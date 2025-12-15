@@ -1,4 +1,4 @@
-﻿using namespace System.Collections.Generic
+using namespace System.Collections.Generic
 using namespace System.Text
 
 # ExcelImportScreen - Import project from Excel
@@ -51,15 +51,12 @@ class ExcelImportScreen : PmcScreen {
 
     # Constructor
     ExcelImportScreen() : base("ExcelImport", "Import from Excel") {
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') ========== EXCELIMPORTSCREEN CONSTRUCTOR CALLED =========="
 
         try {
             $this._reader = [ExcelComReader]::new()
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') EXCELIMPORTSCREEN: ExcelComReader created successfully"
         }
         catch {
             $this._errorMessage = "Excel COM not available: $($_.Exception.Message). Excel must be installed to use this feature."
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') EXCELIMPORTSCREEN: FAILED to create ExcelComReader - $($_.Exception.Message)"
             Write-PmcTuiLog "ExcelImportScreen: Failed to initialize ExcelComReader - $_" "ERROR"
         }
 
@@ -81,15 +78,12 @@ class ExcelImportScreen : PmcScreen {
 
     # Constructor with container
     ExcelImportScreen([object]$container) : base("ExcelImport", "Import from Excel", $container) {
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') ========== EXCELIMPORTSCREEN CONTAINER CONSTRUCTOR CALLED =========="
 
         try {
             $this._reader = [ExcelComReader]::new()
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') EXCELIMPORTSCREEN: ExcelComReader created successfully"
         }
         catch {
             $this._errorMessage = "Excel COM not available: $($_.Exception.Message). Excel must be installed to use this feature."
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') EXCELIMPORTSCREEN: FAILED to create ExcelComReader - $($_.Exception.Message)"
             Write-PmcTuiLog "ExcelImportScreen: Failed to initialize ExcelComReader - $_" "ERROR"
         }
 
@@ -117,7 +111,6 @@ class ExcelImportScreen : PmcScreen {
     }
 
     [string] Render() {
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') EXCELIMPORTSCREEN.Render: CALLED step=$($this._step)"
         $sb = [StringBuilder]::new()
 
         # Render base widgets
@@ -134,19 +127,15 @@ class ExcelImportScreen : PmcScreen {
         # Render based on step
         switch ($this._step) {
             1 {
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') EXCELIMPORTSCREEN.Render: Calling _RenderStep1"
                 $this._RenderStep1($sb, $y, $contentWidth)
             }
             2 {
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') EXCELIMPORTSCREEN.Render: Calling _RenderStep2"
                 $this._RenderStep2($sb, $y, $contentWidth)
             }
             3 {
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') EXCELIMPORTSCREEN.Render: Calling _RenderStep3"
                 $this._RenderStep3($sb, $y, $contentWidth)
             }
             4 {
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') EXCELIMPORTSCREEN.Render: Calling _RenderStep4"
                 $this._RenderStep4($sb, $y, $contentWidth)
             }
         }

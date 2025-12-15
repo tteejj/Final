@@ -1,4 +1,4 @@
-﻿# PmcScreen - Base class for all PMC screens
+# PmcScreen - Base class for all PMC screens
 # Provides standard screen lifecycle, layout, and widget management
 
 using namespace System.Collections.Generic
@@ -123,8 +123,6 @@ class PmcScreen {
 
     # === Constructor (backward compatible - no container) ===
     PmcScreen([string]$key, [string]$title) {
-        # PERF: Disabled - if ($global:PmcTuiLogFile) {
-        # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] PmcScreen: Legacy constructor called (key=$key, title=$title)"
         # }
 
         $this.ScreenKey = $key
@@ -137,8 +135,6 @@ class PmcScreen {
 
     # === Constructor (with ServiceContainer) ===
     PmcScreen([string]$key, [string]$title, [object]$container) {
-        # PERF: Disabled - if ($global:PmcTuiLogFile) {
-        # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] PmcScreen: Constructor called with ServiceContainer (key=$key, title=$title, container=$($null -ne $container))"
         # }
 
         $this.ScreenKey = $key
@@ -146,9 +142,7 @@ class PmcScreen {
         $this.Container = $container
         $this.ContentWidgets = New-Object 'System.Collections.Generic.List[object]'
 
-        # PERF: Disabled - if ($global:PmcTuiLogFile) {
 
-        # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] PmcScreen: ServiceContainer stored (available=$($null -ne $this.Container))"
         # }
 
         # Create default widgets
@@ -198,8 +192,6 @@ class PmcScreen {
     Override to perform initialization when screen is displayed
     #>
     [void] OnEnter() {
-        # PERF: Disabled - if ($global:PmcTuiLogFile) {
-        # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [LIFECYCLE] PmcScreen.OnEnter() - Screen='$($this.ScreenKey)' entering"
         # }
         $this.IsActive = $true
         $this.LoadData()
@@ -207,8 +199,6 @@ class PmcScreen {
         if ($this.OnEnterHandler) {
             & $this.OnEnterHandler $this
         }
-        # PERF: Disabled - if ($global:PmcTuiLogFile) {
-        # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [LIFECYCLE] PmcScreen.OnEnter() - Screen='$($this.ScreenKey)' entered successfully"
         # }
     }
 
@@ -220,16 +210,12 @@ class PmcScreen {
     Override to perform cleanup when leaving screen
     #>
     [void] OnDoExit() {
-        # PERF: Disabled - if ($global:PmcTuiLogFile) {
-        # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [LIFECYCLE] PmcScreen.OnDoExit() - Screen='$($this.ScreenKey)' exiting"
         # }
         $this.IsActive = $false
 
         if ($this.OnExitHandler) {
             & $this.OnExitHandler $this
         }
-        # PERF: Disabled - if ($global:PmcTuiLogFile) {
-        # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [LIFECYCLE] PmcScreen.OnDoExit() - Screen='$($this.ScreenKey)' exited successfully"
         # }
     }
 
@@ -241,8 +227,6 @@ class PmcScreen {
     Override to load screen-specific data
     #>
     [void] LoadData() {
-        # PERF: Disabled - if ($global:PmcTuiLogFile) {
-        # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [LIFECYCLE] PmcScreen.LoadData() - Screen='$($this.ScreenKey)' (base class - no-op)"
         # }
         # Override in subclass
     }
@@ -357,8 +341,6 @@ class PmcScreen {
         # Store container if provided
         if ($container) {
             $this.Container = $container
-            # PERF: Disabled - if ($global:PmcTuiLogFile) {
-            # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] PmcScreen.Initialize: Container set for screen '$($this.ScreenKey)'"
             # }
         }
 
@@ -539,8 +521,6 @@ class PmcScreen {
         }
         catch {
             # If we can't even write the error, just log it
-            # PERF: Disabled - if ($global:PmcTuiLogFile) {
-            # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [FATAL] Could not write error to screen: $_"
             # }
         }
     }
@@ -677,22 +657,16 @@ class PmcScreen {
     #>
     [object] GetService([string]$serviceName) {
         if ($null -eq $this.Container) {
-            # PERF: Disabled - if ($global:PmcTuiLogFile) {
-            # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] PmcScreen.GetService: Container not available (service=$serviceName)"
             # }
             return $null
         }
 
         try {
             $service = $this.Container.Get($serviceName)
-            # PERF: Disabled - if ($global:PmcTuiLogFile) {
-            # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] PmcScreen.GetService: Retrieved service (name=$serviceName, found=$($null -ne $service))"
             # }
             return $service
         }
         catch {
-            # PERF: Disabled - if ($global:PmcTuiLogFile) {
-            # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] PmcScreen.GetService: Error retrieving service (name=$serviceName, error=$($_.Exception.Message))"
             # }
             return $null
         }
@@ -720,8 +694,6 @@ class PmcScreen {
             return $this.Container.Has($serviceName)
         }
         catch {
-            # PERF: Disabled - if ($global:PmcTuiLogFile) {
-            # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] PmcScreen.HasService: Error checking service (name=$serviceName, error=$($_.Exception.Message))"
             # }
             return $false
         }

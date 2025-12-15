@@ -1,4 +1,4 @@
-﻿using namespace System
+using namespace System
 using namespace System.Collections.Generic
 using namespace System.Text
 
@@ -806,14 +806,12 @@ class InlineEditor : PmcWidget {
             return $sb.ToString()
         }
 
-        # PERF: Disabled - if ($global:PmcTuiLogFile) {
         # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [EDIT] InlineEditor._RenderHorizontal() called"
         # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [EDIT] _showFieldWidgets=$($this._showFieldWidgets) _expandedFieldName='$($this._expandedFieldName)'"
         # }
 
         # If a widget is expanded, render it instead
         if ($this._showFieldWidgets -and -not [string]::IsNullOrWhiteSpace($this._expandedFieldName)) {
-            # PERF: Disabled - if ($global:PmcTuiLogFile) {
             # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [EDIT] WIDGET EXPANDED - field='$($this._expandedFieldName)'"
             # }
             $field = $this._fields | Where-Object { $_.Name -eq $this._expandedFieldName } | Select-Object -First 1
@@ -822,13 +820,11 @@ class InlineEditor : PmcWidget {
                 $widget = $null
                 if ($field.Type -eq 'date' -and $this._datePickerMode -and $this._datePickerWidgets.ContainsKey($field.Name)) {
                     $widget = $this._datePickerWidgets[$field.Name]
-                    # PERF: Disabled - if ($global:PmcTuiLogFile) {
                     # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [EDIT] Found DatePicker in _datePickerWidgets: $($widget.GetType().Name)"
                     # }
                 }
                 elseif ($this._fieldWidgets.ContainsKey($field.Name)) {
                     $widget = $this._fieldWidgets[$field.Name]
-                    # PERF: Disabled - if ($global:PmcTuiLogFile) {
                     # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [EDIT] Found widget in _fieldWidgets: $($widget.GetType().Name)"
                     # }
                 }
@@ -836,12 +832,10 @@ class InlineEditor : PmcWidget {
                 if ($null -ne $widget) {
                     # Widget types that render themselves
                     if ($widget.GetType().Name -in @('DatePicker', 'ProjectPicker', 'TagEditor')) {
-                        # PERF: Disabled - if ($global:PmcTuiLogFile) {
                         # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [EDIT] Rendering expanded widget: $($widget.GetType().Name)"
                         # }
                         # NOTE: NeedsClear NOT set - widgets render as overlays without clearing screen
                         $widgetOutput = $widget.Render()
-                        # PERF: Disabled - if ($global:PmcTuiLogFile) {
                         # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [EDIT] Widget rendered, output length=$($widgetOutput.Length)"
                         # }
                         return $widgetOutput
@@ -1044,17 +1038,13 @@ class InlineEditor : PmcWidget {
                         $termHeight = 40
                     }
 
-                    # PERF: Disabled - if ($global:PmcTuiLogFile) {
 
-                    # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] InlineEditor: Rendering PmcFilePicker with termWidth=$termWidth, termHeight=$termHeight"
                     # }
 
                     # NOTE: NeedsClear NOT set - FilePicker renders as overlay without clearing screen
                     $output = $widget.Render($termWidth, $termHeight)
 
-                    # PERF: Disabled - if ($global:PmcTuiLogFile) {
 
-                    # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] InlineEditor: PmcFilePicker render returned length=$($output.Length)"
                     # }
 
                     return $output
@@ -1296,7 +1286,6 @@ class InlineEditor : PmcWidget {
         $fieldName = $fieldDef.Name
         $fieldType = $fieldDef.Type
         $value = $(if ($fieldDef.ContainsKey('Value')) { $fieldDef.Value } else { $null })
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [_CreateFieldWidget] Creating widget for field=$fieldName type=$fieldType LayoutMode=$($this.LayoutMode) value=$(if ($null -ne $value) { $value } else { '(null)' })"
 
         $widget = $null
 

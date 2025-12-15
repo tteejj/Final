@@ -55,10 +55,8 @@ class PmcThemeEngine {
     [void] LoadFromConfig([hashtable]$themeConfig) {
         if ($themeConfig.ContainsKey('Palette')) {
             $this._palette = $themeConfig.Palette
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-theme-engine-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') LoadFromConfig: Loaded Palette with $($this._palette.Count) colors"
         }
         else {
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-theme-engine-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') LoadFromConfig: NO Palette in config"
         }
 
         if ($themeConfig.ContainsKey('Properties')) {

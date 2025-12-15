@@ -1,4 +1,4 @@
-﻿using namespace System.Collections.Generic
+using namespace System.Collections.Generic
 using namespace System.Text
 
 # PmcMenuBar - Top-level navigation menu with dropdown support
@@ -452,27 +452,19 @@ class PmcMenuBar : PmcWidget {
         $key = $keyInfo.Key
         $char = $keyInfo.KeyChar
 
-        # PERF: Disabled - if ($global:PmcTuiLogFile) {
 
-        # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] MenuBar.HandleKeyPress: Key=$key Char='$char' Alt=$($keyInfo.Modifiers -band [ConsoleModifiers]::Alt) IsActive=$($this.IsActive)"
         # }
 
         # Handle Alt+hotkey even when not active (to activate menu)
         if ($keyInfo.Modifiers -band [ConsoleModifiers]::Alt) {
-            # PERF: Disabled - if ($global:PmcTuiLogFile) {
-            # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] MenuBar: Alt key detected, calling _HandleMenuHotkey('$char')"
             # }
             if ($this._HandleMenuHotkey($char)) {
                 # Menu hotkey handler already set SelectedMenuIndex and showed dropdown
                 # Just ensure IsActive is set (don't call Activate() which resets index to 0)
                 $this.IsActive = $true
-                # PERF: Disabled - if ($global:PmcTuiLogFile) {
-                # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] MenuBar: Hotkey matched, menu activated"
                 # }
                 return $true
             }
-            # PERF: Disabled - if ($global:PmcTuiLogFile) {
-            # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] MenuBar: Hotkey '$char' not matched"
             # }
         }
 
@@ -510,10 +502,7 @@ class PmcMenuBar : PmcWidget {
                     return $true
                 }
                 'Escape' {
-                    # PERF: Disabled - if ($global:PmcTuiLogFile) {
-                    # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] MenuBar: ESC in dropdown mode - deactivating menu entirely"
                     # }
-                    # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-esc-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [MenuBar] ESC in dropdown mode - deactivating menu entirely"
                     $this.HideDropdown()
                     $this.Deactivate()
                     return $true
@@ -545,10 +534,7 @@ class PmcMenuBar : PmcWidget {
                     return $true
                 }
                 'Escape' {
-                    # PERF: Disabled - if ($global:PmcTuiLogFile) {
-                    # PERF: Disabled -     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] MenuBar: ESC in menu bar mode - deactivating"
                     # }
-                    # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-esc-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [MenuBar] ESC in menu bar mode - deactivating"
                     $this.Deactivate()
                     return $true
                 }

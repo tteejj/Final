@@ -396,17 +396,24 @@ class TaskStore {
             # Check IsSaving INSIDE the lock to ensure thread safety
             if ($this.IsSaving) {
                 $this.LastError = "Save already in progress"
-                Write-PmcTuiLog "SaveData: Already saving, returning false" "ERROR"
+                Write-PmcTuiLog "TaskStore.SaveData: Already saving, returning false" "ERROR"
                 return $false
             }
 
             $this.IsSaving = $true
+            Write-PmcTuiLog "TaskStore.SaveData: START - tasks=$($this._data.tasks.Count) projects=$($this._data.projects.Count) timelogs=$($this._data.timelogs.Count)" "INFO"
 
             try {
-                # Create backup before save
+                # PHASE 1: Create in-memory backup for rollback
+                Write-PmcTuiLog "TaskStore.SaveData: Creating in-memory backup" "DEBUG"
                 $this._CreateBackup()
 
-                # Build data structure for Set-PmcAllData
+                # PHASE 2: Create persistent timestamped backup before destructive operation
+                Write-PmcTuiLog "TaskStore.SaveData: Creating persistent backup" "DEBUG"
+                $this._CreatePersistentBackup()
+
+                # PHASE 3: Build data structure for Save-PmcData
+                Write-PmcTuiLog "TaskStore.SaveData: Building data structure" "DEBUG"
                 $dataToSave = @{
                     tasks    = $this._data.tasks.ToArray()
                     projects = $this._data.projects.ToArray()
@@ -414,32 +421,62 @@ class TaskStore {
                     settings = $this._data.settings
                 }
 
-                Write-PmcTuiLog "SaveData: Calling Save-PmcData with tasks=$($dataToSave.tasks.Count) projects=$($dataToSave.projects.Count) timelogs=$($dataToSave.timelogs.Count)" "DEBUG"
+                Write-PmcTuiLog "TaskStore.SaveData: Data structure built - tasks=$($dataToSave.tasks.Count) projects=$($dataToSave.projects.Count) timelogs=$($dataToSave.timelogs.Count)" "INFO"
+                
+                # Log first task/project for verification
+                if ($dataToSave.tasks.Count -gt 0) {
+                    $firstTask = $dataToSave.tasks[0]
+                    Write-PmcTuiLog "TaskStore.SaveData: First task - text='$(Get-SafeProperty $firstTask 'text')' id='$(Get-SafeProperty $firstTask 'id')'" "DEBUG"
+                }
                 if ($dataToSave.projects.Count -gt 0) {
                     $firstProject = $dataToSave.projects[0]
-                    Write-PmcTuiLog "SaveData: First project name='$($firstProject.name)' ID1='$(Get-SafeProperty $firstProject 'ID1')'" "DEBUG"
+                    Write-PmcTuiLog "TaskStore.SaveData: First project - name='$(Get-SafeProperty $firstProject 'name')' ID1='$(Get-SafeProperty $firstProject 'ID1')'" "DEBUG"
                 }
 
-                # FIX: Call Save-PmcData via explicit module invocation
+                # PHASE 4: Call Save-PmcData via explicit module invocation
+                Write-PmcTuiLog "TaskStore.SaveData: Calling Save-PmcData" "INFO"
                 $pmcModule = Get-Module -Name 'Pmc.Strict'
+                if ($null -eq $pmcModule) {
+                    $this.LastError = "Pmc.Strict module not loaded - cannot save"
+                    Write-PmcTuiLog "TaskStore.SaveData: FATAL - Pmc.Strict module not found" "ERROR"
+                    return $false
+                }
+                
                 & $pmcModule { param($data) Save-PmcData -Data $data } $dataToSave
+                Write-PmcTuiLog "TaskStore.SaveData: Save-PmcData completed successfully" "INFO"
 
+                # PHASE 5: Verify save success
+                Write-PmcTuiLog "TaskStore.SaveData: Verifying save" "DEBUG"
+                $this._VerifySave($dataToSave)
+
+                # PHASE 6: Update metadata
                 $this._data.metadata.lastSaved = Get-Date
                 $this.LastError = ""
+                $this.HasPendingChanges = $false
 
-                # Clear backup on successful save
+                # Clear in-memory backup on successful save
                 $this._dataBackup = $null
 
-                Write-PmcTuiLog "SaveData: Success" "DEBUG"
+                Write-PmcTuiLog "TaskStore.SaveData: SUCCESS - Data saved and verified" "INFO"
                 return $true
             }
             catch {
                 $this.LastError = "Failed to save data: $($_.Exception.Message)"
-                Write-PmcTuiLog "SaveData: Exception: $($_.Exception.Message)" "ERROR"
-                Write-PmcTuiLog "SaveData: Stack trace: $($_.ScriptStackTrace)" "ERROR"
+                Write-PmcTuiLog "TaskStore.SaveData: EXCEPTION: $($_.Exception.Message)" "ERROR"
+                Write-PmcTuiLog "TaskStore.SaveData: Exception type: $($_.Exception.GetType().FullName)" "ERROR"
+                Write-PmcTuiLog "TaskStore.SaveData: Stack trace: $($_.ScriptStackTrace)" "ERROR"
+                
+                # Log actionable error guidance
+                Write-PmcTuiLog "TaskStore.SaveData: ERROR GUIDANCE:" "ERROR"
+                Write-PmcTuiLog "  1. Check log for detailed error above" "ERROR"
+                Write-PmcTuiLog "  2. Verify disk space available" "ERROR"
+                Write-PmcTuiLog "  3. Check file permissions on tasks.json" "ERROR"
+                Write-PmcTuiLog "  4. Look for backup files: tasks.json.backup.*" "ERROR"
+
                 $this._InvokeCallback($this.OnSaveError, $this.LastError)
 
-                # Rollback to backup
+                # Rollback to in-memory backup
+                Write-PmcTuiLog "TaskStore.SaveData: Rolling back to in-memory backup" "INFO"
                 $this._Rollback()
 
                 return $false
@@ -448,6 +485,7 @@ class TaskStore {
         finally {
             $this.IsSaving = $false
             [Monitor]::Exit($this._dataLock)
+            Write-PmcTuiLog "TaskStore.SaveData: END" "DEBUG"
         }
     }
 
@@ -487,6 +525,107 @@ class TaskStore {
             $this._dataBackup = $null
         }
     }
+
+    <#
+    .SYNOPSIS
+    Create persistent timestamped backup before save (separate from in-memory backup)
+    
+    .DESCRIPTION
+    Creates a backup file like tasks.json.backup.20231215-143527
+    Keeps last 5 backups, deletes older ones
+    This protects against corruption from save failures
+    #>
+    hidden [void] _CreatePersistentBackup() {
+        try {
+            # Get tasks.json path
+            $pmcModule = Get-Module -Name 'Pmc.Strict'
+            if ($null -eq $pmcModule) {
+                Write-PmcTuiLog "_CreatePersistentBackup: Pmc.Strict module not found, skipping backup" "WARNING"
+                return
+            }
+
+            $tasksFile = & $pmcModule { Get-PmcTaskFilePath }
+            if (-not (Test-Path $tasksFile)) {
+                Write-PmcTuiLog "_CreatePersistentBackup: tasks.json does not exist yet, skipping backup" "DEBUG"
+                return
+            }
+
+            # Create timestamped backup
+            $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+            $backupFile = "$tasksFile.backup.$timestamp"
+            
+            Copy-Item -Path $tasksFile -Destination $backupFile -Force
+            Write-PmcTuiLog "_CreatePersistentBackup: Created backup at $backupFile" "INFO"
+
+            # Rotate backups - keep only last 5
+            $backupDir = Split-Path $tasksFile -Parent
+            $backupPattern = "$(Split-Path $tasksFile -Leaf).backup.*"
+            $backups = Get-ChildItem -Path $backupDir -Filter $backupPattern | 
+                Sort-Object LastWriteTime -Descending
+
+            if ($backups.Count -gt 5) {
+                $toDelete = $backups | Select-Object -Skip 5
+                foreach ($old in $toDelete) {
+                    Remove-Item $old.FullName -Force
+                    Write-PmcTuiLog "_CreatePersistentBackup: Deleted old backup $($old.Name)" "DEBUG"
+                }
+            }
+        }
+        catch {
+            # Backup creation is non-critical, log but continue
+            Write-PmcTuiLog "_CreatePersistentBackup: Failed to create backup: $_" "WARNING"
+        }
+    }
+
+    <#
+    .SYNOPSIS
+    Verify save succeeded by re-loading data from disk
+    
+    .DESCRIPTION
+    Attempts to load tasks.json and verify task count matches
+    This catches save failures early
+    #>
+    hidden [void] _VerifySave([hashtable]$savedData) {
+        try {
+            $pmcModule = Get-Module -Name 'Pmc.Strict'
+            if ($null -eq $pmcModule) {
+                Write-PmcTuiLog "_VerifySave: Pmc.Strict module not found, cannot verify" "WARNING"
+                return
+            }
+
+            # Reload data from disk
+            $reloadedData = & $pmcModule { Get-PmcData }
+            
+            if ($null -eq $reloadedData) {
+                Write-PmcTuiLog "_VerifySave: Reloaded data is null!" "ERROR"
+                throw "Save verification failed - reloaded data is null"
+            }
+
+            # Compare counts
+            $savedTasks = $savedData.tasks.Count
+            $reloadedTasks = if ($reloadedData.tasks) { @($reloadedData.tasks).Count } else { 0 }
+            
+            $savedProjects = $savedData.projects.Count  
+            $reloadedProjects = if ($reloadedData.projects) { @($reloadedData.projects).Count } else { 0 }
+
+            if ($savedTasks -ne $reloadedTasks) {
+                Write-PmcTuiLog "_VerifySave: Task count mismatch! Saved=$savedTasks Reloaded=$reloadedTasks" "ERROR"
+                throw "Save verification failed - task count mismatch (saved:$savedTasks vs reloaded:$reloadedTasks)"
+            }
+
+            if ($savedProjects -ne $reloadedProjects) {
+                Write-PmcTuiLog "_VerifySave: Project count mismatch! Saved=$savedProjects Reloaded=$reloadedProjects" "ERROR"
+                throw "Save verification failed - project count mismatch (saved:$savedProjects vs reloaded:$reloadedProjects)"
+            }
+
+            Write-PmcTuiLog "_VerifySave: Verification passed - tasks=$reloadedTasks projects=$reloadedProjects" "DEBUG"
+        }
+        catch {
+            Write-PmcTuiLog "_VerifySave: Verification failed: $_" "ERROR"
+            throw
+        }
+    }
+
 
     # === Task CRUD Operations ===
 

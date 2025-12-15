@@ -129,26 +129,6 @@ $global:LOG_FILE_EXTENSION = ".log"
 $global:BACKUP_DIRECTORY = "backups"
 
 # Preferences file name
-$global:PREFERENCES_FILE = "preferences.json"
-
-# ============================================================================
-# VALIDATION CONSTANTS
-# ============================================================================
-
-# Maximum lengths for text fields
-$global:MAX_TASK_TITLE_LENGTH = 200
-$global:MAX_DESCRIPTION_LENGTH = 4000
-$global:MAX_TAG_LENGTH = 30
-$global:MAX_PROJECT_NAME_LENGTH = 100
-
-# Maximum counts
-$global:MAX_TAGS_PER_TASK = 20
-$global:MAX_DEPENDENCIES_PER_TASK = 50
-
-# ============================================================================
-# ACCESSIBILITY CONSTANTS
-# ============================================================================
-
 # M-ACC-2: Symbol alternatives for color-only indicators
 $global:USE_SYMBOLS = $true  # Configurable via preferences
 

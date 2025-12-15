@@ -1,4 +1,4 @@
-﻿# TaskListScreen.ps1 - Complete Task List with CRUD + Filters
+# TaskListScreen.ps1 - Complete Task List with CRUD + Filters
 #
 # Full-featured task list screen with:
 # - UniversalList integration (sorting, virtual scrolling, multi-select)
@@ -242,7 +242,6 @@ class TaskListScreen : StandardListScreen {
                 . "$PSScriptRoot/../ServiceContainer.ps1"
                 $global:PmcContainer = [ServiceContainer]::new()
 
-                # PERF: Disabled - if ($global:PmcTuiLogFile) {
                 # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] TaskListScreen: Created new ServiceContainer"
                 # }
             }

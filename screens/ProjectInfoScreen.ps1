@@ -1,4 +1,4 @@
-﻿using namespace System.Collections.Generic
+using namespace System.Collections.Generic
 using namespace System.Text
 
 # ProjectInfoScreen - Detailed project information
@@ -191,7 +191,6 @@ class ProjectInfoScreen : PmcScreen {
 
     [string] RenderContent() {
         try {
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') RenderContent START *** NEW CODE VERSION 2.0 ***"
 
             # If editor is showing, render it instead
             if ($this.ShowEditor -and $this.Editor) {
@@ -204,7 +203,6 @@ class ProjectInfoScreen : PmcScreen {
                 return $sb.ToString()
             }
 
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') Getting content area"
             # Get content area
             $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
 
@@ -220,7 +218,6 @@ class ProjectInfoScreen : PmcScreen {
         # Initialize cursor position tracking for editing field (must be at method scope)
         $editingCursorRow = $null
         $editingCursorCol = $null
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') INITIALIZED CURSOR TRACKING: editingCursorRow=$editingCursorRow editingCursorCol=$editingCursorCol"
 
         $y = $contentRect.Y + 1
 
@@ -233,11 +230,9 @@ class ProjectInfoScreen : PmcScreen {
         }
 
         # Compact header: Name, Status, Created on one line
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') Rendering project name"
         $sb.Append($this.Header.BuildMoveTo($contentRect.X + 4, $y++))
         $sb.Append($highlightColor)
         $name = $(if ($this.ProjectData -is [string]) { $this.ProjectData } else { Get-SafeProperty $this.ProjectData 'name' })
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') name=$name type=$($name.GetType().FullName)"
         $sb.Append([string]$name)
         $sb.Append($reset)
         $sb.Append($mutedColor)
@@ -269,7 +264,6 @@ class ProjectInfoScreen : PmcScreen {
 
             # In edit mode, display fields in 3 columns with selection highlighting
             if ($this.EditMode) {
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') EDIT MODE: EditableFields.Count=$($this.EditableFields.Count) SelectedFieldIndex=$($this.SelectedFieldIndex) IsEditingField=$($this.IsEditingField)"
                 $selectColor = "`e[30;47m"  # Black text on white background for selected field
 
                 # Clear entire content area first
@@ -284,14 +278,12 @@ class ProjectInfoScreen : PmcScreen {
                 $col2X = $col1X + $colWidth
                 $col3X = $col2X + $colWidth
 
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') Column positions: col1X=$col1X col2X=$col2X col3X=$col3X contentRect.Width=$($contentRect.Width)"
 
                 for ($i = 0; $i -lt $this.EditableFields.Count; $i += 3) {
                     if ($i -lt 9) {  # Log first 3 rows
                         $f1Label = $this.EditableFields[$i].Label
                         $f2Label = $(if ($i+1 -lt $this.EditableFields.Count) { $this.EditableFields[$i+1].Label } else { "N/A" })
                         $f3Label = $(if ($i+2 -lt $this.EditableFields.Count) { $this.EditableFields[$i+2].Label } else { "N/A" })
-                        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') Row i=$i y=$y Labels: [$f1Label] [$f2Label] [$f3Label]"
                     }
 
                     # Column 1
@@ -299,15 +291,12 @@ class ProjectInfoScreen : PmcScreen {
                     $isSelected1 = ($i -eq $this.SelectedFieldIndex)
 
                     if ($i -lt 9) {
-                        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL1 i=$i SelectedFieldIndex=$($this.SelectedFieldIndex) isSelected1=$isSelected1 Label=$($field1.Label)"
                     }
 
                     if ($i -lt 6 -and $isSelected1) {
-                        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL1 SELECTED: i=$i field=$($field1.Label)"
                     }
 
                     if ($i -eq 0) {
-                        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') === COL1 START i=$i y=$y isSelected1=$isSelected1 IsEditingField=$($this.IsEditingField) ==="
                     }
 
                     $sb.Append($this.Header.BuildMoveTo($col1X, $y))
@@ -315,7 +304,6 @@ class ProjectInfoScreen : PmcScreen {
                     if ($i -eq 0) {
                         $afterMoveTo = $sb.ToString()
                         $tail = $(if ($afterMoveTo.Length -gt 30) { $afterMoveTo.Substring($afterMoveTo.Length - 30) } else { $afterMoveTo })
-                        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After MoveTo($col1X,$y): last30='$($tail -replace "`e", '<ESC>')'"
                     }
 
                     # Render label with selection color (same logic as Column 2 and 3)
@@ -324,46 +312,38 @@ class ProjectInfoScreen : PmcScreen {
 
                     if ($isSelected1) {
                         if ($i -eq 0) {
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL1 RENDERING SELECTED: selectColor='$selectColor' highlightColor='$highlightColor'"
                         }
                         $sb.Append($selectColor)
                         if ($i -eq 0) {
                             $curr = $sb.ToString()
                             $tail = $(if ($curr.Length -gt 30) { $curr.Substring($curr.Length - 30) } else { $curr })
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After selectColor: last30='$($tail -replace "`e", '<ESC>')'"
                         }
                         $sb.Append($label1)
                         if ($i -eq 0) {
                             $curr = $sb.ToString()
                             $tail = $(if ($curr.Length -gt 30) { $curr.Substring($curr.Length - 30) } else { $curr })
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After label '$label1': last30='$($tail -replace "`e", '<ESC>')'"
                         }
                         $sb.Append(' ' * (22 - $label1.Length))  # Pad WITH selectColor still active
                         if ($i -eq 0) {
                             $curr = $sb.ToString()
                             $tail = $(if ($curr.Length -gt 30) { $curr.Substring($curr.Length - 30) } else { $curr })
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After padding: last30='$($tail -replace "`e", '<ESC>')'"
                         }
                         $sb.Append($reset)  # Reset AFTER padding
                         if ($i -eq 0) {
                             $curr = $sb.ToString()
                             $tail = $(if ($curr.Length -gt 30) { $curr.Substring($curr.Length - 30) } else { $curr })
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After padding: last30='$($tail -replace "`e", '<ESC>')'"
                         }
                         # Only set value color if NOT currently editing (cursor will handle colors when editing)
                         if (-not ($this.IsEditingField -and $isSelected1)) {
                             $sb.Append($highlightColor)
                             if ($i -eq 0) {
-                                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After highlightColor (NOT editing): last30='$(($sb.ToString() | Select-Object -Last 1).Substring([Math]::Max(0, ($sb.ToString()).Length - 30)) -replace "`e", '<ESC>')'"
                             }
                         } else {
                             if ($i -eq 0) {
-                                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') SKIPPED highlightColor (IS editing)"
                             }
                         }
                     } else {
                         if ($i -eq 1) {
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL1 RENDERING NOT SELECTED: mutedColor='$mutedColor' textColor='$textColor'"
                         }
                         $sb.Append($mutedColor)
                         $sb.Append($label1)
@@ -374,34 +354,28 @@ class ProjectInfoScreen : PmcScreen {
 
                     # Value - if currently editing this field, show EditingValue with cursor
                     if ($this.IsEditingField -and $isSelected1) {
-                        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL1 SHOWING CURSOR: EditingValue='$($this.EditingValue)' i=$i y=$y col1X=$col1X"
                         if ($i -eq 0) {
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') EDITING - about to append highlightColor then value then cursor"
                         }
                         $sb.Append($highlightColor)  # Set color for value
                         if ($i -eq 0) {
                             $curr = $sb.ToString()
                             $tail = $(if ($curr.Length -gt 40) { $curr.Substring($curr.Length - 40) } else { $curr })
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After highlightColor: last40='$($tail -replace "`e", '<ESC>')'"
                         }
                         $sb.Append($this.EditingValue)
                         if ($i -eq 0) {
                             $curr = $sb.ToString()
                             $tail = $(if ($curr.Length -gt 40) { $curr.Substring($curr.Length - 40) } else { $curr })
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After EditingValue='$($this.EditingValue)': last40='$($tail -replace "`e", '<ESC>')'"
                         }
                         # DON'T APPEND CURSOR - let terminal cursor position naturally
                         # The cursor position is right here, right now, in the flow
                         # Store where we are BEFORE appending the visual block
                         $editingCursorRow = $y
                         $editingCursorCol = $col1X + 22 + $this.EditingValue.Length
-                        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL1 STORED CURSOR POSITION: editingCursorRow=$editingCursorRow editingCursorCol=$editingCursorCol (calculated: col1X=$col1X + 22 + len=$($this.EditingValue.Length))"
                         # NOW append the visual cursor block
                         $sb.Append("`e[7m `e[0m")  # Block cursor with reset
                         if ($i -eq 0) {
                             $curr = $sb.ToString()
                             $tail = $(if ($curr.Length -gt 40) { $curr.Substring($curr.Length - 40) } else { $curr })
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After cursor: last40='$($tail -replace "`e", '<ESC>')'"
                         }
                     } elseif ($field1.Value) {
                         # Show saved value (truncate if needed)
@@ -420,11 +394,8 @@ class ProjectInfoScreen : PmcScreen {
                     if ($i -eq 0) {
                         $afterCol1 = $sb.ToString()
                         $last100 = $(if ($afterCol1.Length > 100) { $afterCol1.Substring($afterCol1.Length - 100) } else { $afterCol1 })
-                        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   AFTER COL1 RESET: last100='$($last100 -replace "`e", '<ESC>')'"
                         $curr = $sb.ToString()
                         $tail = $(if ($curr.Length -gt 50) { $curr.Substring($curr.Length - 50) } else { $curr })
-                        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After final COL1 reset: last50='$($tail -replace "`e", '<ESC>')'"
-                        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') === COL1 END ==="
                     }
 
                     # Column 2 (if exists)
@@ -433,11 +404,9 @@ class ProjectInfoScreen : PmcScreen {
                         $isSelected2 = (($i + 1) -eq $this.SelectedFieldIndex)
 
                         if ($i -lt 9) {
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL2 i=$($i+1) SelectedFieldIndex=$($this.SelectedFieldIndex) isSelected2=$isSelected2 Label=$($field2.Label)"
                         }
 
                         if ($i -eq 0) {
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') === COL2 START i=$($i+1) y=$y isSelected2=$isSelected2 ==="
                         }
 
                         # CRITICAL: Reset all colors BEFORE MoveTo to prevent bleed from COL1
@@ -445,19 +414,15 @@ class ProjectInfoScreen : PmcScreen {
                         if ($i -eq 0) {
                             $beforeMoveTo = $sb.ToString()
                             $last50 = $(if ($beforeMoveTo.Length > 50) { $beforeMoveTo.Substring($beforeMoveTo.Length - 50) } else { $beforeMoveTo })
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   BEFORE COL2 MOVETO: last50='$($last50 -replace "`e", '<ESC>')'"
                             $curr = $sb.ToString()
                             $tail = $(if ($curr.Length -gt 40) { $curr.Substring($curr.Length - 40) } else { $curr })
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') Before COL2 reset: last40='$($tail -replace "`e", '<ESC>')'"
                         }
                         $sb.Append($this.Header.BuildMoveTo($col2X, $y))
                         if ($i -eq 0) {
                             $afterMoveTo = $sb.ToString()
                             $last50 = $(if ($afterMoveTo.Length > 50) { $afterMoveTo.Substring($afterMoveTo.Length - 50) } else { $afterMoveTo })
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   AFTER COL2 MOVETO: last50='$($last50 -replace "`e", '<ESC>')'"
                             $curr = $sb.ToString()
                             $tail = $(if ($curr.Length -gt 40) { $curr.Substring($curr.Length - 40) } else { $curr })
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After COL2 MoveTo($col2X,$y): last40='$($tail -replace "`e", '<ESC>')'"
                         }
 
                         # Render label with selection color
@@ -466,7 +431,6 @@ class ProjectInfoScreen : PmcScreen {
 
                         if ($isSelected2) {
                             if ($i -eq 0) {
-                                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL2 RENDERING SELECTED: selectColor='$selectColor' highlightColor='$highlightColor'"
                             }
                             $sb.Append($selectColor)
                             $sb.Append($label2)
@@ -478,43 +442,35 @@ class ProjectInfoScreen : PmcScreen {
                             }
                         } else {
                             if ($i -eq 0) {
-                                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL2 RENDERING NOT SELECTED: mutedColor='$mutedColor' textColor='$textColor'"
-                                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') COL2 NOT SELECTED - appending mutedColor for label"
                             }
                             $sb.Append($mutedColor)
                             if ($i -eq 0) {
                                 $curr = $sb.ToString()
                                 $tail = $(if ($curr.Length -gt 30) { $curr.Substring($curr.Length - 30) } else { $curr })
-                                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After mutedColor: last30='$($tail -replace "`e", '<ESC>')'"
                             }
                             $sb.Append($label2)
                             if ($i -eq 0) {
                                 $curr = $sb.ToString()
                                 $tail = $(if ($curr.Length -gt 30) { $curr.Substring($curr.Length - 30) } else { $curr })
-                                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After label2 '$label2': last30='$($tail -replace "`e", '<ESC>')'"
                             }
                             $sb.Append($reset)
                             if ($i -eq 0) {
                                 $curr = $sb.ToString()
                                 $tail = $(if ($curr.Length -gt 30) { $curr.Substring($curr.Length - 30) } else { $curr })
-                                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After reset: last30='$($tail -replace "`e", '<ESC>')'"
                             }
                             $sb.Append(' ' * (22 - $label2.Length))  # Pad without color
                             if ($i -eq 0) {
                                 $curr = $sb.ToString()
                                 $tail = $(if ($curr.Length -gt 30) { $curr.Substring($curr.Length - 30) } else { $curr })
-                                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After padding: last30='$($tail -replace "`e", '<ESC>')'"
                             }
                             $sb.Append($textColor)
                             if ($i -eq 0) {
                                 $curr = $sb.ToString()
                                 $tail = $(if ($curr.Length -gt 30) { $curr.Substring($curr.Length - 30) } else { $curr })
-                                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-col-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') After textColor: last30='$($tail -replace "`e", '<ESC>')'"
                             }
                         }
 
                         if ($this.IsEditingField -and $isSelected2) {
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL2 SHOWING CURSOR: EditingValue='$($this.EditingValue)' i=$($i+1) y=$y col2X=$col2X"
                             # DON'T use BuildMoveTo - just let it flow naturally after the label
                             $sb.Append($highlightColor)  # Set color for value
                             $sb.Append($this.EditingValue)
@@ -522,7 +478,6 @@ class ProjectInfoScreen : PmcScreen {
                             # Store the cursor position for COL2 editing field
                             $editingCursorRow = $y
                             $editingCursorCol = $col2X + 22 + $this.EditingValue.Length
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL2 STORED CURSOR POSITION: editingCursorRow=$editingCursorRow editingCursorCol=$editingCursorCol (calculated: col2X=$col2X + 22 + len=$($this.EditingValue.Length))"
                         } elseif ($field2.Value) {
                             # Show saved value (truncate if needed)
                             $val2 = [string]$field2.Value
@@ -545,7 +500,6 @@ class ProjectInfoScreen : PmcScreen {
                         $isSelected3 = (($i + 2) -eq $this.SelectedFieldIndex)
 
                         if ($i -lt 9) {
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL3 i=$($i+2) SelectedFieldIndex=$($this.SelectedFieldIndex) isSelected3=$isSelected3 Label=$($field3.Label)"
                         }
 
                         # CRITICAL: Reset all colors BEFORE MoveTo to prevent bleed from COL2
@@ -574,7 +528,6 @@ class ProjectInfoScreen : PmcScreen {
                         }
 
                         if ($this.IsEditingField -and $isSelected3) {
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL3 SHOWING CURSOR: EditingValue='$($this.EditingValue)' i=$($i+2) y=$y col3X=$col3X"
                             # DON'T use BuildMoveTo - just let it flow naturally after the label
                             $sb.Append($highlightColor)  # Set color for value
                             $sb.Append($this.EditingValue)
@@ -582,7 +535,6 @@ class ProjectInfoScreen : PmcScreen {
                             # Store the cursor position for COL3 editing field
                             $editingCursorRow = $y
                             $editingCursorCol = $col3X + 22 + $this.EditingValue.Length
-                            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff')   COL3 STORED CURSOR POSITION: editingCursorRow=$editingCursorRow editingCursorCol=$editingCursorCol (calculated: col3X=$col3X + 22 + len=$($this.EditingValue.Length))"
                         } elseif ($field3.Value) {
                             # Show saved value (truncate if needed)
                             $val3 = [string]$field3.Value
@@ -741,14 +693,12 @@ class ProjectInfoScreen : PmcScreen {
         }
 
         # Compact task summary on one line
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') Rendering stats section"
         $y++
         $sb.Append($this.Header.BuildMoveTo($contentRect.X + 4, $y++))
         $sb.Append($mutedColor)
         $sb.Append("Tasks: ")
         $sb.Append($reset)
         $sb.Append($textColor)
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') About to append TotalTasks=$($this.ProjectStats.TotalTasks) type=$($this.ProjectStats.TotalTasks.GetType().FullName)"
         $sb.Append($this.ProjectStats.TotalTasks.ToString())
         $sb.Append($mutedColor)
         $sb.Append(" total, ")
@@ -781,14 +731,11 @@ class ProjectInfoScreen : PmcScreen {
 
         # CRITICAL FIX: If we're editing a field, reposition cursor back to the editing position
         # This ensures the terminal cursor appears at the right location after all rendering
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') CURSOR CHECK: EditMode=$($this.EditMode) IsEditingField=$($this.IsEditingField) editingCursorRow=$editingCursorRow editingCursorCol=$editingCursorCol"
         if ($this.EditMode -and $this.IsEditingField -and $null -ne $editingCursorRow -and $null -ne $editingCursorCol) {
             $moveSeq = $this.Header.BuildMoveTo($editingCursorCol, $editingCursorRow)
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') REPOSITIONING CURSOR: moveSeq='$($moveSeq -replace "`e", '<ESC>')' (0-based: col=$editingCursorCol row=$editingCursorRow)"
             $sb.Append($moveSeq)
             # Also make cursor visible
             $sb.Append("`e[?25h")
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') REPOSITIONED CURSOR to row=$editingCursorRow col=$editingCursorCol (VT100: $($moveSeq -replace "`e", '<ESC>'))"
         }
 
         $finalString = $sb.ToString()
@@ -796,23 +743,16 @@ class ProjectInfoScreen : PmcScreen {
             # Dump the ENTIRE final string when editing
             $debugFile = "$($env:TEMP)\pmc-full-render-debug.log"
             $timestamp = Get-Date -Format 'HH:mm:ss.fff'
-            # PERF: Disabled - Add-Content -Path $debugFile -Value "=== $timestamp FINAL RENDER STRING (length=$($finalString.Length)) ==="
             # Split by ESC to show structure
             $parts = $finalString -split "`e"
             for ($i = 0; $i -lt $parts.Count; $i++) {
                 if ($i -eq 0) {
-                    # PERF: Disabled - Add-Content -Path $debugFile -Value "Part $i (before first ESC): '$($parts[$i])'"
                 } else {
-                    # PERF: Disabled - Add-Content -Path $debugFile -Value "Part ${i}: <ESC>$($parts[$i])"
                 }
             }
-            # PERF: Disabled - Add-Content -Path $debugFile -Value "=== END FINAL STRING ==="
         }
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') RenderContent SUCCESS"
         return $finalString
         } catch {
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') ERROR at line $($_.InvocationInfo.ScriptLineNumber): $($_.Exception.Message)"
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StackTrace: $($_.ScriptStackTrace)"
             throw
         }
     }
@@ -861,48 +801,38 @@ class ProjectInfoScreen : PmcScreen {
         if ($this.EditMode) {
             if ($key -eq [ConsoleKey]::UpArrow) {
                 # Move up 3 positions (one row up in 3-column layout)
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') UP ARROW: SelectedFieldIndex=$($this.SelectedFieldIndex)"
                 if ($this.SelectedFieldIndex -ge 3) {
                     $this.SelectedFieldIndex -= 3
-                    # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') UP ARROW: New SelectedFieldIndex=$($this.SelectedFieldIndex)"
                 }
                 return $true
             }
             elseif ($key -eq [ConsoleKey]::DownArrow) {
                 # Move down 3 positions (one row down in 3-column layout)
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') DOWN ARROW: SelectedFieldIndex=$($this.SelectedFieldIndex)"
                 if ($this.SelectedFieldIndex + 3 -lt $this.EditableFields.Count) {
                     $this.SelectedFieldIndex += 3
-                    # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') DOWN ARROW: New SelectedFieldIndex=$($this.SelectedFieldIndex)"
                 }
                 return $true
             }
             elseif ($key -eq [ConsoleKey]::LeftArrow) {
                 # Move to previous field (left in row)
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') LEFT ARROW: SelectedFieldIndex=$($this.SelectedFieldIndex)"
                 if ($this.SelectedFieldIndex -gt 0) {
                     $this.SelectedFieldIndex--
-                    # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') LEFT ARROW: New SelectedFieldIndex=$($this.SelectedFieldIndex)"
                 }
                 return $true
             }
             elseif ($key -eq [ConsoleKey]::RightArrow) {
                 # Move to next field (right in row)
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') RIGHT ARROW: SelectedFieldIndex=$($this.SelectedFieldIndex)"
                 if ($this.SelectedFieldIndex -lt ($this.EditableFields.Count - 1)) {
                     $this.SelectedFieldIndex++
-                    # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') RIGHT ARROW: New SelectedFieldIndex=$($this.SelectedFieldIndex)"
                 }
                 return $true
             }
             elseif ($key -eq [ConsoleKey]::Enter) {
                 # Start editing the selected field
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') ENTER PRESSED: SelectedFieldIndex=$($this.SelectedFieldIndex)"
                 $selectedField = $this.EditableFields[$this.SelectedFieldIndex]
                 $this.EditingValue = $(if ($selectedField.Value) { [string]$selectedField.Value } else { "" })
                 $this.IsEditingField = $true
                 $this._UpdateFooterShortcuts()
-                # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') STARTED EDITING: Field=$($selectedField.Name) InitialValue='$($this.EditingValue)' IsEditingField=$($this.IsEditingField)"
                 return $true
             }
             elseif ($keyChar -eq 'e') {
@@ -1034,7 +964,6 @@ class ProjectInfoScreen : PmcScreen {
     }
 
     hidden [void] _EditProject() {
-        # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') _EditProject CALLED: EditMode=$($this.EditMode)"
         if ($this.EditMode) {
             # Already in edit mode - save and exit
             $this._SaveAllEdits()
@@ -1043,7 +972,6 @@ class ProjectInfoScreen : PmcScreen {
             $this.ShowStatus("Edit mode off - changes saved")
         } else {
             # Enter edit mode
-            # PERF: Disabled - Add-Content -Path "$($env:TEMP)\pmc-project-render.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') _EditProject: ENTERING EDIT MODE, resetting SelectedFieldIndex to 0"
             $this.EditMode = $true
             $this.SelectedFieldIndex = 0
             $this._BuildEditableFieldsList()
