@@ -508,6 +508,29 @@ class TimeListScreen : StandardListScreen {
         }
     }
 
+    # Virtual method called when inline editor is confirmed
+    # This method is called by StandardListScreen when inline editing is confirmed
+    # TimeListScreen already handles inline editing through OnItemCreated and OnItemUpdated,
+    # so this is a no-op to prevent method-not-found errors
+    [void] OnInlineEditConfirmed([hashtable]$values) {
+        if ($null -eq $values) {
+            Write-PmcTuiLog "TimeListScreen.OnInlineEditConfirmed called with null values" "WARNING"
+            return
+        }
+        Write-PmcTuiLog "TimeListScreen.OnInlineEditConfirmed called with values: $($values.Keys -join ',')" "DEBUG"
+        # No-op: TimeListScreen handles inline editor callbacks directly through OnItemCreated/OnItemUpdated
+    }
+
+    # Virtual method called when inline editor is cancelled
+    # This method is called by StandardListScreen when inline editing is cancelled
+    # TimeListScreen already handles inline editing through its own callbacks,
+    # so this is a no-op to prevent method-not-found errors
+    [void] OnInlineEditCancelled() {
+        Write-PmcTuiLog "TimeListScreen.OnInlineEditCancelled called" "DEBUG"
+        # No-op: TimeListScreen handles inline editor callbacks directly
+    }
+
+
     # Get custom actions for footer display
     [array] GetCustomActions() {
         $self = $this
