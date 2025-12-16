@@ -1747,20 +1747,21 @@ class TaskListScreen : StandardListScreen {
         $valueColor = $this.Header.GetThemedColorInt('Foreground.Success')
         $mutedColor = $this.Header.GetThemedColorInt('Foreground.Muted')
         $bg = $this.Header.GetThemedColorInt('Background.Primary')
-        
-        $y = 3
+
+        # Position status at second line from bottom
+        $y = $this.TermHeight - 2
         $x = 0
-        
+
         # View Mode
         $viewMode = $(if ($this._viewMode) { $this._viewMode.ToUpper() } else { 'ALL' })
         $engine.WriteAt(2, $y, "View: $viewMode", $labelColor, $bg)
-        
+
         # Stats
         $statsX = 20
         $engine.WriteAt($statsX, $y, "Total: $($this._stats.Total)", $labelColor, $bg)
         $engine.WriteAt($statsX + 15, $y, "Active: $($this._stats.Active)", $valueColor, $bg)
         $engine.WriteAt($statsX + 30, $y, "Done: $($this._stats.Completed)", $labelColor, $bg)
-        
+
         if ($this._stats.Overdue -gt 0) {
             $errorColor = $this.Header.GetThemedColorInt('Foreground.Error')
             $engine.WriteAt($statsX + 45, $y, "Overdue: $($this._stats.Overdue)", $errorColor, $bg)
@@ -1769,7 +1770,7 @@ class TaskListScreen : StandardListScreen {
             $engine.WriteAt($statsX + 45, $y, "Overdue: 0", $mutedColor, $bg)
         }
 
-        # Keyboard shortcuts help (Y=4)
+        # Keyboard shortcuts help (one line below status)
         $help = "F:Filter A:Add E:Edit D:Delete Space:Toggle C:Complete X:Clone 1-6:Views H:Hide S:Sort Q:Quit"
         $engine.WriteAt(2, $y + 1, $help, $mutedColor, $bg)
     }
