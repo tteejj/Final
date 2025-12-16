@@ -190,9 +190,10 @@ class StandardListScreen : PmcScreen {
             # So List should start at Y+5 or Y+6?
             # Header is at Y=1. So Ends at 1+4=5.
             # List should start at 6.
+            # List should end before status lines at bottom (need 3 lines for status + footer)
             $listY = 6
-            $listHeight = [Math]::Max(5, $height - $listY - 1)
-            
+            $listHeight = [Math]::Max(5, $height - $listY - 3)
+
             $this.List.SetPosition(0, $listY)
             $this.List.SetSize($width, $listHeight)
         }

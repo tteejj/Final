@@ -1748,8 +1748,8 @@ class TaskListScreen : StandardListScreen {
         $mutedColor = $this.Header.GetThemedColorInt('Foreground.Muted')
         $bg = $this.Header.GetThemedColorInt('Background.Primary')
 
-        # Position status at second line from bottom
-        $y = $this.TermHeight - 2
+        # Position status at third line from bottom (above footer at TermHeight-1)
+        $y = $this.TermHeight - 3
         $x = 0
 
         # View Mode
