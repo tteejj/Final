@@ -1519,6 +1519,10 @@ class InlineEditor : PmcWidget {
 
         if ($widget) {
             $this._fieldWidgets[$fieldName] = $widget
+            Write-PmcTuiLog "InlineEditor._CreateFieldWidget: Stored widget for field '$fieldName' (type=$fieldType) - widget.Text='$($widget.Text if $widget.GetType().Name -eq 'TextInput' else 'N/A')'" "DEBUG"
+        }
+        else {
+            Write-PmcTuiLog "InlineEditor._CreateFieldWidget: WARNING - widget is null for field '$fieldName' (type=$fieldType)" "WARNING"
         }
     }
 
@@ -1538,7 +1542,9 @@ class InlineEditor : PmcWidget {
                     Write-PmcTuiLog "ERROR: Widget is null for text field '$fieldName'" "ERROR"
                     return ""
                 }
-                return $widget.GetText()
+                $value = $widget.GetText()
+                Write-PmcTuiLog "InlineEditor._GetFieldValue: text field '$fieldName' -> value='$value' (widget.Text='$($widget.Text)')" "DEBUG"
+                return $value
             }
 
             'textarea' {
