@@ -719,8 +719,8 @@ class TaskListScreen : StandardListScreen {
 
     # Override: Get edit fields for inline editor
     [array] GetEditFields($item) {
-        # Calculate field widths - MUST MATCH GetColumns() for proper alignment
-        # Account for 4 separators (2 spaces each = 8 chars total) between 5 columns
+        # CRITICAL: Match column widths from GetColumns() for proper alignment
+        # Calculate field widths using same logic as GetColumns()
         $availableWidth = $(if ($this.List -and $this.List.Width -gt 4) { $this.List.Width - 4 - 8 } else { 105 })
         $textWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.32))
         $detailsWidth = [Math]::Max(15, [Math]::Floor($availableWidth * 0.22))
@@ -729,11 +729,11 @@ class TaskListScreen : StandardListScreen {
         $tagsWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.18))
 
         return @(
-            @{ Name = 'text'; Label = ''; Type = 'text'; Value = (Get-SafeProperty $item 'text'); Required = $true; MaxLength = 200; Width = $textWidth }
-            @{ Name = 'details'; Label = ''; Type = 'text'; Value = (Get-SafeProperty $item 'details'); Width = $detailsWidth }
-            @{ Name = 'due'; Label = ''; Type = 'date'; Value = (Get-SafeProperty $item 'due'); Width = $dueWidth }
-            @{ Name = 'project'; Label = ''; Type = 'project'; Value = (Get-SafeProperty $item 'project'); Width = $projectWidth }
-            @{ Name = 'tags'; Label = ''; Type = 'tags'; Value = (Get-SafeProperty $item 'tags'); Width = $tagsWidth }
+            @{ Name = 'text'; Label = 'Task'; Type = 'text'; Value = (Get-SafeProperty $item 'text'); Required = $true; MaxLength = 200; Width = $textWidth }
+            @{ Name = 'details'; Label = 'Details'; Type = 'text'; Value = (Get-SafeProperty $item 'details'); Width = $detailsWidth }
+            @{ Name = 'due'; Label = 'Due'; Type = 'date'; Value = (Get-SafeProperty $item 'due'); Width = $dueWidth }
+            @{ Name = 'project'; Label = 'Project'; Type = 'project'; Value = (Get-SafeProperty $item 'project'); Width = $projectWidth }
+            @{ Name = 'tags'; Label = 'Tags'; Type = 'tags'; Value = (Get-SafeProperty $item 'tags'); Width = $tagsWidth }
         )
     }
 
@@ -849,9 +849,20 @@ class TaskListScreen : StandardListScreen {
         # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [OnItemUpdated] Values received: $($values | ConvertTo-Json -Compress)"
         # Write-PmcTuiLog "OnItemUpdated CALLED - item=$($item.id) values=$($values.Keys -join ',')" "INFO"
         # Write-PmcTuiLog "OnItemUpdated values: $($values | ConvertTo-Json -Compress)" "INFO"
+
+        # CRITICAL FIX: Check if this is ADD mode (item is null)
+        $isAddMode = ($null -eq $item)
+
+        if ($isAddMode) {
+            Write-PmcTuiLog "OnItemUpdated: Processing ADD (new task) mode" "INFO"
+            # Create new task instead of updating existing
+            $this.OnItemCreated($values)
+            return
+        }
+
         # MEDIUM FIX TLS-M4: Add null checks on parameters
         if ($null -eq $item) {
-            Write-PmcTuiLog "OnItemUpdated called with null item" "ERROR"
+            Write-PmcTuiLog "OnItemUpdated called with null item in EDIT mode" "ERROR"
             $this.SetStatusMessage("Cannot update task: no item selected", "error")
             return
         }
@@ -1080,14 +1091,32 @@ class TaskListScreen : StandardListScreen {
     # Virtual method called when inline editor is confirmed
     [void] OnInlineEditConfirmed([hashtable]$values) {
         # This method is called by StandardListScreen when inline editing is confirmed
-        # TaskListScreen overrides the InlineEditor callbacks, so this is rarely called
-        # But we provide it for completeness and to prevent method-not-found errors
+        # It handles BOTH add and edit modes, since EditItem only overrides the callback for edit mode
+        Write-PmcTuiLog "OnInlineEditConfirmed called - EditorMode=$($this.EditorMode) values=$($values.Keys -join ',')" "DEBUG"
+
         if ($null -eq $values) {
             Write-PmcTuiLog "OnInlineEditConfirmed called with null values" "WARNING"
             return
         }
-        Write-PmcTuiLog "OnInlineEditConfirmed called with values: $($values.Keys -join ',')" "DEBUG"
-        # No-op: TaskListScreen handles inline editor callbacks directly
+
+        # Determine if we're adding a new task or editing existing one
+        $isAddMode = ($this.EditorMode -eq 'add')
+
+        if ($isAddMode) {
+            # ADDING NEW TASK
+            Write-PmcTuiLog "OnInlineEditConfirmed: Processing ADD operation" "INFO"
+            $this.OnItemUpdated($null, $values)
+        }
+        else {
+            # EDITING EXISTING TASK
+            Write-PmcTuiLog "OnInlineEditConfirmed: Processing EDIT operation for item=$($this.CurrentEditItem.id)" "INFO"
+            if ($this.CurrentEditItem) {
+                $this.OnItemUpdated($this.CurrentEditItem, $values)
+            }
+            else {
+                Write-PmcTuiLog "OnInlineEditConfirmed: EDIT mode but no CurrentEditItem!" "ERROR"
+            }
+        }
     }
 
     # Virtual method called when inline editor is cancelled
@@ -1534,7 +1563,8 @@ class TaskListScreen : StandardListScreen {
 
     # Override EditItem to use InlineEditor horizontally at row position
     [void] EditItem($item) {
-        Write-PmcTuiLog "TaskListScreen.EditItem called - item.id=$($item.id if ($item) else 'NULL')" "INFO"
+        Write-Host "*** TASKLISTSCREEN.EDITITEM CALLED - SHOULD SEE THIS IN LOG ***" -ForegroundColor Yellow
+        Write-PmcTuiLog "TaskListScreen.EditItem called - item.id=$(if ($item) { $item.id } else { 'NULL' })" "INFO"
         if ($null -eq $item) { return }
 
         # Get row position

@@ -190,32 +190,39 @@ class ProjectListScreen : StandardListScreen {
     # Define edit fields for InlineEditor (only core fields for quick add/edit)
     # Full field editing is available via the Project Detail view (V action)
     [array] GetEditFields([object]$item) {
-        # Column widths INCLUDING the 2-space separator after each column
-        # UniversalList adds 2 spaces after each column, so field width = col.Width + 2
-        $nameWidth = 41 + 2
-        $statusWidth = 19 + 2
-        $taskCountWidth = 10 + 2
-        $descWidth = 62  # Last column, no trailing spaces
+        try {
+            # CRITICAL: Edit fields must match the full visual layout of GetColumns()
+            # GetColumns displays: name=41, status=19, task_count=10, description=62 (total 132)
+            # For inline editing, span the full width with only name and description editable
+            # Status and task_count are read-only, so we skip them and give their space to name and description
 
-        if ($null -eq $item -or $item.Count -eq 0) {
-            # New project - include all columns to match layout
-            # task_count is a spacer field (not editable)
-            return @(
-                @{ Name = 'name'; Type = 'text'; Label = ''; Required = $true; Value = ''; Width = $nameWidth }
-                @{ Name = 'status'; Type = 'text'; Label = ''; Value = $global:DEFAULT_STATUS; Width = $statusWidth }
-                @{ Name = 'task_count'; Type = 'text'; Label = ''; Value = ''; Width = $taskCountWidth; Readonly = $true }
-                @{ Name = 'description'; Type = 'text'; Label = ''; Value = ''; Width = $descWidth }
-            )
+            # Match the column widths exactly - this is what the user sees on screen
+            $nameWidth = 41
+            $statusWidth = 19    # Not editable - read-only
+            $taskCountWidth = 10 # Not editable - read-only
+            $descWidth = 62
+
+            if ($null -eq $item -or $item.Count -eq 0) {
+                # New project
+                Write-PmcTuiLog "ProjectListScreen.GetEditFields: Creating NEW project fields" "DEBUG"
+                return @(
+                    @{ Name = 'name'; Type = 'text'; Label = 'Project'; Required = $true; Value = ''; MaxLength = $global:MAX_PROJECT_NAME_LENGTH; Width = $nameWidth }
+                    @{ Name = 'description'; Type = 'text'; Label = 'Description'; Value = ''; Width = $descWidth }
+                )
+            }
+            else {
+                # Existing project
+                Write-PmcTuiLog "ProjectListScreen.GetEditFields: Editing existing project '$($item.name)'" "DEBUG"
+                return @(
+                    @{ Name = 'name'; Type = 'text'; Label = 'Project'; Required = $true; Value = (Get-SafeProperty $item 'name'); MaxLength = $global:MAX_PROJECT_NAME_LENGTH; Width = $nameWidth }
+                    @{ Name = 'description'; Type = 'text'; Label = 'Description'; Value = (Get-SafeProperty $item 'description'); Width = $descWidth }
+                )
+            }
         }
-        else {
-            # Existing project - include all columns to match layout
-            $taskCount = $(if ($item.ContainsKey('task_count')) { $item.task_count } else { '' })
-            return @(
-                @{ Name = 'name'; Type = 'text'; Label = ''; Required = $true; Value = (Get-SafeProperty $item 'name'); Width = $nameWidth }
-                @{ Name = 'status'; Type = 'text'; Label = ''; Value = (Get-SafeProperty $item 'status'); Width = $statusWidth }
-                @{ Name = 'task_count'; Type = 'text'; Label = ''; Value = $taskCount; Width = $taskCountWidth; Readonly = $true }
-                @{ Name = 'description'; Type = 'text'; Label = ''; Value = (Get-SafeProperty $item 'description'); Width = $descWidth }
-            )
+        catch {
+            Write-PmcTuiLog "ProjectListScreen.GetEditFields: ERROR - $_" "ERROR"
+            Write-PmcTuiLog "Stack: $($_.ScriptStackTrace)" "ERROR"
+            return @()
         }
     }
 

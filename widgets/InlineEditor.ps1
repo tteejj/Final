@@ -176,9 +176,17 @@ class InlineEditor : PmcWidget {
 
             # Add to fields list
             $this._fields.Add($fieldDef)
+            Write-PmcTuiLog "InlineEditor.SetFields: Added field '$($fieldDef.Name)' type=$($fieldDef.Type)" "DEBUG"
 
             # Create widget instance for this field
-            $this._CreateFieldWidget($fieldDef)
+            try {
+                $this._CreateFieldWidget($fieldDef)
+                Write-PmcTuiLog "InlineEditor.SetFields: Created widget for field '$($fieldDef.Name)'" "DEBUG"
+            }
+            catch {
+                Write-PmcTuiLog "InlineEditor.SetFields: ERROR creating widget for field '$($fieldDef.Name)': $_" "ERROR"
+                throw
+            }
         }
 
         # Add Save button as last field ONLY in vertical mode
@@ -366,7 +374,7 @@ class InlineEditor : PmcWidget {
                 # Add-Content -Path "$($env:TEMP)\pmc-widget-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [InlineEditor.HandleInput] Collapsing widget, setting _showFieldWidgets=false and NeedsClear=true"
                 $this._showFieldWidgets = $false
                 $this._datePickerMode = $false
-                $this.NeedsClear = $true  # Request full screen clear to remove widget
+                # DO NOT set NeedsClear - widget will be hidden naturally on next render
 
                 # Get value from widget and update field BEFORE collapsing
                 # Only for widgets that have IsConfirmed property (not PmcFilePicker which uses Result)
@@ -375,9 +383,18 @@ class InlineEditor : PmcWidget {
                     if ($field.Type -eq 'tags') {
                         $field.Value = $widget.GetTags()
                     }
-                    # For project, get selected project
+                    # For project, get selected project and update field value
                     elseif ($field.Type -eq 'project') {
-                        $field.Value = $widget.GetSelectedProject()
+                        $selectedProject = $widget.GetSelectedProject()
+                        $field.Value = $selectedProject
+
+                        # CRITICAL: Restore the original TextInput widget with selected value
+                        # In horizontal mode, project field uses TextInput (which was temporarily replaced by ProjectPicker)
+                        $textWidget = [TextInput]::new()
+                        $textWidget.MaxLength = 100
+                        $textWidget.Placeholder = 'Project name'
+                        $textWidget.SetText([string]$selectedProject)
+                        $this._fieldWidgets[$this._expandedFieldName] = $textWidget
                     }
 
                     $this._InvokeCallback($this.OnFieldChanged, @($this._expandedFieldName, $field.Value))
@@ -517,6 +534,7 @@ class InlineEditor : PmcWidget {
         # For all fields with widgets, allow direct typing (inline editing)
         if ($this._currentFieldIndex -ge 0 -and $this._currentFieldIndex -lt $this._fields.Count) {
             $currentField = $this._fields[$this._currentFieldIndex]
+            Write-PmcTuiLog "InlineEditor.HandleInput: Current field index=$($this._currentFieldIndex) name=$($currentField.Name) type=$($currentField.Type)" "DEBUG"
 
             # Text, Textarea, Date, Tags, and Project fields - pass input to widget (except Tab/Up/Down for navigation)
             if ($currentField.Type -eq 'text' -or $currentField.Type -eq 'textarea' -or $currentField.Type -eq 'date' -or $currentField.Type -eq 'tags' -or $currentField.Type -eq 'project') {
@@ -534,13 +552,19 @@ class InlineEditor : PmcWidget {
                 }
 
                 if (-not $this._fieldWidgets.ContainsKey($currentField.Name)) {
+                    Write-PmcTuiLog "InlineEditor.HandleInput: ERROR - Widget not found for field '$($currentField.Name)'. Available widgets: $($this._fieldWidgets.Keys -join ', ')" "ERROR"
                     return $false
                 }
 
                 $widget = $this._fieldWidgets[$currentField.Name]
+                Write-PmcTuiLog "InlineEditor.HandleInput: Routing input to widget type=$($widget.GetType().Name)" "DEBUG"
                 # Handle input for TextInput
                 if ($widget.GetType().Name -eq 'TextInput') {
+                    Write-PmcTuiLog "InlineEditor.HandleInput: Calling TextInput.HandleInput() with key=$($keyInfo.Key) char=$($keyInfo.KeyChar)" "DEBUG"
+                    $textBefore = $widget.Text
                     $handled = $widget.HandleInput($keyInfo)
+                    $textAfter = $widget.Text
+                    Write-PmcTuiLog "InlineEditor.HandleInput: TextInput.HandleInput() returned - Text before='$textBefore' after='$textAfter' handled=$handled" "DEBUG"
 
                     # CRITICAL FIX: If TextInput confirmed (Enter pressed), validate and confirm ENTIRE form
                     if ($widget.PSObject.Properties['IsConfirmed'] -and $widget.IsConfirmed) {
@@ -587,6 +611,8 @@ class InlineEditor : PmcWidget {
         # Process debounced validation first
         $this._ProcessDebouncedValidation()
 
+        Write-PmcTuiLog "InlineEditor.RenderToEngine: START X=$($this.X) Y=$($this.Y) Width=$($this.Width) Height=$($this.Height) Fields=$($this._fields.Count) CurrentFieldIndex=$($this._currentFieldIndex)" "DEBUG"
+
         # Use Z-layer for popup effect (Editor is always on top)
         # CRITICAL FIX: Base panels render at Z=20. We must be higher.
         # using 100 (Dropdown/Overlay level) ensures we are visible.
@@ -597,7 +623,7 @@ class InlineEditor : PmcWidget {
 
 
         # LAYOUT SYSTEM: Render fields horizontally
-        
+
         $currentX = $this.X
         
         # Colors (Int)
@@ -636,11 +662,15 @@ class InlineEditor : PmcWidget {
             }
             
             # Text Input Handling (Cursor logic)
-            if ($isFocused -and ($field.Type -eq 'text' -or $field.Type -eq 'textarea' -or $field.Type -eq 'date' -or $field.Type -eq 'tags' -or $field.Type -eq 'project') -and $this._fieldWidgets.ContainsKey($field.Name)) {
+            $isEditableType = ($field.Type -eq 'text' -or $field.Type -eq 'textarea' -or $field.Type -eq 'date' -or $field.Type -eq 'tags' -or $field.Type -eq 'project')
+            $hasWidget = $this._fieldWidgets.ContainsKey($field.Name)
+            Write-PmcTuiLog "InlineEditor.RenderToEngine: Field check - focused=$isFocused editableType=$isEditableType hasWidget=$hasWidget widgets=$($this._fieldWidgets.Keys -join ',')" "DEBUG"
+            if ($isFocused -and $isEditableType -and $hasWidget) {
                 $widget = $this._fieldWidgets[$field.Name]
                 if ($widget.GetType().Name -eq 'TextInput') {
                     $text = $widget.GetText()
-                    
+                    Write-PmcTuiLog "InlineEditor.RenderToEngine: TextInput widget found for field '$($field.Name)' - text='$text'" "DEBUG"
+
                     # Ensure widget width logic
                     $widget.Width = $fieldWidth + 4
                     
@@ -663,9 +693,10 @@ class InlineEditor : PmcWidget {
                     $displayText = $visibleText
                     
                     # Render Field Background & Text
+                    Write-PmcTuiLog "InlineEditor.RenderToEngine: Rendering focused text field '$($field.Name)' at X=$currentX Y=$($this.Y) width=$fieldWidth text='$displayText'" "DEBUG"
                     $engine.Fill($currentX, $this.Y, $fieldWidth, 1, ' ', $fg, $bg)
                     $engine.WriteAt($currentX, $this.Y, $displayText, $fg, $bg)
-                    
+
                     # Render Cursor
                     $relCursor = $cursorPos - $scrollOffset
                     if ($relCursor -ge 0 -and $relCursor -le $fieldWidth) {
@@ -675,6 +706,7 @@ class InlineEditor : PmcWidget {
                             $cursorChar = $displayText[$relCursor]
                         }
                         # Swap FG/BG for cursor
+                        Write-PmcTuiLog "InlineEditor.RenderToEngine: Rendering cursor at X=$($currentX + $relCursor) Y=$($this.Y) char='$cursorChar'" "DEBUG"
                         $engine.WriteAt($currentX + $relCursor, $this.Y, $cursorChar, $bg, $fg)
                     }
                 }

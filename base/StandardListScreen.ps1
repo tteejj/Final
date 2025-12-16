@@ -689,7 +689,9 @@ class StandardListScreen : PmcScreen {
         # }
 
         $this.InlineEditor.LayoutMode = "horizontal"
+        Write-PmcTuiLog "StandardListScreen.AddItem: About to SetFields with $($fields.Count) fields" "DEBUG"
         $this.InlineEditor.SetFields($fields)
+        Write-PmcTuiLog "StandardListScreen.AddItem: SetFields completed successfully" "DEBUG"
         $this.InlineEditor.Title = "Add New"
 
         # Position editor at end of list (or first row if empty)
@@ -720,6 +722,7 @@ class StandardListScreen : PmcScreen {
     #>
     [void] EditItem($item) {
         # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [EditItem] START"
+        Write-PmcTuiLog "*** STANDARDLISTSCREEN.EDITITEM CALLED (base class) - item type=$($item.GetType().Name) ***" "WARN"
         if ($null -eq $item) {
             # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [EditItem] item is null, returning"
             return
@@ -889,6 +892,20 @@ class StandardListScreen : PmcScreen {
 
         # NOTE: Don't reset IsConfirmed/IsCancelled here - HandleKeyPress checks them
         # They will be reset when SetFields() is called for the next add/edit
+    }
+
+    <#
+    .SYNOPSIS
+    Virtual method called when inline editor is confirmed
+    Subclasses should override to handle save, or rely on OnItemCreated/OnItemUpdated
+    #>
+    [void] OnInlineEditConfirmed([hashtable]$values) {
+        # Default implementation: delegate to _SaveEditedItem which calls OnItemCreated or OnItemUpdated
+        # This ensures all screens work even if they don't override this method
+        Write-PmcTuiLog "StandardListScreen.OnInlineEditConfirmed called - EditorMode=$($this.EditorMode)" "DEBUG"
+
+        # Call save which will dispatch to OnItemCreated or OnItemUpdated
+        $this._SaveEditedItem($values)
     }
 
     # === Filtering ===

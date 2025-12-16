@@ -83,7 +83,6 @@ class TimeListScreen : StandardListScreen {
             @{ Name='date_display'; Label='Date'; Width=12 },
             @{ Name='task'; Label='Task'; Width=25 },
             @{ Name='project'; Label='Project'; Width=16 },
-            @{ Name='timecode'; Label='Code'; Width=10 },
             @{ Name='id1'; Label='ID1'; Width=10 },
             @{ Name='id2'; Label='ID2'; Width=10 },
             @{ Name='duration'; Label='Duration'; Width=18 },
@@ -147,14 +146,14 @@ class TimeListScreen : StandardListScreen {
             # Create grouping key
             # TS-M3 FIX: Sanitize components to prevent pipe character breaking grouping
             $project = $(if ($entry.ContainsKey('project')) { $entry.project } else { '' })
-            $timecode = $(if ($entry.ContainsKey('timecode')) { $entry.timecode } else { '' })
+            $id1 = $(if ($entry.ContainsKey('id1')) { $entry.id1 } else { '' })
 
             # Replace pipe characters in components to prevent grouping key corruption
             $dateStrSafe = $dateStr -replace '\|', '_'
             $projectSafe = $project -replace '\|', '_'
-            $timecodeSafe = $timecode -replace '\|', '_'
+            $id1Safe = $id1 -replace '\|', '_'
 
-            $groupKey = "$dateStrSafe|$projectSafe|$timecodeSafe"
+            $groupKey = "$dateStrSafe|$projectSafe|$id1Safe"
 
             # Initialize group if needed
             if (-not $grouped.ContainsKey($groupKey)) {
@@ -162,7 +161,8 @@ class TimeListScreen : StandardListScreen {
                     date = $entry.date
                     date_display = $dateStr
                     project = $project
-                    timecode = $timecode
+                    id1 = $id1
+                    id2 = $(if ($entry.ContainsKey('id2')) { $entry.id2 } else { '' })
                     task = $(if ($entry.ContainsKey('task')) { $entry.task } else { '' })
                     notes = $(if ($entry.ContainsKey('notes')) { $entry.notes } else { '' })
                     minutes = 0
@@ -273,21 +273,24 @@ class TimeListScreen : StandardListScreen {
     [array] GetListColumns() {
         return @(
             @{ Name='date_display'; Header='Date'; Width=12 }
-            @{ Name='task'; Header='Task'; Width=30 }
-            @{ Name='project'; Header='Project'; Width=20 }
-            @{ Name='duration'; Header='Duration'; Width=10 }
-            @{ Name='notes'; Header='Notes'; Width=30 }
+            @{ Name='task'; Header='Task'; Width=25 }
+            @{ Name='project'; Header='Project'; Width=16 }
+            @{ Name='id1'; Header='ID1/Code'; Width=10 }
+            @{ Name='id2'; Header='ID2'; Width=10 }
+            @{ Name='duration'; Header='Duration'; Width=18 }
+            @{ Name='notes'; Header='Notes'; Width=40 }
         )
     }
 
     # Define edit fields for InlineEditor
     [array] GetEditFields([object]$item) {
-        # CRITICAL FIX: Use SAME widths as GetColumns() for column alignment
-        # GetColumns defines: date_display=12, task=25, project=16, timecode=10, duration=18, notes=40
+        # CRITICAL: Match GetColumns() field widths exactly
+        # GetColumns defines: date_display=12, task=25, project=16, id1=10, id2=10, duration=18, notes=40
         $dateWidth = 12      # Matches date_display column
         $taskWidth = 25      # Matches task column
         $projectWidth = 16   # Matches project column
-        $timecodeWidth = 10  # Matches timecode column
+        $id1Width = 10       # Matches id1 column
+        $id2Width = 10       # Matches id2 column
         $hoursWidth = 18     # Matches duration column
         $notesWidth = 40     # Matches notes column
 
@@ -296,10 +299,9 @@ class TimeListScreen : StandardListScreen {
             return @(
                 @{ Name='date'; Type='date'; Label='Date'; Required=$true; Value=[DateTime]::Now; Width=$dateWidth }
                 @{ Name='task'; Type='text'; Label='Task'; Value=''; Width=$taskWidth }
-                @{ Name='project'; Type='project'; Label='Project (or leave blank for timecode)'; Value=''; Width=$projectWidth }
-                @{ Name='timecode'; Type='text'; Label='Timecode (2-5 digits, or leave blank for project)'; Value=''; MaxLength=5; Width=$timecodeWidth }
-                @{ Name='id1'; Type='text'; Label='ID1'; Value=''; MaxLength=10; Width=10 }
-                @{ Name='id2'; Type='text'; Label='ID2'; Value=''; MaxLength=10; Width=10 }
+                @{ Name='project'; Type='project'; Label='Project'; Value=''; Width=$projectWidth }
+                @{ Name='id1'; Type='text'; Label='ID1'; Value=''; MaxLength=10; Width=$id1Width }
+                @{ Name='id2'; Type='text'; Label='ID2'; Value=''; MaxLength=10; Width=$id2Width }
                 # MEDIUM FIX TMS-M3 & TLS-M2: Use constant for max hours validation
                 @{ Name='hours'; Type='number'; Label='Hours'; Min=$global:MIN_HOURS_PER_ENTRY; Max=$global:MAX_HOURS_PER_ENTRY; Step=0.25; Value=$global:MIN_HOURS_PER_ENTRY; Width=$hoursWidth }
                 @{ Name='notes'; Type='text'; Label='Notes'; Value=''; Width=$notesWidth }
@@ -307,7 +309,6 @@ class TimeListScreen : StandardListScreen {
         } else {
             # Existing time entry - populate from item
             $projectVal = $(if ($item.ContainsKey('project')) { $item.project } else { '' })
-            $timecodeVal = $(if ($item.ContainsKey('timecode')) { $item.timecode } else { '' })
             $id1Val = $(if ($item.ContainsKey('id1')) { $item.id1 } else { '' })
             $id2Val = $(if ($item.ContainsKey('id2')) { $item.id2 } else { '' })
             # Convert minutes to hours for display
@@ -319,14 +320,41 @@ class TimeListScreen : StandardListScreen {
             return @(
                 @{ Name='date'; Type='date'; Label='Date'; Required=$true; Value=$item.date; Width=$dateWidth }
                 @{ Name='task'; Type='text'; Label='Task'; Value=$taskVal; Width=$taskWidth }
-                @{ Name='project'; Type='project'; Label='Project (or leave blank for timecode)'; Value=$projectVal; Width=$projectWidth }
-                @{ Name='timecode'; Type='text'; Label='Timecode (2-5 digits, or leave blank for project)'; Value=$timecodeVal; MaxLength=5; Width=$timecodeWidth }
-                @{ Name='id1'; Type='text'; Label='ID1'; Value=$id1Val; MaxLength=10; Width=10 }
-                @{ Name='id2'; Type='text'; Label='ID2'; Value=$id2Val; MaxLength=10; Width=10 }
+                @{ Name='project'; Type='project'; Label='Project'; Value=$projectVal; Width=$projectWidth }
+                @{ Name='id1'; Type='text'; Label='ID1'; Value=$id1Val; MaxLength=10; Width=$id1Width }
+                @{ Name='id2'; Type='text'; Label='ID2'; Value=$id2Val; MaxLength=10; Width=$id2Width }
                 # MEDIUM FIX TMS-M3 & TLS-M2: Use constant for max hours validation
                 @{ Name='hours'; Type='number'; Label='Hours'; Min=$global:MIN_HOURS_PER_ENTRY; Max=$global:MAX_HOURS_PER_ENTRY; Step=0.25; Value=$hoursVal; Width=$hoursWidth }
                 @{ Name='notes'; Type='text'; Label='Notes'; Value=$notesVal; Width=$notesWidth }
             )
+        }
+    }
+
+    # Helper: Get ID1/ID2 values from project if project is selected
+    hidden [void] PopulateIDsFromProject([hashtable]$timeData) {
+        if ($timeData.ContainsKey('project') -and -not [string]::IsNullOrWhiteSpace($timeData.project)) {
+            # Project is selected - try to get ID1/ID2 from it
+            $project = $this.Store.GetProject($timeData.project)
+            if ($project) {
+                Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Found project '$($timeData.project)'" "DEBUG"
+
+                # If project has ID1, use it (unless user already entered a value)
+                if (-not [string]::IsNullOrWhiteSpace($project.ID1) -and [string]::IsNullOrWhiteSpace($timeData.id1)) {
+                    $timeData.id1 = $project.ID1
+                    Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id1 from project: '$($timeData.id1)'" "DEBUG"
+                }
+
+                # If project has ID2, use it (unless user already entered a value)
+                if (-not [string]::IsNullOrWhiteSpace($project.ID2) -and [string]::IsNullOrWhiteSpace($timeData.id2)) {
+                    $timeData.id2 = $project.ID2
+                    Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id2 from project: '$($timeData.id2)'" "DEBUG"
+                }
+            } else {
+                Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Project '$($timeData.project)' not found" "WARNING"
+            }
+        } else {
+            # No project selected - clear ID1/ID2 if they should come from project
+            Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: No project selected, keeping user-entered ID1/ID2 values" "DEBUG"
         }
     }
 
@@ -392,13 +420,17 @@ class TimeListScreen : StandardListScreen {
                 date = $dateValue
                 task = $(if ($values.ContainsKey('task')) { $values.task } else { '' })
                 project = $(if ($values.ContainsKey('project')) { $values.project } else { '' })
-                timecode = $(if ($values.ContainsKey('timecode')) { $values.timecode } else { '' })
                 id1 = $(if ($values.ContainsKey('id1')) { $values.id1 } else { '' })
                 id2 = $(if ($values.ContainsKey('id2')) { $values.id2 } else { '' })
                 minutes = $minutes
                 notes = $(if ($values.ContainsKey('notes')) { $values.notes } else { '' })
                 created = [DateTime]::Now
             }
+
+            # Populate ID1/ID2 from project if project is selected and IDs are empty
+            $this.PopulateIDsFromProject($timeData)
+
+            Write-PmcTuiLog "TimeListScreen.OnItemCreated: About to save time entry - id1='$($timeData.id1)' id2='$($timeData.id2)'" "DEBUG"
             Write-PmcTuiLog "TimeListScreen.OnItemCreated: Calling Store.AddTimeLog..." "DEBUG"
 
             $success = $this.Store.AddTimeLog($timeData)
@@ -466,15 +498,20 @@ class TimeListScreen : StandardListScreen {
                 date = $dateValue
                 task = $(if ($values.ContainsKey('task')) { $values.task } else { '' })
                 project = $(if ($values.ContainsKey('project')) { $values.project } else { '' })
-                timecode = $(if ($values.ContainsKey('timecode')) { $values.timecode } else { '' })
                 id1 = $(if ($values.ContainsKey('id1')) { $values.id1 } else { '' })
                 id2 = $(if ($values.ContainsKey('id2')) { $values.id2 } else { '' })
                 minutes = $minutes
                 notes = $(if ($values.ContainsKey('notes')) { $values.notes } else { '' })
             }
 
+            # Populate ID1/ID2 from project if project is selected and IDs are empty
+            $this.PopulateIDsFromProject($changes)
+
+            Write-PmcTuiLog "TimeListScreen.OnItemUpdated: About to save changes - id1='$($changes.id1)' id2='$($changes.id2)'" "DEBUG"
+
             # Update time log via TaskStore
             if ($item.ContainsKey('id') -and -not [string]::IsNullOrWhiteSpace($item.id)) {
+                Write-PmcTuiLog "TimeListScreen.OnItemUpdated: Calling Store.UpdateTimeLog with id=$($item.id)" "DEBUG"
                 $success = $this.Store.UpdateTimeLog($item.id, $changes)
                 if ($success) {
                     $this.SetStatusMessage("Time entry updated", "success")
@@ -518,7 +555,23 @@ class TimeListScreen : StandardListScreen {
             return
         }
         Write-PmcTuiLog "TimeListScreen.OnInlineEditConfirmed called with values: $($values.Keys -join ',')" "DEBUG"
-        # No-op: TimeListScreen handles inline editor callbacks directly through OnItemCreated/OnItemUpdated
+
+        # Route to OnItemCreated or OnItemUpdated based on mode
+        $isAddMode = ($this.EditorMode -eq 'add')
+
+        if ($isAddMode) {
+            Write-PmcTuiLog "OnInlineEditConfirmed: Processing ADD mode for time entry" "INFO"
+            $this.OnItemCreated($values)
+        }
+        else {
+            Write-PmcTuiLog "OnInlineEditConfirmed: Processing EDIT mode for time entry" "INFO"
+            if ($this.CurrentEditItem) {
+                $this.OnItemUpdated($this.CurrentEditItem, $values)
+            }
+            else {
+                Write-PmcTuiLog "OnInlineEditConfirmed: EDIT mode but no CurrentEditItem!" "ERROR"
+            }
+        }
     }
 
     # Virtual method called when inline editor is cancelled
