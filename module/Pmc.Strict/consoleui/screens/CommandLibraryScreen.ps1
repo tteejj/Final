@@ -54,6 +54,14 @@ class CommandLibraryScreen : StandardListScreen {
         # Configure header
         $this.Header.SetBreadcrumb(@("Home", "Tools", "Command Library"))
 
+        # Configure footer shortcuts
+        $this.Footer.ClearShortcuts()
+        $this.Footer.AddShortcut("A", "Add")
+        $this.Footer.AddShortcut("E", "Edit")
+        $this.Footer.AddShortcut("D", "Delete")
+        $this.Footer.AddShortcut("Enter/C", "Copy")
+        $this.Footer.AddShortcut("Esc", "Back")
+
         # Setup event handlers
         $self = $this
         $this._commandService.OnCommandsChanged = {
@@ -177,29 +185,33 @@ class CommandLibraryScreen : StandardListScreen {
 
     # Define edit fields for InlineEditor
     [array] GetEditFields([object]$item) {
-        # Calculate field widths - MUST MATCH GetColumns() for proper alignment
-        # Account for 4 separators (2 spaces each = 8 chars total) between 5 columns
+        # Calculate field widths - MUST MATCH GetColumns() exactly
         $availableWidth = $(if ($this.List -and $this.List.Width -gt 4) { $this.List.Width - 4 - 8 } else { 103 })
         $nameWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.24))
         $categoryWidth = [Math]::Max(12, [Math]::Floor($availableWidth * 0.15))
-        # Skip uses and last_used (not editable)
+        $usesWidth = 8  # Fixed narrow column - display only
+        $lastUsedWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.12))
         $descWidth = [Math]::Max(30, [Math]::Floor($availableWidth * 0.44))
 
         if ($null -eq $item -or $item.Count -eq 0) {
-            # New command - empty fields
+            # New command - empty fields (5 fields to match 5 columns)
             return @(
                 @{ Name='name'; Type='text'; Label=''; Required=$true; Value=''; Width=$nameWidth }
                 @{ Name='category'; Type='text'; Label=''; Value='General'; Width=$categoryWidth }
-                @{ Name='command_text'; Type='text'; Label=''; Required=$true; Value=''; MaxLength=500; Width=$descWidth }
+                @{ Name='usage_count'; Type='text'; Label=''; Value='0'; Width=$usesWidth; ReadOnly=$true }
+                @{ Name='last_used'; Type='text'; Label=''; Value='Never'; Width=$lastUsedWidth; ReadOnly=$true }
                 @{ Name='description'; Type='text'; Label=''; Value=''; Width=$descWidth }
             )
         } else {
-            # Existing command - populate from item
+            # Existing command - populate from item (5 fields to match 5 columns)
+            $uses = $(if ($item.usage_count) { $item.usage_count.ToString() } else { '0' })
+            $lastUsed = $(if ($item.last_used) { $item.last_used } else { 'Never' })
             return @(
                 @{ Name='name'; Type='text'; Label=''; Required=$true; Value=$item.name; Width=$nameWidth }
                 @{ Name='category'; Type='text'; Label=''; Value=$item.category; Width=$categoryWidth }
-                @{ Name='command_text'; Type='text'; Label=''; Required=$true; Value=$item.command_text; MaxLength=500; Width=$descWidth }
-                @{ Name='description'; Type='text'; Label=''; Value=$item.description; Width=$descWidth }
+                @{ Name='usage_count'; Type='text'; Label=''; Value=$uses; Width=$usesWidth; ReadOnly=$true }
+                @{ Name='last_used'; Type='text'; Label=''; Value=$lastUsed; Width=$lastUsedWidth; ReadOnly=$true }
+                @{ Name='description'; Type='text'; Label=''; Value=$item.command_text; Width=$descWidth }
             )
         }
     }
@@ -213,7 +225,8 @@ class CommandLibraryScreen : StandardListScreen {
                 return
             }
 
-            if (-not $values.ContainsKey('command_text') -or [string]::IsNullOrWhiteSpace($values.command_text)) {
+            # description field contains the command text (column alignment)
+            if (-not $values.ContainsKey('description') -or [string]::IsNullOrWhiteSpace($values.description)) {
                 $this.SetStatusMessage("Command text is required", "error")
                 return
             }
@@ -225,9 +238,10 @@ class CommandLibraryScreen : StandardListScreen {
             })
 
             $name = $values.name
-            $commandText = $values.command_text
+            # description field IS the command text (for column alignment)
+            $commandText = $values.description
             $category = $(if ($values.ContainsKey('category')) { $values.category } else { '' })
-            $description = $(if ($values.ContainsKey('description')) { $values.description } else { '' })
+            $description = ''  # We don't have a separate description field
 
             $this._commandService.CreateCommand($name, $commandText, $category, $description, $tags)
 
@@ -252,8 +266,8 @@ class CommandLibraryScreen : StandardListScreen {
             $changes = @{
                 name = $(if ($values.ContainsKey('name')) { $values.name } else { '' })
                 category = $(if ($values.ContainsKey('category')) { $values.category } else { '' })
-                command_text = $(if ($values.ContainsKey('command_text')) { $values.command_text } else { '' })
-                description = $(if ($values.ContainsKey('description')) { $values.description } else { '' })
+                command_text = $(if ($values.ContainsKey('description')) { $values.description } else { '' })
+                description = ''  # description field IS command_text
                 tags = $tags
             }
 

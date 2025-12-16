@@ -396,6 +396,13 @@ function Start-PmcTUI {
                     'Foreground.Error'        = @{ Type = 'Solid'; Color = $p['Error'] }
                     'Foreground.Success'      = @{ Type = 'Solid'; Color = $p['Success'] }
                     'Border.Widget'           = @{ Type = 'Solid'; Color = $p['Border'] }
+                    'Background.TabActive'    = @{ Type = 'Solid'; Color = $p['Primary'] }
+                    'Background.TabInactive'  = @{ Type = 'Solid'; Color = '#333333' }
+                    'Foreground.TabActive'    = @{ Type = 'Solid'; Color = '#FFFFFF' }
+                    'Foreground.TabInactive'  = @{ Type = 'Solid'; Color = $p['Muted'] }
+                    'Background.Primary'      = @{ Type = 'Solid'; Color = '#000000' }
+                    'Background.Widget'       = @{ Type = 'Solid'; Color = '#1a1a1a' }
+                    'Foreground.Primary'      = @{ Type = 'Solid'; Color = $p['Text'] }
                 }
 
                 # Load theme config with palette AND properties

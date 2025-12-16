@@ -252,9 +252,9 @@ class StandardListScreen : PmcScreen {
                     $editY = $this.List.Y + 3 + $relativeIndex
                     
                     # Update Editor Geometry to match row
-                    $this.InlineEditor.X = $this.List.X + 1  # Inside border
+                    $this.InlineEditor.X = $this.List.X + 2  # Inside border
                     $this.InlineEditor.Y = $editY
-                    $this.InlineEditor.Width = $this.List.Width - 2 # Inside borders
+                    $this.InlineEditor.Width = $this.List.Width - 4 # Inside borders
                     $this.InlineEditor.Height = 1 # Single row mode
                     
                     # Force layout recalc

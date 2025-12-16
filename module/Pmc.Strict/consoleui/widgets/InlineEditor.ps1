@@ -1020,9 +1020,10 @@ class InlineEditor : PmcWidget {
                 $sb.Append($reset)
             }
 
-            # Add separator spacing to match column spacing
-            $sb.Append("    ")
-            $currentX += $fieldWidth + 6
+            # CRITICAL FIX: Match UniversalList column spacing exactly
+            # UniversalList uses: currentX += colWidth (no extra padding)
+            # We must match to avoid cumulative column misalignment in Edit mode
+            $currentX += $fieldWidth
         }
 
         # CRITICAL FIX: Reset colors THEN clear to EOL (ensures no background bleeds into padding)

@@ -346,6 +346,7 @@ class TabPanel : PmcWidget {
         $selectText = $this.GetThemedColorInt('Foreground.RowSelected')
         $bg = $this.GetThemedColorInt('Background.Primary') # Default background
 
+
         # 1. Render Tab Bar (Top Row)
         $currentX = $this.X
         Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabPanel] Rendering tab bar at Y=$($this.Y) with $($this.Tabs.Count) tabs"
@@ -361,7 +362,7 @@ class TabPanel : PmcWidget {
             $drawBg = $(if ($isActive) { $tabActiveBg } else { $tabInactiveBg })
             $drawFg = $(if ($isActive) { $tabActiveText } else { $tabInactiveText })
 
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabPanel] Tab $i: label='$label' at X=$currentX Y=$($this.Y) active=$isActive"
+            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabPanel] Tab ${i}: label='$label' at X=$currentX Y=$($this.Y) active=$isActive"
             $engine.WriteAt($currentX, $this.Y, " $label ", $drawFg, $drawBg)
             $currentX += $tabWidth
         }

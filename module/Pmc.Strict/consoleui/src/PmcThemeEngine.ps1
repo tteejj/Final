@@ -437,6 +437,13 @@ class PmcThemeEngine {
             'Foreground.Error'        = @{ Type = 'Solid'; Color = $errorHex }
             'Foreground.Success'      = @{ Type = 'Solid'; Color = $successHex }
             'Border.Widget'           = @{ Type = 'Solid'; Color = $borderHex }
+            'Background.TabActive'    = @{ Type = 'Solid'; Color = $primaryHex }
+            'Background.TabInactive'  = @{ Type = 'Solid'; Color = '#333333' }
+            'Foreground.TabActive'    = @{ Type = 'Solid'; Color = '#FFFFFF' }
+            'Foreground.TabInactive'  = @{ Type = 'Solid'; Color = $mutedHex }
+            'Background.Primary'      = @{ Type = 'Solid'; Color = '#000000' }
+            'Background.Widget'       = @{ Type = 'Solid'; Color = '#1a1a1a' }
+            'Foreground.Primary'      = @{ Type = 'Solid'; Color = $textHex }
         }
     }
 

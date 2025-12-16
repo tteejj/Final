@@ -68,7 +68,7 @@ class PmcLayoutManager {
         # Main content area (fills available space)
         'Content' = @{
             X = '2%'
-            Y = 7
+            Y = 8
             Width = '96%'
             Height = 'FILL'  # Calculated: termHeight - Y - FooterHeight - StatusBarHeight
         }
@@ -92,7 +92,7 @@ class PmcLayoutManager {
         # Sidebar (optional, for split layouts)
         'Sidebar' = @{
             X = '2%'
-            Y = 7
+            Y = 8
             Width = '30%'
             Height = 'FILL'
         }
@@ -100,7 +100,7 @@ class PmcLayoutManager {
         # Main area when sidebar present
         'MainWithSidebar' = @{
             X = '33%'
-            Y = 7
+            Y = 8
             Width = '65%'
             Height = 'FILL'
         }

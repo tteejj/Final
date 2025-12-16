@@ -118,7 +118,7 @@ class TabbedScreen : PmcScreen {
         $contentHeight = $this.TermHeight - 9  # header(3) + footer(2) + menu(1) + TabPanel tabs(2) + padding(1)
 
         $this.TabPanel.X = 2
-        $this.TabPanel.Y = 7  # After header separator at Y=6
+        $this.TabPanel.Y = 8  # After header separator at Y=7
         $this.TabPanel.Width = $this.TermWidth - 4
         $this.TabPanel.Height = $contentHeight
 
