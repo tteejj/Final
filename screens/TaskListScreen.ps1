@@ -1534,6 +1534,7 @@ class TaskListScreen : StandardListScreen {
 
     # Override EditItem to use InlineEditor horizontally at row position
     [void] EditItem($item) {
+        Write-PmcTuiLog "TaskListScreen.EditItem called - item.id=$($item.id if ($item) else 'NULL')" "INFO"
         if ($null -eq $item) { return }
 
         # Get row position
@@ -1585,6 +1586,7 @@ class TaskListScreen : StandardListScreen {
         # Set up save callback
         $self = $this
         $taskId = $item.id
+        Write-PmcTuiLog "TaskListScreen.EditItem: Setting OnConfirmed callback for taskId=$taskId" "INFO"
         $this.InlineEditor.OnConfirmed = {
             param($values)
             Write-PmcTuiLog "InlineEditor.OnConfirmed FIRED - taskId=$taskId values=$($values.Keys -join ',')" "INFO"
