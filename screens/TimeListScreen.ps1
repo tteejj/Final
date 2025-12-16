@@ -51,6 +51,9 @@ class TimeListScreen : StandardListScreen {
         $this.AllowDelete = $true
         $this.AllowFilter = $true
 
+        # Configure inline editor layout mode for horizontal (inline) editing
+        $this.InlineEditor.LayoutMode = 'horizontal'
+
         # Configure header
         $this.Header.SetBreadcrumb(@("Home", "Time Tracking"))
 

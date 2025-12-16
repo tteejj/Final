@@ -63,6 +63,9 @@ class ProjectListScreen : StandardListScreen {
         $this.AllowDelete = $true
         $this.AllowFilter = $true
 
+        # Configure inline editor layout mode for horizontal (inline) editing
+        $this.InlineEditor.LayoutMode = 'horizontal'
+
         # Configure header
         if ($this.Header) {
             $this.Header.SetBreadcrumb(@("Home", "Projects"))
