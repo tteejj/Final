@@ -257,9 +257,8 @@ class KanbanScreenV2 : PmcScreen {
         $reset = "`e[0m"
 
         # Calculate dynamic column widths based on terminal width
-        # Minimum 120 chars total, minimum 40 chars per column
-        $minTotalWidth = 120
-        $actualWidth = [Math]::Max($minTotalWidth, $contentRect.Width)
+        # Use actual available width, no minimum requirement
+        $actualWidth = $contentRect.Width
 
         # 3 columns with spacing between them
         # Each column: left border (1) + content (width) + right border (1) = width+2

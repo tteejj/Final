@@ -439,10 +439,11 @@ class StandardListScreen : PmcScreen {
         # Initialize InlineEditor
         $this.InlineEditor = [InlineEditor]::new()
         # Use properties, not methods (SetPosition/SetSize don't exist)
-        $this.InlineEditor.X = 10
-        $this.InlineEditor.Y = 5
-        $this.InlineEditor.Width = 70
-        $this.InlineEditor.Height = 25
+        $termSize = $this._GetTerminalSize()
+        $this.InlineEditor.X = [Math]::Max(1, [Math]::Floor(($termSize.Width - 70) / 2))
+        $this.InlineEditor.Y = [Math]::Max(3, [Math]::Floor(($termSize.Height - 15) / 2))
+        $this.InlineEditor.Width = [Math]::Min(70, $termSize.Width - 2)
+        $this.InlineEditor.Height = [Math]::Min(15, $termSize.Height - 4)
         # Capture $this explicitly to avoid wrong screen receiving callback
         $thisScreen = $this
         $this.InlineEditor.OnConfirmed = {

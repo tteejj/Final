@@ -137,10 +137,11 @@ class TabbedScreen : PmcScreen {
         # Initialize InlineEditor (for editing fields)
         $this.InlineEditor = [InlineEditor]::new()
         $this.InlineEditor.LayoutMode = "vertical"  # Popup mode
-        $this.InlineEditor.X = 10
-        $this.InlineEditor.Y = 8
-        $this.InlineEditor.Width = 60
-        $this.InlineEditor.Height = 12
+        $termSize = $this._GetTerminalSize()
+        $this.InlineEditor.X = [Math]::Max(1, [Math]::Floor(($termSize.Width - 60) / 2))
+        $this.InlineEditor.Y = [Math]::Max(3, [Math]::Floor(($termSize.Height - 12) / 2))
+        $this.InlineEditor.Width = [Math]::Min(60, $termSize.Width - 2)
+        $this.InlineEditor.Height = [Math]::Min(12, $termSize.Height - 4)
 
         # Wire up InlineEditor events
         $this.InlineEditor.OnConfirmed = {
@@ -480,14 +481,9 @@ class TabbedScreen : PmcScreen {
     # === Helper Methods ===
 
     hidden [hashtable] _GetTerminalSize() {
-        try {
-            $width = [Console]::WindowWidth
-            $height = [Console]::WindowHeight
-            return @{ Width = $width; Height = $height }
-        }
-        catch {
-            return @{ Width = 120; Height = 40 }
-        }
+        $width = [Console]::WindowWidth
+        $height = [Console]::WindowHeight
+        return @{ Width = $width; Height = $height }
     }
 }
 

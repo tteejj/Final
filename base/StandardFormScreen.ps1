@@ -400,15 +400,9 @@ class StandardFormScreen : PmcScreen {
     Hashtable with Width and Height properties
     #>
     hidden [hashtable] _GetTerminalSize() {
-        try {
-            $width = [Console]::WindowWidth
-            $height = [Console]::WindowHeight
-            return @{ Width = $width; Height = $height }
-        }
-        catch {
-            # Default size if console not available
-            return @{ Width = 120; Height = 40 }
-        }
+        $width = [Console]::WindowWidth
+        $height = [Console]::WindowHeight
+        return @{ Width = $width; Height = $height }
     }
 
     # === Utility Methods for Subclasses ===
