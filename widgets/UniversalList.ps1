@@ -202,13 +202,11 @@ class UniversalList : PmcWidget {
 
     # === Constructor ===
     UniversalList() : base("UniversalList") {
-        Add-Content -Path "$(Join-Path ([System.IO.Path]::GetTempPath()) 'pmc_debug.txt')" -Value "[$(Get-Date)] UniversalList: Constructor START"
         $this.Width = 120
         $this.Height = 35
         $this.CanFocus = $true
 
         # Initialize filter panel
-        Add-Content -Path "$(Join-Path ([System.IO.Path]::GetTempPath()) 'pmc_debug.txt')" -Value "[$(Get-Date)] UniversalList: Creating FilterPanel"
         $this._filterPanel = [FilterPanel]::new()
         $this._filterPanel.SetPosition($this.X + 10, $this.Y + 5)
         $this._filterPanel.SetSize(60, 12)
@@ -872,7 +870,9 @@ class UniversalList : PmcWidget {
             try {
                 $engine.WriteAt($this.X + 2, $this.Y, " $($this.Title) ", $primaryColor, $rowBg)
             }
-            catch {}
+            catch {
+                # Title write failure is non-critical
+            }
         }
 
 
@@ -980,7 +980,9 @@ class UniversalList : PmcWidget {
                     try {
                         $val = & $col.Format $item $null
                     }
-                    catch { }
+                    catch {
+                        # Format callback failed - use raw value
+                    }
                 }
                 
                 $strVal = $(if ($val -ne $null) { $val.ToString() } else { "" })
@@ -1004,7 +1006,9 @@ class UniversalList : PmcWidget {
             $countText = "($($itemCount) items)"
             $engine.WriteAt($this.X + $this.Width - $countText.Length - 2, $this.Y, $countText, $mutedColor, $rowBg)
         }
-        catch {}
+        catch {
+            # Item count display is non-critical
+        }
         
         # 6. Inline Editor (Delegate)
         if ($this._showInlineEditor -and $this._inlineEditor) {

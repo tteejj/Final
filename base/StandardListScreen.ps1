@@ -1234,7 +1234,15 @@ class StandardListScreen : PmcScreen {
     Hashtable with Width and Height properties
     #>
     hidden [hashtable] _GetTerminalSize() {
-        # FORCED DEBUG SIZE
-        return @{ Width = 100; Height = 30 }
+        try {
+            $width = [Console]::WindowWidth
+            $height = [Console]::WindowHeight
+        }
+        catch {
+            # Fallback to defaults if Console methods fail
+            $width = 80
+            $height = 24
+        }
+        return @{ Width = $width; Height = $height }
     }
 }

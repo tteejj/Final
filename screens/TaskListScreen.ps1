@@ -179,7 +179,6 @@ class TaskListScreen : StandardListScreen {
         if ($this.AllowEdit) {
             # if ($global:PmcTuiLogFile) {
             #     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [DEBUG] TaskListScreen: Re-registering Edit action"
-            # }
             $self = $this
             $editAction = {
                 $selectedItem = $self.List.GetSelectedItem()
@@ -192,7 +191,6 @@ class TaskListScreen : StandardListScreen {
             $this.List.AddAction('e', 'Edit', $editAction)
             # if ($global:PmcTuiLogFile) {
             #     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [DEBUG] TaskListScreen: Edit action registered"
-            # }
         }
 
         # CRITICAL: Set GetIsInEditMode callback so UniversalList doesn't render row highlight in edit mode
@@ -243,7 +241,6 @@ class TaskListScreen : StandardListScreen {
                 $global:PmcContainer = [ServiceContainer]::new()
 
                 # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] TaskListScreen: Created new ServiceContainer"
-                # }
             }
 
             # Load manifest with container

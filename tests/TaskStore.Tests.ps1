@@ -266,7 +266,6 @@ Describe "TaskStore - Task Validation" {
     # It "Rejects whitespace-only text" {
     #     $result = $script:store.AddTask(@{ text = "   " })
     #     $result | Should -Be $false
-    # }
 
     It "Accepts task with only text" {
         $result = $script:store.AddTask(@{ text = "Minimal task" })
