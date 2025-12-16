@@ -1,0 +1,78 @@
+[2025-12-16 11:29:12.814] [INFO] Loading PMC module...
+[2025-12-16 11:29:13.616] [INFO] PMC module loaded
+[2025-12-16 11:29:13.618] [INFO] Loading dependencies (FieldSchemas, etc.)...
+[2025-12-16 11:29:13.696] [INFO] Dependencies loaded
+[2025-12-16 11:29:13.697] [INFO] Loading SpeedTUI framework...
+[2025-12-16 11:29:13.862] [INFO] SpeedTUI framework loaded
+[2025-12-16 11:29:13.863] [INFO] Loading PraxisVT...
+[2025-12-16 11:29:13.864] [INFO] PraxisVT loaded
+[2025-12-16 11:29:13.865] [INFO] Loading core dependencies...
+[2025-12-16 11:29:13.906] [INFO] Core dependencies loaded
+[2025-12-16 11:29:13.906] [INFO] Loading widget base classes...
+[2025-12-16 11:29:13.953] [INFO] Widget base classes loaded
+[2025-12-16 11:29:13.954] [INFO] Loading services...
+[2025-12-16 11:29:14.021] [INFO] Services loaded
+[2025-12-16 11:29:14.022] [INFO] Loading helpers...
+[2025-12-16 11:29:14.795] [INFO] Helpers loaded
+[2025-12-16 11:29:14.796] [INFO] Loading widgets...
+[2025-12-16 11:29:14.986] [INFO] Widgets loaded
+[2025-12-16 11:29:14.987] [INFO] Loading screen base class...
+[2025-12-16 11:29:14.994] [INFO] Screen base class loaded
+[2025-12-16 11:29:14.995] [INFO] Loading HelpViewScreen (needed by base classes)...
+[2025-12-16 11:29:14.999] [INFO] HelpViewScreen loaded
+[2025-12-16 11:29:15.000] [INFO] Loading base classes...
+[2025-12-16 11:29:15.041] [INFO] Base classes loaded
+[2025-12-16 11:29:15.042] [INFO] Loading ServiceContainer (needed by screens)...
+[2025-12-16 11:29:15.085] [INFO] ServiceContainer loaded
+[2025-12-16 11:29:15.090] [INFO] Loading remaining screens...
+[2025-12-16 11:29:15.168] [ERROR] Failed to load screens: At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectListScreen.ps1:753 char:36
++     hidden [void] EnsureFilePicker() {
++                                    ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectListScreen.ps1:761 char:12
++     [void] ImportFromExcel() {
++            ~~~~~~~~~~~~~~~
+Unexpected token 'ImportFromExcel' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectListScreen.ps1:761 char:28
++     [void] ImportFromExcel() {
++                            ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectListScreen.ps1:777 char:12
++     [void] ToggleProjectArchive([object]$project) {
++            ~~~~~~~~~~~~~~~~~~~~
+Unexpected token 'ToggleProjectArchive' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectListScreen.ps1:792 char:12
++     [void] OpenProjectFolder([object]$project) {
++            ~~~~~~~~~~~~~~~~~
+Unexpected token 'OpenProjectFolder' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectListScreen.ps1:840 char:13
++     [array] GetCustomActions() {
++             ~~~~~~~~~~~~~~~~
+Unexpected token 'GetCustomActions' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectListScreen.ps1:840 char:30
++     [array] GetCustomActions() {
++                              ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectListScreen.ps1:915 char:12
++     [void] RenderContentToEngine([object]$engine) {
++            ~~~~~~~~~~~~~~~~~~~~~
+Unexpected token 'RenderContentToEngine' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectListScreen.ps1:926 char:14
++     [string] RenderContent() { return "" }
++              ~~~~~~~~~~~~~
+Unexpected token 'RenderContent' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectListScreen.ps1:926 char:28
++     [string] RenderContent() { return "" }
++                            ~
+An expression was expected after '('.
+
+Not all parse errors were reported.  Correct the reported errors and try again.

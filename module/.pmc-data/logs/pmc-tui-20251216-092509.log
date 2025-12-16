@@ -1,0 +1,433 @@
+[2025-12-16 09:25:09.729] [INFO] Loading PMC module...
+[2025-12-16 09:25:11.053] [INFO] PMC module loaded
+[2025-12-16 09:25:11.057] [INFO] Loading dependencies (FieldSchemas, etc.)...
+[2025-12-16 09:25:11.177] [INFO] Dependencies loaded
+[2025-12-16 09:25:11.179] [INFO] Loading SpeedTUI framework...
+[2025-12-16 09:25:11.516] [INFO] SpeedTUI framework loaded
+[2025-12-16 09:25:11.518] [INFO] Loading PraxisVT...
+[2025-12-16 09:25:11.520] [INFO] PraxisVT loaded
+[2025-12-16 09:25:11.521] [INFO] Loading core dependencies...
+[2025-12-16 09:25:11.563] [INFO] Core dependencies loaded
+[2025-12-16 09:25:11.564] [INFO] Loading widget base classes...
+[2025-12-16 09:25:11.625] [INFO] Widget base classes loaded
+[2025-12-16 09:25:11.627] [INFO] Loading services...
+[2025-12-16 09:25:11.746] [INFO] Services loaded
+[2025-12-16 09:25:11.747] [INFO] Loading helpers...
+[2025-12-16 09:25:12.758] [INFO] Helpers loaded
+[2025-12-16 09:25:12.760] [INFO] Loading widgets...
+[2025-12-16 09:25:13.175] [INFO] Widgets loaded
+[2025-12-16 09:25:13.176] [INFO] Loading screen base class...
+[2025-12-16 09:25:13.190] [INFO] Screen base class loaded
+[2025-12-16 09:25:13.192] [INFO] Loading HelpViewScreen (needed by base classes)...
+[2025-12-16 09:25:13.199] [INFO] HelpViewScreen loaded
+[2025-12-16 09:25:13.200] [INFO] Loading base classes...
+[2025-12-16 09:25:13.255] [INFO] Base classes loaded
+[2025-12-16 09:25:13.256] [INFO] Loading ServiceContainer (needed by screens)...
+[2025-12-16 09:25:13.262] [INFO] ServiceContainer loaded
+[2025-12-16 09:25:13.263] [INFO] Loading remaining screens...
+[2025-12-16 09:25:13.368] [INFO] Remaining screens loaded
+[2025-12-16 09:25:13.369] [INFO] Loading PmcApplication...
+[2025-12-16 09:25:13.384] [INFO] PmcApplication loaded
+[2025-12-16 09:25:13.385] [INFO] All components loaded successfully
+[2025-12-16 09:25:13.405] [INFO] Starting PMC TUI with screen: TaskList
+[2025-12-16 09:25:13.414] [INFO] Cleared stale PmcSharedMenuBar and MenuRegistry singleton
+[2025-12-16 09:25:13.416] [INFO] Creating ServiceContainer...
+[2025-12-16 09:25:13.432] [INFO] ServiceContainer created
+[2025-12-16 09:25:13.434] [INFO] Registering Theme service...
+[2025-12-16 09:25:13.456] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-16 09:25:13.459] [INFO] Registering ThemeManager...
+[2025-12-16 09:25:13.460] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-16 09:25:13.461] [INFO] Registering Config service...
+[2025-12-16 09:25:13.462] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-16 09:25:13.463] [INFO] Registering TaskStore service...
+[2025-12-16 09:25:13.464] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-16 09:25:13.465] [INFO] Registering MenuRegistry service...
+[2025-12-16 09:25:13.466] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-16 09:25:13.467] [INFO] Registering Application service...
+[2025-12-16 09:25:13.468] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-16 09:25:13.469] [INFO] Registering CommandService...
+[2025-12-16 09:25:13.470] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-16 09:25:13.477] [INFO] Registering ChecklistService...
+[2025-12-16 09:25:13.478] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-16 09:25:13.479] [INFO] Registering NoteService...
+[2025-12-16 09:25:13.480] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-16 09:25:13.480] [INFO] Registering ExcelMappingService...
+[2025-12-16 09:25:13.481] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-16 09:25:13.482] [INFO] Registering PreferencesService...
+[2025-12-16 09:25:13.483] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-16 09:25:13.484] [INFO] Registering screen factories...
+[2025-12-16 09:25:13.485] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-16 09:25:13.486] [INFO] Resolving Application from container...
+[2025-12-16 09:25:13.505] ServiceContainer: Resolving 'Application'...
+[2025-12-16 09:25:13.507] [INFO] Resolving Application...
+[2025-12-16 09:25:13.508] ServiceContainer: Resolving 'Theme'...
+[2025-12-16 09:25:13.518] [INFO] Resolving Theme: Calling Initialize-PmcThemeSystem...
+[2025-12-16 09:25:13.533] [INFO] Theme resolved: #33aaff
+[2025-12-16 09:25:13.535] [INFO] Loading PmcThemeEngine...
+[2025-12-16 09:25:13.605] [DEBUG] Palette [Header] -> #228844 (R=34 G=136 B=68)
+[2025-12-16 09:25:13.606] [DEBUG] Palette [Warning] -> #7FCA14 (R=127 G=202 B=20)
+[2025-12-16 09:25:13.607] [DEBUG] Palette [Primary] -> #228844 (R=34 G=136 B=68)
+[2025-12-16 09:25:13.608] [DEBUG] Palette [Label] -> #5C8F6D (R=92 G=143 B=109)
+[2025-12-16 09:25:13.626] [DEBUG] Palette [Bright] -> #2CB158 (R=44 G=177 B=88)
+[2025-12-16 09:25:13.627] [DEBUG] Palette [Status] -> #5C8F6D (R=92 G=143 B=109)
+[2025-12-16 09:25:13.628] [DEBUG] Palette [Success] -> #2CB158 (R=44 G=177 B=88)
+[2025-12-16 09:25:13.630] [DEBUG] Palette [Error] -> #BE2914 (R=190 G=41 B=20)
+[2025-12-16 09:25:13.631] [DEBUG] Palette [Cursor] -> #228844 (R=34 G=136 B=68)
+[2025-12-16 09:25:13.632] [DEBUG] Palette [Highlight] -> #228844 (R=34 G=136 B=68)
+[2025-12-16 09:25:13.634] [DEBUG] Palette [Border] -> #185F30 (R=24 G=95 B=48)
+[2025-12-16 09:25:13.635] [DEBUG] Palette [Text] -> #C2EACF (R=194 G=234 B=207)
+[2025-12-16 09:25:13.636] [DEBUG] Palette [Footer] -> #185F30 (R=24 G=95 B=48)
+[2025-12-16 09:25:13.638] [DEBUG] Palette [Muted] -> #5C8F6D (R=92 G=143 B=109)
+[2025-12-16 09:25:13.654] [INFO] LoadFromConfig: Loaded Properties with 16 items
+[2025-12-16 09:25:13.667] [INFO] PmcThemeEngine initialized with PMC palette (14 colors)
+[2025-12-16 09:25:13.672] ServiceContainer: Resolved 'Theme' successfully
+[2025-12-16 09:25:14.451] ServiceContainer: Resolving 'ThemeManager'...
+[2025-12-16 09:25:14.454] [INFO] Resolving ThemeManager...
+[2025-12-16 09:25:14.499] ServiceContainer: Resolved 'ThemeManager' successfully
+[2025-12-16 09:25:14.513] ServiceContainer: Resolved 'Application' successfully
+[2025-12-16 09:25:14.515] [INFO] Application resolved and assigned to $global:PmcApp
+[2025-12-16 09:25:14.516] [INFO] Loading menus from manifest...
+[2025-12-16 09:25:14.517] ServiceContainer: Resolving 'MenuRegistry'...
+[2025-12-16 09:25:14.520] [INFO] Resolving MenuRegistry...
+[2025-12-16 09:25:14.535] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2025-12-16 09:25:14.559] MenuRegistry: Loaded manifest with 24 entries
+[2025-12-16 09:25:14.591] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2025-12-16 09:25:14.592] MenuRegistry: Registered screen factory 'ChecklistsLauncherScreen' in container (viewMode=)
+[2025-12-16 09:25:14.612] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-16 09:25:14.615] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2025-12-16 09:25:14.616] MenuRegistry: Registered screen factory 'ProjectListScreen' in container (viewMode=)
+[2025-12-16 09:25:14.618] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-16 09:25:14.620] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2025-12-16 09:25:14.621] MenuRegistry: Registered screen factory 'ExcelProfileManagerScreen' in container (viewMode=)
+[2025-12-16 09:25:14.622] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-16 09:25:14.624] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2025-12-16 09:25:14.625] MenuRegistry: Registered screen factory 'HelpViewScreen' in container (viewMode=)
+[2025-12-16 09:25:14.627] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-16 09:25:14.629] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2025-12-16 09:25:14.630] MenuRegistry: Registered screen factory 'TimeReportScreen' in container (viewMode=)
+[2025-12-16 09:25:14.632] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-16 09:25:14.641] ServiceContainer: Registered 'TaskListScreen_Month' (singleton=False)
+[2025-12-16 09:25:14.642] MenuRegistry: Registered screen factory 'TaskListScreen_Month' in container (viewMode=month)
+[2025-12-16 09:25:14.644] MenuRegistry: Registered 'Month View' in 'Tasks' menu (hotkey=M order=45)
+[2025-12-16 09:25:14.645] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2025-12-16 09:25:14.646] MenuRegistry: Registered screen factory 'ExcelImportScreen' in container (viewMode=)
+[2025-12-16 09:25:14.647] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-16 09:25:14.649] ServiceContainer: Registered 'TaskListScreen_NoDate' (singleton=False)
+[2025-12-16 09:25:14.650] MenuRegistry: Registered screen factory 'TaskListScreen_NoDate' in container (viewMode=noduedate)
+[2025-12-16 09:25:14.651] MenuRegistry: Registered 'No Due Date' in 'Tasks' menu (hotkey=D order=40)
+[2025-12-16 09:25:14.653] ServiceContainer: Registered 'KanbanScreenV2' (singleton=False)
+[2025-12-16 09:25:14.653] MenuRegistry: Registered screen factory 'KanbanScreenV2' in container (viewMode=)
+[2025-12-16 09:25:14.655] MenuRegistry: Registered 'Kanban Board' in 'Tasks' menu (hotkey=K order=55)
+[2025-12-16 09:25:14.656] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2025-12-16 09:25:14.657] MenuRegistry: Registered screen factory 'NotesMenuScreen' in container (viewMode=)
+[2025-12-16 09:25:14.658] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-16 09:25:14.660] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2025-12-16 09:25:14.661] MenuRegistry: Registered screen factory 'WeeklyTimeReportScreen' in container (viewMode=)
+[2025-12-16 09:25:14.662] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-16 09:25:14.663] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2025-12-16 09:25:14.664] MenuRegistry: Registered screen factory 'ChecklistTemplatesFolderScreen' in container (viewMode=)
+[2025-12-16 09:25:14.665] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-16 09:25:14.667] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2025-12-16 09:25:14.668] MenuRegistry: Registered screen factory 'SettingsScreen' in container (viewMode=)
+[2025-12-16 09:25:14.669] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-16 09:25:14.670] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2025-12-16 09:25:14.671] MenuRegistry: Registered screen factory 'CommandLibraryScreen' in container (viewMode=)
+[2025-12-16 09:25:14.672] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-16 09:25:14.674] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2025-12-16 09:25:14.675] MenuRegistry: Registered screen factory 'ThemeEditorScreen' in container (viewMode=)
+[2025-12-16 09:25:14.676] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-16 09:25:14.678] ServiceContainer: Registered 'TaskListScreen_Agenda' (singleton=False)
+[2025-12-16 09:25:14.679] MenuRegistry: Registered screen factory 'TaskListScreen_Agenda' in container (viewMode=agenda)
+[2025-12-16 09:25:14.680] MenuRegistry: Registered 'Agenda View' in 'Tasks' menu (hotkey=A order=50)
+[2025-12-16 09:25:14.681] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2025-12-16 09:25:14.682] MenuRegistry: Registered screen factory 'TimeListScreen' in container (viewMode=)
+[2025-12-16 09:25:14.684] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-16 09:25:14.686] ServiceContainer: Registered 'TaskListScreen_Overdue' (singleton=False)
+[2025-12-16 09:25:14.687] MenuRegistry: Registered screen factory 'TaskListScreen_Overdue' in container (viewMode=overdue)
+[2025-12-16 09:25:14.688] MenuRegistry: Registered 'Overdue' in 'Tasks' menu (hotkey=O order=30)
+[2025-12-16 09:25:14.693] ServiceContainer: Registered 'TaskListScreen_Week' (singleton=False)
+[2025-12-16 09:25:14.694] MenuRegistry: Registered screen factory 'TaskListScreen_Week' in container (viewMode=week)
+[2025-12-16 09:25:14.696] MenuRegistry: Registered 'Week View' in 'Tasks' menu (hotkey=W order=20)
+[2025-12-16 09:25:14.698] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2025-12-16 09:25:14.699] MenuRegistry: Registered screen factory 'TaskListScreen_Default' in container (viewMode=)
+[2025-12-16 09:25:14.700] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-16 09:25:14.702] ServiceContainer: Registered 'TaskListScreen_Today' (singleton=False)
+[2025-12-16 09:25:14.704] MenuRegistry: Registered screen factory 'TaskListScreen_Today' in container (viewMode=today)
+[2025-12-16 09:25:14.706] MenuRegistry: Registered 'Today' in 'Tasks' menu (hotkey=Y order=10)
+[2025-12-16 09:25:14.709] ServiceContainer: Registered 'TaskListScreen_Tomorrow' (singleton=False)
+[2025-12-16 09:25:14.711] MenuRegistry: Registered screen factory 'TaskListScreen_Tomorrow' in container (viewMode=tomorrow)
+[2025-12-16 09:25:14.713] MenuRegistry: Registered 'Tomorrow' in 'Tasks' menu (hotkey=T order=15)
+[2025-12-16 09:25:14.716] ServiceContainer: Registered 'TaskListScreen_Upcoming' (singleton=False)
+[2025-12-16 09:25:14.718] MenuRegistry: Registered screen factory 'TaskListScreen_Upcoming' in container (viewMode=upcoming)
+[2025-12-16 09:25:14.721] MenuRegistry: Registered 'Upcoming' in 'Tasks' menu (hotkey=U order=25)
+[2025-12-16 09:25:14.724] ServiceContainer: Registered 'TaskListScreen_NextActions' (singleton=False)
+[2025-12-16 09:25:14.725] MenuRegistry: Registered screen factory 'TaskListScreen_NextActions' in container (viewMode=nextactions)
+[2025-12-16 09:25:14.726] MenuRegistry: Registered 'Next Actions' in 'Tasks' menu (hotkey=N order=35)
+[2025-12-16 09:25:14.728] [INFO] Menus loaded from /home/teej/ztest/module/Pmc.Strict/consoleui/screens/MenuItems.psd1
+[2025-12-16 09:25:14.729] [INFO] Launching screen: TaskList
+[2025-12-16 09:25:14.731] [INFO] Resolving TaskListScreen from container...
+[2025-12-16 09:25:14.732] ServiceContainer: Resolving 'TaskListScreen'...
+[2025-12-16 09:25:14.734] [INFO] Resolving TaskListScreen...
+[2025-12-16 09:25:14.736] ServiceContainer: Resolving 'TaskStore'...
+[2025-12-16 09:25:14.738] [INFO] Resolving TaskStore...
+[2025-12-16 09:25:14.798] [DEBUG] TaskStore.LoadData: Starting
+[2025-12-16 09:25:14.801] [DEBUG] TaskStore.LoadData: Calling Get-PmcData
+[2025-12-16 09:25:15.009] [DEBUG] TaskStore.LoadData: Get-PmcData returned - tasks=2 projects=0 timelogs=0
+[2025-12-16 09:25:15.024] [DEBUG] TaskStore.LoadData: Loaded 2 tasks
+[2025-12-16 09:25:15.026] [DEBUG] TaskStore.LoadData: No projects in data, initialized empty list
+[2025-12-16 09:25:15.041] ServiceContainer: Resolved 'TaskStore' successfully
+[2025-12-16 09:25:15.675] [DEBUG] PmcScreen.AddContentWidget: Adding UniversalList (Total: 1)
+[2025-12-16 09:25:15.763] [DEBUG] TaskListScreen: Constructor started
+[2025-12-16 09:25:15.824] _PopulateMenusFromRegistry: Menu 'Tasks' has 11 items from registry (array)
+[2025-12-16 09:25:15.852] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2025-12-16 09:25:15.855] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2025-12-16 09:25:15.859] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2025-12-16 09:25:15.864] _PopulateMenusFromRegistry: Menu 'Tools' has 4 items from registry (array)
+[2025-12-16 09:25:15.867] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2025-12-16 09:25:15.869] [DEBUG] TaskListScreen: Constructor completed
+[2025-12-16 09:25:15.872] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2025-12-16 09:25:15.873] [INFO] Pushing screen to app...
+[2025-12-16 09:25:16.643] [DEBUG] LoadData: Got 2 tasks from Store
+[2025-12-16 09:25:16.768] [DEBUG] TaskListScreen.LoadData: Setting 2 tasks
+[2025-12-16 09:25:16.776] [DEBUG] UniversalList.SetData: START
+[2025-12-16 09:25:16.849] [DEBUG] UniversalList.SetData: COMPLETE (2 items)
+[2025-12-16 09:25:16.861] [INFO] Screen pushed successfully
+[2025-12-16 09:25:16.863] [INFO] Starting event loop...
+[2025-12-16 09:25:18.000] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:25:21.615] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:26:30.385] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Escape)
+[2025-12-16 09:26:31.584] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Escape)
+[2025-12-16 09:26:33.759] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=UpArrow)
+[2025-12-16 09:26:33.767] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=True ShowInlineEditor=True
+[2025-12-16 09:26:33.769] [DEBUG] StandardListScreen: Editor field widget closed - PROPAGATING CLEAR TO SCREEN
+[2025-12-16 09:26:34.192] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:26:36.340] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=UpArrow)
+[2025-12-16 09:26:36.342] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=True ShowInlineEditor=True
+[2025-12-16 09:26:36.343] [DEBUG] StandardListScreen: Editor confirmed/cancelled - closing editor NO CLEAR
+[2025-12-16 09:26:36.349] [DEBUG] StandardListScreen: Restored selectedIndex to 1 after add mode exit (itemCount=2)
+[2025-12-16 09:26:36.617] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:26:37.475] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:26:38.309] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:26:39.203] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:26:40.151] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:26:41.067] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:26:41.871] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:26:43.692] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:26:44.646] [INFO] TaskListScreen.EditItem called - item.id=f6d455a4-9e14-46c4-ba1a-4563c83b3b39
+[2025-12-16 09:26:44.683] [INFO] TaskListScreen.EditItem: Setting OnConfirmed callback for taskId=f6d455a4-9e14-46c4-ba1a-4563c83b3b39
+[2025-12-16 09:26:44.964] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:27:12.038] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:27:13.292] ServiceContainer: Resolving 'ProjectListScreen'...
+[2025-12-16 09:27:13.361] [DEBUG] PmcScreen.AddContentWidget: Adding UniversalList (Total: 1)
+[2025-12-16 09:27:13.386] ServiceContainer: Resolved 'ProjectListScreen' successfully
+[2025-12-16 09:27:13.570] [DEBUG] UniversalList.SetData: START
+[2025-12-16 09:27:13.574] [DEBUG] UniversalList.SetData: COMPLETE (0 items)
+[2025-12-16 09:27:13.812] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:27:15.972] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:27:17.741] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=P)
+[2025-12-16 09:27:17.770] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:27:17.771] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:27:18.113] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:27:18.685] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=D1)
+[2025-12-16 09:27:18.688] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:27:18.689] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:27:18.690] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:27:18.693] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:27:18.694] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:27:18.939] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:27:23.680] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Enter)
+[2025-12-16 09:27:23.689] [DEBUG] InlineEditor._ValidateAllFields CALLED - field count: 2
+[2025-12-16 09:27:23.692] [DEBUG] InlineEditor._ValidateAllFields - Field: name, Type: text, Required: True, Value: ''
+[2025-12-16 09:27:23.696] [ERROR] InlineEditor._ValidateAllFields - VALIDATION ERROR:  is required
+[2025-12-16 09:27:23.703] [DEBUG] InlineEditor._ValidateAllFields - Field: description, Type: text, Required: False, Value: ''
+[2025-12-16 09:27:23.711] [DEBUG] InlineEditor._ValidateAllFields RESULT: isValid=False, errorCount=1
+[2025-12-16 09:27:23.716] [DEBUG] InlineEditor._InvokeCallback: Invoking callback with arg type=String[]
+[2025-12-16 09:27:23.723] [DEBUG] InlineEditor._InvokeCallback: Callback completed successfully
+[2025-12-16 09:27:23.723] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:27:23.724] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:27:23.947] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:27:36.636] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:27:36.637] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:27:36.638] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:27:36.877] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:27:38.721] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=P)
+[2025-12-16 09:27:38.723] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:27:38.724] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:27:38.973] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:27:39.564] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=D1)
+[2025-12-16 09:27:39.565] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:27:39.566] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:27:39.798] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:27:43.512] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Escape)
+[2025-12-16 09:28:36.548] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Escape)
+[2025-12-16 09:28:40.244] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:28:42.033] ServiceContainer: Resolving 'TimeListScreen'...
+[2025-12-16 09:28:42.114] [DEBUG] PmcScreen.AddContentWidget: Adding UniversalList (Total: 1)
+[2025-12-16 09:28:42.155] [DEBUG] UniversalList.SetData: START
+[2025-12-16 09:28:42.156] [DEBUG] UniversalList.SetData: COMPLETE (0 items)
+[2025-12-16 09:28:42.158] ServiceContainer: Resolved 'TimeListScreen' successfully
+[2025-12-16 09:28:42.323] [DEBUG] UniversalList.SetData: START
+[2025-12-16 09:28:42.324] [DEBUG] UniversalList.SetData: COMPLETE (0 items)
+[2025-12-16 09:28:42.563] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:28:48.773] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:40.484] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:31:40.486] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:40.490] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:40.730] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:41.313] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:31:41.314] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:41.314] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:41.554] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:42.137] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:31:42.138] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:42.138] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:42.374] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:44.315] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:31:44.316] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:44.316] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:44.571] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:46.365] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:31:46.367] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:46.367] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:46.621] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:49.390] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:31:49.391] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:49.392] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:49.649] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:50.910] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=D0)
+[2025-12-16 09:31:50.917] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:50.918] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:51.187] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:51.766] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=D5)
+[2025-12-16 09:31:51.767] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:51.768] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:51.768] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=D0)
+[2025-12-16 09:31:51.769] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:51.770] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:51.993] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:53.319] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:31:53.320] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:53.321] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:53.623] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:54.214] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:31:54.215] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:54.215] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:54.459] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:56.602] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:31:56.603] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:56.607] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:31:56.880] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:31:57.634] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Enter)
+[2025-12-16 09:31:57.635] [DEBUG] InlineEditor._ValidateAllFields CALLED - field count: 8
+[2025-12-16 09:31:57.636] [DEBUG] InlineEditor._ValidateAllFields - Field: date, Type: date, Required: True, Value: '12/16/2025 00:00:00'
+[2025-12-16 09:31:57.638] [DEBUG] InlineEditor._ValidateAllFields - Field: task, Type: text, Required: False, Value: ''
+[2025-12-16 09:31:57.639] [DEBUG] InlineEditor._ValidateAllFields - Field: project, Type: project, Required: False, Value: ''
+[2025-12-16 09:31:57.642] [DEBUG] InlineEditor._ValidateAllFields - Field: timecode, Type: text, Required: False, Value: ''
+[2025-12-16 09:31:57.642] [DEBUG] InlineEditor._ValidateAllFields - Field: id1, Type: text, Required: False, Value: '050'
+[2025-12-16 09:31:57.643] [DEBUG] InlineEditor._ValidateAllFields - Field: id2, Type: text, Required: False, Value: ''
+[2025-12-16 09:31:57.644] [DEBUG] InlineEditor._ValidateAllFields - Field: hours, Type: number, Required: False, Value: '0.25'
+[2025-12-16 09:31:57.648] [DEBUG] InlineEditor._ValidateAllFields - Field: notes, Type: text, Required: False, Value: ''
+[2025-12-16 09:31:57.649] [DEBUG] InlineEditor._ValidateAllFields RESULT: isValid=True, errorCount=0
+[2025-12-16 09:31:57.658] [DEBUG] InlineEditor._InvokeCallback: Invoking callback with arg type=Hashtable
+[2025-12-16 09:31:57.664] [DEBUG] TimeListScreen.OnInlineEditConfirmed called with values: hours,id2,notes,timecode,project,id1,date,task
+[2025-12-16 09:31:57.665] [INFO] OnInlineEditConfirmed: Processing ADD mode for time entry
+[2025-12-16 09:31:57.699] [DEBUG] TimeListScreen.OnItemCreated: CALLED with values: {"hours":0.25,"id2":"","notes":"","timecode":"","project":"","id1":"050","date":"2025-12-16T00:00:00","task":""}
+[2025-12-16 09:31:57.704] [DEBUG] TimeListScreen.OnItemCreated: Hours validation passed
+[2025-12-16 09:31:57.707] [DEBUG] TimeListScreen.OnItemCreated: Hours value=0.25, MAX_HOURS_PER_ENTRY=24
+[2025-12-16 09:31:57.709] [DEBUG] TimeListScreen.OnItemCreated: Hour range validation passed
+[2025-12-16 09:31:57.711] [DEBUG] TimeListScreen.OnItemCreated: Calculated minutes=15
+[2025-12-16 09:31:57.713] [DEBUG] TimeListScreen.OnItemCreated: Date=12/16/2025 00:00:00
+[2025-12-16 09:31:57.720] [DEBUG] TimeListScreen.OnItemCreated: Calling Store.AddTimeLog...
+[2025-12-16 09:31:57.727] [DEBUG] TaskStore.AddTimeLog: CALLED with timelog keys: created, id2, notes, minutes, timecode, project, id1, date, task
+[2025-12-16 09:31:57.732] [DEBUG] TaskStore.AddTimeLog:   created = 12/16/2025 09:31:57 (type: DateTime)
+[2025-12-16 09:31:57.734] [DEBUG] TaskStore.AddTimeLog:   id2 =  (type: String)
+[2025-12-16 09:31:57.734] [DEBUG] TaskStore.AddTimeLog:   notes =  (type: String)
+[2025-12-16 09:31:57.737] [DEBUG] TaskStore.AddTimeLog:   minutes = 15 (type: Int32)
+[2025-12-16 09:31:57.738] [DEBUG] TaskStore.AddTimeLog:   timecode =  (type: String)
+[2025-12-16 09:31:57.738] [DEBUG] TaskStore.AddTimeLog:   project =  (type: String)
+[2025-12-16 09:31:57.738] [DEBUG] TaskStore.AddTimeLog:   id1 = 050 (type: String)
+[2025-12-16 09:31:57.739] [DEBUG] TaskStore.AddTimeLog:   date = 12/16/2025 00:00:00 (type: DateTime)
+[2025-12-16 09:31:57.739] [DEBUG] TaskStore.AddTimeLog:   task =  (type: String)
+[2025-12-16 09:31:57.765] [DEBUG] TaskStore.AddTimeLog: Validation passed
+[2025-12-16 09:31:57.784] [INFO] TaskStore.SaveData: START - tasks=2 projects=0 timelogs=1
+[2025-12-16 09:31:57.784] [DEBUG] TaskStore.SaveData: Creating in-memory backup
+[2025-12-16 09:31:57.785] [DEBUG] TaskStore.SaveData: Creating persistent backup
+[2025-12-16 09:31:57.809] [INFO] _CreatePersistentBackup: Created backup at /home/teej/ztest/tasks.json.backup.20251216-093157
+[2025-12-16 09:31:57.831] [DEBUG] _CreatePersistentBackup: Deleted old backup tasks.json.backup.20251215-171237
+[2025-12-16 09:31:57.832] [DEBUG] TaskStore.SaveData: Building data structure
+[2025-12-16 09:31:57.833] [INFO] TaskStore.SaveData: Data structure built - tasks=2 projects=0 timelogs=1
+[2025-12-16 09:31:57.834] [DEBUG] TaskStore.SaveData: First task - text='Updated' id='9ecd4e7d-79be-4091-93c5-c3efa1141a62'
+[2025-12-16 09:31:57.834] [INFO] TaskStore.SaveData: Calling Save-PmcData
+[2025-12-16 09:31:57.971] [INFO] TaskStore.SaveData: Save-PmcData completed successfully
+[2025-12-16 09:31:57.972] [DEBUG] TaskStore.SaveData: Verifying save
+[2025-12-16 09:31:58.014] [DEBUG] _VerifySave: Verification passed - tasks=2 projects=0
+[2025-12-16 09:31:58.017] [INFO] TaskStore.SaveData: SUCCESS - Data saved and verified
+[2025-12-16 09:31:58.018] [DEBUG] TaskStore.SaveData: END
+[2025-12-16 09:31:58.066] [DEBUG] UniversalList.SetData: START
+[2025-12-16 09:31:58.067] [DEBUG] UniversalList.SetData: COMPLETE (1 items)
+[2025-12-16 09:31:58.070] [DEBUG] TimeListScreen.OnItemCreated: AddTimeLog returned success=True
+[2025-12-16 09:31:58.073] [DEBUG] InlineEditor._InvokeCallback: Callback completed successfully
+[2025-12-16 09:31:58.074] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=True IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:31:58.074] [DEBUG] StandardListScreen: Editor confirmed/cancelled - closing editor NO CLEAR
+[2025-12-16 09:31:58.076] [DEBUG] StandardListScreen: Restored selectedIndex to 0 after add mode exit (itemCount=1)
+[2025-12-16 09:31:58.315] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:32:08.908] [WARN] *** STANDARDLISTSCREEN.EDITITEM CALLED (base class) - item type=Hashtable ***
+[2025-12-16 09:32:09.189] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:32:10.506] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:32:10.507] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:32:10.508] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:32:10.760] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:32:11.622] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:32:11.623] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:32:11.624] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:32:11.879] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:32:12.937] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:32:12.938] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:32:12.938] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:32:13.197] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:32:15.201] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=D0)
+[2025-12-16 09:32:15.205] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:32:15.206] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:32:15.462] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:32:16.067] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=D5)
+[2025-12-16 09:32:16.068] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:32:16.068] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:32:16.069] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=D0)
+[2025-12-16 09:32:16.070] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:32:16.070] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:32:16.306] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:32:17.658] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Tab)
+[2025-12-16 09:32:17.659] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:32:17.660] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:32:17.923] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:32:19.439] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=D0)
+[2025-12-16 09:32:19.441] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:32:19.442] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:32:19.677] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:32:20.226] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=D5)
+[2025-12-16 09:32:20.228] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:32:20.228] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:32:20.229] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=D0)
+[2025-12-16 09:32:20.230] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=False IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:32:20.230] [DEBUG] StandardListScreen: After close check - ShowInlineEditor=True
+[2025-12-16 09:32:20.455] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:32:22.212] [DEBUG] StandardListScreen: Routing to InlineEditor (Key=Enter)
+[2025-12-16 09:32:22.213] [DEBUG] InlineEditor._ValidateAllFields CALLED - field count: 8
+[2025-12-16 09:32:22.214] [DEBUG] InlineEditor._ValidateAllFields - Field: date, Type: date, Required: True, Value: '12/16/2025 00:00:00'
+[2025-12-16 09:32:22.215] [DEBUG] InlineEditor._ValidateAllFields - Field: task, Type: text, Required: False, Value: ''
+[2025-12-16 09:32:22.215] [DEBUG] InlineEditor._ValidateAllFields - Field: project, Type: project, Required: False, Value: ''
+[2025-12-16 09:32:22.216] [DEBUG] InlineEditor._ValidateAllFields - Field: timecode, Type: text, Required: False, Value: '050'
+[2025-12-16 09:32:22.217] [DEBUG] InlineEditor._ValidateAllFields - Field: id1, Type: text, Required: False, Value: '050'
+[2025-12-16 09:32:22.218] [DEBUG] InlineEditor._ValidateAllFields - Field: id2, Type: text, Required: False, Value: ''
+[2025-12-16 09:32:22.219] [DEBUG] InlineEditor._ValidateAllFields - Field: hours, Type: number, Required: False, Value: '0.25'
+[2025-12-16 09:32:22.220] [DEBUG] InlineEditor._ValidateAllFields - Field: notes, Type: text, Required: False, Value: ''
+[2025-12-16 09:32:22.225] [DEBUG] InlineEditor._ValidateAllFields RESULT: isValid=True, errorCount=0
+[2025-12-16 09:32:22.227] [DEBUG] InlineEditor._InvokeCallback: Invoking callback with arg type=Hashtable
+[2025-12-16 09:32:22.229] [DEBUG] TimeListScreen.OnInlineEditConfirmed called with values: hours,id2,notes,timecode,project,id1,date,task
+[2025-12-16 09:32:22.230] [INFO] OnInlineEditConfirmed: Processing EDIT mode for time entry
+[2025-12-16 09:32:22.259] [DEBUG] InlineEditor._InvokeCallback: Callback completed successfully
+[2025-12-16 09:32:22.260] [DEBUG] StandardListScreen: After HandleInput - IsConfirmed=True IsCancelled=False ShowInlineEditor=True
+[2025-12-16 09:32:22.261] [DEBUG] StandardListScreen: Editor confirmed/cancelled - closing editor NO CLEAR
+[2025-12-16 09:32:22.485] [DEBUG] PmcScreen: Calling RenderToEngine on UniversalList
+[2025-12-16 09:32:33.771] [INFO] Event loop exited normally
+[2025-12-16 09:32:33.772] [INFO] Cleanup - showing cursor and resetting terminal
