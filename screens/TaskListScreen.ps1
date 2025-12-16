@@ -522,11 +522,8 @@ class TaskListScreen : StandardListScreen {
 
             Write-PmcTuiLog "TaskListScreen.LoadData: Setting $($organizedTasks.Count) tasks" "DEBUG"
 
-            # Set data and request render
+            # Set data and invalidate cache (do NOT request clear - let rendering system handle it)
             $this.List.SetData($organizedTasks)
-            if ($this.RenderEngine -and $this.RenderEngine.PSObject.Methods['RequestClear']) {
-                $this.RenderEngine.RequestClear()
-            }
         }
         finally {
             $this._isLoading = $false

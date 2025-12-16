@@ -1853,28 +1853,19 @@ class InlineEditor : PmcWidget {
                 return
             }
 
-            # For date fields, create DatePicker on demand (if not already created)
+            # For date fields, create fresh DatePicker each time
             if ($field.Type -eq 'date') {
                 # Get current value from TextInput widget (which stays in _fieldWidgets)
                 $textWidget = $this._fieldWidgets[$field.Name]
                 $currentText = $textWidget.GetText()
 
-                # Create or reuse DatePicker (stored separately)
-                if (-not $this._datePickerWidgets.ContainsKey($field.Name)) {
-                    # Create DatePicker in CALENDAR mode (not text mode)
-                    $datePicker = [DatePicker]::new()
-                    $datePicker.SetPosition($this.X + 5, $this.Y + 5)
-                    $datePicker.SetSize(35, 14)
+                # ALWAYS create a fresh DatePicker (don't reuse old instances)
+                $datePicker = [DatePicker]::new()
+                $datePicker.SetPosition($this.X + 5, $this.Y + 5)
+                $datePicker.SetSize(35, 14)
 
-                    # Force calendar mode (not text input mode)
-                    $datePicker._isCalendarMode = $true
-
-                    # Store DatePicker separately
-                    $this._datePickerWidgets[$field.Name] = $datePicker
-                }
-
-                # Get the DatePicker
-                $datePicker = $this._datePickerWidgets[$field.Name]
+                # Force calendar mode (not text input mode)
+                $datePicker._isCalendarMode = $true
 
                 # Parse current text value to DateTime if possible
                 if (-not [string]::IsNullOrWhiteSpace($currentText)) {
@@ -1892,22 +1883,27 @@ class InlineEditor : PmcWidget {
                     $datePicker.SetDate([DateTime]::Now)
                 }
 
+                # Store fresh DatePicker
+                $this._datePickerWidgets[$field.Name] = $datePicker
+
                 # Set mode to DatePicker
                 $this._datePickerMode = $true
 
-                # Reset DatePicker state
-                $datePicker.IsConfirmed = $false
-                $datePicker.IsCancelled = $false
+                # Fresh picker has IsConfirmed/IsCancelled already false
+                $this._expandedFieldName = $field.Name
+                $this._showFieldWidgets = $true
+                # NOTE: NeedsClear NOT set - widget renders as overlay without clearing screen
+                return
             }
 
-            # For project fields, create ProjectPicker on demand
+            # For project fields, create fresh ProjectPicker each time
             if ($field.Type -eq 'project') {
                 # Load ProjectPicker if not already loaded
                 if (-not ([System.Management.Automation.PSTypeName]'ProjectPicker').Type) {
                     . "$PSScriptRoot/ProjectPicker.ps1"
                 }
 
-                # Create ProjectPicker
+                # ALWAYS create a fresh ProjectPicker (don't reuse old instances)
                 $projectPicker = [ProjectPicker]::new()
                 $projectPicker.SetPosition($this.X + 5, $this.Y + 3)
                 $projectPicker.SetSize(40, 15)
@@ -1919,15 +1915,12 @@ class InlineEditor : PmcWidget {
                     $projectPicker._searchText = $currentProject
                 }
 
-                # Replace the TextInput with ProjectPicker temporarily
+                # Store fresh ProjectPicker
                 $this._fieldWidgets[$field.Name] = $projectPicker
 
                 $this._expandedFieldName = $field.Name
                 $this._showFieldWidgets = $true
                 # NOTE: NeedsClear NOT set - widget renders as overlay without clearing screen
-
-                $projectPicker.IsConfirmed = $false
-                $projectPicker.IsCancelled = $false
                 return
             }
 
