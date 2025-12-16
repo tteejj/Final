@@ -66,6 +66,52 @@ $global:PmcEnableFlowDebug = $false
 function Write-PmcTuiLog {
     param([string]$Message, [string]$Level = "INFO")
 
+    # Skip if logging disabled
+    if (-not $global:PmcTuiLogFile) { return }
+
+    # Filter by log level
+    $levelValue = switch ($Level) {
+        "ERROR" { 1 }
+        "INFO" { 2 }
+        "DEBUG" { 3 }
+        default { 2 }
+    }
+
+    if ($levelValue -gt $global:PmcTuiLogLevel) { return }
+
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss.fff"
+    $logLine = "[$timestamp] [$Level] $Message"
+    try {
+        Add-Content -Path $global:PmcTuiLogFile -Value $logLine -ErrorAction Stop
+    }
+    catch {
+        # Silently fail on log write errors to prevent cascading failures
+        # This can happen if path is invalid or disk is full
+        if ($Level -eq "ERROR") {
+            Write-Host $logLine -ForegroundColor Red
+        }
+    }
+    if ($Level -eq "ERROR") {
+        Write-Host $logLine -ForegroundColor Red
+    }
+}
+
+Write-PmcTuiLog "Loading PMC module..." "INFO"
+
+try {
+    # Import PMC module for data functions
+    Import-Module "$PSScriptRoot/../Pmc.Strict.psd1" -Force -ErrorAction Stop
+    Write-PmcTuiLog "PMC module loaded" "INFO"
+}
+catch {
+    Write-PmcTuiLog "Failed to load PMC module: $_" "ERROR"
+    Write-PmcTuiLog $_.ScriptStackTrace "ERROR"
+    throw
+}
+
+Write-PmcTuiLog "Loading dependencies (FieldSchemas, etc.)..." "INFO"
+
+try {
     . "$PSScriptRoot/DepsLoader.ps1"
     Write-PmcTuiLog "Dependencies loaded" "INFO"
 }

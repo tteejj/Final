@@ -38,14 +38,12 @@ PmcScreen provides:
 #     [string] RenderContent() {
 #         # Render your content...
 #     }
-# }
 #
 # Example: Legacy constructor (backward compatible)
 # class MyLegacyScreen : PmcScreen {
 #     MyLegacyScreen() : base("MyScreen", "My Screen Title") {
 #         # Works without container for backward compatibility
 #     }
-# }
 #>
 class PmcScreen {
     # === Core Properties ===
@@ -81,35 +79,13 @@ class PmcScreen {
     [void] Resize([int]$width, [int]$height) {
         $this.TermWidth = $width
         $this.TermHeight = $height
-        
-        # Calculate vertical layout
-        $currentY = 0
-        
-        # MenuBar (Top)
-        if ($this.MenuBar) {
-            $this.MenuBar.SetPosition(0, $currentY)
-            $this.MenuBar.SetSize($width, 1)
-            $currentY++
-        }
-        
-        # Header (Below Menu)
-        if ($this.Header) {
-            $this.Header.SetPosition(0, $currentY)
-            # Header is typically 1 line
-            $this.Header.SetSize($width, 1)
-            $currentY++
-        }
-        
-        # Footer (Bottom, fixed height)
-        if ($this.Footer) {
-            $this.Footer.SetPosition(0, $height - 1)
-            $this.Footer.SetSize($width, 1)
-        }
-        
-        # StatusBar (Above Footer)
-        if ($this.StatusBar) {
-            $this.StatusBar.SetPosition(0, $height - 2)
-            $this.StatusBar.SetSize($width, 1)
+
+        # Delegate to ApplyLayout for correct positioning
+        # ApplyLayout uses PmcLayoutManager which has the correct constraints:
+        # - Footer: Y = 'BOTTOM-2' (height - 2)
+        # - StatusBar: Y = 'BOTTOM' (height - 1)
+        if ($this.LayoutManager) {
+            $this.ApplyLayout($this.LayoutManager, $width, $height)
         }
     }
 
@@ -123,7 +99,6 @@ class PmcScreen {
 
     # === Constructor (backward compatible - no container) ===
     PmcScreen([string]$key, [string]$title) {
-        # }
 
         $this.ScreenKey = $key
         $this.ScreenTitle = $title
@@ -135,7 +110,6 @@ class PmcScreen {
 
     # === Constructor (with ServiceContainer) ===
     PmcScreen([string]$key, [string]$title, [object]$container) {
-        # }
 
         $this.ScreenKey = $key
         $this.ScreenTitle = $title
@@ -143,15 +117,12 @@ class PmcScreen {
         $this.ContentWidgets = New-Object 'System.Collections.Generic.List[object]'
 
 
-        # }
 
         # Create default widgets
         $this._CreateDefaultWidgets()
     }
 
     hidden [void] _CreateDefaultWidgets() {
-        Add-Content -Path "$(Join-Path ([System.IO.Path]::GetTempPath()) 'pmc_debug.txt')" -Value "[$(Get-Date)] PmcScreen._CreateDefaultWidgets: START. Screen=$($this.ScreenKey)"
-
         # Menu bar - use shared MenuBar if available (populated by TaskListScreen)
         # CRITICAL: Check if variable exists AND is not null
         if ((Get-Variable -Name PmcSharedMenuBar -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcSharedMenuBar) {
@@ -192,14 +163,12 @@ class PmcScreen {
     Override to perform initialization when screen is displayed
     #>
     [void] OnEnter() {
-        # }
         $this.IsActive = $true
         $this.LoadData()
 
         if ($this.OnEnterHandler) {
             & $this.OnEnterHandler $this
         }
-        # }
     }
 
     <#
@@ -210,13 +179,11 @@ class PmcScreen {
     Override to perform cleanup when leaving screen
     #>
     [void] OnDoExit() {
-        # }
         $this.IsActive = $false
 
         if ($this.OnExitHandler) {
             & $this.OnExitHandler $this
         }
-        # }
     }
 
     <#
@@ -227,7 +194,6 @@ class PmcScreen {
     Override to load screen-specific data
     #>
     [void] LoadData() {
-        # }
         # Override in subclass
     }
 
@@ -248,21 +214,18 @@ class PmcScreen {
     #>
     [void] ApplyLayout([object]$layoutManager, [int]$termWidth, [int]$termHeight) {
         try {
-            Write-Host "DEBUG: PmcScreen.ApplyLayout: START Screen=$($this.ScreenKey) W=$termWidth H=$termHeight"
             $this.LayoutManager = $layoutManager
             $this.TermWidth = $termWidth
             $this.TermHeight = $termHeight
 
             # Apply layout to standard widgets
             if ($this.MenuBar) {
-                Write-Host "DEBUG: PmcScreen.ApplyLayout: Formatting MenuBar"
                 $rect = $layoutManager.GetRegion('MenuBar', $termWidth, $termHeight)
                 $this.MenuBar.SetPosition($rect.X, $rect.Y)
                 $this.MenuBar.SetSize($rect.Width, $rect.Height)
             }
 
             if ($this.Header) {
-                Write-Host "DEBUG: PmcScreen.ApplyLayout: Formatting Header"
                 $rect = $layoutManager.GetRegion('Header', $termWidth, $termHeight)
                 $this.Header.SetPosition($rect.X, $rect.Y)
                 $this.Header.SetSize($rect.Width, $rect.Height)
@@ -281,9 +244,7 @@ class PmcScreen {
             }
 
             # Apply layout to content widgets
-            Write-Host "DEBUG: PmcScreen.ApplyLayout: Calling ApplyContentLayout"
             $this.ApplyContentLayout($layoutManager, $termWidth, $termHeight)
-            Write-Host "DEBUG: PmcScreen.ApplyLayout: COMPLETE"
         }
         catch {
             Write-Host "FATAL ERROR PmcScreen.ApplyLayout: $_"
@@ -341,7 +302,6 @@ class PmcScreen {
         # Store container if provided
         if ($container) {
             $this.Container = $container
-            # }
         }
 
         # Initialize standard widgets
@@ -521,7 +481,6 @@ class PmcScreen {
         }
         catch {
             # If we can't even write the error, just log it
-            # }
         }
     }
 
@@ -657,17 +616,14 @@ class PmcScreen {
     #>
     [object] GetService([string]$serviceName) {
         if ($null -eq $this.Container) {
-            # }
             return $null
         }
 
         try {
             $service = $this.Container.Get($serviceName)
-            # }
             return $service
         }
         catch {
-            # }
             return $null
         }
     }
@@ -694,7 +650,6 @@ class PmcScreen {
             return $this.Container.Has($serviceName)
         }
         catch {
-            # }
             return $false
         }
     }
