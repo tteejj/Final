@@ -46,8 +46,6 @@ class NoteEditorScreen : PmcScreen {
         Write-PmcTuiLog "NoteEditorScreen: Creating TextAreaEditor" "DEBUG"
         $this._editor = [TextAreaEditor]::new()
 
-        # NOTE: _SetupMenus() removed - MenuRegistry handles menu population via manifest
-
         Write-PmcTuiLog "NoteEditorScreen: Constructor complete" "INFO"
     }
 
@@ -73,57 +71,62 @@ class NoteEditorScreen : PmcScreen {
         Write-PmcTuiLog "NoteEditorScreen: Creating TextAreaEditor" "DEBUG"
         $this._editor = [TextAreaEditor]::new()
 
-        # NOTE: _SetupMenus() removed - MenuRegistry handles menu population via manifest
-
         Write-PmcTuiLog "NoteEditorScreen: Constructor complete" "INFO"
     }
 
     # === Lifecycle Methods ===
 
-    [void] Initialize([object]$renderEngine) {
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Called" "INFO"
+    [void] Initialize([object]$renderEngine, [object]$container) {
+        Write-PmcTuiLog "NoteEditorScreen.Initialize: Called with renderEngine and container" "INFO"
 
         $this.RenderEngine = $renderEngine
+        $this.Container = $container
 
         # Get terminal size
         $this.TermWidth = $renderEngine.Width
         $this.TermHeight = $renderEngine.Height
         Write-PmcTuiLog "NoteEditorScreen.Initialize: Terminal size $($this.TermWidth)x$($this.TermHeight)" "DEBUG"
 
-        # Configure footer shortcuts AFTER initialization
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Configuring footer shortcuts" "DEBUG"
-        $this.Footer.ClearShortcuts()
-        $this.Footer.AddShortcut("Ctrl+S", "Save")
-        $this.Footer.AddShortcut("Ctrl+L", "Checklist")
-        $this.Footer.AddShortcut("Esc", "Back")
-        # PERFORMANCE: Undo/Redo removed - disabled for responsiveness
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Footer shortcuts configured" "DEBUG"
-
-        # Update header breadcrumb and position
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Setting Header.Y to 1 (was $($this.Header.Y))" "DEBUG"
-        $this.Header.Y = 1  # Header starts at row 1 (after MenuBar at row 0)
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Header.Y is now $($this.Header.Y)" "DEBUG"
-        $this.Header.SetBreadcrumb(@("Notes", $this._note.title))
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: After SetBreadcrumb, Header.Y is $($this.Header.Y)" "DEBUG"
-
         # Initialize layout manager
         if (-not $this.LayoutManager) {
             $this.LayoutManager = [PmcLayoutManager]::new()
         }
 
-        # Calculate editor bounds
-        # Layout: MenuBar (row 0) + Header (rows 1-5: title, blank, breadcrumb, blank, separator) + Editor + Footer + StatusBar
-        # Header actually uses 5 rows: Y, Y+1(blank), Y+2(breadcrumb), Y+3(blank), Y+4(separator)
-        $editorY = 6  # After menubar (row 0) and header (rows 1-5)
-        $editorHeight = $this.TermHeight - 8  # Subtract menubar(1), header(5), footer(1), statusbar(1)
-        $editorX = 0
-        $editorWidth = $this.TermWidth
+        # Configure footer shortcuts
+        Write-PmcTuiLog "NoteEditorScreen.Initialize: Configuring footer" "DEBUG"
+        $this.Footer.ClearShortcuts()
+        $this.Footer.AddShortcut("Ctrl+S", "Save")
+        $this.Footer.AddShortcut("Ctrl+L", "Checklist")
+        $this.Footer.AddShortcut("Esc", "Back")
+        Write-PmcTuiLog "NoteEditorScreen.Initialize: Footer shortcuts configured" "DEBUG"
 
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Setting editor bounds X=$editorX Y=$editorY W=$editorWidth H=$editorHeight" "DEBUG"
-        $this._editor.SetBounds($editorX, $editorY, $editorWidth, $editorHeight)
+        # Use layout manager for Header positioning
+        $headerRect = $this.LayoutManager.GetRegion('Header', $this.TermWidth, $this.TermHeight)
+        $this.Header.X = $headerRect.X
+        $this.Header.Y = $headerRect.Y
+        $this.Header.Width = $headerRect.Width
+        $this.Header.Height = $headerRect.Height
+        $this.Header.SetBreadcrumb(@("Notes", $this._note.title))
+        Write-PmcTuiLog "NoteEditorScreen.Initialize: Header via LayoutManager - X=$($headerRect.X) Y=$($headerRect.Y) W=$($headerRect.Width) H=$($headerRect.Height)" "DEBUG"
 
-        # NOTE: LoadData() removed from Initialize - it's called via OnEnter()
-        # This prevents duplicate loading and follows proper lifecycle pattern
+        # Use layout manager for Footer positioning
+        $footerRect = $this.LayoutManager.GetRegion('Footer', $this.TermWidth, $this.TermHeight)
+        $this.Footer.X = $footerRect.X
+        $this.Footer.Y = $footerRect.Y
+        $this.Footer.Width = $footerRect.Width
+        Write-PmcTuiLog "NoteEditorScreen.Initialize: Footer via LayoutManager - X=$($footerRect.X) Y=$($footerRect.Y) W=$($footerRect.Width)" "DEBUG"
+
+        # Use layout manager for StatusBar positioning
+        $statusBarRect = $this.LayoutManager.GetRegion('StatusBar', $this.TermWidth, $this.TermHeight)
+        $this.StatusBar.X = $statusBarRect.X
+        $this.StatusBar.Y = $statusBarRect.Y
+        $this.StatusBar.Width = $statusBarRect.Width
+        Write-PmcTuiLog "NoteEditorScreen.Initialize: StatusBar via LayoutManager - X=$($statusBarRect.X) Y=$($statusBarRect.Y) W=$($statusBarRect.Width)" "DEBUG"
+
+        # Use layout manager for Content (editor) positioning
+        $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
+        $this._editor.SetBounds($contentRect.X, $contentRect.Y, $contentRect.Width, $contentRect.Height)
+        Write-PmcTuiLog "NoteEditorScreen.Initialize: Editor via LayoutManager - X=$($contentRect.X) Y=$($contentRect.Y) W=$($contentRect.Width) H=$($contentRect.Height)" "DEBUG"
 
         Write-PmcTuiLog "NoteEditorScreen.Initialize: Complete" "INFO"
     }
@@ -150,36 +153,9 @@ class NoteEditorScreen : PmcScreen {
     [void] OnEnter() {
         # Call parent to ensure proper lifecycle (sets IsActive, calls LoadData, executes OnEnterHandler)
         ([PmcScreen]$this).OnEnter()
-
-        # Additional screen-specific logic
-        $this.UpdateStatusBar()
-        # Force full screen clear for editor
-        $this.NeedsClear = $true
     }
-
-    [void] OnDoExit() {
-        $this.IsActive = $false
-
-        # Save on exit if modified
-        if ($this._saveOnExit -and $this._editor.Modified) {
-            $this.SaveNote()
-        }
-    }
-
-    # === Rendering ===
 
     [void] RenderToEngine([object]$engine) {
-        # Write-PmcTuiLog "NoteEditorScreen.RenderToEngine: Called - Header.Y=$($this.Header.Y)" "DEBUG"
-
-        # FORCE Header.Y back to 1 since something keeps resetting it
-        $this.Header.Y = 1
-        
-        # Render MenuBar (Layer 100)
-        $engine.BeginLayer([ZIndex]::Dropdown)
-        if ($this.MenuBar) {
-            $this.MenuBar.RenderToEngine($engine)
-        }
-
         # Render Header (Layer 50)
         $engine.BeginLayer([ZIndex]::Header)
         if ($this.Header) {
@@ -201,20 +177,37 @@ class NoteEditorScreen : PmcScreen {
         if ($this.StatusBar) {
             $this.StatusBar.RenderToEngine($engine)
         }
+
+        # Render MenuBar (Layer 100 - Dropdown)
+        # CRITICAL: Render MenuBar LAST with highest z-index
+        $engine.BeginLayer([ZIndex]::Dropdown)
+        if ($this.MenuBar) {
+            $this.MenuBar.RenderToEngine($engine)
+        }
     }
 
     # === Input Handling ===
 
     [bool] HandleKeyPress([ConsoleKeyInfo]$key) {
-        # CRITICAL: Call parent FIRST for MenuBar, F10, Alt+keys, content widgets
-        $handled = ([PmcScreen]$this).HandleKeyPress($key)
-        if ($handled) { return $true }
-
-        Write-PmcTuiLog "NoteEditorScreen.HandleKeyPress: Key=$($key.Key) Char=$($key.KeyChar) Modifiers=$($key.Modifiers)" "INFO"
-
-        # Handle screen-level shortcuts first
+        # Handle screen-level shortcuts FIRST before parent or editor
         $ctrl = $key.Modifiers -band [ConsoleModifiers]::Control
-        Write-PmcTuiLog "NoteEditorScreen.HandleKeyPress: Ctrl pressed=$ctrl" "INFO"
+
+        # Escape - Go back with auto-save
+        if ($key.Key -eq [ConsoleKey]::Escape) {
+            Write-PmcTuiLog "NoteEditorScreen: ESCAPE DETECTED - Auto-saving and exiting" "INFO"
+            if ($this._editor.Modified) {
+                try {
+                    $this.SaveNote()
+                    Write-PmcTuiLog "NoteEditorScreen: Note saved successfully" "INFO"
+                }
+                catch {
+                    Write-PmcTuiLog "NoteEditorScreen: ERROR during auto-save - $_" "ERROR"
+                    # Continue with exit even if save fails
+                }
+            }
+            $global:PmcApp.PopScreen()
+            return $true
+        }
 
         # Ctrl+S - Save
         if ($ctrl -and $key.Key -eq [ConsoleKey]::S) {
@@ -230,16 +223,9 @@ class NoteEditorScreen : PmcScreen {
             return $true
         }
 
-        # Escape - Go back (auto-save if modified)
-        if ($key.Key -eq [ConsoleKey]::Escape) {
-            if ($this._editor.Modified) {
-                # Auto-save on exit - modern UX pattern
-                $this.SaveNote()
-                $this.SetStatusMessage("Note saved automatically", "info")
-            }
-            $global:PmcApp.PopScreen()
-            return $true
-        }
+        # CRITICAL: Call parent for MenuBar, F10, Alt+keys, content widgets
+        $handled = ([PmcScreen]$this).HandleKeyPress($key)
+        if ($handled) { return $true }
 
         # F10 - Menu
         if ($key.Key -eq [ConsoleKey]::F10) {
@@ -250,9 +236,7 @@ class NoteEditorScreen : PmcScreen {
         }
 
         # Delegate to editor
-        Write-PmcTuiLog "NoteEditorScreen.HandleKeyPress: Delegating to editor" "DEBUG"
         $handled = $this._editor.HandleInput($key)
-        Write-PmcTuiLog "NoteEditorScreen.HandleKeyPress: Editor returned handled=$handled" "DEBUG"
 
         # Update status bar after editor handles input
         if ($handled) {
@@ -262,42 +246,25 @@ class NoteEditorScreen : PmcScreen {
         return $handled
     }
 
-    # === Helper Methods ===
-
-    hidden [void] SaveNote() {
-        Write-PmcTuiLog "NoteEditorScreen.SaveNote: Saving note $($this._noteId)" "DEBUG"
-
-        try {
-            Write-PmcTuiLog "NoteEditorScreen.SaveNote: Getting text from editor" "DEBUG"
-            $content = $this._editor.GetText()
-            $contentLen = $(if ($null -eq $content) { "NULL" } else { $content.Length })
-            Write-PmcTuiLog "NoteEditorScreen.SaveNote: Got content, length=$contentLen" "DEBUG"
-
-            Write-PmcTuiLog "NoteEditorScreen.SaveNote: Calling SaveNoteContent" "DEBUG"
-            $this._noteService.SaveNoteContent($this._noteId, $content)
-
-            # Mark as not modified
-            $this._editor.Modified = $false
-
-            # Update status bar
-            $this.UpdateStatusBar()
-
-            Write-PmcTuiLog "NoteEditorScreen.SaveNote: Saved successfully" "INFO"
-        }
-        catch {
-            Write-PmcTuiLog "NoteEditorScreen.SaveNote: Error - $_" "ERROR"
-            $this.SetStatusMessage("Failed to save note: $($_.Exception.Message)", "error")
-        }
+    [void] SaveNote() {
+        Write-PmcTuiLog "NoteEditorScreen.SaveNote: Saving note $($this._noteId)" "INFO"
+        
+        $content = $this._editor.GetText()
+        Write-PmcTuiLog "NoteEditorScreen.SaveNote: Content length = $($content.Length)" "DEBUG"
+        
+        $this._noteService.SaveNoteContent($this._noteId, $content)
+        $this._editor.Modified = $false
+        
+        $this.ShowSuccess("Note saved", $false)
+        $this.UpdateStatusBar()
     }
 
-    hidden [void] ConvertToChecklist() {
-        Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Starting conversion" "INFO"
-
+    [void] ConvertToChecklist() {
         try {
             # Get note content
             $content = $this._editor.GetText()
             if ([string]::IsNullOrWhiteSpace($content)) {
-                $this.SetStatusMessage("Note is empty - cannot convert to checklist", "warning")
+                Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Note is empty" "WARN"
                 return
             }
 
@@ -305,7 +272,7 @@ class NoteEditorScreen : PmcScreen {
             $lines = @($content -split "`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 
             if ($lines.Count -eq 0) {
-                $this.SetStatusMessage("Note has no content lines", "warning")
+                Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: No content lines" "WARN"
                 return
             }
 
@@ -325,12 +292,12 @@ class NoteEditorScreen : PmcScreen {
             $checklistScreen = New-Object ChecklistEditorScreen -ArgumentList $instance.id
             $global:PmcApp.PushScreen($checklistScreen)
 
-            $this.SetStatusMessage("Converted to checklist with $($lines.Count) items", "success")
+            Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Converted to checklist with $($lines.Count) items" "INFO"
 
         }
         catch {
             Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: ERROR - $($_.Exception.Message)" "ERROR"
-            $this.SetStatusMessage("Failed to convert: $($_.Exception.Message)", "error")
+            Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Stack trace - $($_.ScriptStackTrace)" "ERROR"
         }
     }
 

@@ -1,0 +1,20 @@
+[INFO] NoteEditorScreen: Constructor called for noteId=3070648b-525e-4b35-9d25-2149cbc85382
+[DEBUG] NoteEditorScreen: Loading note metadata
+[DEBUG] NoteEditorScreen: Title set to 'Test Note Manual'
+[DEBUG] NoteEditorScreen: Creating TextAreaEditor
+[INFO] NoteEditorScreen: Constructor complete
+[INFO] NoteEditorScreen.Initialize: Called with renderEngine and container
+[DEBUG] NoteEditorScreen.Initialize: Terminal size 80x24
+[DEBUG] NoteEditorScreen.Initialize: Configuring footer
+[DEBUG] NoteEditorScreen.Initialize: Footer shortcuts configured
+[DEBUG] NoteEditorScreen.Initialize: Header via LayoutManager - X=1 Y=3 W=76 H=3
+[DEBUG] NoteEditorScreen.Initialize: Footer via LayoutManager - X=1 Y=22 W=76
+[DEBUG] NoteEditorScreen.Initialize: StatusBar via LayoutManager - X=0 Y=23 W=80
+[DEBUG] NoteEditorScreen.Initialize: Editor via LayoutManager - X=1 Y=8 W=76 H=13
+[INFO] NoteEditorScreen.Initialize: Complete
+[DEBUG] NoteEditorScreen.LoadData: Loading note 3070648b-525e-4b35-9d25-2149cbc85382
+[DEBUG] NoteEditorScreen.LoadData: Loaded 1 characters
+[INFO] NoteEditorScreen: ESCAPE DETECTED - Auto-saving and exiting
+[INFO] NoteEditorScreen.SaveNote: Saving note 3070648b-525e-4b35-9d25-2149cbc85382
+[DEBUG] NoteEditorScreen.SaveNote: Content length = 6
+[INFO] NoteEditorScreen: Note saved successfully

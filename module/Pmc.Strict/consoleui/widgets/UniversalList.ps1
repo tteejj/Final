@@ -949,9 +949,10 @@ class UniversalList : PmcWidget {
             # Skip rendering selected row if inline editor is active (editor will render in its place)
             # But clear the row to avoid visual artifacts
             if ($isSelected -and $this._showInlineEditor) {
-                # Clear this row - editor will render on top
+                # CRITICAL FIX: Clear ONLY the content area, NOT the borders
+                # Clear from X+2 (after left border+padding) to Width-4 (before right padding+border)
                 Add-Content -Path "/tmp/pmc-universallist-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] CLEARING ROW: dataIndex=$dataIndex rowY=$rowY Y=$($this.Y) selectedIndex=$($this._selectedIndex) fillWidth=$($this.Width)"
-                $engine.Fill($this.X, $rowY, $this.Width, 1, ' ', $textColor, $rowBg)
+                $engine.Fill($this.X + 2, $rowY, $this.Width - 4, 1, ' ', $textColor, $rowBg)
                 continue
             }
             

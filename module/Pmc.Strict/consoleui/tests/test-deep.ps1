@@ -191,7 +191,7 @@ try {
 '@
 
 $loadTestScript = "/tmp/module-load-test.ps1"
-$loadTest | Out-File -FilePath $loadTestScript -Encoding UTF8
+$loadTest | Out-File -FilePath $loadTestScript -Encoding utf8
 
 $loadResult = & pwsh -File $loadTestScript 2>&1
 $loadExitCode = $LASTEXITCODE
@@ -239,7 +239,7 @@ try {
 '@
 
 $screenTestScript = "/tmp/screen-test.ps1"
-$screenTest | Out-File -FilePath $screenTestScript -Encoding UTF8
+$screenTest | Out-File -FilePath $screenTestScript -Encoding utf8
 
 $screenResult = & pwsh -File $screenTestScript 2>&1
 $screenExitCode = $LASTEXITCODE
@@ -293,7 +293,7 @@ try {
 '@
 
 $tabPanelTestScript = "/tmp/tabpanel-test.ps1"
-$tabPanelTest | Out-File -FilePath $tabPanelTestScript -Encoding UTF8
+$tabPanelTest | Out-File -FilePath $tabPanelTestScript -Encoding utf8
 
 $tabPanelResult = & pwsh -File $tabPanelTestScript 2>&1
 $tabPanelExitCode = $LASTEXITCODE
@@ -338,7 +338,7 @@ try {
 '@
 
 $perfTestScript = "/tmp/perf-test.ps1"
-$perfTest | Out-File -FilePath $perfTestScript -Encoding UTF8
+$perfTest | Out-File -FilePath $perfTestScript -Encoding utf8
 
 $perfResult = & pwsh -File $perfTestScript 2>&1
 $perfExitCode = $LASTEXITCODE

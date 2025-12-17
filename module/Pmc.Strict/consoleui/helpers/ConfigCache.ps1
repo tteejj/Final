@@ -74,7 +74,7 @@ class ConfigCache {
         if ($needsLoad) {
             try {
                 # Load and parse config
-                $json = Get-Content $absolutePath -Raw -Encoding UTF8 -ErrorAction Stop
+                $json = Get-Content $absolutePath -Raw -Encoding utf8 -ErrorAction Stop
                 [ConfigCache]::_cache = $json | ConvertFrom-Json -AsHashtable -ErrorAction Stop
 
                 # Update metadata

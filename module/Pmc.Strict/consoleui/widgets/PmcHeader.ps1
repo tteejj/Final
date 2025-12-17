@@ -33,13 +33,13 @@ class PmcHeader : PmcWidget {
 
     # === Constructor ===
     PmcHeader() : base("Header") {
-        $this.Height = 3  # Title line + separator line + padding
+        $this.Height = 5  # Title + blank + breadcrumb + blank + separator (max height with breadcrumb)
         $this.Width = 80
     }
 
     PmcHeader([string]$title) : base("Header") {
         $this.Title = $title
-        $this.Height = 3
+        $this.Height = 5  # Title + blank + breadcrumb + blank + separator (max height with breadcrumb)
         $this.Width = 80
     }
 

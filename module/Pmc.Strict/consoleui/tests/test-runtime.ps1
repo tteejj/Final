@@ -28,7 +28,7 @@ cd /home/teej/ztest/module/Pmc.Strict/consoleui
 "@
 
 $testScriptPath = "/tmp/tui-runtime-test.ps1"
-$testScript | Out-File -FilePath $testScriptPath -Encoding UTF8
+$testScript | Out-File -FilePath $testScriptPath -Encoding utf8
 
 # Run TUI in background for a few seconds to test rendering
 Write-Host "  Starting TUI (will run for 5 seconds)..." -ForegroundColor Gray

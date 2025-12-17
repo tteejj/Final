@@ -89,7 +89,7 @@ try {
 "@
     
     $testScriptPath = "/tmp/tui-startup-test.ps1"
-    $testScript | Out-File -FilePath $testScriptPath -Encoding UTF8
+    $testScript | Out-File -FilePath $testScriptPath -Encoding utf8
     
     $result = & pwsh -File $testScriptPath 2>&1
     $exitCode = $LASTEXITCODE

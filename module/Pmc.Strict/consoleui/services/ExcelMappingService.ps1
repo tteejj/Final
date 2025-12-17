@@ -210,7 +210,7 @@ class ExcelMappingService {
 
             # ES-H6 FIX: Atomic save with proper cleanup of temp file on failure
             $tempFile = "$($this._profilesFile).tmp"
-            $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding UTF8
+            $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding utf8
 
             try {
                 if (Test-Path $this._profilesFile) {

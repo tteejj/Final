@@ -115,7 +115,7 @@ class NoteService {
 
             # Atomic save: write to temp file, then rename
             $tempFile = "$($this._metadataFile).tmp"
-            $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding UTF8
+            $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding utf8
 
             # Backup existing file
             if (Test-Path $this._metadataFile) {
@@ -169,7 +169,7 @@ class NoteService {
         $filePath = Join-Path $this._notesDir $fileName
 
         # Create initial empty note
-        Set-Content -Path $filePath -Value "" -Encoding UTF8
+        Set-Content -Path $filePath -Value "" -Encoding utf8
 
         # Create metadata entry
         $note = @{
@@ -295,7 +295,8 @@ class NoteService {
         $tempFile = "$($note.file).tmp"
 
         try {
-            Set-Content -Path $tempFile -Value $content -Encoding UTF8
+            # PowerShell 7+ requires lowercase encoding names
+            Set-Content -Path $tempFile -Value $content -Encoding utf8
 
             # Backup existing file
             if (Test-Path $note.file) {

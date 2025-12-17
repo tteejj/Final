@@ -147,7 +147,7 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
 
             # Create empty template file with instructions
             $content = "# Checklist template: $name`n# Each line will become a checklist item`n# Delete these comment lines and add your items below`n`n"
-            Set-Content -Path $filePath -Value $content -Encoding UTF8
+            Set-Content -Path $filePath -Value $content -Encoding utf8
 
             $this.SetStatusMessage("Template '$name' created. Press Enter to edit.", "success")
 

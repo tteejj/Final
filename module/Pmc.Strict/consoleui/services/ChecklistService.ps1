@@ -124,7 +124,7 @@ class ChecklistService {
 
             # Atomic save
             $tempFile = "$($this._templatesFile).tmp"
-            $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding UTF8
+            $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding utf8
 
             if (Test-Path $this._templatesFile) {
                 Copy-Item $this._templatesFile "$($this._templatesFile).bak" -Force
@@ -210,7 +210,7 @@ class ChecklistService {
 
             # Atomic save
             $tempFile = "$($this._instancesFile).tmp"
-            $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding UTF8
+            $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding utf8
 
             if (Test-Path $this._instancesFile) {
                 Copy-Item $this._instancesFile "$($this._instancesFile).bak" -Force

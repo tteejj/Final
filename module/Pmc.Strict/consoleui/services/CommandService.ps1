@@ -115,7 +115,7 @@ class CommandService {
 
             # Atomic save: write to temp file, then rename
             $tempFile = "$($this._metadataFile).tmp"
-            $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding UTF8
+            $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding utf8
 
             # Backup existing file
             if (Test-Path $this._metadataFile) {

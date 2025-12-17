@@ -94,7 +94,7 @@ class CommandLibraryScreen : StandardListScreen {
             @{ Name='category'; Label='Category'; Width=$categoryWidth }
             @{ Name='usage_count'; Label='Uses'; Width=$usesWidth }
             @{ Name='last_used'; Label='Last Used'; Width=$lastUsedWidth }
-            @{ Name='description'; Label='Description'; Width=$descWidth }
+            @{ Name='description'; Label='Command'; Width=$descWidth }
         )
     }
 
@@ -196,22 +196,22 @@ class CommandLibraryScreen : StandardListScreen {
         if ($null -eq $item -or $item.Count -eq 0) {
             # New command - empty fields (5 fields to match 5 columns)
             return @(
-                @{ Name='name'; Type='text'; Label=''; Required=$true; Value=''; Width=$nameWidth }
-                @{ Name='category'; Type='text'; Label=''; Value='General'; Width=$categoryWidth }
+                @{ Name='name'; Type='text'; Label=''; Required=$true; Value=''; Width=$nameWidth; Placeholder='Command name' }
+                @{ Name='category'; Type='text'; Label=''; Value='General'; Width=$categoryWidth; Placeholder='Category' }
                 @{ Name='usage_count'; Type='text'; Label=''; Value='0'; Width=$usesWidth; ReadOnly=$true }
                 @{ Name='last_used'; Type='text'; Label=''; Value='Never'; Width=$lastUsedWidth; ReadOnly=$true }
-                @{ Name='description'; Type='text'; Label=''; Value=''; Width=$descWidth }
+                @{ Name='description'; Type='text'; Label=''; Value=''; Width=$descWidth; Placeholder='Enter command text (will be copied to clipboard)'; Required=$true }
             )
         } else {
             # Existing command - populate from item (5 fields to match 5 columns)
             $uses = $(if ($item.usage_count) { $item.usage_count.ToString() } else { '0' })
             $lastUsed = $(if ($item.last_used) { $item.last_used } else { 'Never' })
             return @(
-                @{ Name='name'; Type='text'; Label=''; Required=$true; Value=$item.name; Width=$nameWidth }
-                @{ Name='category'; Type='text'; Label=''; Value=$item.category; Width=$categoryWidth }
+                @{ Name='name'; Type='text'; Label=''; Required=$true; Value=$item.name; Width=$nameWidth; Placeholder='Command name' }
+                @{ Name='category'; Type='text'; Label=''; Value=$item.category; Width=$categoryWidth; Placeholder='Category' }
                 @{ Name='usage_count'; Type='text'; Label=''; Value=$uses; Width=$usesWidth; ReadOnly=$true }
                 @{ Name='last_used'; Type='text'; Label=''; Value=$lastUsed; Width=$lastUsedWidth; ReadOnly=$true }
-                @{ Name='description'; Type='text'; Label=''; Value=$item.command_text; Width=$descWidth }
+                @{ Name='description'; Type='text'; Label=''; Value=$item.command_text; Width=$descWidth; Placeholder='Enter command text (will be copied to clipboard)'; Required=$true }
             )
         }
     }
@@ -219,15 +219,15 @@ class CommandLibraryScreen : StandardListScreen {
     # Handle item creation
     [void] OnItemCreated([hashtable]$values) {
         try {
-            # SAVE FIX: Validate and safe access
+            # VALIDATION: Command name is required
             if (-not $values.ContainsKey('name') -or [string]::IsNullOrWhiteSpace($values.name)) {
                 $this.SetStatusMessage("Command name is required", "error")
                 return
             }
 
-            # description field contains the command text (column alignment)
+            # VALIDATION: Command text is required (stored in 'description' field for column alignment)
             if (-not $values.ContainsKey('description') -or [string]::IsNullOrWhiteSpace($values.description)) {
-                $this.SetStatusMessage("Command text is required", "error")
+                $this.SetStatusMessage("Command text is required - enter the text you want to copy in the 'Command' field", "error")
                 return
             }
 
@@ -306,7 +306,7 @@ class CommandLibraryScreen : StandardListScreen {
     [void] CopyCommand() {
         $selectedItem = $this.List.GetSelectedItem()
         if ($null -eq $selectedItem) {
-            $this.SetStatusMessage("No command selected", "error")
+            $this.SetStatusMessage("No command selected - select a command and press Enter to copy", "error")
             return
         }
 
@@ -315,12 +315,12 @@ class CommandLibraryScreen : StandardListScreen {
         $commandId = $(if ($selectedItem -is [hashtable]) { $selectedItem['id'] } else { $selectedItem.id })
 
         if ([string]::IsNullOrEmpty($commandText)) {
-            $this.SetStatusMessage("Command has no text", "error")
+            $this.SetStatusMessage("Command '$commandName' has no text to copy - edit it and add command text in the 'Command' field", "error")
             return
         }
 
         try {
-            # Copy to clipboard
+            # Copy to clipboard (Windows only)
             Set-Clipboard -Value $commandText
 
             # Update usage statistics
@@ -328,9 +328,9 @@ class CommandLibraryScreen : StandardListScreen {
                 $this._commandService.IncrementUsageCount($commandId)
             }
 
-            $this.SetStatusMessage("Command '$commandName' copied to clipboard", "success")
+            $this.SetStatusMessage("Copied to clipboard: $commandText", "success")
         } catch {
-            $this.SetStatusMessage("Error copying command: $($_.Exception.Message)", "error")
+            $this.SetStatusMessage("Failed to copy to clipboard: $($_.Exception.Message)", "error")
         }
     }
 

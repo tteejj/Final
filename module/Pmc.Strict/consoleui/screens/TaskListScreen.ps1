@@ -1589,8 +1589,9 @@ class TaskListScreen : StandardListScreen {
         }
 
         # Build fields for inline editor - PERCENTAGE-BASED widths
-        # Calculate based on available terminal width (List.Width - borders)
-        $availableWidth = $this.List.Width - 4  # Subtract borders and padding
+        # CRITICAL FIX: Calculate based on available terminal width using SAME formula as GetColumns()
+        # Account for 4 separators (2 spaces each = 8 chars total) between 5 columns
+        $availableWidth = $this.List.Width - 4 - 8  # Subtract borders and column separators
         $textWidth = [Math]::Floor($availableWidth * [TaskListScreen]::COL_WIDTH_TEXT)
         $detailsWidth = [Math]::Floor($availableWidth * [TaskListScreen]::COL_WIDTH_DETAILS)
         $dueWidth = [Math]::Floor($availableWidth * [TaskListScreen]::COL_WIDTH_DUE)
@@ -1608,10 +1609,13 @@ class TaskListScreen : StandardListScreen {
         # Configure base class inline editor for horizontal inline editing
         $this.InlineEditor.LayoutMode = 'horizontal'
         $this.InlineEditor.SetFields($fields)
-        
-        # PROPER FIX: Use Region System for alignment
-        # The region ID is constructed by UniversalList.RenderToEngine based on data index
-        $this.InlineEditor.TargetRegionID = "$($this.List.RegionID)_Row_${selectedIndex}"
+
+        # CRITICAL FIX: Set X and Y explicitly for horizontal mode
+        # InlineEditor.RenderToEngine uses $this.X and $this.Y directly, NOT TargetRegionID
+        # List content starts at List.X + 2 (for border), and rowY calculated above
+        $this.InlineEditor.X = $this.List.X + 2
+        $this.InlineEditor.Y = $rowY
+        $this.InlineEditor.Width = $this.List.Width - 4  # Account for borders on both sides
 
         # Set up save callback
         $self = $this

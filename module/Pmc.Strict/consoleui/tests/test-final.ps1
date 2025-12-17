@@ -60,7 +60,7 @@ try {
 }
 '@
 $tuiTestScript = "/tmp/tui-startup-test.ps1"
-$tuiTest | Out-File -FilePath $tuiTestScript -Encoding UTF8
+$tuiTest | Out-File -FilePath $tuiTestScript -Encoding utf8
 $tuiResult = & pwsh -File $tuiTestScript 2>&1
 $tuiExitCode = $LASTEXITCODE
 Test-Result "TUI starts without crashing" ($tuiExitCode -eq 0 -or $tuiExitCode -eq 124) "Exit code: $tuiExitCode"
