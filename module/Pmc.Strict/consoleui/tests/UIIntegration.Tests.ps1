@@ -186,7 +186,8 @@ Describe "InlineEditor Field Rendering Math" {
     }
 
     It "currentX should advance by exactly fieldWidth in horizontal mode" {
-        # This is the correct pattern
-        $script:content | Should -Match '\$currentX\s*\+=\s*\$fieldWidth\s*$' -Because "currentX should advance by exactly fieldWidth with no extra padding"
+        # Check that currentX += fieldWidth exists (without extra padding)
+        $hasCorrectPattern = $script:content -match '\$currentX\s*\+=\s*\$fieldWidth\s*\r?\n'
+        $hasCorrectPattern | Should -Be $true -Because "currentX should advance by exactly fieldWidth"
     }
 }
