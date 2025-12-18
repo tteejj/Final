@@ -12,7 +12,6 @@
 # Usage:
 #   $result = Test-TaskValid $task
 #   if (-not $result.IsValid) {
-#       Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [ValidationHelper] Errors: $($result.Errors -join ', ')"
 #   }
 #
 #   $errors = Get-ValidationErrors $data @{
@@ -71,7 +70,6 @@ ValidationResult object
 
 .EXAMPLE
 $result = Test-TaskValid @{ text='Buy milk'; priority=3 }
-if ($result.IsValid) { Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [ValidationHelper] Valid!" }
 #>
 function Test-TaskValid {
     param(

@@ -317,16 +317,12 @@ class TabPanel : PmcWidget {
     [void] RenderToEngine([object]$engine) {
         $this.RegisterLayout($engine)
 
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabPanel.RenderToEngine] START: X=$($this.X) Y=$($this.Y) Width=$($this.Width) Height=$($this.Height) TabCount=$($this.Tabs.Count) CurrentTab=$($this.CurrentTabIndex)"
-
         # Use Z-layer 10 for tabs to ensure they render above other content
         if ($engine.PSObject.Methods['BeginLayer']) {
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabPanel] BeginLayer(10)"
             $engine.BeginLayer(10)
         }
 
         if ($this.Tabs.Count -eq 0) {
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabPanel] No tabs, rendering empty"
             $this._RenderEmptyToEngine($engine)
             if ($engine.PSObject.Methods['EndLayer']) {
                 $engine.EndLayer()
@@ -349,8 +345,7 @@ class TabPanel : PmcWidget {
 
         # 1. Render Tab Bar (Top Row)
         $currentX = $this.X
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabPanel] Rendering tab bar at Y=$($this.Y) with $($this.Tabs.Count) tabs"
-        
+
         for ($i = 0; $i -lt $this.Tabs.Count; $i++) {
             $tab = $this.Tabs[$i]
             $isActive = ($i -eq $this.CurrentTabIndex)
@@ -362,7 +357,6 @@ class TabPanel : PmcWidget {
             $drawBg = $(if ($isActive) { $tabActiveBg } else { $tabInactiveBg })
             $drawFg = $(if ($isActive) { $tabActiveText } else { $tabInactiveText })
 
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabPanel] Tab ${i}: label='$label' at X=$currentX Y=$($this.Y) active=$isActive"
             $engine.WriteAt($currentX, $this.Y, " $label ", $drawFg, $drawBg)
             $currentX += $tabWidth
         }
@@ -370,10 +364,8 @@ class TabPanel : PmcWidget {
         # Fill rest of tab bar line
         $remaining = $this.Width - ($currentX - $this.X)
         if ($remaining -gt 0) {
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabPanel] Filling rest: X=$currentX Y=$($this.Y) width=$remaining"
             $engine.Fill($currentX, $this.Y, $remaining, 1, ' ', $tabInactiveText, $tabInactiveBg)
         }
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabPanel] Tab bar complete"
 
         # 2. Separator Line
         $separatorY = $this.Y + 1
@@ -421,7 +413,6 @@ class TabPanel : PmcWidget {
             }
 
             $valX = $x + $this.LabelWidth
-            Add-Content -Path "/tmp/pmc-tabpanel-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] FIELD: tab=$($tab.Name) index=$i label=$($field.Label) rawValue='$($field.Value)' displayValue='$value' x=$x y=$y valX=$valX maxValueWidth=$maxValueWidth"
             $engine.WriteAt($valX, $y, $value.PadRight($maxValueWidth), $drawFg, $drawBg)
 
             $row++

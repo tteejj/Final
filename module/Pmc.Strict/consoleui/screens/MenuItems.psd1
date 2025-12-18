@@ -153,13 +153,7 @@
         ViewMode = 'agenda'
     }
 
-    'KanbanScreenV2' = @{
-        Menu = 'Tasks'
-        Label = 'Kanban Board'
-        Hotkey = 'K'
-        Order = 55
-        ScreenFile = 'KanbanScreenV2.ps1'
-    }
+    # KanbanScreenV2 removed - archived 2025-12-17
 
     # ===== TIME MENU =====
     'TimeListScreen' = @{

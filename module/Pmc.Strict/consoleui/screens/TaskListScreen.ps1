@@ -624,15 +624,16 @@ class TaskListScreen : StandardListScreen {
                 }.GetNewClosure()
                 Color            = { param($task)
                     if (& $getSafe $task 'completed') {
-                        return $(if ($self._supportsStrikethrough) { "`e[90m`e[9m" } else { "`e[90m" })
+                        $mutedColor = $self.List.GetThemedFg('Foreground.Muted')
+                        return $(if ($self._supportsStrikethrough) { "${mutedColor}`e[9m" } else { $mutedColor })
                     }
                     $tags = & $getSafe $task 'tags'
                     if ($tags -and $tags -is [array]) {
-                        if ($tags -contains 'urgent' -or $tags -contains 'critical') { return "`e[91m" }
-                        if ($tags -contains 'bug') { return "`e[31m" }
-                        if ($tags -contains 'feature') { return "`e[32m" }
+                        if ($tags -contains 'urgent' -or $tags -contains 'critical') { return $self.List.GetThemedFg('Foreground.Error') }
+                        if ($tags -contains 'bug') { return $self.List.GetThemedFg('Foreground.Error') }
+                        if ($tags -contains 'feature') { return $self.List.GetThemedFg('Foreground.Success') }
                     }
-                    return "`e[37m"
+                    return $self.List.GetThemedFg('Foreground.Row')
                 }.GetNewClosure()
             }
             @{
@@ -645,7 +646,7 @@ class TaskListScreen : StandardListScreen {
                     if ($d -and $d.Length -gt $detailsWidth) { return $d.Substring(0, $detailsWidth - 3) + "..." }
                     return $(if ($null -ne $d) { $d } else { '' })
                 }.GetNewClosure()
-                Color  = { return "`e[90m" }
+                Color  = { return $self.List.GetThemedFg('Foreground.Muted') }.GetNewClosure()
             }
             @{
                 Name   = 'due'
@@ -668,17 +669,17 @@ class TaskListScreen : StandardListScreen {
                 }.GetNewClosure()
                 Color  = { param($task)
                     $d = & $getSafe $task 'due'
-                    if (-not $d -or (& $getSafe $task 'completed')) { return "`e[90m" }
+                    if (-not $d -or (& $getSafe $task 'completed')) { return $self.List.GetThemedFg('Foreground.Muted') }
                     try {
                         $date = [DateTime]$d
                         $diff = ($date.Date - [DateTime]::Today).Days
-                        if ($diff -lt 0) { return "`e[91m" }
-                        if ($diff -eq 0) { return "`e[93m" }
-                        if ($diff -le 3) { return "`e[33m" }
-                        return "`e[92m"
+                        if ($diff -lt 0) { return $self.List.GetThemedFg('Foreground.Error') }
+                        if ($diff -eq 0) { return $self.List.GetThemedFg('Foreground.Error') }
+                        if ($diff -le 3) { return $self.List.GetThemedFg('Foreground.Error') }
+                        return $self.List.GetThemedFg('Foreground.Success')
                     }
                     catch {
-                        return "`e[90m"
+                        return $self.List.GetThemedFg('Foreground.Muted')
                     }
                 }.GetNewClosure()
             }
@@ -692,7 +693,7 @@ class TaskListScreen : StandardListScreen {
                     if ($p -and $p.Length -gt $projectWidth) { return $p.Substring(0, $projectWidth - 3) + "..." }
                     return $(if ($null -ne $p) { $p } else { '' })
                 }.GetNewClosure()
-                Color  = { return "`e[96m" }
+                Color  = { return $self.List.GetThemedFg('Foreground.Row') }.GetNewClosure()
             }
             @{
                 Name   = 'tags'
@@ -712,7 +713,7 @@ class TaskListScreen : StandardListScreen {
                     if ($t -and $t.Length -gt $tagsWidth) { return $t.Substring(0, $tagsWidth - 3) + "..." }
                     return $(if ($null -ne $t) { $t } else { '' })
                 }.GetNewClosure()
-                Color  = { return "`e[95m" }
+                Color  = { return $self.List.GetThemedFg('Foreground.Muted') }.GetNewClosure()
             }
         )
     }
@@ -1563,7 +1564,6 @@ class TaskListScreen : StandardListScreen {
 
     # Override EditItem to use InlineEditor horizontally at row position
     [void] EditItem($item) {
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TaskListScreen] TASKLISTSCREEN.EDITITEM CALLED"
         Write-PmcTuiLog "TaskListScreen.EditItem called - item.id=$(if ($item) { $item.id } else { 'NULL' })" "INFO"
         if ($null -eq $item) { return }
 
@@ -1808,7 +1808,8 @@ class TaskListScreen : StandardListScreen {
         $engine.WriteAt(2, $y + 1, $help, $mutedColor, $bg)
     }
 
-    [string] Render() { return "" }
+
+
 
     # Static: Register menu items for all view modes
     static [void] RegisterMenuItems([object]$registry) {

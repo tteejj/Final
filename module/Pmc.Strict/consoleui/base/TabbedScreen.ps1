@@ -224,12 +224,12 @@ class TabbedScreen : PmcScreen {
         if ($this.RenderEngine) {
             $this.RenderEngine.InvalidateCachedRegion($minY, $maxY)
             if ($global:PmcTuiLogFile) {
-                Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] TabbedScreen.OnTabChanged: Invalidated cache region Y=$minY-$maxY (no flicker)"
+                Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] TabbedScreen.OnTabChanged: Invalidated cache region Y=$minY-$maxY (differential rendering - no full invalidation)"
             }
         }
 
-        # Force full redraw to clear old tab content
-        $this.TabPanel.Invalidate()
+        # REMOVED: $this.TabPanel.Invalidate() - defeats differential renderer, causes flashing
+        # Surgical cache invalidation above is sufficient
 
         # Default: update status bar
         if ($this.StatusBar) {
@@ -364,12 +364,12 @@ class TabbedScreen : PmcScreen {
             $editorHeight = 4  # Field + potential validation message + padding
             $this.RenderEngine.InvalidateCachedRegion($editorY, $editorY + $editorHeight - 1)
             if ($global:PmcTuiLogFile) {
-                Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] TabbedScreen._SaveEditedField: Invalidated editor region Y=$editorY-$($editorY + $editorHeight - 1) (no flicker)"
+                Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] TabbedScreen._SaveEditedField: Invalidated editor region Y=$editorY-$($editorY + $editorHeight - 1) (differential rendering - no full invalidation)"
             }
         }
 
-        # Force TabPanel to invalidate and redraw
-        $this.TabPanel.Invalidate()
+        # REMOVED: $this.TabPanel.Invalidate() - defeats differential renderer, causes flashing
+        # Surgical cache invalidation above is sufficient
 
         if ($global:PmcTuiLogFile) {
             Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] TabbedScreen._SaveEditedField: Editor closed, TabPanel invalidated"
@@ -458,16 +458,11 @@ class TabbedScreen : PmcScreen {
     # === Rendering ===
 
     [void] RenderContentToEngine([object]$engine) {
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabbedScreen.RenderContentToEngine] START"
-
         if (-not $this.TabPanel) {
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabbedScreen.RenderContentToEngine] ERROR: TabPanel is null!"
             return
         }
 
-        # Render TabPanel
-        # It handles its own layout and colors
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TabbedScreen.RenderContentToEngine] Calling TabPanel.RenderToEngine"
+        # Render TabPanel - it handles its own layout and colors
         $this.TabPanel.RenderToEngine($engine)
 
         # If editor is showing, render it on top (Z-Index is handled by widget or engine order)

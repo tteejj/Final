@@ -104,11 +104,8 @@ class PmcApplication {
             }
         }
 
-        # CRITICAL FIX: Invalidate render cache to force full redraw
-        # The differential engine will naturally overwrite old content
-        # No screen clearing means no flicker or blank space
-        # }
-        $this.RenderEngine.RequestClear()
+        # DIFFERENTIAL RENDERING: Do NOT clear screen - let the new screen
+        # overwrite the old content naturally. This prevents flicker.
 
         # Push new screen
         $this.ScreenStack.Push($screen)
@@ -155,11 +152,8 @@ class PmcApplication {
             $poppedScreen.OnDoExit()
         }
 
-        # CRITICAL FIX: Invalidate render cache to force full redraw
-        # The differential engine will naturally overwrite old content
-        # No screen clearing means no flicker or blank space
-        # }
-        $this.RenderEngine.RequestClear()
+        # DIFFERENTIAL RENDERING: Do NOT clear screen - let the previous screen
+        # overwrite the popped content naturally. This prevents flicker.
 
         # Restore previous screen
         if ($this.ScreenStack.Count -gt 0) {

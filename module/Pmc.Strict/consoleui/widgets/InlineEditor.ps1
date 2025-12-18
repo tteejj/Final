@@ -536,8 +536,8 @@ class InlineEditor : PmcWidget {
             $currentField = $this._fields[$this._currentFieldIndex]
             Write-PmcTuiLog "InlineEditor.HandleInput: Current field index=$($this._currentFieldIndex) name=$($currentField.Name) type=$($currentField.Type)" "DEBUG"
 
-            # Text, Textarea, Date, Tags, and Project fields - pass input to widget (except Tab/Up/Down for navigation)
-            if ($currentField.Type -eq 'text' -or $currentField.Type -eq 'textarea' -or $currentField.Type -eq 'date' -or $currentField.Type -eq 'tags' -or $currentField.Type -eq 'project') {
+            # Text, Textarea, Date, Tags, Project AND Number fields - pass input to widget
+            if ($currentField.Type -eq 'text' -or $currentField.Type -eq 'textarea' -or $currentField.Type -eq 'date' -or $currentField.Type -eq 'tags' -or $currentField.Type -eq 'project' -or $currentField.Type -eq 'number') {
                 # Don't pass navigation keys to widget - let InlineEditor handle them
                 # NOTE: Enter is NOT in this list - it's already handled above at line 383
                 if ($keyInfo.Key -eq 'Tab' -or $keyInfo.Key -eq 'UpArrow' -or $keyInfo.Key -eq 'DownArrow') {
@@ -614,7 +614,6 @@ class InlineEditor : PmcWidget {
         # Process debounced validation first
         $this._ProcessDebouncedValidation()
 
-        Write-PmcTuiLog "InlineEditor.RenderToEngine: START X=$($this.X) Y=$($this.Y) Width=$($this.Width) Height=$($this.Height) Fields=$($this._fields.Count) CurrentFieldIndex=$($this._currentFieldIndex)" "DEBUG"
 
         # Use Z-layer for popup effect (Editor is always on top)
         # CRITICAL FIX: Base panels render at Z=20. We must be higher.
@@ -640,9 +639,6 @@ class InlineEditor : PmcWidget {
         $normalBg = $this.GetThemedColorInt('Background.Field')
         $normalFg = $this.GetThemedColorInt('Foreground.Field')
 
-        $stackTrace = [System.Diagnostics.StackTrace]::new($true)
-        $caller = $stackTrace.GetFrame(1).GetMethod().Name
-        Add-Content -Path "/tmp/pmc-inlineeditor-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] === InlineEditor.RenderToEngine START === X=$($this.X) Y=$($this.Y) Width=$($this.Width) FieldCount=$($this._fields.Count) CalledBy=$caller"
 
         for ($i = 0; $i -lt $this._fields.Count; $i++) {
             $field = $this._fields[$i]
@@ -657,7 +653,6 @@ class InlineEditor : PmcWidget {
             $val = $this._GetFieldValuePreview($field)
             $displayText = $val
 
-            Add-Content -Path "/tmp/pmc-inlineeditor-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] Field ${i}: name=$($field.Name) width=$fieldWidth currentX=$currentX Y=$lockedY displayText='$displayText' focused=$isFocused"
 
             # PREVENT DOUBLE BORDER ARTIFACTS:
             # If this field is currently expanded with a "Replacement" widget (Project/Tags),
@@ -678,12 +673,10 @@ class InlineEditor : PmcWidget {
             # Text Input Handling (Cursor logic)
             $isEditableType = ($field.Type -eq 'text' -or $field.Type -eq 'textarea' -or $field.Type -eq 'date' -or $field.Type -eq 'tags' -or $field.Type -eq 'project')
             $hasWidget = $this._fieldWidgets.ContainsKey($field.Name)
-            Write-PmcTuiLog "InlineEditor.RenderToEngine: Field check - focused=$isFocused editableType=$isEditableType hasWidget=$hasWidget widgets=$($this._fieldWidgets.Keys -join ',')" "DEBUG"
             if ($isFocused -and $isEditableType -and $hasWidget) {
                 $widget = $this._fieldWidgets[$field.Name]
                 if ($widget.GetType().Name -eq 'TextInput') {
                     $text = $widget.GetText()
-                    Write-PmcTuiLog "InlineEditor.RenderToEngine: TextInput widget found for field '$($field.Name)' - text='$text'" "DEBUG"
 
                     # Ensure widget width logic
                     $widget.Width = $fieldWidth + 4
@@ -707,7 +700,6 @@ class InlineEditor : PmcWidget {
                     $displayText = $visibleText
                     
                     # Render Field Background & Text
-                    Write-PmcTuiLog "InlineEditor.RenderToEngine: Rendering focused text field '$($field.Name)' at X=$currentX Y=$lockedY width=$fieldWidth text='$displayText'" "DEBUG"
                     $engine.Fill($currentX, $lockedY, $fieldWidth, 1, ' ', $fg, $bg)
                     $engine.WriteAt($currentX, $lockedY, $displayText, $fg, $bg)
 
@@ -720,7 +712,6 @@ class InlineEditor : PmcWidget {
                             $cursorChar = $displayText[$relCursor]
                         }
                         # Swap FG/BG for cursor
-                        Write-PmcTuiLog "InlineEditor.RenderToEngine: Rendering cursor at X=$($currentX + $relCursor) Y=$lockedY char='$cursorChar'" "DEBUG"
                         $engine.WriteAt($currentX + $relCursor, $lockedY, $cursorChar, $bg, $fg)
                     }
                 }
@@ -1516,10 +1507,29 @@ class InlineEditor : PmcWidget {
             }
 
             'number' {
-                # Number is handled inline (no separate widget)
-                # Store value in field definition
-                if (-not $fieldDef.ContainsKey('Value')) {
-                    $fieldDef.Value = $(if ($fieldDef.ContainsKey('Min')) { $fieldDef.Min } else { 0 })
+                # Number fields use TextInput for direct entry AND arrow keys for increment/decrement
+                $widget = [TextInput]::new()
+                $widget.X = $this.X + 5
+                $widget.Y = $this.Y + 5
+                $widget.Width = 20
+                $widget.Height = 3
+                $widget.Label = $fieldDef.Label
+                
+                # Set initial value
+                if ($value) {
+                    $widget.SetText($value.ToString())
+                } else {
+                    $min = $(if ($fieldDef.ContainsKey('Min')) { $fieldDef.Min } else { 0 })
+                    $widget.SetText($min.ToString())
+                }
+                
+                # Validate input is numeric
+                $widget.OnTextChanged = {
+                    param($newText)
+                    if ([string]::IsNullOrWhiteSpace($newText)) { return }
+                    if ($newText -notmatch '^-?\d*\.?\d*$') {
+                        # Revert invalid char? (TextInput doesn't support revert easily, rely on validation)
+                    }
                 }
             }
 
@@ -1719,6 +1729,19 @@ class InlineEditor : PmcWidget {
             }
 
             'number' {
+                if ($this._fieldWidgets.ContainsKey($fieldName)) {
+                    $widget = $this._fieldWidgets[$fieldName]
+                    $textVal = $widget.GetText()
+                    if ([string]::IsNullOrWhiteSpace($textVal)) {
+                        return 0
+                    }
+                    try {
+                        return [double]$textVal
+                    } catch {
+                        return 0
+                    }
+                }
+                
                 $field = $this._fields | Where-Object { $_.Name -eq $fieldName } | Select-Object -First 1
                 if ($field.ContainsKey('Value')) {
                     return $field.Value

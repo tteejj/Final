@@ -653,7 +653,6 @@ class TimeListScreen : StandardListScreen {
             $termWidth = [Console]::WindowWidth
             $termHeight = [Console]::WindowHeight
             $dialogOutput = $dialog.Render($termWidth, $termHeight, $theme)
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TimeListScreen] Rendering dialog output"
 
             # Handle input
             if ([Console]::KeyAvailable) {

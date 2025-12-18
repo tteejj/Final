@@ -55,7 +55,6 @@ $input.Text = "Initial value"
 $input.Placeholder = "Type something..."
 $input.MaxLength = 100
 $input.Validator = { param($text) $text.Length -ge 3 }
-$input.OnTextChanged = { param($newText) Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TextInput] Changed: $newText" }
 $ansiOutput = $input.Render()
 #>
 class TextInput : PmcWidget {

@@ -156,19 +156,15 @@ class StandardListScreen : PmcScreen {
     Initialize screen with render engine and load initial data
     #>
     [void] Initialize([object]$renderEngine) {
-        # Write-PmcTuiLog "StandardListScreen.Initialize: Starting" "DEBUG"
         
         # Call base class initialization
         ([PmcScreen]$this).Initialize($renderEngine)
 
-        # Write-PmcTuiLog "StandardListScreen.Initialize: Calling LoadData" "DEBUG"
         # Load data into the list
         $this.LoadData()
 
-        # Write-PmcTuiLog "StandardListScreen.Initialize: Calling RefreshList" "DEBUG"
         $this.RefreshList()
 
-        # Write-PmcTuiLog "StandardListScreen.Initialize: Complete" "DEBUG"
     }
 
     # === Abstract Methods (MUST override) ===
@@ -181,21 +177,21 @@ class StandardListScreen : PmcScreen {
 
         # Resize List to fit content area
         if ($this.List) {
-            # Header with Breadcrumbs uses ~5 lines:
-            # Y   : Title
-            # Y+1 : Blank
-            # Y+2 : Breadcrumb
-            # Y+3 : Blank
-            # Y+4 : Separator
-            # So List should start at Y+5 or Y+6?
-            # Header is at Y=1. So Ends at 1+4=5.
-            # List should start at 6.
-            # List should end before status lines at bottom (need 3 lines for status + footer)
-            $listY = 6
-            $listHeight = [Math]::Max(5, $height - $listY - 3)
-
-            $this.List.SetPosition(0, $listY)
-            $this.List.SetSize($width, $listHeight)
+            # LAYOUTMANAGER FIX: Use LayoutManager for content positioning instead of hardcoded values
+            if (-not $this.LayoutManager) {
+                $this.LayoutManager = [PmcLayoutManager]::new()
+                $this.LayoutManager.DefineRegion('ListContent', 0, 6, '100%', 'FILL')
+            }
+            # Ensure ListContent region exists (may not if LayoutManager was set externally)
+            try {
+                $contentRect = $this.LayoutManager.GetRegion('ListContent', $width, $height)
+            } catch {
+                # Fallback: define the region now
+                $this.LayoutManager.DefineRegion('ListContent', 0, 6, '100%', 'FILL')
+                $contentRect = $this.LayoutManager.GetRegion('ListContent', $width, $height)
+            }
+            $this.List.SetPosition($contentRect.X, $contentRect.Y)
+            $this.List.SetSize($contentRect.Width, $contentRect.Height)
         }
         
         # Resize overlays
@@ -343,14 +339,10 @@ class StandardListScreen : PmcScreen {
     #>
     [void] OnItemActivated($item) {
         # Default: open inline editor
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [StandardListScreen.OnItemActivated] CALLED for item: $(if ($null -ne $item.text) { $item.text } else { $item.id })"
         try {
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [StandardListScreen.OnItemActivated] About to call EditItem"
             $this.EditItem($item)
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [StandardListScreen.OnItemActivated] EditItem completed"
         }
         catch {
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [StandardListScreen.OnItemActivated] ERROR calling EditItem: $($_.Exception.Message) at line $($_.InvocationInfo.ScriptLineNumber)"
         }
     }
 
@@ -383,8 +375,18 @@ class StandardListScreen : PmcScreen {
         # Initialize UniversalList
         $this.List = [UniversalList]::new()
 
-        $this.List.SetPosition(0, 3)
-        $this.List.SetSize($this.TermWidth, $this.TermHeight - 6)
+        # LAYOUTMANAGER FIX: Use LayoutManager for positioning instead of hardcoded values
+        # NOTE: List screens use full-width layout (no side margins) unlike other screens
+        if (-not $this.LayoutManager) {
+            $this.LayoutManager = [PmcLayoutManager]::new()
+            # Define a full-width 'ListContent' region for list screens
+            # X=0, Y=6 to start below header, Width=100%, Height=FILL
+            $this.LayoutManager.DefineRegion('ListContent', 0, 6, '100%', 'FILL')
+        }
+        $contentRect = $this.LayoutManager.GetRegion('ListContent', $this.TermWidth, $this.TermHeight)
+        $this.List.SetPosition($contentRect.X, $contentRect.Y)
+        $this.List.SetSize($contentRect.Width, $contentRect.Height)
+
         $this.List.Title = "" # Empty title to avoid duplication with Screen Header
         $this.List.AllowMultiSelect = $this.AllowMultiSelect
         $this.List.AllowInlineEdit = $this.AllowEdit
@@ -494,16 +496,12 @@ class StandardListScreen : PmcScreen {
                 }.GetNewClosure()
             }
             'timelog' {
-                # Write-PmcTuiLog "StandardListScreen._InitializeComponents: Setting OnTimeLogsChanged callback" "DEBUG"
                 $this.Store.OnTimeLogsChanged = {
                     param($logs)
-                    # Write-PmcTuiLog "OnTimeLogsChanged callback invoked, IsActive=$($self.IsActive)" "DEBUG"
                     if ($self.IsActive) {
-                        # Write-PmcTuiLog "OnTimeLogsChanged: Calling RefreshList" "DEBUG"
                         $self.RefreshList()
                     }
                 }.GetNewClosure()
-                # Write-PmcTuiLog "StandardListScreen._InitializeComponents: OnTimeLogsChanged callback set" "DEBUG"
             }
         }
 
@@ -518,10 +516,8 @@ class StandardListScreen : PmcScreen {
     hidden [void] _ConfigureListActions() {
         # }
 
-        # Write-PmcTuiLog "_ConfigureListActions: START AllowAdd=$($this.AllowAdd) AllowEdit=$($this.AllowEdit) AllowDelete=$($this.AllowDelete)" "DEBUG"
 
         if ($this.AllowAdd) {
-            # Write-PmcTuiLog "_ConfigureListActions: Creating Add action" "DEBUG"
             # Use GetNewClosure() to capture current scope
             $addAction = {
                 # Find the screen that owns this List by walking up
@@ -530,13 +526,10 @@ class StandardListScreen : PmcScreen {
                 # }
                 $currentScreen.AddItem()
             }.GetNewClosure()
-            # Write-PmcTuiLog "_ConfigureListActions: Add action created, adding to list" "DEBUG"
             $this.List.AddAction('a', 'Add', $addAction)
-            # Write-PmcTuiLog "_ConfigureListActions: Add action added successfully" "DEBUG"
         }
 
         if ($this.AllowEdit) {
-            # Write-PmcTuiLog "_ConfigureListActions: Creating Edit action" "DEBUG"
             $editAction = {
                 $currentScreen = $global:PmcApp.CurrentScreen
                 $selectedItem = $currentScreen.List.GetSelectedItem()
@@ -544,13 +537,10 @@ class StandardListScreen : PmcScreen {
                     $currentScreen.EditItem($selectedItem)
                 }
             }.GetNewClosure()
-            # Write-PmcTuiLog "_ConfigureListActions: Edit action created, adding to list" "DEBUG"
             $this.List.AddAction('e', 'Edit', $editAction)
-            # Write-PmcTuiLog "_ConfigureListActions: Edit action added successfully" "DEBUG"
         }
 
         if ($this.AllowDelete) {
-            # Write-PmcTuiLog "_ConfigureListActions: Creating Delete action" "DEBUG"
             $deleteAction = {
                 $currentScreen = $global:PmcApp.CurrentScreen
                 $selectedItem = $currentScreen.List.GetSelectedItem()
@@ -558,34 +548,25 @@ class StandardListScreen : PmcScreen {
                     $currentScreen.DeleteItem($selectedItem)
                 }
             }.GetNewClosure()
-            # Write-PmcTuiLog "_ConfigureListActions: Delete action created, adding to list" "DEBUG"
             $this.List.AddAction('d', 'Delete', $deleteAction)
-            # Write-PmcTuiLog "_ConfigureListActions: Delete action added successfully" "DEBUG"
         }
 
         # Add custom actions from subclass
-        # Write-PmcTuiLog "_ConfigureListActions: Getting custom actions from subclass" "DEBUG"
         try {
             $customActions = $this.GetCustomActions()
-            # Write-PmcTuiLog "_ConfigureListActions: Got custom actions, type=$($customActions.GetType().FullName)" "DEBUG"
             $actionCount = $(if ($customActions -is [array]) { $customActions.Count } else { 1 })
-            # Write-PmcTuiLog "_ConfigureListActions: Custom actions count=$actionCount" "DEBUG"
             if ($null -ne $customActions) {
                 foreach ($action in $customActions) {
-                    # Write-PmcTuiLog "_ConfigureListActions: Processing action type=$($action.GetType().FullName)" "DEBUG"
                     if ($null -ne $action -and $action -is [hashtable] -and $action.ContainsKey('Key') -and $action.ContainsKey('Label') -and $action.ContainsKey('Callback')) {
-                        # Write-PmcTuiLog "_ConfigureListActions: Adding custom action key=$($action.Key)" "DEBUG"
                         $this.List.AddAction($action.Key, $action.Label, $action.Callback)
                     }
                 }
             }
-            # Write-PmcTuiLog "_ConfigureListActions: Custom actions added successfully" "DEBUG"
         }
         catch {
             Write-PmcTuiLog "_ConfigureListActions: Error adding custom actions: $_" "ERROR"
             Write-PmcTuiLog "_ConfigureListActions: Error stack: $($_.ScriptStackTrace)" "ERROR"
         }
-        # Write-PmcTuiLog "_ConfigureListActions: COMPLETE" "DEBUG"
     }
 
     # === Lifecycle Methods ===
@@ -595,7 +576,6 @@ class StandardListScreen : PmcScreen {
     Called when screen enters view
     #>
     [void] OnEnter() {
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') ===== StandardListScreen.OnEnter: START for screen=$($this.ScreenKey) ====="
         $this.IsActive = $true
 
         # CRITICAL FIX: Force layout update on enter to ensure correct sizing
@@ -604,33 +584,22 @@ class StandardListScreen : PmcScreen {
         $this.Resize($termSize.Width, $termSize.Height)
 
         # Configure list actions (ensures custom actions are registered even for singleton screens)
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StandardListScreen.OnEnter: Calling _ConfigureListActions()"
         $this._ConfigureListActions()
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StandardListScreen.OnEnter: _ConfigureListActions complete"
 
         # Set columns
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StandardListScreen.OnEnter: Calling GetColumns()"
         try {
             $columns = $this.GetColumns()
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StandardListScreen.OnEnter: Got $($columns.Count) columns"
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StandardListScreen.OnEnter: Calling List.SetColumns()"
             $this.List.SetColumns($columns)
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StandardListScreen.OnEnter: SetColumns complete"
         }
         catch {
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StandardListScreen.OnEnter: EXCEPTION in GetColumns/SetColumns - $($_.Exception.Message)"
             throw
         }
 
         # Load data
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StandardListScreen.OnEnter: Calling LoadData()"
         try {
             $this.LoadData()
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StandardListScreen.OnEnter: LoadData complete"
         }
         catch {
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StandardListScreen.OnEnter: EXCEPTION in LoadData - $($_.Exception.Message)"
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') StandardListScreen.OnEnter: STACK - $($_.ScriptStackTrace)"
             throw
         }
 
@@ -645,7 +614,6 @@ class StandardListScreen : PmcScreen {
             $this.StatusBar.SetLeftText("$itemCount items")
         }
 
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') ===== StandardListScreen.OnEnter: COMPLETE ====="
     }
 
     <#
@@ -677,9 +645,8 @@ class StandardListScreen : PmcScreen {
     Add a new item
     #>
     [void] AddItem() {
-        # DEBUG logging
-        # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] StandardListScreen.AddItem() called on type=$($this.GetType().Name) key=$($this.ScreenKey)"
-        # }
+        # DEBUG logging - ENABLED to trace add operation bugs
+        Write-PmcTuiLog "*** STANDARDLISTSCREEN.ADDITEM CALLED on type=$($this.GetType().Name) key=$($this.ScreenKey) ***" "INFO"
 
         $this.EditorMode = 'add'
         $this.CurrentEditItem = @{}
@@ -721,32 +688,24 @@ class StandardListScreen : PmcScreen {
     Item to edit
     #>
     [void] EditItem($item) {
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [EditItem] START"
         Write-PmcTuiLog "*** STANDARDLISTSCREEN.EDITITEM CALLED (base class) - item type=$($item.GetType().Name) ***" "WARN"
         if ($null -eq $item) {
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [EditItem] item is null, returning"
             return
         }
 
         $this.EditorMode = 'edit'
         $this.CurrentEditItem = $item
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [EditItem] CurrentEditItem set to: $($item.id)"
 
         $fields = $this.GetEditFields($item)
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [EditItem] GetEditFields returned $($fields.Count) fields"
         foreach ($field in $fields) {
-            # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [EditItem]   Field: Name=$($field.Name) Type=$($field.Type) Width=$($field.Width)"
         }
 
         $this.InlineEditor.LayoutMode = "horizontal"
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [EditItem] LayoutMode set to horizontal"
 
         $this.InlineEditor.SetFields($fields)
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [EditItem] SetFields called, editor fields count=$($this.InlineEditor._fields.Count)"
 
         $this.InlineEditor.Title = "Edit"
         $this.ShowInlineEditor = $true
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [EditItem] ShowInlineEditor = true"
     }
 
     <#
@@ -861,12 +820,10 @@ class StandardListScreen : PmcScreen {
         try {
             if ($this.EditorMode -eq 'add') {
                 # Call subclass callback for item creation
-                # Write-PmcTuiLog "Calling OnItemCreated with values: $($values | ConvertTo-Json -Compress)" "DEBUG"
                 $this.OnItemCreated($values)
             }
             elseif ($this.EditorMode -eq 'edit') {
                 # Call subclass callback for item update
-                # Write-PmcTuiLog "Calling OnItemUpdated with item and values" "DEBUG"
                 $this.OnItemUpdated($this.CurrentEditItem, $values)
             }
             else {
@@ -876,12 +833,10 @@ class StandardListScreen : PmcScreen {
             }
 
             # Only close editor on success
-            # Write-PmcTuiLog "_SaveEditedItem: Setting ShowInlineEditor=false" "DEBUG"
             $this.ShowInlineEditor = $false
             $this.EditorMode = ""
             $this.CurrentEditItem = $null
 
-            # Write-PmcTuiLog "_SaveEditedItem: After close - ShowInlineEditor=$($this.ShowInlineEditor)" "DEBUG"
         }
         catch {
             Write-PmcTuiLog "_SaveEditedItem failed: $_" "ERROR"

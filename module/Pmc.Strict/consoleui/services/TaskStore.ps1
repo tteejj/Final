@@ -52,7 +52,6 @@ TaskStore provides:
 
 .EXAMPLE
 $store = [TaskStore]::GetInstance()
-$store.OnTaskAdded = { param($task) Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TaskStore] New task: $($task.text)" }
 $store.AddTask(@{ text='Buy milk'; project='personal'; priority=3 })
 #>
 class TaskStore {

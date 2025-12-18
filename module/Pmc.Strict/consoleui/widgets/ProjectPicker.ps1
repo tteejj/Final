@@ -50,8 +50,6 @@ Features:
 $picker = [ProjectPicker]::new()
 $picker.SetPosition(10, 5)
 $picker.SetSize(35, 12)
-$picker.OnProjectSelected = { param($projectName) Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [ProjectPicker] Selected: $projectName" }
-$picker.OnProjectCreated = { param($projectName) Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [ProjectPicker] Created: $projectName" }
 $picker.RenderToEngine($engine)
 #>
 class ProjectPicker : PmcWidget {

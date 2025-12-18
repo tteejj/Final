@@ -117,7 +117,6 @@ class ProjectInfoScreenV4 : TabbedScreen {
         } else {
             $keysDebug = $this.ProjectData.PSObject.Properties.Name
         }
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [ProjectInfoScreenV4] Loaded project '$($this.ProjectName)' with keys: $($keysDebug -join ', ')"
 
         # Build tabs with current data
         $this._BuildTabs()

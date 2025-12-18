@@ -110,204 +110,142 @@ class ExcelImportScreen : PmcScreen {
         }
     }
 
-    [string] Render() {
-        $sb = [StringBuilder]::new()
 
-        # Render base widgets
-        $output = ([PmcScreen]$this).Render()
-        $sb.Append($output)
+    [void] RenderToEngine([object]$engine) {
+        # Call base class to render chrome widgets (Header, Footer, StatusBar, MenuBar)
+        ([PmcScreen]$this).RenderToEngine($engine)
 
         # Calculate content area
         $contentY = 6
-        $contentHeight = $this.TermHeight - 8
         $contentWidth = $this.TermWidth
-
         $y = $contentY + 2
+
+        # Get common colors
+        $textFg = $this.GetThemedColorInt('Foreground.Field')
+        $textBg = $this.GetThemedColorInt('Background.Field')
 
         # Render based on step
         switch ($this._step) {
-            1 {
-                $this._RenderStep1($sb, $y, $contentWidth)
-            }
-            2 {
-                $this._RenderStep2($sb, $y, $contentWidth)
-            }
-            3 {
-                $this._RenderStep3($sb, $y, $contentWidth)
-            }
-            4 {
-                $this._RenderStep4($sb, $y, $contentWidth)
-            }
+            1 { $this._RenderStep1Engine($engine, $y, $contentWidth) }
+            2 { $this._RenderStep2Engine($engine, $y, $contentWidth) }
+            3 { $this._RenderStep3Engine($engine, $y, $contentWidth) }
+            4 { $this._RenderStep4Engine($engine, $y, $contentWidth) }
         }
 
         # Render error if any
         if (-not [string]::IsNullOrEmpty($this._errorMessage)) {
-            $sb.Append($this.Header.BuildMoveTo(2, $this.TermHeight - 5))
-            $sb.Append("`e[31mError: $($this._errorMessage)`e[0m")
+            $errorFg = $this.GetThemedColorInt('Foreground.Error')
+            $engine.WriteAt(2, $this.TermHeight - 5, "Error: $($this._errorMessage)", $errorFg, $textBg)
         }
-
-        return $sb.ToString()
     }
 
-    hidden [void] _RenderStep1([StringBuilder]$sb, [int]$y, [int]$width) {
-        # Step 1: Connect to Excel
-        $sb.Append($this.Header.BuildMoveTo(2, $y))
-        $sb.Append("`e[1mStep 1: Connect to Excel`e[0m")
+    # === Engine-based render methods (new) ===
+    
+    hidden [void] _RenderStep1Engine([object]$engine, [int]$y, [int]$width) {
+        $titleFg = $this.GetThemedColorInt('Foreground.Title')
+        $errorFg = $this.GetThemedColorInt('Foreground.Error')
+        $mutedFg = $this.GetThemedColorInt('Foreground.Muted')
+        $selFg = $this.GetThemedColorInt('Foreground.RowSelected')
+        $selBg = $this.GetThemedColorInt('Background.RowSelected')
+        $textBg = $this.GetThemedColorInt('Background.Field')
+
+        $engine.WriteAt(2, $y, "Step 1: Connect to Excel", $titleFg, $textBg)
         $y += 2
 
-        # Check if Excel COM is available
         if ($null -eq $this._reader) {
-            $sb.Append($this.Header.BuildMoveTo(4, $y))
-            $sb.Append("`e[31m")  # Red text
-            $sb.Append("Excel COM is not available on this system.")
-            $sb.Append("`e[0m")
+            $engine.WriteAt(4, $y, "Excel COM is not available on this system.", $errorFg, $textBg)
             $y += 2
-
-            $sb.Append($this.Header.BuildMoveTo(4, $y))
-            $sb.Append("`e[90m")  # Gray text
-            $sb.Append("This feature requires Microsoft Excel to be installed.")
-            $sb.Append("`e[0m")
+            $engine.WriteAt(4, $y, "This feature requires Microsoft Excel to be installed.", $mutedFg, $textBg)
             $y++
-
-            $sb.Append($this.Header.BuildMoveTo(4, $y))
-            $sb.Append("`e[90m")  # Gray text
-            $sb.Append("Press Esc to return to the project list.")
-            $sb.Append("`e[0m")
+            $engine.WriteAt(4, $y, "Press Esc to return to the project list.", $mutedFg, $textBg)
             return
         }
 
-        # Option 1: Attach to running Excel
-        $sb.Append($this.Header.BuildMoveTo(4, $y))
-        if ($this._selectedOption -eq 0) {
-            $sb.Append("`e[7m")  # Highlight
-        }
-        $sb.Append("1. Attach to running Excel instance")
-        if ($this._selectedOption -eq 0) {
-            $sb.Append("`e[0m")
-        }
+        # Option 1
+        $fg1 = $(if ($this._selectedOption -eq 0) { $selFg } else { $mutedFg })
+        $bg1 = $(if ($this._selectedOption -eq 0) { $selBg } else { $textBg })
+        $engine.WriteAt(4, $y, "1. Attach to running Excel instance", $fg1, $bg1)
         $y++
 
-        # Option 2: Open Excel file
-        $sb.Append($this.Header.BuildMoveTo(4, $y))
-        if ($this._selectedOption -eq 1) {
-            $sb.Append("`e[7m")  # Highlight
-        }
-        $sb.Append("2. Open Excel file...")
-        if ($this._selectedOption -eq 1) {
-            $sb.Append("`e[0m")
-        }
-        $y++
-
-        $y++
-        $sb.Append($this.Header.BuildMoveTo(4, $y))
-        $sb.Append("`e[90m")  # Gray text
-        if ($this._selectedOption -eq 0) {
-            $sb.Append("(Make sure Excel is running with your workbook open)")
-        }
-        else {
-            $sb.Append("(Browse for an Excel file to import)")
-        }
-        $sb.Append("`e[0m")
-    }
-
-    hidden [void] _RenderStep2([StringBuilder]$sb, [int]$y, [int]$width) {
-        # Step 2: Select profile
-        $sb.Append($this.Header.BuildMoveTo(2, $y))
-        $sb.Append("`e[1mStep 2: Select Import Profile`e[0m")
+        # Option 2
+        $fg2 = $(if ($this._selectedOption -eq 1) { $selFg } else { $mutedFg })
+        $bg2 = $(if ($this._selectedOption -eq 1) { $selBg } else { $textBg })
+        $engine.WriteAt(4, $y, "2. Open Excel file...", $fg2, $bg2)
         $y += 2
 
-        # HIGH FIX ES-H1: Validate GetAllProfiles() return
+        $hint = $(if ($this._selectedOption -eq 0) { "(Make sure Excel is running with your workbook open)" } else { "(Browse for an Excel file to import)" })
+        $engine.WriteAt(4, $y, $hint, $mutedFg, $textBg)
+    }
+
+    hidden [void] _RenderStep2Engine([object]$engine, [int]$y, [int]$width) {
+        $titleFg = $this.GetThemedColorInt('Foreground.Title')
+        $selFg = $this.GetThemedColorInt('Foreground.RowSelected')
+        $selBg = $this.GetThemedColorInt('Background.RowSelected')
+        $textFg = $this.GetThemedColorInt('Foreground.Field')
+        $textBg = $this.GetThemedColorInt('Background.Field')
+
+        $engine.WriteAt(2, $y, "Step 2: Select Import Profile", $titleFg, $textBg)
+        $y += 2
+
         $profiles = @($this._mappingService.GetAllProfiles())
-        if ($null -eq $profiles) {
-            throw "ExcelMappingService.GetAllProfiles() returned null. Failed to load import profiles."
+        if ($null -eq $profiles -or $profiles.Count -eq 0) {
+            $engine.WriteAt(4, $y, "No profiles found. Please create a profile first.", $textFg, $textBg)
+            return
         }
-        if ($profiles.Count -eq 0) {
-            $sb.Append($this.Header.BuildMoveTo(4, $y))
-            $sb.Append("No profiles found. Please create a profile first.")
+
+        $activeProfile = $this._mappingService.GetActiveProfile()
+        $activeId = $null
+        if ($null -ne $activeProfile) {
+            if ($activeProfile -is [hashtable] -and $activeProfile.ContainsKey('id')) { $activeId = $activeProfile['id'] }
+            elseif ($activeProfile.PSObject.Properties['id']) { $activeId = $activeProfile.id }
         }
-        else {
-            # HIGH FIX ES-H2: Validate GetActiveProfile() return before property access
-            $activeProfile = $this._mappingService.GetActiveProfile()
-            $activeId = $(if ($null -ne $activeProfile) {
-                    if ($activeProfile -is [hashtable]) {
-                        if ($activeProfile.ContainsKey('id')) { $activeProfile['id'] } else { $null }
-                    }
-                    else {
-                        if ($activeProfile.PSObject.Properties['id']) { $activeProfile.id } else { $null }
-                    }
-                }
-                else {
-                    $null
-                })
 
-            for ($i = 0; $i -lt $profiles.Count; $i++) {
-                $profile = $profiles[$i]
-                # HIGH FIX ES-H3: Validate profile before string interpolation
-                if ($null -eq $profile) {
-                    Write-PmcTuiLog "ExcelImportScreen: Null profile at index $i" "WARNING"
-                    continue
-                }
+        for ($i = 0; $i -lt $profiles.Count; $i++) {
+            $profile = $profiles[$i]
+            if ($null -eq $profile) { continue }
 
-                # Handle both hashtables and PSCustomObjects
-                $profileId = $(if ($profile -is [hashtable]) {
-                        if ($profile.ContainsKey('id')) { $profile['id'] } else { $null }
-                    }
-                    else {
-                        if ($profile.PSObject.Properties['id']) { $profile.id } else { $null }
-                    })
-                $isActive = $(if ($profileId -eq $activeId) { " [ACTIVE]" } else { "" })
-
-                $sb.Append($this.Header.BuildMoveTo(4, $y + $i))
-                if ($i -eq $this._selectedOption) {
-                    $sb.Append("`e[7m")
-                }
-
-                # Handle both hashtables and PSCustomObjects
-                $profileName = $(if ($profile -is [hashtable]) {
-                        if ($profile.ContainsKey('name')) { $profile['name'] } else { 'Unnamed' }
-                    }
-                    else {
-                        if ($profile.PSObject.Properties['name']) { $profile.name } else { 'Unnamed' }
-                    })
-
-                $sb.Append("$($i + 1). $profileName$isActive")
-                if ($i -eq $this._selectedOption) {
-                    $sb.Append("`e[0m")
-                }
+            $profileId = $null
+            $profileName = 'Unnamed'
+            if ($profile -is [hashtable]) {
+                if ($profile.ContainsKey('id')) { $profileId = $profile['id'] }
+                if ($profile.ContainsKey('name')) { $profileName = $profile['name'] }
+            } else {
+                if ($profile.PSObject.Properties['id']) { $profileId = $profile.id }
+                if ($profile.PSObject.Properties['name']) { $profileName = $profile.name }
             }
+
+            $isActive = $(if ($profileId -eq $activeId) { " [ACTIVE]" } else { "" })
+            $text = "$($i + 1). $profileName$isActive"
+
+            $fg = $(if ($i -eq $this._selectedOption) { $selFg } else { $textFg })
+            $bg = $(if ($i -eq $this._selectedOption) { $selBg } else { $textBg })
+            $engine.WriteAt(4, $y + $i, $text, $fg, $bg)
         }
     }
 
-    hidden [void] _RenderStep3([StringBuilder]$sb, [int]$y, [int]$width) {
-        # Step 3: Preview data
-        $sb.Append($this.Header.BuildMoveTo(2, $y))
-        $sb.Append("`e[1mStep 3: Preview Import Data`e[0m")
+    hidden [void] _RenderStep3Engine([object]$engine, [int]$y, [int]$width) {
+        $titleFg = $this.GetThemedColorInt('Foreground.Title')
+        $textFg = $this.GetThemedColorInt('Foreground.Field')
+        $textBg = $this.GetThemedColorInt('Background.Field')
+
+        $engine.WriteAt(2, $y, "Step 3: Preview Import Data", $titleFg, $textBg)
         $y += 2
 
         if ($null -eq $this._activeProfile) {
-            $sb.Append($this.Header.BuildMoveTo(4, $y))
-            $sb.Append("No profile selected")
+            $engine.WriteAt(4, $y, "No profile selected", $textFg, $textBg)
             return
         }
 
-        # HIGH FIX ES-H4: Validate profile name before string interpolation
-        $profileName = $(if ($null -ne $this._activeProfile) {
-                if ($this._activeProfile -is [hashtable]) {
-                    if ($this._activeProfile.ContainsKey('name')) { $this._activeProfile['name'] } else { 'Unnamed Profile' }
-                }
-                else {
-                    if ($this._activeProfile.PSObject.Properties['name']) { $this._activeProfile.name } else { 'Unnamed Profile' }
-                }
-            }
-            else {
-                'Unnamed Profile'
-            })
-        $sb.Append($this.Header.BuildMoveTo(4, $y))
-        $sb.Append("Profile: $profileName")
+        $profileName = 'Unnamed Profile'
+        if ($this._activeProfile -is [hashtable] -and $this._activeProfile.ContainsKey('name')) {
+            $profileName = $this._activeProfile['name']
+        } elseif ($this._activeProfile.PSObject.Properties['name']) {
+            $profileName = $this._activeProfile.name
+        }
+
+        $engine.WriteAt(4, $y, "Profile: $profileName", $textFg, $textBg)
         $y += 2
 
-        # Show preview data
-        # MEDIUM FIX ES-M4: Use script-level constant for max preview rows
         $maxRows = $global:MAX_PREVIEW_ROWS
         $rowCount = 0
 
@@ -315,39 +253,28 @@ class ExcelImportScreen : PmcScreen {
             if ($rowCount -ge $maxRows) { break }
 
             $fieldName = $mapping['display_name']
-            $value = $(if ($this._previewData.ContainsKey($mapping['excel_cell'])) {
-                    $cellValue = $this._previewData[$mapping['excel_cell']]
-                    if ($null -eq $cellValue -or [string]::IsNullOrWhiteSpace($cellValue)) {
-                        "(empty)"
-                    }
-                    else {
-                        $cellValue
-                    }
-                }
-                else {
-                    "(empty)"
-                })
+            $value = "(empty)"
+            if ($this._previewData.ContainsKey($mapping['excel_cell'])) {
+                $cellValue = $this._previewData[$mapping['excel_cell']]
+                if (-not [string]::IsNullOrWhiteSpace($cellValue)) { $value = $cellValue }
+            }
 
             $required = $(if ($mapping['required']) { "*" } else { " " })
-
-            $sb.Append($this.Header.BuildMoveTo(4, $y + $rowCount))
-            $sb.Append("$required$($fieldName): $value")
+            $engine.WriteAt(4, $y + $rowCount, "$required$($fieldName): $value", $textFg, $textBg)
             $rowCount++
         }
     }
 
-    hidden [void] _RenderStep4([StringBuilder]$sb, [int]$y, [int]$width) {
-        # Step 4: Confirm
-        $sb.Append($this.Header.BuildMoveTo(2, $y))
-        $sb.Append("`e[1mStep 4: Import Complete`e[0m")
-        $y += 2
+    hidden [void] _RenderStep4Engine([object]$engine, [int]$y, [int]$width) {
+        $titleFg = $this.GetThemedColorInt('Foreground.Title')
+        $textFg = $this.GetThemedColorInt('Foreground.Field')
+        $textBg = $this.GetThemedColorInt('Background.Field')
 
-        $sb.Append($this.Header.BuildMoveTo(4, $y))
-        $sb.Append("Project imported successfully!")
+        $engine.WriteAt(2, $y, "Step 4: Import Complete", $titleFg, $textBg)
         $y += 2
-
-        $sb.Append($this.Header.BuildMoveTo(4, $y))
-        $sb.Append("Press Esc to return to project list.")
+        $engine.WriteAt(4, $y, "Project imported successfully!", $textFg, $textBg)
+        $y += 2
+        $engine.WriteAt(4, $y, "Press Esc to return to project list.", $textFg, $textBg)
     }
 
     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
@@ -720,7 +647,6 @@ class ExcelImportScreen : PmcScreen {
             $termWidth = [Console]::WindowWidth
             $termHeight = [Console]::WindowHeight
             $pickerOutput = $picker.Render($termWidth, $termHeight)
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [ExcelImportScreen] Rendering picker output"
 
             # Handle input
             # ES-H1 FIX: Protect against non-interactive mode crash

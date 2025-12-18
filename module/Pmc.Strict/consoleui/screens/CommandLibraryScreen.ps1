@@ -81,19 +81,15 @@ class CommandLibraryScreen : StandardListScreen {
     # Define columns for list display
     [array] GetColumns() {
         # Calculate column widths dynamically based on available width
-        # Account for 4 separators (2 spaces each = 8 chars total) between 5 columns
-        $availableWidth = $(if ($this.List -and $this.List.Width -gt 4) { $this.List.Width - 4 - 8 } else { 103 })
-        $nameWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.24))
-        $categoryWidth = [Math]::Max(12, [Math]::Floor($availableWidth * 0.15))
-        $usesWidth = 8  # Fixed narrow column
-        $lastUsedWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.12))
-        $descWidth = [Math]::Max(30, [Math]::Floor($availableWidth * 0.44))
+        # Account for 2 separators (2 spaces each = 4 chars total) between 3 columns
+        $availableWidth = $(if ($this.List -and $this.List.Width -gt 4) { $this.List.Width - 4 - 4 } else { 103 })
+        $nameWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.30))
+        $categoryWidth = [Math]::Max(12, [Math]::Floor($availableWidth * 0.20))
+        $descWidth = [Math]::Max(30, [Math]::Floor($availableWidth * 0.50))
 
         return @(
             @{ Name='name'; Label='Name'; Width=$nameWidth }
             @{ Name='category'; Label='Category'; Width=$categoryWidth }
-            @{ Name='usage_count'; Label='Uses'; Width=$usesWidth }
-            @{ Name='last_used'; Label='Last Used'; Width=$lastUsedWidth }
             @{ Name='description'; Label='Command'; Width=$descWidth }
         )
     }
@@ -110,17 +106,6 @@ class CommandLibraryScreen : StandardListScreen {
 
         # Format for display
         foreach ($cmd in $commands) {
-            if (-not $cmd.ContainsKey('usage_count')) {
-                $cmd['usage_count'] = 0
-            }
-            if ($cmd.ContainsKey('last_used') -and $cmd.last_used -is [DateTime]) {
-                $cmd['last_used'] = $cmd.last_used.ToString('yyyy-MM-dd')
-            } elseif ($cmd.ContainsKey('last_used') -and $cmd.last_used) {
-                # Already a string, keep it
-            } else {
-                $cmd['last_used'] = 'Never'
-            }
-
             # Format tags for display
             if ($cmd.ContainsKey('tags') -and $cmd.tags -is [array]) {
                 $cmd['tags_display'] = $cmd.tags -join ', '
@@ -186,31 +171,23 @@ class CommandLibraryScreen : StandardListScreen {
     # Define edit fields for InlineEditor
     [array] GetEditFields([object]$item) {
         # Calculate field widths - MUST MATCH GetColumns() exactly
-        $availableWidth = $(if ($this.List -and $this.List.Width -gt 4) { $this.List.Width - 4 - 8 } else { 103 })
-        $nameWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.24))
-        $categoryWidth = [Math]::Max(12, [Math]::Floor($availableWidth * 0.15))
-        $usesWidth = 8  # Fixed narrow column - display only
-        $lastUsedWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.12))
-        $descWidth = [Math]::Max(30, [Math]::Floor($availableWidth * 0.44))
+        $availableWidth = $(if ($this.List -and $this.List.Width -gt 4) { $this.List.Width - 4 - 4 } else { 103 })
+        $nameWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.30))
+        $categoryWidth = [Math]::Max(12, [Math]::Floor($availableWidth * 0.20))
+        $descWidth = [Math]::Max(30, [Math]::Floor($availableWidth * 0.50))
 
         if ($null -eq $item -or $item.Count -eq 0) {
-            # New command - empty fields (5 fields to match 5 columns)
+            # New command - empty fields (3 fields to match 3 columns)
             return @(
                 @{ Name='name'; Type='text'; Label=''; Required=$true; Value=''; Width=$nameWidth; Placeholder='Command name' }
                 @{ Name='category'; Type='text'; Label=''; Value='General'; Width=$categoryWidth; Placeholder='Category' }
-                @{ Name='usage_count'; Type='text'; Label=''; Value='0'; Width=$usesWidth; ReadOnly=$true }
-                @{ Name='last_used'; Type='text'; Label=''; Value='Never'; Width=$lastUsedWidth; ReadOnly=$true }
                 @{ Name='description'; Type='text'; Label=''; Value=''; Width=$descWidth; Placeholder='Enter command text (will be copied to clipboard)'; Required=$true }
             )
         } else {
-            # Existing command - populate from item (5 fields to match 5 columns)
-            $uses = $(if ($item.usage_count) { $item.usage_count.ToString() } else { '0' })
-            $lastUsed = $(if ($item.last_used) { $item.last_used } else { 'Never' })
+            # Existing command - populate from item (3 fields to match 3 columns)
             return @(
                 @{ Name='name'; Type='text'; Label=''; Required=$true; Value=$item.name; Width=$nameWidth; Placeholder='Command name' }
                 @{ Name='category'; Type='text'; Label=''; Value=$item.category; Width=$categoryWidth; Placeholder='Category' }
-                @{ Name='usage_count'; Type='text'; Label=''; Value=$uses; Width=$usesWidth; ReadOnly=$true }
-                @{ Name='last_used'; Type='text'; Label=''; Value=$lastUsed; Width=$lastUsedWidth; ReadOnly=$true }
                 @{ Name='description'; Type='text'; Label=''; Value=$item.command_text; Width=$descWidth; Placeholder='Enter command text (will be copied to clipboard)'; Required=$true }
             )
         }
@@ -298,6 +275,30 @@ class CommandLibraryScreen : StandardListScreen {
         } catch {
             $this.SetStatusMessage("Error deleting command: $($_.Exception.Message)", "error")
         }
+    }
+
+    # Virtual method called when inline editor is confirmed
+    [void] OnInlineEditConfirmed([hashtable]$values) {
+        if ($null -eq $values) {
+            return
+        }
+
+        # Determine if we're adding a new command or editing existing one
+        $isAddMode = ($this.EditorMode -eq 'add')
+
+        if ($isAddMode) {
+            $this.OnItemCreated($values)
+        }
+        else {
+            if ($this.CurrentEditItem) {
+                $this.OnItemUpdated($this.CurrentEditItem, $values)
+            }
+        }
+    }
+
+    # Virtual method called when inline editor is cancelled
+    [void] OnInlineEditCancelled() {
+        # No-op: StandardListScreen handles the UI updates
     }
 
     # === Custom Actions ===

@@ -111,7 +111,6 @@ The property/key name to look for.
 
 .EXAMPLE
 if (Test-SafeProperty $task 'parent_id') {
-    Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TypeNormalization] Has parent"
 }
 #>
 function Global:Test-SafeProperty {

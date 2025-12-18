@@ -9,7 +9,6 @@ using namespace System.Text
 #   $editor.SetPosition(5, 10)
 #   $editor.SetSize(60, 5)
 #   $editor.SetTags(@("work", "urgent"))
-#   $editor.OnTagsChanged = { param($tags) Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TagEditor] Tags: $($tags -join ', ')" }
 #
 #   # Render
 #   $ansiOutput = $editor.Render()
@@ -53,7 +52,6 @@ $editor.SetPosition(5, 10)
 $editor.SetSize(60, 5)
 $editor.SetTags(@("work", "urgent"))
 $editor.MaxTags = 5
-$editor.OnTagsChanged = { param($tags) Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TagEditor] Tags changed: $($tags -join ', ')" }
 $ansiOutput = $editor.Render()
 #>
 class TagEditor : PmcWidget {

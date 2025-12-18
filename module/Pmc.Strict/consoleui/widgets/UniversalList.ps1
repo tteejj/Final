@@ -828,14 +828,8 @@ class UniversalList : PmcWidget {
         # Action handling
         $keyChar = $keyInfo.KeyChar.ToString().ToLower()
 
-        # DEBUG: Write directly to log file for troubleshooting
-        $debugMsg = "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] UniversalList HandleInput: char='$keyChar' Key=$($keyInfo.Key) Actions=$($this._actions.Keys -join ',')"
-        # }
-
         if ($this._actions.ContainsKey($keyChar)) {
             $action = $this._actions[$keyChar]
-            $actionMsg = "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] UniversalList: Triggering action '$keyChar' - $($action.Label)"
-            # }
             $this._InvokeCallback($action.Callback, $this)
             return $true
         }
@@ -936,9 +930,10 @@ class UniversalList : PmcWidget {
             $dataIndex = $visibleStartIndex + $i
             $rowY = $this.Y + 3 + $i
 
-            # If beyond data, fill with background
+            # If beyond data, fill with background (preserve borders!)
             if ($dataIndex -ge $itemCount) {
-                $engine.Fill($this.X, $rowY, $this.Width, 1, ' ', $textColor, $rowBg)
+                # BORDER FIX: Fill ONLY content area (X+1 to Width-2), not borders
+                $engine.Fill($this.X + 1, $rowY, $this.Width - 2, 1, ' ', $textColor, $rowBg)
                 continue
             }
 
@@ -968,6 +963,10 @@ class UniversalList : PmcWidget {
                 $fg = $successColor
                 $bg = $rowBg
             }
+            
+            # RENDERING FIX: Fill entire row background FIRST to clear any editor artifacts
+            # This ensures the previous inline editor's background doesn't bleed through
+            $engine.Fill($this.X + 1, $rowY, $this.Width - 2, 1, ' ', $fg, $bg)
             
             # Render Cells
             $cellX = $this.X + 2
@@ -1033,12 +1032,9 @@ class UniversalList : PmcWidget {
                 $this._inlineEditor.Width = $this.Width - 4
                 $this._inlineEditor.Height = 1
 
-                Add-Content -Path "/tmp/pmc-universallist-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] BEFORE RENDER: editorX=$($this._inlineEditor.X) editorWidth=$($this._inlineEditor.Width)"
+
                 # Render Editor
                 $this._inlineEditor.RenderToEngine($engine)
-                Add-Content -Path "/tmp/pmc-universallist-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] AFTER RENDER: editorX=$($this._inlineEditor.X) editorWidth=$($this._inlineEditor.Width)"
-
-                Add-Content -Path "/tmp/pmc-universallist-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] EDITOR POSITION: selectedIndex=$($this._selectedIndex) scrollOffset=$($this._scrollOffset) relIndex=$relIndex rowY=$rowY editorX=$($this._inlineEditor.X) editorY=$rowY editorWidth=$($this._inlineEditor.Width)"
             }
         }
     }

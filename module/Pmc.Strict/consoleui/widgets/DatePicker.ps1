@@ -50,8 +50,6 @@ $picker = [DatePicker]::new()
 $picker.SetPosition(10, 5)
 $picker.SetSize(35, 14)
 $picker.SetDate([DateTime]::Today)
-$picker.OnDateChanged = { param($newDate) Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [DatePicker] Date changed to: $newDate" }
-$picker.OnConfirmed = { param($date) Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [DatePicker] Confirmed: $date" }
 $ansiOutput = $picker.Render()
 #>
 class DatePicker : PmcWidget {
