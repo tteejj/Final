@@ -27,6 +27,7 @@ try {
 
     # 3. Terminal and rendering
     . "$SpeedTUIRoot/Core/SimplifiedTerminal.ps1"
+    . "$SpeedTUIRoot/Core/NativeRenderCore.ps1"  # C# high-performance buffer (must load before CellBuffer)
     . "$SpeedTUIRoot/Core/CellBuffer.ps1"
     # HybridRenderEngine replaces OptimizedRenderEngine and EnhancedRenderEngine
     . "$SpeedTUIRoot/Core/HybridRenderEngine.ps1"

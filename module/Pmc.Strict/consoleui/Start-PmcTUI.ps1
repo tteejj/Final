@@ -14,7 +14,7 @@ function Write-PmcDebugLog {
     param([string]$Message)
     
     # Determine log path (prefer global set by start.ps1)
-    $debugLogPath = $global:PmcDebugLogPath
+    $debugLogPath = if (Test-Path variable:global:PmcDebugLogPath) { $global:PmcDebugLogPath } else { $null }
     if (-not $debugLogPath) {
         # Fallback: create path relative to script location
         $root = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent

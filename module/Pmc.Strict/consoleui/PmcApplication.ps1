@@ -438,8 +438,8 @@ class PmcApplication {
                 # OPTIMIZATION: Use centralized terminal service for resize detection
                 # Only checks actual console every 100ms (cached)
                 if ((-not $this.IsDirty) -or ($iteration % 10 -eq 0)) {
-                    if ([PmcTerminalService]::CheckForResize()) {
-                        $dims = [PmcTerminalService]::GetDimensions()
+                    if (($this.RenderEngine.Width -ne [Console]::WindowWidth -or $this.RenderEngine.Height -ne [Console]::WindowHeight)) {
+                        $dims = @{ Width = [Console]::WindowWidth; Height = [Console]::WindowHeight }
                         $this._HandleTerminalResize($dims.Width, $dims.Height)
                     }
                 }
@@ -643,7 +643,7 @@ Screen Stack Depth: $($this.ScreenStack.Count)
 
     hidden [void] _UpdateTerminalSize() {
         # Use centralized terminal service (cached, optimized)
-        $dims = [PmcTerminalService]::GetDimensions()
+        $dims = @{ Width = [Console]::WindowWidth; Height = [Console]::WindowHeight }
         $this.TermWidth = $dims.Width
         $this.TermHeight = $dims.Height
     }

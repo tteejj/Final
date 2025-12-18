@@ -631,7 +631,7 @@ class PmcWidget : Component {
     [string] TruncateHelpText([string]$text, [int]$maxWidth = -1) {
         if ($maxWidth -lt 0) {
             # L-POL-1: Use centralized terminal service (cached, optimized)
-            $termWidth = [PmcTerminalService]::GetWidth()
+            $termWidth = [Console]::WindowWidth
             $maxWidth = $termWidth - 10
         }
 

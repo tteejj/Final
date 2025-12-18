@@ -11,3 +11,173 @@
 [08:19:04.415] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
 [08:19:04.437] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
 [08:19:24.911] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-081900.log
+[09:48:32.566] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-094832.log (Level 2)
+[09:48:33.585] [SpeedTUILoader] Failed to load SpeedTUI: At /home/teej/ztest/lib/SpeedTUI/Core/HybridRenderEngine.ps1:158 char:35
++             $this._frontBuffer = [NativeCellBuffer]::new($this.Width, …
++                                   ~~~~~~~~~~~~~~~~
+Unable to find type [NativeCellBuffer].
+
+At /home/teej/ztest/lib/SpeedTUI/Core/HybridRenderEngine.ps1:159 char:34
++             $this._backBuffer = [NativeCellBuffer]::new($this.Width,  …
++                                  ~~~~~~~~~~~~~~~~
+Unable to find type [NativeCellBuffer].
+
+At /home/teej/ztest/lib/SpeedTUI/Core/HybridRenderEngine.ps1:586 char:36
++         if ($this._backBuffer -is [NativeCellBuffer]) {
++                                    ~~~~~~~~~~~~~~~~
+Unable to find type [NativeCellBuffer].
+[2025-12-18 09:48:33.588] [ERROR] Failed to load SpeedTUI: At /home/teej/ztest/lib/SpeedTUI/Core/HybridRenderEngine.ps1:158 char:35
++             $this._frontBuffer = [NativeCellBuffer]::new($this.Width, …
++                                   ~~~~~~~~~~~~~~~~
+Unable to find type [NativeCellBuffer].
+
+At /home/teej/ztest/lib/SpeedTUI/Core/HybridRenderEngine.ps1:159 char:34
++             $this._backBuffer = [NativeCellBuffer]::new($this.Width,  …
++                                  ~~~~~~~~~~~~~~~~
+Unable to find type [NativeCellBuffer].
+
+At /home/teej/ztest/lib/SpeedTUI/Core/HybridRenderEngine.ps1:586 char:36
++         if ($this._backBuffer -is [NativeCellBuffer]) {
++                                    ~~~~~~~~~~~~~~~~
+Unable to find type [NativeCellBuffer].
+[09:51:20.754] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-095120.log (Level 2)
+[2025-12-18 09:51:22.553] [ERROR] Failed to load widget base classes: At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1:634 char:27
++             $termWidth = [PmcTerminalService]::GetWidth()
++                           ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+[09:54:42.306] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-095442.log (Level 2)
+[2025-12-18 09:54:44.914] [ERROR] Failed to load PmcApplication: At /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1:441 char:26
++                     if ([PmcTerminalService]::CheckForResize()) {
++                          ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1:442 char:34
++                         $dims = [PmcTerminalService]::GetDimensions()
++                                  ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1:646 char:18
++         $dims = [PmcTerminalService]::GetDimensions()
++                  ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+[09:58:31.672] [Start-PmcTUI] DEBUG: InvocationName='/home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1' MyCommand='Start-PmcTUI.ps1'
+[09:58:31.688] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[2025-12-18 09:58:31.867] [ERROR] EXCEPTION: Unable to find type [PmcApplication].
+[2025-12-18 09:58:31.869] [ERROR] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 502
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 559
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 639
+[2025-12-18 09:58:31.888] [ERROR] Exception details: 
+ErrorRecord                 : Unable to find type [PmcApplication].
+WasThrownFromThrowStatement : True
+TargetSite                  : Void CheckActionPreference(System.Management.Automation.Language.FunctionContext, System.Exception)
+Message                     : Unable to find type [PmcApplication].
+Data                        : {[System.Management.Automation.Interpreter.InterpretedFrameInfo, System.Management.Automation.Interpreter.InterpretedFrameInfo[]]}
+InnerException              : 
+HelpLink                    : 
+Source                      : System.Management.Automation
+HResult                     : -2146233087
+StackTrace                  :    at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)
+                                 at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)
+                                 at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+                                 at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+
+
+[09:58:31.889] [Start-PmcTUI] PMC TUI Error: Unable to find type [PmcApplication].
+[09:58:31.890] [Start-PmcTUI] Log file: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-095827.log
+[09:58:31.891] [Start-PmcTUI] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 502
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 559
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 639
+[09:58:31.893] [Start-PmcTUI] Log saved to: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-095827.log
+[10:00:22.006] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-100022.log (Level 2)
+[2025-12-18 10:00:23.902] [ERROR] Failed to load widget base classes: At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1:634 char:27
++             $termWidth = [PmcTerminalService]::GetWidth()
++                           ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+[10:02:13.717] [Start-PmcTUI] DEBUG: InvocationName='/home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1' MyCommand='Start-PmcTUI.ps1'
+[10:02:13.736] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[2025-12-18 10:02:13.914] [ERROR] EXCEPTION: Unable to find type [PmcApplication].
+[2025-12-18 10:02:13.917] [ERROR] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 502
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 559
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 639
+[2025-12-18 10:02:13.938] [ERROR] Exception details: 
+ErrorRecord                 : Unable to find type [PmcApplication].
+WasThrownFromThrowStatement : True
+TargetSite                  : Void CheckActionPreference(System.Management.Automation.Language.FunctionContext, System.Exception)
+Message                     : Unable to find type [PmcApplication].
+Data                        : {[System.Management.Automation.Interpreter.InterpretedFrameInfo, System.Management.Automation.Interpreter.InterpretedFrameInfo[]]}
+InnerException              : 
+HelpLink                    : 
+Source                      : System.Management.Automation
+HResult                     : -2146233087
+StackTrace                  :    at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)
+                                 at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)
+                                 at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+                                 at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+
+
+[10:02:13.940] [Start-PmcTUI] PMC TUI Error: Unable to find type [PmcApplication].
+[10:02:13.941] [Start-PmcTUI] Log file: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-100210.log
+[10:02:13.948] [Start-PmcTUI] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 502
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 559
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 639
+[10:02:13.950] [Start-PmcTUI] Log saved to: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-100210.log
+[10:04:32.628] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-100432.log (Level 2)
+[2025-12-18 10:04:35.744] [ERROR] Failed to load PmcApplication: At /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1:441 char:26
++                     if ([PmcTerminalService]::CheckForResize()) {
++                          ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1:442 char:34
++                         $dims = [PmcTerminalService]::GetDimensions()
++                                  ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1:646 char:18
++         $dims = [PmcTerminalService]::GetDimensions()
++                  ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+[10:05:20.541] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-100520.log (Level 2)
+[10:05:24.582] [Start-PmcTUI] DEBUG: InvocationName='/home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1' MyCommand='Start-PmcTUI.ps1'
+[10:05:24.595] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[10:05:38.942] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-100538.log (Level 2)
+[10:07:09.594] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-100709.log (Level 2)
+[10:07:13.118] [Start-PmcTUI] DEBUG: InvocationName='/home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1' MyCommand='Start-PmcTUI.ps1'
+[10:07:13.133] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[2025-12-18 10:07:14.902] [ERROR] EXCEPTION: The property 'Width' cannot be found on this object. Verify that the property exists.
+[2025-12-18 10:07:14.905] [ERROR] Stack trace: at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 441
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 614
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 639
+[2025-12-18 10:07:14.946] [ERROR] Exception details: 
+ErrorRecord                 : The property 'Width' cannot be found on this object. Verify that the property exists.
+WasThrownFromThrowStatement : False
+TargetSite                  : Void CheckActionPreference(System.Management.Automation.Language.FunctionContext, System.Exception)
+Message                     : The property 'Width' cannot be found on this object. Verify that the property exists.
+Data                        : {[System.Management.Automation.Interpreter.InterpretedFrameInfo, System.Management.Automation.Interpreter.InterpretedFrameInfo[]]}
+InnerException              : 
+HelpLink                    : 
+Source                      : System.Management.Automation
+HResult                     : -2146233087
+StackTrace                  :    at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)
+                                 at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)
+                                 at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+                                 at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+
+
+[10:07:14.948] [Start-PmcTUI] PMC TUI Error: The property 'Width' cannot be found on this object. Verify that the property exists.
+[10:07:14.950] [Start-PmcTUI] Log file: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-100709.log
+[10:07:14.951] [Start-PmcTUI] Stack trace: at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 441
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 614
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 639
+[10:07:14.955] [Start-PmcTUI] Log saved to: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-100709.log
+[10:08:10.832] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-100810.log (Level 2)
+[10:08:13.971] [Start-PmcTUI] DEBUG: InvocationName='/home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1' MyCommand='Start-PmcTUI.ps1'
+[10:08:13.991] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[10:08:42.398] [Start-PmcTUI] Log saved to: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-100810.log
+[10:09:59.570] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-100959.log (Level 2)
+[10:10:02.234] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[10:10:02.247] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[10:10:26.969] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-100959.log

@@ -1,0 +1,172 @@
+[2025-12-18 09:58:27.927] [INFO] Loading PMC module...
+[2025-12-18 09:58:29.472] [INFO] PMC module loaded
+[2025-12-18 09:58:29.476] [INFO] Loading dependencies (FieldSchemas, etc.)...
+[2025-12-18 09:58:29.664] [INFO] Dependencies loaded
+[2025-12-18 09:58:29.666] [INFO] Loading SpeedTUI framework...
+[2025-12-18 09:58:31.131] [INFO] SpeedTUI framework loaded
+[2025-12-18 09:58:31.132] [INFO] Loading PraxisVT...
+[2025-12-18 09:58:31.134] [INFO] PraxisVT loaded
+[2025-12-18 09:58:31.135] [INFO] Loading core dependencies...
+[2025-12-18 09:58:31.175] [INFO] Core dependencies loaded
+[2025-12-18 09:58:31.177] [INFO] Loading widget base classes...
+[2025-12-18 09:58:31.192] [ERROR] Failed to load widget base classes: At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1:634 char:27
++             $termWidth = [PmcTerminalService]::GetWidth()
++                           ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+[2025-12-18 09:58:31.197] [INFO] Loading services...
+[2025-12-18 09:58:31.309] [INFO] Services loaded
+[2025-12-18 09:58:31.311] [INFO] Loading helpers...
+[2025-12-18 09:58:31.443] [INFO] Helpers loaded
+[2025-12-18 09:58:31.444] [INFO] Loading widgets...
+[2025-12-18 09:58:31.479] [ERROR] Failed to load widgets: At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/TextInput.ps1:60 char:19
++ class TextInput : PmcWidget {
++                   ~~~~~~~~~
+Unable to find type [PmcWidget].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/TextInput.ps1:315 char:11
++         ([PmcWidget]$this).RegisterLayout($engine)
++           ~~~~~~~~~
+Unable to find type [PmcWidget].
+[2025-12-18 09:58:31.484] [INFO] Loading screen base class...
+[2025-12-18 09:58:31.504] [ERROR] Failed to load screen base: At /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1:581 char:30
++     [void] AddContentWidget([PmcWidget]$widget) {
++                              ~~~~~~~~~
+Unable to find type [PmcWidget].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1:598 char:33
++     [void] RemoveContentWidget([PmcWidget]$widget) {
++                                 ~~~~~~~~~
+Unable to find type [PmcWidget].
+[2025-12-18 09:58:31.508] [INFO] Loading HelpViewScreen (needed by base classes)...
+[2025-12-18 09:58:31.516] [ERROR] Failed to load HelpViewScreen: At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/HelpViewScreen.ps1:25 char:24
++ class HelpViewScreen : PmcScreen {
++                        ~~~~~~~~~
+Unable to find type [PmcScreen].
+[2025-12-18 09:58:31.520] [INFO] Loading base classes...
+[2025-12-18 09:58:31.561] [ERROR] Failed to load base classes: At /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardDashboard.ps1:98 char:27
++ class StandardDashboard : PmcScreen {
++                           ~~~~~~~~~
+Unable to find type [PmcScreen].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardDashboard.ps1:600 char:19
++         $panel = [PmcPanel]::new()
++                   ~~~~~~~~
+Unable to find type [PmcPanel].
+[2025-12-18 09:58:31.565] [INFO] Loading ServiceContainer (needed by screens)...
+[2025-12-18 09:58:31.570] [INFO] ServiceContainer loaded
+[2025-12-18 09:58:31.571] [INFO] Loading remaining screens...
+[2025-12-18 09:58:31.641] [ERROR] Failed to load screens: At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1:67 char:24
++ class TaskListScreen : StandardListScreen {
++                        ~~~~~~~~~~~~~~~~~~
+Unable to find type [StandardListScreen].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1:152 char:11
++         ([StandardListScreen]$this)._InitializeComponents()
++           ~~~~~~~~~~~~~~~~~~
+Unable to find type [StandardListScreen].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1:308 char:34
++                     $menuItem = [PmcMenuItem]::new($item['Label'], $i …
++                                  ~~~~~~~~~~~
+Unable to find type [PmcMenuItem].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1:1661 char:18
++         return ([StandardListScreen]$this).RenderContent()
++                  ~~~~~~~~~~~~~~~~~~
+Unable to find type [StandardListScreen].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1:1670 char:22
++             return ([StandardListScreen]$this).HandleKeyPress($keyInf …
++                      ~~~~~~~~~~~~~~~~~~
+Unable to find type [StandardListScreen].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1:1675 char:22
++         $handled = ([StandardListScreen]$this).HandleKeyPress($keyInf …
++                      ~~~~~~~~~~~~~~~~~~
+Unable to find type [StandardListScreen].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1:1772 char:11
++         ([StandardListScreen]$this).RenderToEngine($engine)
++           ~~~~~~~~~~~~~~~~~~
+Unable to find type [StandardListScreen].
+[2025-12-18 09:58:31.645] [INFO] Loading PmcApplication...
+[2025-12-18 09:58:31.665] [ERROR] Failed to load PmcApplication: At /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1:441 char:26
++                     if ([PmcTerminalService]::CheckForResize()) {
++                          ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1:442 char:34
++                         $dims = [PmcTerminalService]::GetDimensions()
++                                  ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1:646 char:18
++         $dims = [PmcTerminalService]::GetDimensions()
++                  ~~~~~~~~~~~~~~~~~~
+Unable to find type [PmcTerminalService].
+[2025-12-18 09:58:31.671] [INFO] All components loaded successfully
+[2025-12-18 09:58:31.692] [INFO] Starting PMC TUI with screen: TaskList
+[2025-12-18 09:58:31.698] [INFO] Cleared stale PmcSharedMenuBar and MenuRegistry singleton
+[2025-12-18 09:58:31.699] [INFO] Creating ServiceContainer...
+[2025-12-18 09:58:31.707] [INFO] ServiceContainer created
+[2025-12-18 09:58:31.708] [INFO] Registering Theme service...
+[2025-12-18 09:58:31.724] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-18 09:58:31.727] [INFO] Registering ThemeManager...
+[2025-12-18 09:58:31.728] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-18 09:58:31.729] [INFO] Registering Config service...
+[2025-12-18 09:58:31.730] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-18 09:58:31.730] [INFO] Registering TaskStore service...
+[2025-12-18 09:58:31.731] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-18 09:58:31.732] [INFO] Registering MenuRegistry service...
+[2025-12-18 09:58:31.733] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-18 09:58:31.734] [INFO] Registering Application service...
+[2025-12-18 09:58:31.735] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-18 09:58:31.736] [INFO] Registering CommandService...
+[2025-12-18 09:58:31.737] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-18 09:58:31.737] [INFO] Registering ChecklistService...
+[2025-12-18 09:58:31.738] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-18 09:58:31.739] [INFO] Registering NoteService...
+[2025-12-18 09:58:31.740] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-18 09:58:31.741] [INFO] Registering ExcelMappingService...
+[2025-12-18 09:58:31.742] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-18 09:58:31.743] [INFO] Registering PreferencesService...
+[2025-12-18 09:58:31.744] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-18 09:58:31.744] [INFO] Registering screen factories...
+[2025-12-18 09:58:31.745] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-18 09:58:31.746] [INFO] Resolving Application from container...
+[2025-12-18 09:58:31.759] ServiceContainer: Resolving 'Application'...
+[2025-12-18 09:58:31.761] [INFO] Resolving Application...
+[2025-12-18 09:58:31.762] ServiceContainer: Resolving 'Theme'...
+[2025-12-18 09:58:31.773] [INFO] Resolving Theme: Calling Initialize-PmcThemeSystem...
+[2025-12-18 09:58:31.785] [INFO] Theme resolved: #33aaff
+[2025-12-18 09:58:31.786] [INFO] Loading PmcThemeEngine...
+[2025-12-18 09:58:31.848] [INFO] LoadFromConfig: Loaded Properties with 23 items
+[2025-12-18 09:58:31.857] [INFO] PmcThemeEngine initialized with PMC palette (14 colors)
+[2025-12-18 09:58:31.859] ServiceContainer: Resolved 'Theme' successfully
+[2025-12-18 09:58:31.863] [ERROR] ServiceContainer: Failed to resolve 'Application': Unable to find type [PmcApplication].
+[2025-12-18 09:58:31.864] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 502
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 559
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 639
+[2025-12-18 09:58:31.867] [ERROR] EXCEPTION: Unable to find type [PmcApplication].
+[2025-12-18 09:58:31.869] [ERROR] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 502
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 559
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 639
+[2025-12-18 09:58:31.888] [ERROR] Exception details: 
+ErrorRecord                 : Unable to find type [PmcApplication].
+WasThrownFromThrowStatement : True
+TargetSite                  : Void CheckActionPreference(System.Management.Automation.Language.FunctionContext, System.Exception)
+Message                     : Unable to find type [PmcApplication].
+Data                        : {[System.Management.Automation.Interpreter.InterpretedFrameInfo, System.Management.Automation.Interpreter.InterpretedFrameInfo[]]}
+InnerException              : 
+HelpLink                    : 
+Source                      : System.Management.Automation
+HResult                     : -2146233087
+StackTrace                  :    at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)
+                                 at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)
+                                 at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+                                 at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+
+
+[2025-12-18 09:58:31.893] [INFO] Cleanup - showing cursor and resetting terminal

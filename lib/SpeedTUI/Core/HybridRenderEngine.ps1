@@ -57,9 +57,9 @@ class LayoutRegion {
 class HybridRenderEngine {
     # -- CORE BUFFERS --
     # FrontBuffer: Represents exactly what is currently visible on the user's screen.
-    hidden [CellBuffer]$_frontBuffer
+    hidden [object]$_frontBuffer  # NativeCellBuffer or CellBuffer
     # BackBuffer: The "Canvas" we are currently painting on for the next frame.
-    hidden [CellBuffer]$_backBuffer
+    hidden [object]$_backBuffer   # NativeCellBuffer or CellBuffer
     # ZBuffer: Stores the depth (layer index) of each cell. Used to decide if a new
     # write should overwrite existing content or appear behind it.
     hidden [int[][]] $_zBuffer
@@ -152,8 +152,15 @@ class HybridRenderEngine {
 
     hidden [void] _InitializeBuffers() {
         # Re-allocate all buffers to match new dimensions
-        $this._frontBuffer = [CellBuffer]::new($this.Width, $this.Height)
-        $this._backBuffer = [CellBuffer]::new($this.Width, $this.Height)
+        # Use C# NativeCellBuffer for ~50-100x speedup (if loaded)
+        $nativeType = ([System.Management.Automation.PSTypeName]'NativeCellBuffer').Type
+        if ($nativeType) {
+            $this._frontBuffer = $nativeType::new($this.Width, $this.Height)
+            $this._backBuffer = $nativeType::new($this.Width, $this.Height)
+        } else {
+            $this._frontBuffer = [CellBuffer]::new($this.Width, $this.Height)
+            $this._backBuffer = [CellBuffer]::new($this.Width, $this.Height)
+        }
         
         # Z-Buffer is a primitive int array for speed
         $this._zBuffer = [int[][]]::new($this.Height)
@@ -570,12 +577,17 @@ class HybridRenderEngine {
         if ($y -gt $this._dirtyBounds.MaxY) { $this._dirtyBounds.MaxY = $y }
     }
 
-    # Core Diffing Logic (Optimized with Dirty Rects)
+    # Core Diffing Logic - delegates to C# for performance
     hidden [string] _BuildOptimizedDiff() {
         # If nothing changed, return empty
         if ($this._dirtyBounds.MaxX -lt 0) { return "" }
 
-        # Clamp bounds to screen
+        # Delegate to C# BuildDiff for ~50-100x speedup
+        if ($this._backBuffer.GetType().Name -eq 'NativeCellBuffer') {
+            return $this._backBuffer.BuildDiff($this._frontBuffer)
+        }
+
+        # PowerShell fallback - Clamp bounds to screen
         $minX = [Math]::Max(0, $this._dirtyBounds.MinX)
         $maxX = [Math]::Min($this.Width - 1, $this._dirtyBounds.MaxX)
         $minY = [Math]::Max(0, $this._dirtyBounds.MinY)
