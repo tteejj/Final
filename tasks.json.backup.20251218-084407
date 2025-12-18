@@ -1,0 +1,15 @@
+{
+  "settings": {},
+  "projects": [],
+  "timelogs": [
+    {
+      "id": "d95ae346-cbc4-48df-a314-477efd9aa570",
+      "taskId": "test-task-id",
+      "timestamp": "2025-12-18T08:44:07.6505857-07:00",
+      "date": "2025-12-18T00:00:00-07:00",
+      "notes": "Working on tests",
+      "minutes": 60
+    }
+  ],
+  "tasks": []
+}

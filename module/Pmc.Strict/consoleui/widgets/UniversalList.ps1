@@ -946,7 +946,9 @@ class UniversalList : PmcWidget {
             if ($isSelected -and $this._showInlineEditor) {
                 # CRITICAL FIX: Clear ONLY the content area, NOT the borders
                 # Clear from X+2 (after left border+padding) to Width-4 (before right padding+border)
-                Add-Content -Path "/tmp/pmc-universallist-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] CLEARING ROW: dataIndex=$dataIndex rowY=$rowY Y=$($this.Y) selectedIndex=$($this._selectedIndex) fillWidth=$($this.Width)"
+                if ($global:PmcEnableFlowDebug) {
+                    Add-Content -Path "/tmp/pmc-universallist-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] CLEARING ROW: dataIndex=$dataIndex rowY=$rowY Y=$($this.Y) selectedIndex=$($this._selectedIndex) fillWidth=$($this.Width)"
+                }
                 $engine.Fill($this.X + 2, $rowY, $this.Width - 4, 1, ' ', $textColor, $rowBg)
                 continue
             }

@@ -1,11 +1,11 @@
 {
   "Display": {
-    "Theme": {
-      "Enabled": true,
-      "Hex": "#228844"
-    },
     "Icons": {
       "Mode": "emoji"
+    },
+    "Theme": {
+      "Enabled": true,
+      "Hex": "#ff00ff"
     }
   }
 }

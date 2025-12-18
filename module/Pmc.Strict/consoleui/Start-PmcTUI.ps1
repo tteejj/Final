@@ -8,6 +8,31 @@ param(
 
 Set-StrictMode -Version Latest
 
+# PORTABILITY: Helper function to write debug logs to portable path
+# Uses $global:PmcDebugLogPath set by start.ps1, or creates fallback in data/logs/
+function Write-PmcDebugLog {
+    param([string]$Message)
+    
+    # Determine log path (prefer global set by start.ps1)
+    $debugLogPath = $global:PmcDebugLogPath
+    if (-not $debugLogPath) {
+        # Fallback: create path relative to script location
+        $root = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
+        $logDir = Join-Path $root "data/logs"
+        if (-not (Test-Path $logDir)) {
+            New-Item -ItemType Directory -Path $logDir -Force -ErrorAction SilentlyContinue | Out-Null
+        }
+        $debugLogPath = Join-Path $logDir "pmc-debug.log"
+        $global:PmcDebugLogPath = $debugLogPath
+    }
+    
+    try {
+        Add-Content -Path $debugLogPath -Value $Message -ErrorAction SilentlyContinue
+    } catch {
+        # Silently fail - don't crash app for logging issues
+    }
+}
+
 # Setup logging (DISABLED BY DEFAULT for performance)
 # M-CFG-1: Configurable Log Path - uses environment variable or local directory for portability
 # PORTABILITY: Default to .pmc-data/logs directory relative to module root (self-contained)
@@ -45,11 +70,11 @@ if ($DebugLog -or $effectiveLogLevel -gt 0) {
 
         $global:PmcTuiLogFile = Join-Path $logPath "pmc-tui-$(Get-Date -Format 'yyyyMMdd-HHmmss').log"
         $global:PmcTuiLogLevel = $effectiveLogLevel
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Debug logging enabled: $global:PmcTuiLogFile (Level $effectiveLogLevel)"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Debug logging enabled: $global:PmcTuiLogFile (Level $effectiveLogLevel)"
     }
     catch {
         # If log setup fails, disable logging and continue
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] WARNING: Failed to setup logging: $_"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] WARNING: Failed to setup logging: $_"
         $global:PmcTuiLogFile = $null
         $global:PmcTuiLogLevel = 0
     }
@@ -88,11 +113,11 @@ function Write-PmcTuiLog {
         # Silently fail on log write errors to prevent cascading failures
         # This can happen if path is invalid or disk is full
         if ($Level -eq "ERROR") {
-            Add-Content -Path "/tmp/pmc-debug.log" -Value $logLine
+            Write-PmcDebugLog $logLine
         }
     }
     if ($Level -eq "ERROR") {
-        Add-Content -Path "/tmp/pmc-debug.log" -Value $logLine
+        Write-PmcDebugLog $logLine
     }
 }
 
@@ -330,7 +355,7 @@ function Start-PmcTUI {
         [string]$StartScreen = "TaskList"
     )
 
-    Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)..."
+    Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)..."
     Write-PmcTuiLog "Starting PMC TUI with screen: $StartScreen" "INFO"
 
     try {
@@ -595,21 +620,21 @@ function Start-PmcTUI {
         Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
         Write-PmcTuiLog "Exception details: $($_.Exception | Out-String)" "ERROR"
 
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] PMC TUI Error: $_"
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Log file: $global:PmcTuiLogFile"
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Stack trace: $($_.ScriptStackTrace)"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] PMC TUI Error: $_"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Log file: $global:PmcTuiLogFile"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Stack trace: $($_.ScriptStackTrace)"
         throw
     }
     finally {
         # Cleanup
         Write-PmcTuiLog "Cleanup - showing cursor and resetting terminal" "INFO"
-        Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Log saved to: $global:PmcTuiLogFile"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Log saved to: $global:PmcTuiLogFile"
     }
 }
 
 # Allow direct execution
 # Allow direct execution
-Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] DEBUG: InvocationName='$($MyInvocation.InvocationName)' MyCommand='$($MyInvocation.MyCommand.Name)'"
+Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] DEBUG: InvocationName='$($MyInvocation.InvocationName)' MyCommand='$($MyInvocation.MyCommand.Name)'"
 if ($MyInvocation.InvocationName -ne '.' -and $MyInvocation.InvocationName -ne '&') {
     Start-PmcTUI @args
 }

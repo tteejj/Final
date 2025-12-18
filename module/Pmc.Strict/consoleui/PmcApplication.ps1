@@ -70,7 +70,7 @@ class PmcApplication {
             $this.RenderEngine.Initialize()
         }
         catch {
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] FATAL: Failed to initialize RenderEngine: $($_.Exception.Message)"
+            Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] FATAL: Failed to initialize RenderEngine: $($_.Exception.Message)"
             throw
         }
 
@@ -277,11 +277,11 @@ class PmcApplication {
                 [Console]::Clear()
                 [Console]::CursorVisible = $true
                 [Console]::SetCursorPosition(0, 0)
-                Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] TOO MANY RENDER ERRORS - EXITING"
-                Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Error: $errorMsg"
-                Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Location: $errorLocation"
-                Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] The application experienced too many render errors."
-                Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Please restart the application."
+                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] TOO MANY RENDER ERRORS - EXITING"
+                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Error: $errorMsg"
+                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Location: $errorLocation"
+                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] The application experienced too many render errors."
+                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Please restart the application."
 
                 [Console]::ReadKey($true) | Out-Null
                 $this.Stop()
@@ -293,8 +293,8 @@ class PmcApplication {
                 # Clear screen and show error message
                 [Console]::Clear()
                 [Console]::SetCursorPosition(0, 0)
-                Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Render Error Occurred"
-                Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Error: $($_.Exception.Message)"
+                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Render Error Occurred"
+                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Error: $($_.Exception.Message)"
 
                 $key = [Console]::ReadKey($true)
                 if ($key.Key -eq 'Escape') {
@@ -308,7 +308,7 @@ class PmcApplication {
 
                 # If current screen is problematic, try to go back
                 if ($this.ScreenStack.Count -gt 1 -and $this.RenderErrorCount -gt 3) {
-                    Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Returning to previous screen due to errors..."
+                    Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Returning to previous screen due to errors..."
                     Start-Sleep -Milliseconds 500
                     $this.PopScreen()
                     $this.RenderErrorCount = 0  # Reset counter after navigation
@@ -435,19 +435,12 @@ class PmcApplication {
                 # Capture dirty state before rendering
                 $wasActive = $this.IsDirty
 
-                # OPTIMIZATION: Check terminal resize periodically (every 10 iterations or when idle)
-                # FIX: Was only checking when idle, but if app is always dirty, resize never detected
+                # OPTIMIZATION: Use centralized terminal service for resize detection
+                # Only checks actual console every 100ms (cached)
                 if ((-not $this.IsDirty) -or ($iteration % 10 -eq 0)) {
-                    try {
-                        $currentWidth = [Console]::WindowWidth
-                        $currentHeight = [Console]::WindowHeight
-
-                        if ($currentWidth -ne $this.TermWidth -or $currentHeight -ne $this.TermHeight) {
-                            $this._HandleTerminalResize($currentWidth, $currentHeight)
-                        }
-                    }
-                    catch {
-                        # Console API calls can fail in some environments, ignore
+                    if ([PmcTerminalService]::CheckForResize()) {
+                        $dims = [PmcTerminalService]::GetDimensions()
+                        $this._HandleTerminalResize($dims.Width, $dims.Height)
                     }
                 }
 
@@ -649,15 +642,10 @@ Screen Stack Depth: $($this.ScreenStack.Count)
     # === Terminal Management ===
 
     hidden [void] _UpdateTerminalSize() {
-        try {
-            $this.TermWidth = [Console]::WindowWidth
-            $this.TermHeight = [Console]::WindowHeight
-        }
-        catch {
-            # Fallback to defaults
-            $this.TermWidth = 80
-            $this.TermHeight = 24
-        }
+        # Use centralized terminal service (cached, optimized)
+        $dims = [PmcTerminalService]::GetDimensions()
+        $this.TermWidth = $dims.Width
+        $this.TermHeight = $dims.Height
     }
 
     hidden [void] _HandleTerminalResize([int]$newWidth, [int]$newHeight) {

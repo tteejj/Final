@@ -1,0 +1,13 @@
+[08:15:58.745] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-081558.log (Level 2)
+[08:16:02.771] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[08:16:34.300] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-081634.log (Level 2)
+[08:16:39.110] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[08:16:50.061] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-081650.log (Level 2)
+[08:16:54.035] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[08:17:46.346] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-081746.log (Level 2)
+[08:17:50.345] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[08:17:50.375] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[08:19:00.931] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-081900.log (Level 2)
+[08:19:04.415] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[08:19:04.437] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[08:19:24.911] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-081900.log

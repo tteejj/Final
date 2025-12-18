@@ -630,15 +630,8 @@ class PmcWidget : Component {
     #>
     [string] TruncateHelpText([string]$text, [int]$maxWidth = -1) {
         if ($maxWidth -lt 0) {
-            # L-POL-1: Detect terminal width and reserve space for borders
-            $termWidth = $(if ([Console]::WindowWidth -gt 0) {
-                    [Console]::WindowWidth
-                }
-                else {
-                    # FAIL FAST
-                    throw "Terminal width not detected"
-                    # 80  # Fallback to standard width
-                })
+            # L-POL-1: Use centralized terminal service (cached, optimized)
+            $termWidth = [PmcTerminalService]::GetWidth()
             $maxWidth = $termWidth - 10
         }
 
@@ -650,5 +643,6 @@ class PmcWidget : Component {
         return $text.Substring(0, $maxWidth - 3) + "..."
     }
 }
+
 
 # Classes and functions are exported automatically in PowerShell 5.1+

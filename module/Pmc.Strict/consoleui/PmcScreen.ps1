@@ -247,8 +247,8 @@ class PmcScreen {
             $this.ApplyContentLayout($layoutManager, $termWidth, $termHeight)
         }
         catch {
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcScreen] FATAL ERROR PmcScreen.ApplyLayout: $_"
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcScreen] Stack: $($_.ScriptStackTrace)"
+            Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcScreen] FATAL ERROR PmcScreen.ApplyLayout: $_"
+            Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcScreen] Stack: $($_.ScriptStackTrace)"
             throw
         }
     }

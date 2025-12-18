@@ -1,0 +1,68 @@
+[2025-12-17 16:33:22.553] [INFO] Loading PMC module...
+[2025-12-17 16:33:23.340] [INFO] PMC module loaded
+[2025-12-17 16:33:23.341] [INFO] Loading dependencies (FieldSchemas, etc.)...
+[2025-12-17 16:33:23.411] [INFO] Dependencies loaded
+[2025-12-17 16:33:23.412] [INFO] Loading SpeedTUI framework...
+[2025-12-17 16:33:23.583] [INFO] SpeedTUI framework loaded
+[2025-12-17 16:33:23.584] [INFO] Loading PraxisVT...
+[2025-12-17 16:33:23.585] [INFO] PraxisVT loaded
+[2025-12-17 16:33:23.586] [INFO] Loading core dependencies...
+[2025-12-17 16:33:23.621] [INFO] Core dependencies loaded
+[2025-12-17 16:33:23.622] [INFO] Loading widget base classes...
+[2025-12-17 16:33:23.669] [INFO] Widget base classes loaded
+[2025-12-17 16:33:23.669] [INFO] Loading services...
+[2025-12-17 16:33:23.736] [INFO] Services loaded
+[2025-12-17 16:33:23.744] [INFO] Loading helpers...
+[2025-12-17 16:33:24.398] [INFO] Helpers loaded
+[2025-12-17 16:33:24.399] [INFO] Loading widgets...
+[2025-12-17 16:33:24.588] [ERROR] Failed to load widgets: At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1:832 char:12
++     [void] RenderToEngine([object]$engine) {
++            ~~~~~~~~~~~~~~
+Unexpected token 'RenderToEngine' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1:1038 char:36
++     hidden [void] _MoveSelectionUp() {
++                                    ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1:1058 char:38
++     hidden [void] _MoveSelectionDown() {
++                                      ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1:1078 char:39
++     hidden [void] _AdjustScrollOffset() {
++                                       ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1:1106 char:38
++     hidden [void] _ToggleMultiSelect() {
++                                      ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1:1129 char:44
++     hidden [void] _TriggerSelectionChanged() {
++                                            ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1:1138 char:30
++     hidden [void] _ApplySort() {
++                              ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1:1162 char:33
++     hidden [void] _ApplyFilters() {
++                                 ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1:1182 char:32
++     hidden [void] _ApplySearch() {
++                                ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1:137 char:34
++ class UniversalList : PmcWidget {
++                                  ~
+Missing closing '}' in statement block or type definition.
+
+Not all parse errors were reported.  Correct the reported errors and try again.
