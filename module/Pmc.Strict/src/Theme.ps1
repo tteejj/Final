@@ -1,4 +1,4 @@
-﻿# Theme and Preferences management
+# Theme and Preferences management
 
 function Initialize-PmcThemeSystem {
     # OPTIMIZATION: Initialization guard - skip if already initialized
@@ -49,6 +49,16 @@ function Initialize-PmcThemeSystem {
         Subheader= @{ Fg=(Format-Hex-RGB $palette.Muted) }
     }
     Set-PmcState -Section 'Display' -Key 'Styles' -Value $styles
+
+    # CRITICAL FIX: Ensure PmcThemeManager is initialized to configure PmcThemeEngine
+    # The engine has no properties until the manager calls Configure() on it.
+    try {
+        if (([System.Management.Automation.PSTypeName]'PmcThemeManager').Type) {
+            [void][PmcThemeManager]::GetInstance()
+        }
+    } catch {
+        # PmcThemeManager may not be loaded yet (e.g., during module import)
+    }
 }
 
 function Format-Hex-RGB {

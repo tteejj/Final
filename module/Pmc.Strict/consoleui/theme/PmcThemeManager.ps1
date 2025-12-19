@@ -1,4 +1,4 @@
-﻿# PmcThemeManager - Unified theme system bridging PMC and SpeedTUI
+# PmcThemeManager - Unified theme system bridging PMC and SpeedTUI
 # Handles PMC's sophisticated palette derivation + SpeedTUI's theme manager
 
 using namespace System.Collections.Generic
@@ -190,6 +190,8 @@ class PmcThemeManager {
                 'Background.Primary'      = @{ Type = 'Solid'; Color = '#0a0015' }
                 'Background.Widget'       = @{ Type = 'Solid'; Color = '#0f001a' }
                 'Background.Panel'        = @{ Type = 'Solid'; Color = '#0f001a' }
+                'Background.Header'       = @{ Type = 'Solid'; Color = '#1a0030' }
+                'Background.Footer'       = @{ Type = 'Solid'; Color = '#1a0030' }
                 'Foreground.Field'        = @{ Type = 'Gradient'; Start = '#ff00ff'; End = '#00ffff' }
                 'Foreground.FieldFocused' = @{ Type = 'Solid'; Color = '#ffffff' }
                 'Foreground.Row'          = @{ Type = 'Gradient'; Start = '#ff00ff'; End = '#00ffff' }
@@ -218,6 +220,8 @@ class PmcThemeManager {
             'Background.Primary'      = @{ Type = 'Solid'; Color = '#000000' }
             'Background.Widget'       = @{ Type = 'Solid'; Color = '#1a1a1a' }
             'Background.Panel'        = @{ Type = 'Solid'; Color = '#1a1a1a' }
+            'Background.Header'       = @{ Type = 'Solid'; Color = '#1a1a1a' }
+            'Background.Footer'       = @{ Type = 'Solid'; Color = '#1a1a1a' }
             'Foreground.Field'        = @{ Type = 'Solid'; Color = $textHex }
             'Foreground.FieldFocused' = @{ Type = 'Solid'; Color = '#FFFFFF' }
             'Foreground.Row'          = @{ Type = 'Solid'; Color = $textHex }

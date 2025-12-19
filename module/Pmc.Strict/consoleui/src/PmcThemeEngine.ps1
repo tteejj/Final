@@ -128,10 +128,11 @@ class PmcThemeEngine {
         }
         elseif ($prop.Type -eq 'Gradient') {
             # Use first color for gradient fallback
-            if ($prop.Start) {
+            # Use ContainsKey to avoid strict mode errors on missing keys
+            if ($prop.ContainsKey('Start') -and $prop.Start) {
                 $hex = $prop.Start
             }
-            elseif ($prop.Stops -and $prop.Stops.Count -gt 0) {
+            elseif ($prop.ContainsKey('Stops') -and $prop.Stops -and $prop.Stops.Count -gt 0) {
                 $hex = $prop.Stops[0].Color
             }
         }

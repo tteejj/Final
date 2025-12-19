@@ -381,10 +381,15 @@ function Start-PmcTUI {
         Write-PmcTuiLog "Registering Theme service..." "INFO"
         $global:PmcContainer.Register('Theme', {
                 param($container)
-                Write-PmcTuiLog "Resolving Theme: Calling Initialize-PmcThemeSystem..." "INFO"
+                Write-PmcTuiLog "Resolving Theme: Resetting singletons and initializing..." "INFO"
                 
-                # Initialize Core Theme System (Loads State, Configures Manager & Engine)
-                Initialize-PmcThemeSystem
+                # CRITICAL FIX: Reset singletons to ensure fresh theme data from config
+                # This fixes gradient themes not loading because singletons cached old data
+                [PmcThemeManager]::_instance = $null
+                [PmcThemeEngine]::_instance = $null
+                
+                # Initialize Core Theme System with -Force to rebuild from config
+                Initialize-PmcThemeSystem -Force
                 
                 # Get the Manager instance (which is now the source of truth)
                 $manager = [PmcThemeManager]::GetInstance()
