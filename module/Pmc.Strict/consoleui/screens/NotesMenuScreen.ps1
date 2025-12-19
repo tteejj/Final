@@ -82,15 +82,15 @@ class NotesMenuScreen : StandardListScreen {
     Load notes data into the list
     #>
     [void] LoadData() {
-        Write-PmcTuiLog "NotesMenuScreen.LoadData: Loading notes for owner=$($this._ownerType):$($this._ownerId)" "INFO"
+        # Write-PmcTuiLog "NotesMenuScreen.LoadData: Loading notes for owner=$($this._ownerType):$($this._ownerId)" "INFO"
 
         try {
             # Get notes from service (filtered by owner if specified)
             if ($this._ownerType -eq "global" -or $null -eq $this._ownerId) {
-                Write-PmcTuiLog "NotesMenuScreen.LoadData: Getting all notes (global)" "INFO"
+                # Write-PmcTuiLog "NotesMenuScreen.LoadData: Getting all notes (global)" "INFO"
                 $notes = $this._noteService.GetAllNotes()
             } else {
-                Write-PmcTuiLog "NotesMenuScreen.LoadData: Getting notes by owner type=$($this._ownerType) id=$($this._ownerId)" "INFO"
+                # Write-PmcTuiLog "NotesMenuScreen.LoadData: Getting notes by owner type=$($this._ownerType) id=$($this._ownerId)" "INFO"
                 $notes = $this._noteService.GetNotesByOwner($this._ownerType, $this._ownerId)
             }
 
@@ -101,13 +101,13 @@ class NotesMenuScreen : StandardListScreen {
                 $notes = @($notes)
             }
 
-            Write-PmcTuiLog "NotesMenuScreen.LoadData: Loaded $($notes.Count) notes" "INFO"
+            # Write-PmcTuiLog "NotesMenuScreen.LoadData: Loaded $($notes.Count) notes" "INFO"
 
             # Set data in list
             $this.List.SetData($notes)
 
         } catch {
-            Write-PmcTuiLog "NotesMenuScreen.LoadData: Error - $_" "ERROR"
+            # Write-PmcTuiLog "NotesMenuScreen.LoadData: Error - $_" "ERROR"
             $this.List.SetData(@())
         }
     }
@@ -223,28 +223,28 @@ class NotesMenuScreen : StandardListScreen {
         }
 
         if ($noteId) {
-            Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Opening note $noteId" "INFO"
+            # Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Opening note $noteId" "INFO"
 
             # Load NoteEditorScreen
             $editorScreenPath = Join-Path $PSScriptRoot "NoteEditorScreen.ps1"
-            Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Editor path: $editorScreenPath" "DEBUG"
+            # Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Editor path: $editorScreenPath" "DEBUG"
 
             if (Test-Path $editorScreenPath) {
-                Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Loading NoteEditorScreen.ps1" "DEBUG"
+                # Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Loading NoteEditorScreen.ps1" "DEBUG"
                 . $editorScreenPath
 
-                Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Creating NoteEditorScreen instance" "DEBUG"
+                # Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Creating NoteEditorScreen instance" "DEBUG"
                 $editorScreen = New-Object NoteEditorScreen -ArgumentList $noteId
 
-                Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Pushing screen to app" "DEBUG"
+                # Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Pushing screen to app" "DEBUG"
                 $global:PmcApp.PushScreen($editorScreen)
 
-                Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Screen pushed successfully" "INFO"
+                # Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: Screen pushed successfully" "INFO"
             } else {
-                Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: NoteEditorScreen.ps1 not found at $editorScreenPath" "ERROR"
+                # Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: NoteEditorScreen.ps1 not found at $editorScreenPath" "ERROR"
             }
         } else {
-            Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: No noteId found in item" "ERROR"
+            # Write-PmcTuiLog "NotesMenuScreen.OnItemActivated: No noteId found in item" "ERROR"
         }
     }
 
@@ -263,7 +263,7 @@ class NotesMenuScreen : StandardListScreen {
     [void] OnAddItem([hashtable]$data) {
         # SAVE FIX: Safe property access and validation
         $title = $(if ($data.ContainsKey('title')) { $data.title } else { '' })
-        Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Creating note '$title'" "DEBUG"
+        # Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Creating note '$title'" "DEBUG"
 
         try {
             # Validate title
@@ -279,25 +279,25 @@ class NotesMenuScreen : StandardListScreen {
             }
 
             # Create note with owner info
-            Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Calling CreateNote with title='$title' tags=$($tags.Count) owner=$($this._ownerType):$($this._ownerId)" "DEBUG"
+            # Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Calling CreateNote with title='$title' tags=$($tags.Count) owner=$($this._ownerType):$($this._ownerId)" "DEBUG"
             $note = $this._noteService.CreateNote($title, $tags, $this._ownerType, $this._ownerId)
 
             if ($null -eq $note) {
-                Write-PmcTuiLog "NotesMenuScreen.OnAddItem: CreateNote returned null!" "ERROR"
+                # Write-PmcTuiLog "NotesMenuScreen.OnAddItem: CreateNote returned null!" "ERROR"
                 return
             }
 
-            Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Created note, checking for id..." "DEBUG"
+            # Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Created note, checking for id..." "DEBUG"
             $noteId = $(if ($note -is [hashtable]) { $note['id'] } else { $note.id })
-            Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Note ID = $noteId" "INFO"
+            # Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Note ID = $noteId" "INFO"
 
             # Refresh list (will happen automatically via event callback)
             # Open the new note in editor
             $this.OnItemActivated($note)
 
         } catch {
-            Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Error - $_" "ERROR"
-            Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Stack trace - $($_.ScriptStackTrace)" "ERROR"
+            # Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Error - $_" "ERROR"
+            # Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Stack trace - $($_.ScriptStackTrace)" "ERROR"
         }
     }
 
@@ -316,7 +316,7 @@ class NotesMenuScreen : StandardListScreen {
     [void] OnEditItem($item, [hashtable]$data) {
         # SAVE FIX: Safe property access
         $itemId = $(if ($item -is [hashtable]) { $item['id'] } else { $item.id })
-        Write-PmcTuiLog "NotesMenuScreen.OnEditItem: Updating note $itemId" "DEBUG"
+        # Write-PmcTuiLog "NotesMenuScreen.OnEditItem: Updating note $itemId" "DEBUG"
 
         try {
             # Validate title
@@ -339,12 +339,12 @@ class NotesMenuScreen : StandardListScreen {
 
             $this._noteService.UpdateNoteMetadata($item.id, $changes)
 
-            Write-PmcTuiLog "NotesMenuScreen.OnEditItem: Updated note $($item.id)" "INFO"
+            # Write-PmcTuiLog "NotesMenuScreen.OnEditItem: Updated note $($item.id)" "INFO"
 
             # Refresh list (will happen automatically via event callback)
 
         } catch {
-            Write-PmcTuiLog "NotesMenuScreen.OnEditItem: Error - $_" "ERROR"
+            # Write-PmcTuiLog "NotesMenuScreen.OnEditItem: Error - $_" "ERROR"
             $this.SetStatusMessage("Failed to update note: $($_.Exception.Message)", "error")
         }
     }
@@ -362,17 +362,17 @@ class NotesMenuScreen : StandardListScreen {
     Handle delete note
     #>
     [void] OnDeleteItem($item) {
-        Write-PmcTuiLog "NotesMenuScreen.OnDeleteItem: Deleting note $($item.id)" "DEBUG"
+        # Write-PmcTuiLog "NotesMenuScreen.OnDeleteItem: Deleting note $($item.id)" "DEBUG"
 
         try {
             $this._noteService.DeleteNote($item.id)
 
-            Write-PmcTuiLog "NotesMenuScreen.OnDeleteItem: Deleted note $($item.id)" "INFO"
+            # Write-PmcTuiLog "NotesMenuScreen.OnDeleteItem: Deleted note $($item.id)" "INFO"
 
             # Refresh list (will happen automatically via event callback)
 
         } catch {
-            Write-PmcTuiLog "NotesMenuScreen.OnDeleteItem: Error - $_" "ERROR"
+            # Write-PmcTuiLog "NotesMenuScreen.OnDeleteItem: Error - $_" "ERROR"
             $this.SetStatusMessage("Failed to delete note: $($_.Exception.Message)", "error")
         }
     }
@@ -478,7 +478,7 @@ class NotesMenuScreen : StandardListScreen {
         if ($this._noteService) {
             $this._noteService.OnNotesChanged = $null
         }
-        Write-PmcTuiLog "NotesMenuScreen.OnExit: Cleaned up event subscriptions" "DEBUG"
+        # Write-PmcTuiLog "NotesMenuScreen.OnExit: Cleaned up event subscriptions" "DEBUG"
     }
 
     <#

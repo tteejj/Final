@@ -57,7 +57,7 @@ class ExcelImportScreen : PmcScreen {
         }
         catch {
             $this._errorMessage = "Excel COM not available: $($_.Exception.Message). Excel must be installed to use this feature."
-            Write-PmcTuiLog "ExcelImportScreen: Failed to initialize ExcelComReader - $_" "ERROR"
+            # Write-PmcTuiLog "ExcelImportScreen: Failed to initialize ExcelComReader - $_" "ERROR"
         }
 
         $this._mappingService = [ExcelMappingService]::GetInstance()
@@ -84,7 +84,7 @@ class ExcelImportScreen : PmcScreen {
         }
         catch {
             $this._errorMessage = "Excel COM not available: $($_.Exception.Message). Excel must be installed to use this feature."
-            Write-PmcTuiLog "ExcelImportScreen: Failed to initialize ExcelComReader - $_" "ERROR"
+            # Write-PmcTuiLog "ExcelImportScreen: Failed to initialize ExcelComReader - $_" "ERROR"
         }
 
         $this._mappingService = [ExcelMappingService]::GetInstance()
@@ -347,7 +347,7 @@ class ExcelImportScreen : PmcScreen {
         # Check if Excel COM is available
         if ($null -eq $this._reader -and $this._step -eq 1) {
             $this._errorMessage = "Excel COM not available. Excel must be installed to use this feature."
-            Write-PmcTuiLog "ExcelImportScreen: Cannot proceed - ExcelComReader is null" "ERROR"
+            # Write-PmcTuiLog "ExcelImportScreen: Cannot proceed - ExcelComReader is null" "ERROR"
             return
         }
 
@@ -375,7 +375,7 @@ class ExcelImportScreen : PmcScreen {
                                 # HIGH FIX ES-H5: Complete null validation before accessing PSObject.Properties
                                 if ($null -ne $wb -and $null -ne $wb.PSObject -and $null -ne $wb.PSObject.Properties) {
                                     if ($wb.PSObject.Properties['Saved'] -and -not $wb.Saved) {
-                                        Write-PmcTuiLog "Warning: Workbook has unsaved changes" "WARNING"
+                                        # Write-PmcTuiLog "Warning: Workbook has unsaved changes" "WARNING"
                                         $this._errorMessage = "Warning: Workbook has unsaved changes. Please save before importing."
                                     }
                                 }
@@ -385,12 +385,12 @@ class ExcelImportScreen : PmcScreen {
                             }
                             catch {
                                 if ($retry -lt ($maxRetries - 1)) {
-                                    Write-PmcTuiLog "AttachToRunningExcel attempt $($retry + 1) failed, retrying in ${retryDelay}ms..." "WARN"
+                                    # Write-PmcTuiLog "AttachToRunningExcel attempt $($retry + 1) failed, retrying in ${retryDelay}ms..." "WARN"
                                     Start-Sleep -Milliseconds $retryDelay
                                 }
                                 else {
                                     $this._errorMessage = "Failed to attach to Excel after $maxRetries attempts: $($_.Exception.Message). Make sure Excel is running and has a workbook open."
-                                    Write-PmcTuiLog "AttachToRunningExcel failed after $maxRetries attempts: $_" "ERROR"
+                                    # Write-PmcTuiLog "AttachToRunningExcel failed after $maxRetries attempts: $_" "ERROR"
                                 }
                             }
                         }
@@ -422,7 +422,7 @@ class ExcelImportScreen : PmcScreen {
                         }
                         catch {
                             $this._errorMessage = "Failed to open Excel file: $($_.Exception.Message)"
-                            Write-PmcTuiLog "OpenFile failed: $_" "ERROR"
+                            # Write-PmcTuiLog "OpenFile failed: $_" "ERROR"
                         }
                     }
                 }
@@ -444,14 +444,14 @@ class ExcelImportScreen : PmcScreen {
                         # ES-M6 & ES-M7 FIX: Use script-level constant for max cells limit
                         $maxCellsToRead = $global:MAX_CELLS_TO_READ
                         if ($cellsToRead.Count -gt $maxCellsToRead) {
-                            Write-PmcTuiLog "Warning: Profile has $($cellsToRead.Count) cell mappings, limiting to $maxCellsToRead to prevent performance issues" "WARN"
+                            # Write-PmcTuiLog "Warning: Profile has $($cellsToRead.Count) cell mappings, limiting to $maxCellsToRead to prevent performance issues" "WARN"
                             $cellsToRead = $cellsToRead | Select-Object -First $maxCellsToRead
                         }
 
                         $this._previewData = $this._reader.ReadCells($cellsToRead)
                         # HIGH FIX ES-H7: Validate ReadCells() return value
                         if ($null -eq $this._previewData) {
-                            Write-PmcTuiLog "ExcelImportScreen: ReadCells() returned null" "WARNING"
+                            # Write-PmcTuiLog "ExcelImportScreen: ReadCells() returned null" "WARNING"
                             $this._previewData = @{}
                         }
 
@@ -473,7 +473,7 @@ class ExcelImportScreen : PmcScreen {
         }
         catch {
             $this._errorMessage = $_.Exception.Message
-            Write-PmcTuiLog "ExcelImportScreen: Error in step $($this._step) - $_" "ERROR"
+            # Write-PmcTuiLog "ExcelImportScreen: Error in step $($this._step) - $_" "ERROR"
         }
     }
 
@@ -528,7 +528,7 @@ class ExcelImportScreen : PmcScreen {
                         }
                     }
                     catch {
-                        Write-PmcTuiLog "Failed to convert '$originalValue' (type: $originalType) to int for field $($mapping['display_name']): $_" "ERROR"
+                        # Write-PmcTuiLog "Failed to convert '$originalValue' (type: $originalType) to int for field $($mapping['display_name']): $_" "ERROR"
                         throw "Cannot convert '$originalValue' (type: $originalType) to integer for field '$($mapping['display_name'])'"
                     }
                 }
@@ -544,7 +544,7 @@ class ExcelImportScreen : PmcScreen {
                         }
                     }
                     catch {
-                        Write-PmcTuiLog "Failed to convert '$originalValue' (type: $originalType) to bool for field $($mapping['display_name']): $_" "ERROR"
+                        # Write-PmcTuiLog "Failed to convert '$originalValue' (type: $originalType) to bool for field $($mapping['display_name']): $_" "ERROR"
                         throw "Cannot convert '$originalValue' (type: $originalType) to boolean for field '$($mapping['display_name'])'"
                     }
                 }
@@ -559,14 +559,14 @@ class ExcelImportScreen : PmcScreen {
                             $dateValue = [datetime]$value
                             # LOW FIX ES-L2, ES-L3, ES-L4: Use script-level constants for date range validation
                             if ($dateValue.Year -lt $global:MIN_VALID_YEAR -or $dateValue.Year -gt $global:MAX_VALID_YEAR) {
-                                Write-PmcTuiLog "Date value '$dateValue' for field $($mapping['display_name']) is outside reasonable range ($global:MIN_VALID_YEAR-$global:MAX_VALID_YEAR)" "WARNING"
+                                # Write-PmcTuiLog "Date value '$dateValue' for field $($mapping['display_name']) is outside reasonable range ($global:MIN_VALID_YEAR-$global:MAX_VALID_YEAR)" "WARNING"
                                 throw "Date '$dateValue' is outside reasonable range ($global:MIN_VALID_YEAR-$global:MAX_VALID_YEAR) for field '$($mapping['display_name'])'"
                             }
                             $dateValue
                         }
                     }
                     catch {
-                        Write-PmcTuiLog "Failed to convert '$originalValue' (type: $originalType) to date for field $($mapping['display_name']): $_" "ERROR"
+                        # Write-PmcTuiLog "Failed to convert '$originalValue' (type: $originalType) to date for field $($mapping['display_name']): $_" "ERROR"
                         throw "Cannot convert '$originalValue' (type: $originalType) to date for field '$($mapping['display_name'])'"
                     }
                 }
@@ -590,18 +590,18 @@ class ExcelImportScreen : PmcScreen {
         # CRITICAL FIX ES-C1: Add explicit null check for AddProject return 
         if ($null -eq $success) {
             $this._errorMessage = "Failed to add project: Store.AddProject returned null"
-            Write-PmcTuiLog "ExcelImportScreen: AddProject returned null for '$($projectData['name'])'" "ERROR"
+            # Write-PmcTuiLog "ExcelImportScreen: AddProject returned null for '$($projectData['name'])'" "ERROR"
             $this._step = 3  # Stay on step 3
             throw "Failed to add project: AddProject returned null"
         }
 
         if ($success) {
-            Write-PmcTuiLog "ExcelImportScreen: Imported project '$($projectData['name'])'" "INFO"
+            # Write-PmcTuiLog "ExcelImportScreen: Imported project '$($projectData['name'])'" "INFO"
             # ES-M9 FIX: Check Flush() return value to ensure data is persisted
             # BUG-14 FIX: Throw error if Flush() fails instead of just logging
             $flushResult = $this.Store.Flush()
             if ($flushResult -eq $false) {
-                Write-PmcTuiLog "ExcelImportScreen: CRITICAL - Flush() returned false after importing project '$($projectData['name'])'" "ERROR"
+                # Write-PmcTuiLog "ExcelImportScreen: CRITICAL - Flush() returned false after importing project '$($projectData['name'])'" "ERROR"
                 throw "Failed to persist project data to disk. Import cancelled."
             }
         }
@@ -613,7 +613,7 @@ class ExcelImportScreen : PmcScreen {
                 else {
                     "Store is null"
                 })
-            Write-PmcTuiLog "ExcelImportScreen: Failed to import project: $errorMsg" "ERROR"
+            # Write-PmcTuiLog "ExcelImportScreen: Failed to import project: $errorMsg" "ERROR"
             throw "Failed to import project: $errorMsg"
         }
     }
@@ -622,7 +622,7 @@ class ExcelImportScreen : PmcScreen {
         # LOW FIX ES-L3: Validate script sourcing path exists
         $pickerPath = "$PSScriptRoot/../widgets/PmcFilePicker.ps1"
         if (-not (Test-Path $pickerPath)) {
-            Write-PmcTuiLog "PmcFilePicker.ps1 not found at: $pickerPath" "ERROR"
+            # Write-PmcTuiLog "PmcFilePicker.ps1 not found at: $pickerPath" "ERROR"
             throw "File picker widget not found. Please ensure PmcFilePicker.ps1 exists."
         }
         . $pickerPath
@@ -636,7 +636,7 @@ class ExcelImportScreen : PmcScreen {
             # ES-M8 FIX: Add null check for PmcThemeManager.GetInstance()
             $themeManager = [PmcThemeManager]::GetInstance()
             if ($null -eq $themeManager) {
-                Write-PmcTuiLog "PmcThemeManager.GetInstance() returned null in file picker" "ERROR"
+                # Write-PmcTuiLog "PmcThemeManager.GetInstance() returned null in file picker" "ERROR"
                 $picker.IsComplete = $true
                 $picker.Result = $false
                 break
@@ -658,7 +658,7 @@ class ExcelImportScreen : PmcScreen {
             }
             catch [System.InvalidOperationException] {
                 # Not in interactive mode - cancel picker
-                Write-PmcTuiLog "File picker cannot run in non-interactive mode" "ERROR"
+                # Write-PmcTuiLog "File picker cannot run in non-interactive mode" "ERROR"
                 $picker.IsComplete = $true
                 $picker.Result = $false
             }
@@ -670,11 +670,11 @@ class ExcelImportScreen : PmcScreen {
         if ($picker.Result -and $null -ne $picker.SelectedPath) {
             # ES-M5 FIX: Validate selection is a file, not a directory
             if (Test-Path -Path $picker.SelectedPath -PathType Container) {
-                Write-PmcTuiLog "Selected path is a directory, not a file: $($picker.SelectedPath)" "ERROR"
+                # Write-PmcTuiLog "Selected path is a directory, not a file: $($picker.SelectedPath)" "ERROR"
                 return ''
             }
             if (-not (Test-Path -Path $picker.SelectedPath -PathType Leaf)) {
-                Write-PmcTuiLog "Selected path is not a valid file: $($picker.SelectedPath)" "ERROR"
+                # Write-PmcTuiLog "Selected path is not a valid file: $($picker.SelectedPath)" "ERROR"
                 return ''
             }
             return $picker.SelectedPath

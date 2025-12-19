@@ -364,11 +364,11 @@ class ProjectInfoScreenV4 : TabbedScreen {
     # === File Actions ===
 
     hidden [void] _HandleFileAction([string]$action) {
-        Write-PmcTuiLog "ProjectInfoScreenV4._HandleFileAction: action=$action ProjectName='$($this.ProjectName)'" "INFO"
+        # Write-PmcTuiLog "ProjectInfoScreenV4._HandleFileAction: action=$action ProjectName='$($this.ProjectName)'" "INFO"
         switch ($action) {
             '_action_notes' {
                 # Open NotesMenuScreen for this project
-                Write-PmcTuiLog "ProjectInfoScreenV4._HandleFileAction: Opening NotesMenuScreen for project='$($this.ProjectName)'" "INFO"
+                # Write-PmcTuiLog "ProjectInfoScreenV4._HandleFileAction: Opening NotesMenuScreen for project='$($this.ProjectName)'" "INFO"
                 . "$PSScriptRoot/NotesMenuScreen.ps1"
                 $notesScreen = New-Object NotesMenuScreen -ArgumentList "project", $this.ProjectName, $this.ProjectName
                 $global:PmcApp.PushScreen($notesScreen)
@@ -379,7 +379,7 @@ class ProjectInfoScreenV4 : TabbedScreen {
             }
             '_action_checklists' {
                 # Open ChecklistsMenuScreen for this project
-                Write-PmcTuiLog "ProjectInfoScreenV4._HandleFileAction: Opening ChecklistsMenuScreen for project='$($this.ProjectName)'" "INFO"
+                # Write-PmcTuiLog "ProjectInfoScreenV4._HandleFileAction: Opening ChecklistsMenuScreen for project='$($this.ProjectName)'" "INFO"
                 . "$PSScriptRoot/ChecklistsMenuScreen.ps1"
                 $checklistsScreen = New-Object ChecklistsMenuScreen -ArgumentList "project", $this.ProjectName, $this.ProjectName
                 $global:PmcApp.PushScreen($checklistsScreen)

@@ -298,7 +298,11 @@ class PmcMenuBar : PmcWidget {
             try {
                 & $item.Action
             } catch {
-                # Log error
+                # Log error so menu action failures are visible
+                if ($global:PmcTuiLogFile) {
+                    Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [ERROR] PmcMenuBar: Action failed for '$($item.Label)': $_"
+                    Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [ERROR] Stack: $($_.ScriptStackTrace)"
+                }
             }
         }
 

@@ -1,0 +1,450 @@
+[2025-12-19 08:32:33.293] [INFO] Loading PMC module...
+[2025-12-19 08:32:34.056] [INFO] PMC module loaded
+[2025-12-19 08:32:34.060] [INFO] Loading dependencies (FieldSchemas, etc.)...
+[2025-12-19 08:32:34.144] [INFO] Dependencies loaded
+[2025-12-19 08:32:34.145] [INFO] Loading SpeedTUI framework...
+[2025-12-19 08:32:34.850] [INFO] SpeedTUI framework loaded
+[2025-12-19 08:32:34.851] [INFO] Loading PraxisVT...
+[2025-12-19 08:32:34.852] [INFO] PraxisVT loaded
+[2025-12-19 08:32:34.853] [INFO] Loading core dependencies...
+[2025-12-19 08:32:34.880] [INFO] Core dependencies loaded
+[2025-12-19 08:32:34.881] [INFO] Loading widget base classes...
+[2025-12-19 08:32:34.917] [INFO] Widget base classes loaded
+[2025-12-19 08:32:34.918] [INFO] Loading services...
+[2025-12-19 08:32:35.015] [INFO] Services loaded
+[2025-12-19 08:32:35.016] [INFO] Loading helpers...
+[2025-12-19 08:32:35.164] [INFO] Helpers loaded
+[2025-12-19 08:32:35.164] [INFO] Loading widgets...
+[2025-12-19 08:32:35.374] [INFO] Widgets loaded
+[2025-12-19 08:32:35.375] [INFO] Loading screen base class...
+[2025-12-19 08:32:35.398] [INFO] Screen base class loaded
+[2025-12-19 08:32:35.399] [INFO] Loading HelpViewScreen (needed by base classes)...
+[2025-12-19 08:32:35.403] [INFO] HelpViewScreen loaded
+[2025-12-19 08:32:35.404] [INFO] Loading base classes...
+[2025-12-19 08:32:35.491] [INFO] Base classes loaded
+[2025-12-19 08:32:35.492] [INFO] Loading ServiceContainer (needed by screens)...
+[2025-12-19 08:32:35.496] [INFO] ServiceContainer loaded
+[2025-12-19 08:32:35.497] [INFO] Loading remaining screens...
+[2025-12-19 08:32:35.598] [INFO] Remaining screens loaded
+[2025-12-19 08:32:35.599] [INFO] Loading PmcApplication...
+[2025-12-19 08:32:35.612] [INFO] PmcApplication loaded
+[2025-12-19 08:32:35.612] [INFO] All components loaded successfully
+[2025-12-19 08:32:35.628] [INFO] Starting PMC TUI with screen: TaskList
+[2025-12-19 08:32:35.634] [INFO] Cleared stale PmcSharedMenuBar and MenuRegistry singleton
+[2025-12-19 08:32:35.635] [INFO] Creating ServiceContainer...
+[2025-12-19 08:32:35.651] [INFO] ServiceContainer created
+[2025-12-19 08:32:35.652] [INFO] Registering Theme service...
+[2025-12-19 08:32:35.665] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-19 08:32:35.668] [INFO] Registering ThemeManager...
+[2025-12-19 08:32:35.669] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-19 08:32:35.671] [INFO] Registering Config service...
+[2025-12-19 08:32:35.672] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-19 08:32:35.672] [INFO] Registering TaskStore service...
+[2025-12-19 08:32:35.673] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-19 08:32:35.674] [INFO] Registering MenuRegistry service...
+[2025-12-19 08:32:35.674] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-19 08:32:35.675] [INFO] Registering Application service...
+[2025-12-19 08:32:35.676] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-19 08:32:35.677] [INFO] Registering CommandService...
+[2025-12-19 08:32:35.677] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-19 08:32:35.678] [INFO] Registering ChecklistService...
+[2025-12-19 08:32:35.679] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-19 08:32:35.680] [INFO] Registering NoteService...
+[2025-12-19 08:32:35.682] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-19 08:32:35.683] [INFO] Registering ExcelMappingService...
+[2025-12-19 08:32:35.684] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-19 08:32:35.685] [INFO] Registering PreferencesService...
+[2025-12-19 08:32:35.687] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-19 08:32:35.688] [INFO] Registering screen factories...
+[2025-12-19 08:32:35.690] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-19 08:32:35.691] [INFO] Resolving Application from container...
+[2025-12-19 08:32:35.704] ServiceContainer: Resolving 'Application'...
+[2025-12-19 08:32:35.706] [INFO] Resolving Application...
+[2025-12-19 08:32:35.707] ServiceContainer: Resolving 'Theme'...
+[2025-12-19 08:32:35.711] [INFO] Resolving Theme: Resetting singletons and initializing...
+[2025-12-19 08:32:35.849] [INFO] Theme initialized: #ff00ff
+[2025-12-19 08:32:35.852] ServiceContainer: Resolved 'Theme' successfully
+[2025-12-19 08:32:35.922] ServiceContainer: Resolving 'ThemeManager'...
+[2025-12-19 08:32:35.925] [INFO] Resolving ThemeManager...
+[2025-12-19 08:32:35.926] ServiceContainer: Resolved 'ThemeManager' successfully
+[2025-12-19 08:32:35.936] ServiceContainer: Resolved 'Application' successfully
+[2025-12-19 08:32:35.938] [INFO] Application resolved and assigned to $global:PmcApp
+[2025-12-19 08:32:35.939] [INFO] Loading menus from manifest...
+[2025-12-19 08:32:35.940] ServiceContainer: Resolving 'MenuRegistry'...
+[2025-12-19 08:32:35.941] [INFO] Resolving MenuRegistry...
+[2025-12-19 08:32:35.950] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2025-12-19 08:32:35.966] MenuRegistry: Loaded manifest with 23 entries
+[2025-12-19 08:32:35.987] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2025-12-19 08:32:35.987] MenuRegistry: Registered screen factory 'WeeklyTimeReportScreen' in container (viewMode=)
+[2025-12-19 08:32:36.000] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-19 08:32:36.001] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2025-12-19 08:32:36.002] MenuRegistry: Registered screen factory 'CommandLibraryScreen' in container (viewMode=)
+[2025-12-19 08:32:36.003] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-19 08:32:36.005] ServiceContainer: Registered 'TaskListScreen_NoDate' (singleton=False)
+[2025-12-19 08:32:36.006] MenuRegistry: Registered screen factory 'TaskListScreen_NoDate' in container (viewMode=noduedate)
+[2025-12-19 08:32:36.007] MenuRegistry: Registered 'No Due Date' in 'Tasks' menu (hotkey=D order=40)
+[2025-12-19 08:32:36.008] ServiceContainer: Registered 'TaskListScreen_Tomorrow' (singleton=False)
+[2025-12-19 08:32:36.009] MenuRegistry: Registered screen factory 'TaskListScreen_Tomorrow' in container (viewMode=tomorrow)
+[2025-12-19 08:32:36.009] MenuRegistry: Registered 'Tomorrow' in 'Tasks' menu (hotkey=T order=15)
+[2025-12-19 08:32:36.011] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2025-12-19 08:32:36.011] MenuRegistry: Registered screen factory 'NotesMenuScreen' in container (viewMode=)
+[2025-12-19 08:32:36.012] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-19 08:32:36.013] ServiceContainer: Registered 'TaskListScreen_Month' (singleton=False)
+[2025-12-19 08:32:36.014] MenuRegistry: Registered screen factory 'TaskListScreen_Month' in container (viewMode=month)
+[2025-12-19 08:32:36.015] MenuRegistry: Registered 'Month View' in 'Tasks' menu (hotkey=M order=45)
+[2025-12-19 08:32:36.035] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2025-12-19 08:32:36.035] MenuRegistry: Registered screen factory 'TimeListScreen' in container (viewMode=)
+[2025-12-19 08:32:36.036] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-19 08:32:36.038] ServiceContainer: Registered 'TaskListScreen_Upcoming' (singleton=False)
+[2025-12-19 08:32:36.038] MenuRegistry: Registered screen factory 'TaskListScreen_Upcoming' in container (viewMode=upcoming)
+[2025-12-19 08:32:36.039] MenuRegistry: Registered 'Upcoming' in 'Tasks' menu (hotkey=U order=25)
+[2025-12-19 08:32:36.040] ServiceContainer: Registered 'TaskListScreen_Overdue' (singleton=False)
+[2025-12-19 08:32:36.041] MenuRegistry: Registered screen factory 'TaskListScreen_Overdue' in container (viewMode=overdue)
+[2025-12-19 08:32:36.042] MenuRegistry: Registered 'Overdue' in 'Tasks' menu (hotkey=O order=30)
+[2025-12-19 08:32:36.043] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2025-12-19 08:32:36.043] MenuRegistry: Registered screen factory 'ProjectListScreen' in container (viewMode=)
+[2025-12-19 08:32:36.044] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-19 08:32:36.045] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2025-12-19 08:32:36.046] MenuRegistry: Registered screen factory 'HelpViewScreen' in container (viewMode=)
+[2025-12-19 08:32:36.047] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-19 08:32:36.048] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2025-12-19 08:32:36.049] MenuRegistry: Registered screen factory 'ExcelProfileManagerScreen' in container (viewMode=)
+[2025-12-19 08:32:36.050] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-19 08:32:36.051] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2025-12-19 08:32:36.052] MenuRegistry: Registered screen factory 'ChecklistsLauncherScreen' in container (viewMode=)
+[2025-12-19 08:32:36.053] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-19 08:32:36.054] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2025-12-19 08:32:36.055] MenuRegistry: Registered screen factory 'ThemeEditorScreen' in container (viewMode=)
+[2025-12-19 08:32:36.056] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-19 08:32:36.058] ServiceContainer: Registered 'TaskListScreen_Week' (singleton=False)
+[2025-12-19 08:32:36.059] MenuRegistry: Registered screen factory 'TaskListScreen_Week' in container (viewMode=week)
+[2025-12-19 08:32:36.060] MenuRegistry: Registered 'Week View' in 'Tasks' menu (hotkey=W order=20)
+[2025-12-19 08:32:36.061] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2025-12-19 08:32:36.062] MenuRegistry: Registered screen factory 'ExcelImportScreen' in container (viewMode=)
+[2025-12-19 08:32:36.063] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-19 08:32:36.065] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2025-12-19 08:32:36.066] MenuRegistry: Registered screen factory 'ChecklistTemplatesFolderScreen' in container (viewMode=)
+[2025-12-19 08:32:36.067] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-19 08:32:36.068] ServiceContainer: Registered 'TaskListScreen_Agenda' (singleton=False)
+[2025-12-19 08:32:36.069] MenuRegistry: Registered screen factory 'TaskListScreen_Agenda' in container (viewMode=agenda)
+[2025-12-19 08:32:36.071] MenuRegistry: Registered 'Agenda View' in 'Tasks' menu (hotkey=A order=50)
+[2025-12-19 08:32:36.072] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2025-12-19 08:32:36.073] MenuRegistry: Registered screen factory 'TimeReportScreen' in container (viewMode=)
+[2025-12-19 08:32:36.074] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-19 08:32:36.076] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2025-12-19 08:32:36.077] MenuRegistry: Registered screen factory 'TaskListScreen_Default' in container (viewMode=)
+[2025-12-19 08:32:36.078] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-19 08:32:36.081] ServiceContainer: Registered 'TaskListScreen_Today' (singleton=False)
+[2025-12-19 08:32:36.082] MenuRegistry: Registered screen factory 'TaskListScreen_Today' in container (viewMode=today)
+[2025-12-19 08:32:36.083] MenuRegistry: Registered 'Today' in 'Tasks' menu (hotkey=Y order=10)
+[2025-12-19 08:32:36.084] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2025-12-19 08:32:36.085] MenuRegistry: Registered screen factory 'SettingsScreen' in container (viewMode=)
+[2025-12-19 08:32:36.086] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-19 08:32:36.088] ServiceContainer: Registered 'TaskListScreen_NextActions' (singleton=False)
+[2025-12-19 08:32:36.089] MenuRegistry: Registered screen factory 'TaskListScreen_NextActions' in container (viewMode=nextactions)
+[2025-12-19 08:32:36.090] MenuRegistry: Registered 'Next Actions' in 'Tasks' menu (hotkey=N order=35)
+[2025-12-19 08:32:36.091] [INFO] Menus loaded from /home/teej/ztest/module/Pmc.Strict/consoleui/screens/MenuItems.psd1
+[2025-12-19 08:32:36.092] [INFO] Launching screen: TaskList
+[2025-12-19 08:32:36.093] [INFO] Resolving TaskListScreen from container...
+[2025-12-19 08:32:36.094] ServiceContainer: Resolving 'TaskListScreen'...
+[2025-12-19 08:32:36.096] [INFO] Resolving TaskListScreen...
+[2025-12-19 08:32:36.097] ServiceContainer: Resolving 'TaskStore'...
+[2025-12-19 08:32:36.099] [INFO] Resolving TaskStore...
+[2025-12-19 08:32:36.317] ServiceContainer: Resolved 'TaskStore' successfully
+[2025-12-19 08:32:36.899] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2025-12-19 08:32:36.918] _PopulateMenusFromRegistry: Menu 'Tasks' has 10 items from registry (array)
+[2025-12-19 08:32:36.921] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2025-12-19 08:32:36.924] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2025-12-19 08:32:36.927] _PopulateMenusFromRegistry: Menu 'Tools' has 4 items from registry (array)
+[2025-12-19 08:32:36.930] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2025-12-19 08:32:36.932] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2025-12-19 08:32:36.933] [INFO] Pushing screen to app...
+[2025-12-19 08:32:37.321] [INFO] Screen pushed successfully
+[2025-12-19 08:32:37.322] [INFO] Starting event loop...
+[2025-12-19 08:32:38.122] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:38.123] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:38.124] [ERROR] TargetObject: 
+[2025-12-19 08:32:38.126] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:42.196] [INFO] *** STANDARDLISTSCREEN.ADDITEM CALLED on type=TaskListScreen key=TaskList ***
+[2025-12-19 08:32:42.637] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:42.638] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:42.638] [ERROR] TargetObject: 
+[2025-12-19 08:32:42.639] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:44.335] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:44.336] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:44.336] [ERROR] TargetObject: 
+[2025-12-19 08:32:44.337] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:44.813] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:44.813] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:44.813] [ERROR] TargetObject: 
+[2025-12-19 08:32:44.814] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:45.039] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:45.040] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:45.040] [ERROR] TargetObject: 
+[2025-12-19 08:32:45.040] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:45.299] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:45.300] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:45.301] [ERROR] TargetObject: 
+[2025-12-19 08:32:45.301] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:45.510] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:45.511] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:45.511] [ERROR] TargetObject: 
+[2025-12-19 08:32:45.511] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:45.727] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:45.727] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:45.728] [ERROR] TargetObject: 
+[2025-12-19 08:32:45.728] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:46.012] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:46.012] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:46.012] [ERROR] TargetObject: 
+[2025-12-19 08:32:46.013] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:47.463] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:47.465] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:47.465] [ERROR] TargetObject: 
+[2025-12-19 08:32:47.465] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:48.064] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:48.065] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:48.065] [ERROR] TargetObject: 
+[2025-12-19 08:32:48.065] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:48.308] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:48.308] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:48.309] [ERROR] TargetObject: 
+[2025-12-19 08:32:48.309] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:48.538] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:48.538] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:48.538] [ERROR] TargetObject: 
+[2025-12-19 08:32:48.539] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:48.777] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:48.778] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:48.778] [ERROR] TargetObject: 
+[2025-12-19 08:32:48.778] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:51.029] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:51.029] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:51.029] [ERROR] TargetObject: 
+[2025-12-19 08:32:51.030] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:53.565] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:53.566] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:53.566] [ERROR] TargetObject: 
+[2025-12-19 08:32:53.566] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:57.367] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:57.368] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:57.368] [ERROR] TargetObject: 
+[2025-12-19 08:32:57.369] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:59.694] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:59.694] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:59.694] [ERROR] TargetObject: 
+[2025-12-19 08:32:59.695] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:32:59.773] ServiceContainer: Resolving 'NotesMenuScreen'...
+[2025-12-19 08:32:59.792] [ERROR] ServiceContainer: Failed to resolve 'NotesMenuScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:20 char:13
++     hidden [FileNoteService]$_noteService = $null
++             ~~~~~~~~~~~~~~~
+Unable to find type [FileNoteService].
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:52 char:31
++         $this._noteService = [FileNoteService]::GetInstance()
++                               ~~~~~~~~~~~~~~~
+Unable to find type [FileNoteService].
+[2025-12-19 08:32:59.793] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 1
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 500
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 952
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1876
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 413
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:59.943] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:32:59.944] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:32:59.944] [ERROR] TargetObject: 
+[2025-12-19 08:32:59.944] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:33:08.933] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:33:08.933] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:33:08.934] [ERROR] TargetObject: 
+[2025-12-19 08:33:08.934] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:33:09.497] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:33:09.497] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:33:09.497] [ERROR] TargetObject: 
+[2025-12-19 08:33:09.498] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:33:11.091] [ERROR] Widget render error: Panel render failed: Cannot convert argument "fg", with value: "rounded", for "DrawBox" to type "System.Int32": "Cannot convert value "rounded" to type "System.Int32". Error: "The input string 'rounded' was not in a correct format.""
+[2025-12-19 08:33:11.091] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcPanel.ps1: line 150
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 397
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 217
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1979
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 38
+[2025-12-19 08:33:11.091] [ERROR] TargetObject: 
+[2025-12-19 08:33:11.092] [ERROR] InvocationInfo:             $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+
+[2025-12-19 08:33:14.491] [INFO] Event loop exited normally
+[2025-12-19 08:33:14.491] [INFO] Cleanup - showing cursor and resetting terminal

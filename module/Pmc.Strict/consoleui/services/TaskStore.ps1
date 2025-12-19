@@ -256,19 +256,19 @@ class TaskStore {
     True if load succeeded, False otherwise
     #>
     [bool] LoadData() {
-        Write-PmcTuiLog "TaskStore.LoadData: Starting" "DEBUG"
+        # Write-PmcTuiLog "TaskStore.LoadData: Starting" "DEBUG"
         [Monitor]::Enter($this._dataLock)
         try {
             try {
                 # FIX: Call Get-PmcData via explicit module invocation
-                Write-PmcTuiLog "TaskStore.LoadData: Calling Get-PmcData" "DEBUG"
+                # Write-PmcTuiLog "TaskStore.LoadData: Calling Get-PmcData" "DEBUG"
                 $pmcModule = Get-Module -Name 'Pmc.Strict'
                 $pmcData = & $pmcModule { Get-PmcData }
-                Write-PmcTuiLog "TaskStore.LoadData: Get-PmcData returned - tasks=$($pmcData.tasks.Count) projects=$($pmcData.projects.Count) timelogs=$($pmcData.timelogs.Count)" "DEBUG"
+                # Write-PmcTuiLog "TaskStore.LoadData: Get-PmcData returned - tasks=$($pmcData.tasks.Count) projects=$($pmcData.projects.Count) timelogs=$($pmcData.timelogs.Count)" "DEBUG"
 
                 if ($null -eq $pmcData) {
                     $this.LastError = "Get-PmcData returned null"
-                    Write-PmcTuiLog "TaskStore.LoadData: ERROR - Get-PmcData returned null" "ERROR"
+                    # Write-PmcTuiLog "TaskStore.LoadData: ERROR - Get-PmcData returned null" "ERROR"
                     $this._InvokeCallback($this.OnLoadError, $this.LastError)
                     return $false
                 }
@@ -289,11 +289,11 @@ class TaskStore {
                             [void]$this._data.tasks.Add($task)
                         }
                     }
-                    Write-PmcTuiLog "TaskStore.LoadData: Loaded $($this._data.tasks.Count) tasks" "DEBUG"
+                    # Write-PmcTuiLog "TaskStore.LoadData: Loaded $($this._data.tasks.Count) tasks" "DEBUG"
                 }
                 else {
                     $this._data.tasks = [System.Collections.ArrayList]::new()
-                    Write-PmcTuiLog "TaskStore.LoadData: No tasks in data, initialized empty list" "DEBUG"
+                    # Write-PmcTuiLog "TaskStore.LoadData: No tasks in data, initialized empty list" "DEBUG"
                 }
 
                 if ($pmcData.projects) {
@@ -311,15 +311,15 @@ class TaskStore {
                             [void]$this._data.projects.Add($project)
                         }
                     }
-                    Write-PmcTuiLog "TaskStore.LoadData: Loaded $($this._data.projects.Count) projects" "DEBUG"
+                    # Write-PmcTuiLog "TaskStore.LoadData: Loaded $($this._data.projects.Count) projects" "DEBUG"
                     if ($this._data.projects.Count -gt 0) {
                         $firstProj = $this._data.projects[0]
-                        Write-PmcTuiLog "TaskStore.LoadData: First project name='$(Get-SafeProperty $firstProj 'name')' ID1='$(Get-SafeProperty $firstProj 'ID1')'" "DEBUG"
+                        # Write-PmcTuiLog "TaskStore.LoadData: First project name='$(Get-SafeProperty $firstProj 'name')' ID1='$(Get-SafeProperty $firstProj 'ID1')'" "DEBUG"
                     }
                 }
                 else {
                     $this._data.projects = [System.Collections.ArrayList]::new()
-                    Write-PmcTuiLog "TaskStore.LoadData: No projects in data, initialized empty list" "DEBUG"
+                    # Write-PmcTuiLog "TaskStore.LoadData: No projects in data, initialized empty list" "DEBUG"
                 }
 
                 if ($pmcData.timelogs) {
@@ -357,8 +357,8 @@ class TaskStore {
             }
             catch {
                 $this.LastError = "Failed to load data: $($_.Exception.Message)"
-                Write-PmcTuiLog "TaskStore.LoadData: EXCEPTION: $($_.Exception.Message)" "ERROR"
-                Write-PmcTuiLog "TaskStore.LoadData: Stack trace: $($_.ScriptStackTrace)" "ERROR"
+                # Write-PmcTuiLog "TaskStore.LoadData: EXCEPTION: $($_.Exception.Message)" "ERROR"
+                # Write-PmcTuiLog "TaskStore.LoadData: Stack trace: $($_.ScriptStackTrace)" "ERROR"
                 $this._InvokeCallback($this.OnLoadError, $this.LastError)
                 return $false
             }
@@ -395,24 +395,24 @@ class TaskStore {
             # Check IsSaving INSIDE the lock to ensure thread safety
             if ($this.IsSaving) {
                 $this.LastError = "Save already in progress"
-                Write-PmcTuiLog "TaskStore.SaveData: Already saving, returning false" "ERROR"
+                # Write-PmcTuiLog "TaskStore.SaveData: Already saving, returning false" "ERROR"
                 return $false
             }
 
             $this.IsSaving = $true
-            Write-PmcTuiLog "TaskStore.SaveData: START - tasks=$($this._data.tasks.Count) projects=$($this._data.projects.Count) timelogs=$($this._data.timelogs.Count)" "INFO"
+            # Write-PmcTuiLog "TaskStore.SaveData: START - tasks=$($this._data.tasks.Count) projects=$($this._data.projects.Count) timelogs=$($this._data.timelogs.Count)" "INFO"
 
             try {
                 # PHASE 1: Create in-memory backup for rollback
-                Write-PmcTuiLog "TaskStore.SaveData: Creating in-memory backup" "DEBUG"
+                # Write-PmcTuiLog "TaskStore.SaveData: Creating in-memory backup" "DEBUG"
                 $this._CreateBackup()
 
                 # PHASE 2: Create persistent timestamped backup before destructive operation
-                Write-PmcTuiLog "TaskStore.SaveData: Creating persistent backup" "DEBUG"
+                # Write-PmcTuiLog "TaskStore.SaveData: Creating persistent backup" "DEBUG"
                 $this._CreatePersistentBackup()
 
                 # PHASE 3: Build data structure for Save-PmcData
-                Write-PmcTuiLog "TaskStore.SaveData: Building data structure" "DEBUG"
+                # Write-PmcTuiLog "TaskStore.SaveData: Building data structure" "DEBUG"
                 $dataToSave = @{
                     tasks    = $this._data.tasks.ToArray()
                     projects = $this._data.projects.ToArray()
@@ -420,32 +420,32 @@ class TaskStore {
                     settings = $this._data.settings
                 }
 
-                Write-PmcTuiLog "TaskStore.SaveData: Data structure built - tasks=$($dataToSave.tasks.Count) projects=$($dataToSave.projects.Count) timelogs=$($dataToSave.timelogs.Count)" "INFO"
+                # Write-PmcTuiLog "TaskStore.SaveData: Data structure built - tasks=$($dataToSave.tasks.Count) projects=$($dataToSave.projects.Count) timelogs=$($dataToSave.timelogs.Count)" "INFO"
                 
                 # Log first task/project for verification
                 if ($dataToSave.tasks.Count -gt 0) {
                     $firstTask = $dataToSave.tasks[0]
-                    Write-PmcTuiLog "TaskStore.SaveData: First task - text='$(Get-SafeProperty $firstTask 'text')' id='$(Get-SafeProperty $firstTask 'id')'" "DEBUG"
+                    # Write-PmcTuiLog "TaskStore.SaveData: First task - text='$(Get-SafeProperty $firstTask 'text')' id='$(Get-SafeProperty $firstTask 'id')'" "DEBUG"
                 }
                 if ($dataToSave.projects.Count -gt 0) {
                     $firstProject = $dataToSave.projects[0]
-                    Write-PmcTuiLog "TaskStore.SaveData: First project - name='$(Get-SafeProperty $firstProject 'name')' ID1='$(Get-SafeProperty $firstProject 'ID1')'" "DEBUG"
+                    # Write-PmcTuiLog "TaskStore.SaveData: First project - name='$(Get-SafeProperty $firstProject 'name')' ID1='$(Get-SafeProperty $firstProject 'ID1')'" "DEBUG"
                 }
 
                 # PHASE 4: Call Save-PmcData via explicit module invocation
-                Write-PmcTuiLog "TaskStore.SaveData: Calling Save-PmcData" "INFO"
+                # Write-PmcTuiLog "TaskStore.SaveData: Calling Save-PmcData" "INFO"
                 $pmcModule = Get-Module -Name 'Pmc.Strict'
                 if ($null -eq $pmcModule) {
                     $this.LastError = "Pmc.Strict module not loaded - cannot save"
-                    Write-PmcTuiLog "TaskStore.SaveData: FATAL - Pmc.Strict module not found" "ERROR"
+                    # Write-PmcTuiLog "TaskStore.SaveData: FATAL - Pmc.Strict module not found" "ERROR"
                     return $false
                 }
                 
                 & $pmcModule { param($data) Save-PmcData -Data $data } $dataToSave
-                Write-PmcTuiLog "TaskStore.SaveData: Save-PmcData completed successfully" "INFO"
+                # Write-PmcTuiLog "TaskStore.SaveData: Save-PmcData completed successfully" "INFO"
 
                 # PHASE 5: Verify save success
-                Write-PmcTuiLog "TaskStore.SaveData: Verifying save" "DEBUG"
+                # Write-PmcTuiLog "TaskStore.SaveData: Verifying save" "DEBUG"
                 $this._VerifySave($dataToSave)
 
                 # PHASE 6: Update metadata
@@ -456,26 +456,26 @@ class TaskStore {
                 # Clear in-memory backup on successful save
                 $this._dataBackup = $null
 
-                Write-PmcTuiLog "TaskStore.SaveData: SUCCESS - Data saved and verified" "INFO"
+                # Write-PmcTuiLog "TaskStore.SaveData: SUCCESS - Data saved and verified" "INFO"
                 return $true
             }
             catch {
                 $this.LastError = "Failed to save data: $($_.Exception.Message)"
-                Write-PmcTuiLog "TaskStore.SaveData: EXCEPTION: $($_.Exception.Message)" "ERROR"
-                Write-PmcTuiLog "TaskStore.SaveData: Exception type: $($_.Exception.GetType().FullName)" "ERROR"
-                Write-PmcTuiLog "TaskStore.SaveData: Stack trace: $($_.ScriptStackTrace)" "ERROR"
+                # Write-PmcTuiLog "TaskStore.SaveData: EXCEPTION: $($_.Exception.Message)" "ERROR"
+                # Write-PmcTuiLog "TaskStore.SaveData: Exception type: $($_.Exception.GetType().FullName)" "ERROR"
+                # Write-PmcTuiLog "TaskStore.SaveData: Stack trace: $($_.ScriptStackTrace)" "ERROR"
                 
                 # Log actionable error guidance
-                Write-PmcTuiLog "TaskStore.SaveData: ERROR GUIDANCE:" "ERROR"
-                Write-PmcTuiLog "  1. Check log for detailed error above" "ERROR"
-                Write-PmcTuiLog "  2. Verify disk space available" "ERROR"
-                Write-PmcTuiLog "  3. Check file permissions on tasks.json" "ERROR"
-                Write-PmcTuiLog "  4. Look for backup files: tasks.json.backup.*" "ERROR"
+                # Write-PmcTuiLog "TaskStore.SaveData: ERROR GUIDANCE:" "ERROR"
+                # Write-PmcTuiLog "  1. Check log for detailed error above" "ERROR"
+                # Write-PmcTuiLog "  2. Verify disk space available" "ERROR"
+                # Write-PmcTuiLog "  3. Check file permissions on tasks.json" "ERROR"
+                # Write-PmcTuiLog "  4. Look for backup files: tasks.json.backup.*" "ERROR"
 
                 $this._InvokeCallback($this.OnSaveError, $this.LastError)
 
                 # Rollback to in-memory backup
-                Write-PmcTuiLog "TaskStore.SaveData: Rolling back to in-memory backup" "INFO"
+                # Write-PmcTuiLog "TaskStore.SaveData: Rolling back to in-memory backup" "INFO"
                 $this._Rollback()
 
                 return $false
@@ -484,7 +484,7 @@ class TaskStore {
         finally {
             $this.IsSaving = $false
             [Monitor]::Exit($this._dataLock)
-            Write-PmcTuiLog "TaskStore.SaveData: END" "DEBUG"
+            # Write-PmcTuiLog "TaskStore.SaveData: END" "DEBUG"
         }
     }
 
@@ -539,13 +539,13 @@ class TaskStore {
             # Get tasks.json path
             $pmcModule = Get-Module -Name 'Pmc.Strict'
             if ($null -eq $pmcModule) {
-                Write-PmcTuiLog "_CreatePersistentBackup: Pmc.Strict module not found, skipping backup" "WARNING"
+                # Write-PmcTuiLog "_CreatePersistentBackup: Pmc.Strict module not found, skipping backup" "WARNING"
                 return
             }
 
             $tasksFile = & $pmcModule { Get-PmcTaskFilePath }
             if (-not (Test-Path $tasksFile)) {
-                Write-PmcTuiLog "_CreatePersistentBackup: tasks.json does not exist yet, skipping backup" "DEBUG"
+                # Write-PmcTuiLog "_CreatePersistentBackup: tasks.json does not exist yet, skipping backup" "DEBUG"
                 return
             }
 
@@ -554,7 +554,7 @@ class TaskStore {
             $backupFile = "$tasksFile.backup.$timestamp"
             
             Copy-Item -Path $tasksFile -Destination $backupFile -Force
-            Write-PmcTuiLog "_CreatePersistentBackup: Created backup at $backupFile" "INFO"
+            # Write-PmcTuiLog "_CreatePersistentBackup: Created backup at $backupFile" "INFO"
 
             # Rotate backups - keep only last 5
             $backupDir = Split-Path $tasksFile -Parent
@@ -566,13 +566,13 @@ class TaskStore {
                 $toDelete = $backups | Select-Object -Skip 5
                 foreach ($old in $toDelete) {
                     Remove-Item $old.FullName -Force
-                    Write-PmcTuiLog "_CreatePersistentBackup: Deleted old backup $($old.Name)" "DEBUG"
+                    # Write-PmcTuiLog "_CreatePersistentBackup: Deleted old backup $($old.Name)" "DEBUG"
                 }
             }
         }
         catch {
             # Backup creation is non-critical, log but continue
-            Write-PmcTuiLog "_CreatePersistentBackup: Failed to create backup: $_" "WARNING"
+            # Write-PmcTuiLog "_CreatePersistentBackup: Failed to create backup: $_" "WARNING"
         }
     }
 
@@ -588,7 +588,7 @@ class TaskStore {
         try {
             $pmcModule = Get-Module -Name 'Pmc.Strict'
             if ($null -eq $pmcModule) {
-                Write-PmcTuiLog "_VerifySave: Pmc.Strict module not found, cannot verify" "WARNING"
+                # Write-PmcTuiLog "_VerifySave: Pmc.Strict module not found, cannot verify" "WARNING"
                 return
             }
 
@@ -596,7 +596,7 @@ class TaskStore {
             $reloadedData = & $pmcModule { Get-PmcData }
             
             if ($null -eq $reloadedData) {
-                Write-PmcTuiLog "_VerifySave: Reloaded data is null!" "ERROR"
+                # Write-PmcTuiLog "_VerifySave: Reloaded data is null!" "ERROR"
                 throw "Save verification failed - reloaded data is null"
             }
 
@@ -608,19 +608,19 @@ class TaskStore {
             $reloadedProjects = if ($reloadedData.projects) { @($reloadedData.projects).Count } else { 0 }
 
             if ($savedTasks -ne $reloadedTasks) {
-                Write-PmcTuiLog "_VerifySave: Task count mismatch! Saved=$savedTasks Reloaded=$reloadedTasks" "ERROR"
+                # Write-PmcTuiLog "_VerifySave: Task count mismatch! Saved=$savedTasks Reloaded=$reloadedTasks" "ERROR"
                 throw "Save verification failed - task count mismatch (saved:$savedTasks vs reloaded:$reloadedTasks)"
             }
 
             if ($savedProjects -ne $reloadedProjects) {
-                Write-PmcTuiLog "_VerifySave: Project count mismatch! Saved=$savedProjects Reloaded=$reloadedProjects" "ERROR"
+                # Write-PmcTuiLog "_VerifySave: Project count mismatch! Saved=$savedProjects Reloaded=$reloadedProjects" "ERROR"
                 throw "Save verification failed - project count mismatch (saved:$savedProjects vs reloaded:$reloadedProjects)"
             }
 
-            Write-PmcTuiLog "_VerifySave: Verification passed - tasks=$reloadedTasks projects=$reloadedProjects" "DEBUG"
+            # Write-PmcTuiLog "_VerifySave: Verification passed - tasks=$reloadedTasks projects=$reloadedProjects" "DEBUG"
         }
         catch {
-            Write-PmcTuiLog "_VerifySave: Verification failed: $_" "ERROR"
+            # Write-PmcTuiLog "_VerifySave: Verification failed: $_" "ERROR"
             throw
         }
     }
@@ -640,7 +640,7 @@ class TaskStore {
         try {
             # HIGH FIX #9: Always return array, never null
             if ($null -eq $this._data.tasks) {
-                Write-PmcTuiLog "GetAllTasks: No tasks collection, returning empty array" "WARNING"
+                # Write-PmcTuiLog "GetAllTasks: No tasks collection, returning empty array" "WARNING"
                 return @()
             }
 
@@ -674,7 +674,7 @@ class TaskStore {
         try {
             # HIGH FIX #9: Explicit null check with consistent behavior
             if ([string]::IsNullOrWhiteSpace($id)) {
-                Write-PmcTuiLog "GetTask: Invalid ID (null or empty)" "WARNING"
+                # Write-PmcTuiLog "GetTask: Invalid ID (null or empty)" "WARNING"
                 return $null
             }
 
@@ -702,7 +702,7 @@ class TaskStore {
     True if add succeeded, False otherwise
     #>
     [bool] AddTask([hashtable]$task) {
-        Write-PmcTuiLog "AddTask: Starting with task keys: $($task.Keys -join ', ')" "DEBUG"
+        # Write-PmcTuiLog "AddTask: Starting with task keys: $($task.Keys -join ', ')" "DEBUG"
         [Monitor]::Enter($this._dataLock)
 
         $success = $false
@@ -714,7 +714,7 @@ class TaskStore {
             $validationErrors = $this._ValidateEntity($task, 'task')
             if ($validationErrors.Count -gt 0) {
                 $this.LastError = "Task validation failed: $($validationErrors -join ', ')"
-                Write-PmcTuiLog "AddTask: Validation FAILED: $($validationErrors -join ', ')" "ERROR"
+                # Write-PmcTuiLog "AddTask: Validation FAILED: $($validationErrors -join ', ')" "ERROR"
                 return $false
             }
             # Write-PmcTuiLog "AddTask: Validation passed" "DEBUG"
@@ -737,13 +737,13 @@ class TaskStore {
                         $guidGenerated = $true
                     }
                     else {
-                        Write-PmcTuiLog "GUID collision detected: $newGuid (retry $($retryCount + 1)/$maxRetries)" "WARNING"
+                        # Write-PmcTuiLog "GUID collision detected: $newGuid (retry $($retryCount + 1)/$maxRetries)" "WARNING"
                         $retryCount++
                     }
                 }
                 if (-not $guidGenerated) {
                     $this.LastError = "Failed to generate unique GUID after $maxRetries attempts"
-                    Write-PmcTuiLog "AddTask: GUID generation failed after $maxRetries retries" "ERROR"
+                    # Write-PmcTuiLog "AddTask: GUID generation failed after $maxRetries retries" "ERROR"
                     return $false
                 }
             }
@@ -752,7 +752,7 @@ class TaskStore {
             $existingTask = $this._data.tasks | Where-Object { $_.id -eq $task.id } | Select-Object -First 1
             if ($existingTask) {
                 $this.LastError = "Task with ID '$($task.id)' already exists"
-                Write-PmcTuiLog "AddTask: Duplicate ID detected: $($task.id)" "ERROR"
+                # Write-PmcTuiLog "AddTask: Duplicate ID detected: $($task.id)" "ERROR"
                 return $false
             }
 
@@ -773,7 +773,7 @@ class TaskStore {
 
             # Add to collection
             $this._data.tasks.Add($task)
-            Write-PmcTuiLog "AddTask: Added to collection, total tasks=$($this._data.tasks.Count)" "DEBUG"
+            # Write-PmcTuiLog "AddTask: Added to collection, total tasks=$($this._data.tasks.Count)" "DEBUG"
 
             # Mark pending changes and invalidate stats cache
             $this.HasPendingChanges = $true
@@ -782,10 +782,10 @@ class TaskStore {
             # Persist only if AutoSave is enabled
             if ($this.AutoSave) {
                 if (-not $this.SaveData()) {
-                    Write-PmcTuiLog "AddTask: SaveData FAILED" "ERROR"
+                    # Write-PmcTuiLog "AddTask: SaveData FAILED" "ERROR"
                     return $false
                 }
-                Write-PmcTuiLog "AddTask: SaveData succeeded" "DEBUG"
+                # Write-PmcTuiLog "AddTask: SaveData succeeded" "DEBUG"
             }
 
             # Capture data for callbacks BEFORE releasing lock
@@ -802,7 +802,7 @@ class TaskStore {
 
         # Fire events AFTER releasing lock to avoid deadlock
         if ($success) {
-            Write-PmcTuiLog "AddTask: Firing callbacks" "DEBUG"
+            # Write-PmcTuiLog "AddTask: Firing callbacks" "DEBUG"
             $this._InvokeCallback($this.OnTaskAdded, $capturedTask)
             $this._InvokeCallback($this.OnTasksChanged, $capturedTasks)
             $this._InvokeCallback($this.OnDataChanged, $null)
@@ -1047,29 +1047,29 @@ class TaskStore {
     True if add succeeded, False otherwise
     #>
     [bool] AddProject([hashtable]$project) {
-        Write-PmcTuiLog "TaskStore.AddProject: START - name='$($project.name)'" "DEBUG"
+        # Write-PmcTuiLog "TaskStore.AddProject: START - name='$($project.name)'" "DEBUG"
         [Monitor]::Enter($this._dataLock)
         try {
             # Validate project
-            Write-PmcTuiLog "TaskStore.AddProject: Calling _ValidateEntity..." "DEBUG"
+            # Write-PmcTuiLog "TaskStore.AddProject: Calling _ValidateEntity..." "DEBUG"
             $validationErrors = $this._ValidateEntity($project, 'project')
             if ($validationErrors.Count -gt 0) {
                 $errorMsg = "Project validation failed: $($validationErrors -join ', ')"
                 $this.LastError = $errorMsg
-                Write-PmcTuiLog "TaskStore.AddProject: FAILED - $errorMsg" "ERROR"
+                # Write-PmcTuiLog "TaskStore.AddProject: FAILED - $errorMsg" "ERROR"
                 return $false
             }
-            Write-PmcTuiLog "TaskStore.AddProject: Validation passed" "DEBUG"
+            # Write-PmcTuiLog "TaskStore.AddProject: Validation passed" "DEBUG"
 
             # Check for duplicate name
             $existing = $this._data.projects | Where-Object { $_.name -eq $project.name }
             if ($existing) {
                 $errorMsg = "Project already exists: $($project.name)"
                 $this.LastError = $errorMsg
-                Write-PmcTuiLog "TaskStore.AddProject: FAILED - $errorMsg" "ERROR"
+                # Write-PmcTuiLog "TaskStore.AddProject: FAILED - $errorMsg" "ERROR"
                 return $false
             }
-            Write-PmcTuiLog "TaskStore.AddProject: No duplicate found" "DEBUG"
+            # Write-PmcTuiLog "TaskStore.AddProject: No duplicate found" "DEBUG"
 
             # Create backup BEFORE any modifications
             $this._CreateBackup()
@@ -1082,7 +1082,7 @@ class TaskStore {
             $project.modified = $now
 
             # Add to collection
-            Write-PmcTuiLog "TaskStore.AddProject: Adding to collection..." "DEBUG"
+            # Write-PmcTuiLog "TaskStore.AddProject: Adding to collection..." "DEBUG"
             $this._data.projects.Add($project)
 
             # Mark pending changes
@@ -1090,12 +1090,12 @@ class TaskStore {
 
             # Persist only if AutoSave is enabled
             if ($this.AutoSave) {
-                Write-PmcTuiLog "TaskStore.AddProject: AutoSave enabled, calling SaveData..." "DEBUG"
+                # Write-PmcTuiLog "TaskStore.AddProject: AutoSave enabled, calling SaveData..." "DEBUG"
                 if (-not $this.SaveData()) {
-                    Write-PmcTuiLog "TaskStore.AddProject: FAILED - SaveData returned false" "ERROR"
+                    # Write-PmcTuiLog "TaskStore.AddProject: FAILED - SaveData returned false" "ERROR"
                     return $false
                 }
-                Write-PmcTuiLog "TaskStore.AddProject: SaveData succeeded" "DEBUG"
+                # Write-PmcTuiLog "TaskStore.AddProject: SaveData succeeded" "DEBUG"
             }
 
             # Fire events
@@ -1103,7 +1103,7 @@ class TaskStore {
             $this._InvokeCallback($this.OnProjectsChanged, $this._data.projects.ToArray())
             $this._InvokeCallback($this.OnDataChanged, $null)
 
-            Write-PmcTuiLog "TaskStore.AddProject: SUCCESS" "DEBUG"
+            # Write-PmcTuiLog "TaskStore.AddProject: SUCCESS" "DEBUG"
             return $true
         }
         finally {
@@ -1134,11 +1134,11 @@ class TaskStore {
 
             if ($null -eq $project) {
                 $this.LastError = "Project not found: $name"
-                Write-PmcTuiLog "UpdateProject: Project not found: $name" "ERROR"
+                # Write-PmcTuiLog "UpdateProject: Project not found: $name" "ERROR"
                 return $false
             }
 
-            Write-PmcTuiLog "UpdateProject: Found project, type=$($project.GetType().Name) BEFORE ID1='$(Get-SafeProperty $project 'ID1')'" "DEBUG"
+            # Write-PmcTuiLog "UpdateProject: Found project, type=$($project.GetType().Name) BEFORE ID1='$(Get-SafeProperty $project 'ID1')'" "DEBUG"
 
             # Create backup BEFORE any modifications
             $this._CreateBackup()
@@ -1146,7 +1146,7 @@ class TaskStore {
             # Apply changes - handle both hashtable and PSCustomObject
             foreach ($key in $changes.Keys) {
                 if ($key -eq 'ID1') {
-                    Write-PmcTuiLog "UpdateProject: Updating ID1 from '$(Get-SafeProperty $project 'ID1')' to '$($changes[$key])'" "DEBUG"
+                    # Write-PmcTuiLog "UpdateProject: Updating ID1 from '$(Get-SafeProperty $project 'ID1')' to '$($changes[$key])'" "DEBUG"
                 }
 
                 # Check if hashtable or PSCustomObject
@@ -1154,7 +1154,7 @@ class TaskStore {
                     # Hashtable: direct assignment
                     $project[$key] = $changes[$key]
                     if ($key -eq 'ID1') {
-                        Write-PmcTuiLog "UpdateProject: Hashtable assignment - project['ID1']='$($project[$key])'" "DEBUG"
+                        # Write-PmcTuiLog "UpdateProject: Hashtable assignment - project['ID1']='$($project[$key])'" "DEBUG"
                     }
                 }
                 else {
@@ -1168,7 +1168,7 @@ class TaskStore {
                 }
             }
 
-            Write-PmcTuiLog "UpdateProject: AFTER applying changes - ID1='$(Get-SafeProperty $project 'ID1')'" "DEBUG"
+            # Write-PmcTuiLog "UpdateProject: AFTER applying changes - ID1='$(Get-SafeProperty $project 'ID1')'" "DEBUG"
 
             # Update modified timestamp
             if ($project -is [hashtable]) {
@@ -1187,7 +1187,7 @@ class TaskStore {
             $validationErrors = $this._ValidateEntity($project, 'project')
             if ($validationErrors.Count -gt 0) {
                 $this.LastError = "Project validation failed: $($validationErrors -join ', ')"
-                Write-PmcTuiLog "UpdateProject: Validation FAILED - $($validationErrors -join ', ')" "ERROR"
+                # Write-PmcTuiLog "UpdateProject: Validation FAILED - $($validationErrors -join ', ')" "ERROR"
                 $this._Rollback()
                 return $false
             }
@@ -1198,20 +1198,20 @@ class TaskStore {
             # Verify the change is in the projects array BEFORE SaveData
             $verifyProject = $this._data.projects | Where-Object { $_.name -eq $name } | Select-Object -First 1
             if ($verifyProject) {
-                Write-PmcTuiLog "UpdateProject: VERIFY before SaveData - project in array has ID1='$(Get-SafeProperty $verifyProject 'ID1')'" "DEBUG"
+                # Write-PmcTuiLog "UpdateProject: VERIFY before SaveData - project in array has ID1='$(Get-SafeProperty $verifyProject 'ID1')'" "DEBUG"
             }
 
             # Persist only if AutoSave is enabled
             if ($this.AutoSave) {
-                Write-PmcTuiLog "UpdateProject: AutoSave is enabled, calling SaveData" "DEBUG"
+                # Write-PmcTuiLog "UpdateProject: AutoSave is enabled, calling SaveData" "DEBUG"
                 if (-not $this.SaveData()) {
-                    Write-PmcTuiLog "UpdateProject: SaveData FAILED" "ERROR"
+                    # Write-PmcTuiLog "UpdateProject: SaveData FAILED" "ERROR"
                     return $false
                 }
-                Write-PmcTuiLog "UpdateProject: SaveData succeeded" "DEBUG"
+                # Write-PmcTuiLog "UpdateProject: SaveData succeeded" "DEBUG"
             }
             else {
-                Write-PmcTuiLog "UpdateProject: AutoSave is DISABLED, skipping SaveData" "WARNING"
+                # Write-PmcTuiLog "UpdateProject: AutoSave is DISABLED, skipping SaveData" "WARNING"
             }
 
             # Fire events
@@ -1335,21 +1335,21 @@ class TaskStore {
         [Monitor]::Enter($this._dataLock)
         try {
             if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
-                Write-PmcTuiLog "TaskStore.AddTimeLog: CALLED with timelog keys: $($timelog.Keys -join ', ')" "DEBUG"
+                # Write-PmcTuiLog "TaskStore.AddTimeLog: CALLED with timelog keys: $($timelog.Keys -join ', ')" "DEBUG"
                 foreach ($key in $timelog.Keys) {
                     $val = $timelog[$key]
                     $valType = if ($null -eq $val) { 'null' } else { $val.GetType().Name }
-                    Write-PmcTuiLog "TaskStore.AddTimeLog:   $key = $val (type: $valType)" "DEBUG"
+                    # Write-PmcTuiLog "TaskStore.AddTimeLog:   $key = $val (type: $valType)" "DEBUG"
                 }
             }
             # Validate time log
             $validationErrors = $this._ValidateEntity($timelog, 'timelog')
             if ($validationErrors.Count -gt 0) {
                 $this.LastError = "Time log validation failed: $($validationErrors -join ', ')"
-                Write-PmcTuiLog "TaskStore.AddTimeLog: VALIDATION FAILED: $($validationErrors -join ', ')" "ERROR"
+                # Write-PmcTuiLog "TaskStore.AddTimeLog: VALIDATION FAILED: $($validationErrors -join ', ')" "ERROR"
                 return $false
             }
-            Write-PmcTuiLog "TaskStore.AddTimeLog: Validation passed" "DEBUG"
+            # Write-PmcTuiLog "TaskStore.AddTimeLog: Validation passed" "DEBUG"
 
             # Create backup BEFORE any modifications
             $this._CreateBackup()
@@ -1681,9 +1681,9 @@ class TaskStore {
                 # Log callback errors but DON'T rethrow - callbacks must never crash the app
                 $this.LastError = "Callback failed: $($_.Exception.Message)"
                 if (Get-Command Write-PmcTuiLog -ErrorAction SilentlyContinue) {
-                    Write-PmcTuiLog "TaskStore callback error: $($_.Exception.Message)" "ERROR"
-                    Write-PmcTuiLog "Callback code: $($callback.ToString())" "ERROR"
-                    Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
+                    # Write-PmcTuiLog "TaskStore callback error: $($_.Exception.Message)" "ERROR"
+                    # Write-PmcTuiLog "Callback code: $($callback.ToString())" "ERROR"
+                    # Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
                 }
                 # DON'T rethrow - background operations must not crash
             }

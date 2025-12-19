@@ -105,9 +105,9 @@ class ChecklistsMenuScreen : StandardListScreen {
     }
 
     [array] LoadItems() {
-        Write-PmcTuiLog "ChecklistsMenuScreen.LoadItems: Loading checklists for owner type=$($this._ownerType) id=$($this._ownerId)" "INFO"
+        # Write-PmcTuiLog "ChecklistsMenuScreen.LoadItems: Loading checklists for owner type=$($this._ownerType) id=$($this._ownerId)" "INFO"
         $checklists = @($this._checklistService.GetInstancesByOwner($this._ownerType, $this._ownerId))
-        Write-PmcTuiLog "ChecklistsMenuScreen.LoadItems: Loaded $($checklists.Count) checklists" "INFO"
+        # Write-PmcTuiLog "ChecklistsMenuScreen.LoadItems: Loaded $($checklists.Count) checklists" "INFO"
 
         # Format for display
         foreach ($checklist in $checklists) {

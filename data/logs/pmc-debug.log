@@ -341,3 +341,7 @@ Variable is not assigned in the method.
 [08:20:16.787] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251219-082016.log (Level 2)
 [08:20:19.561] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
 [08:20:19.574] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[08:32:33.273] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251219-083233.log (Level 2)
+[08:32:35.613] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[08:32:35.627] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[08:33:14.492] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251219-083233.log

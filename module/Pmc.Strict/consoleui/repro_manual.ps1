@@ -9,7 +9,7 @@ function Get-PmcColorPalette { return @{} }
 # Mock Write-PmcTuiLog (defined in Start-PmcTUI.ps1)
     function Write-PmcTuiLog {
         param($Message, $Level="INFO")
-        Add-Content -Path "repro.log" -Value "[$Level] $Message"
+        # Add-Content -Path "repro.log" -Value "[$Level] $Message"
     }
 
 try {

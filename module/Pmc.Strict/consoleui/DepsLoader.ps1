@@ -43,7 +43,7 @@ try {
         Initialize-ExcelT2020Mappings
     }
 } catch {
-    Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [DepsLoader] Excel integration not available (Excel COM not installed)"
+    # Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [DepsLoader] Excel integration not available (Excel COM not installed)"
 }
 
-Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [DepsLoader] ConsoleUI deps loaded (from src/ + deps/ unique files)"
+# Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [DepsLoader] ConsoleUI deps loaded (from src/ + deps/ unique files)"

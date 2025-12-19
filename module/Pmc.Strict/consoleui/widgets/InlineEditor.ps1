@@ -176,15 +176,15 @@ class InlineEditor : PmcWidget {
 
             # Add to fields list
             $this._fields.Add($fieldDef)
-            Write-PmcTuiLog "InlineEditor.SetFields: Added field '$($fieldDef.Name)' type=$($fieldDef.Type)" "DEBUG"
+            # Write-PmcTuiLog "InlineEditor.SetFields: Added field '$($fieldDef.Name)' type=$($fieldDef.Type)" "DEBUG"
 
             # Create widget instance for this field
             try {
                 $this._CreateFieldWidget($fieldDef)
-                Write-PmcTuiLog "InlineEditor.SetFields: Created widget for field '$($fieldDef.Name)'" "DEBUG"
+                # Write-PmcTuiLog "InlineEditor.SetFields: Created widget for field '$($fieldDef.Name)'" "DEBUG"
             }
             catch {
-                Write-PmcTuiLog "InlineEditor.SetFields: ERROR creating widget for field '$($fieldDef.Name)': $_" "ERROR"
+                # Write-PmcTuiLog "InlineEditor.SetFields: ERROR creating widget for field '$($fieldDef.Name)': $_" "ERROR"
                 throw
             }
         }
@@ -534,7 +534,7 @@ class InlineEditor : PmcWidget {
         # For all fields with widgets, allow direct typing (inline editing)
         if ($this._currentFieldIndex -ge 0 -and $this._currentFieldIndex -lt $this._fields.Count) {
             $currentField = $this._fields[$this._currentFieldIndex]
-            Write-PmcTuiLog "InlineEditor.HandleInput: Current field index=$($this._currentFieldIndex) name=$($currentField.Name) type=$($currentField.Type)" "DEBUG"
+            # Write-PmcTuiLog "InlineEditor.HandleInput: Current field index=$($this._currentFieldIndex) name=$($currentField.Name) type=$($currentField.Type)" "DEBUG"
 
             # Text, Textarea, Date, Tags, Project AND Number fields - pass input to widget
             if ($currentField.Type -eq 'text' -or $currentField.Type -eq 'textarea' -or $currentField.Type -eq 'date' -or $currentField.Type -eq 'tags' -or $currentField.Type -eq 'project' -or $currentField.Type -eq 'number') {
@@ -552,22 +552,22 @@ class InlineEditor : PmcWidget {
                 }
 
                 if (-not $this._fieldWidgets.ContainsKey($currentField.Name)) {
-                    Write-PmcTuiLog "InlineEditor.HandleInput: ERROR - Widget not found for field '$($currentField.Name)'. Available widgets: $($this._fieldWidgets.Keys -join ', ')" "ERROR"
+                    # Write-PmcTuiLog "InlineEditor.HandleInput: ERROR - Widget not found for field '$($currentField.Name)'. Available widgets: $($this._fieldWidgets.Keys -join ', ')" "ERROR"
                     return $false
                 }
 
                 $widget = $this._fieldWidgets[$currentField.Name]
-                Write-PmcTuiLog "InlineEditor.HandleInput: Routing input to widget type=$($widget.GetType().Name)" "DEBUG"
+                # Write-PmcTuiLog "InlineEditor.HandleInput: Routing input to widget type=$($widget.GetType().Name)" "DEBUG"
                 # Handle input for TextInput
                 if ($widget.GetType().Name -eq 'TextInput') {
                     # DEBUG: Detailed trace
-                    Add-Content -Path "/tmp/pmc-input-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] InlineEditor: Before TextInput.HandleInput - Key=$($keyInfo.Key) Char='$($keyInfo.KeyChar)' Text='$($widget.Text)'"
-                    Write-PmcTuiLog "InlineEditor.HandleInput: Calling TextInput.HandleInput() with key=$($keyInfo.Key) char=$($keyInfo.KeyChar)" "DEBUG"
+                    # Add-Content -Path "/tmp/pmc-input-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] InlineEditor: Before TextInput.HandleInput - Key=$($keyInfo.Key) Char='$($keyInfo.KeyChar)' Text='$($widget.Text)'"
+                    # Write-PmcTuiLog "InlineEditor.HandleInput: Calling TextInput.HandleInput() with key=$($keyInfo.Key) char=$($keyInfo.KeyChar)" "DEBUG"
                     $textBefore = $widget.Text
                     $handled = $widget.HandleInput($keyInfo)
                     $textAfter = $widget.Text
-                    Add-Content -Path "/tmp/pmc-input-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] InlineEditor: After TextInput.HandleInput - handled=$handled Text before='$textBefore' after='$textAfter'"
-                    Write-PmcTuiLog "InlineEditor.HandleInput: TextInput.HandleInput() returned - Text before='$textBefore' after='$textAfter' handled=$handled" "DEBUG"
+                    # Add-Content -Path "/tmp/pmc-input-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] InlineEditor: After TextInput.HandleInput - handled=$handled Text before='$textBefore' after='$textAfter'"
+                    # Write-PmcTuiLog "InlineEditor.HandleInput: TextInput.HandleInput() returned - Text before='$textBefore' after='$textAfter' handled=$handled" "DEBUG"
 
                     # CRITICAL FIX: If TextInput confirmed (Enter pressed), validate and confirm ENTIRE form
                     if ($widget.PSObject.Properties['IsConfirmed'] -and $widget.IsConfirmed) {
@@ -1544,10 +1544,10 @@ class InlineEditor : PmcWidget {
 
         if ($widget) {
             $this._fieldWidgets[$fieldName] = $widget
-            Write-PmcTuiLog "InlineEditor._CreateFieldWidget: Stored widget for field '$fieldName' (type=$fieldType) - widget.Text='$(if ($widget.GetType().Name -eq 'TextInput') { $widget.Text } else { 'N/A' })'" "DEBUG"
+            # Write-PmcTuiLog "InlineEditor._CreateFieldWidget: Stored widget for field '$fieldName' (type=$fieldType) - widget.Text='$(if ($widget.GetType().Name -eq 'TextInput') { $widget.Text } else { 'N/A' })'" "DEBUG"
         }
         else {
-            Write-PmcTuiLog "InlineEditor._CreateFieldWidget: WARNING - widget is null for field '$fieldName' (type=$fieldType)" "WARNING"
+            # Write-PmcTuiLog "InlineEditor._CreateFieldWidget: WARNING - widget is null for field '$fieldName' (type=$fieldType)" "WARNING"
         }
     }
 
@@ -1559,16 +1559,16 @@ class InlineEditor : PmcWidget {
         switch ($fieldType) {
             'text' {
                 if (-not $this._fieldWidgets.ContainsKey($fieldName)) {
-                    Write-PmcTuiLog "ERROR: No widget for text field '$fieldName'" "ERROR"
+                    # Write-PmcTuiLog "ERROR: No widget for text field '$fieldName'" "ERROR"
                     return ""
                 }
                 $widget = $this._fieldWidgets[$fieldName]
                 if (-not $widget) {
-                    Write-PmcTuiLog "ERROR: Widget is null for text field '$fieldName'" "ERROR"
+                    # Write-PmcTuiLog "ERROR: Widget is null for text field '$fieldName'" "ERROR"
                     return ""
                 }
                 $value = $widget.GetText()
-                Write-PmcTuiLog "InlineEditor._GetFieldValue: text field '$fieldName' -> value='$value' (widget.Text='$($widget.Text)')" "DEBUG"
+                # Write-PmcTuiLog "InlineEditor._GetFieldValue: text field '$fieldName' -> value='$value' (widget.Text='$($widget.Text)')" "DEBUG"
                 return $value
             }
 
@@ -1695,7 +1695,7 @@ class InlineEditor : PmcWidget {
                         $validTags += $tag
                     }
                     else {
-                        Write-PmcTuiLog "InlineEditor: Invalid tag '$tag' - must contain only letters, numbers, underscore, or hyphen" "WARNING"
+                        # Write-PmcTuiLog "InlineEditor: Invalid tag '$tag' - must contain only letters, numbers, underscore, or hyphen" "WARNING"
                     }
                 }
 
@@ -2039,7 +2039,7 @@ class InlineEditor : PmcWidget {
     True if all fields valid, False otherwise
     #>
     hidden [bool] _ValidateAllFields() {
-        Write-PmcTuiLog "InlineEditor._ValidateAllFields CALLED - field count: $($this._fields.Count)" "DEBUG"
+        # Write-PmcTuiLog "InlineEditor._ValidateAllFields CALLED - field count: $($this._fields.Count)" "DEBUG"
         $this._validationErrors = @()
 
         foreach ($field in $this._fields) {
@@ -2048,7 +2048,7 @@ class InlineEditor : PmcWidget {
             $isRequired = $(if ($field.ContainsKey('Required')) { $field.Required } else { $false })
 
             $value = $this._GetFieldValue($fieldName, $fieldType)
-            Write-PmcTuiLog "InlineEditor._ValidateAllFields - Field: $fieldName, Type: $fieldType, Required: $isRequired, Value: '$value'" "DEBUG"
+            # Write-PmcTuiLog "InlineEditor._ValidateAllFields - Field: $fieldName, Type: $fieldType, Required: $isRequired, Value: '$value'" "DEBUG"
 
             # Check required fields
             if ($isRequired) {
@@ -2074,7 +2074,7 @@ class InlineEditor : PmcWidget {
 
                 if ($isEmpty) {
                     $err = "$($field.Label) is required"
-                    Write-PmcTuiLog "InlineEditor._ValidateAllFields - VALIDATION ERROR: $err" "ERROR"
+                    # Write-PmcTuiLog "InlineEditor._ValidateAllFields - VALIDATION ERROR: $err" "ERROR"
                     $this._validationErrors += $err
                 }
             }
@@ -2086,20 +2086,20 @@ class InlineEditor : PmcWidget {
 
                 if ($value -lt $min) {
                     $err = "$($field.Label) must be >= $min"
-                    Write-PmcTuiLog "InlineEditor._ValidateAllFields - VALIDATION ERROR: $err" "ERROR"
+                    # Write-PmcTuiLog "InlineEditor._ValidateAllFields - VALIDATION ERROR: $err" "ERROR"
                     $this._validationErrors += $err
                 }
 
                 if ($value -gt $max) {
                     $err = "$($field.Label) must be <= $max"
-                    Write-PmcTuiLog "InlineEditor._ValidateAllFields - VALIDATION ERROR: $err" "ERROR"
+                    # Write-PmcTuiLog "InlineEditor._ValidateAllFields - VALIDATION ERROR: $err" "ERROR"
                     $this._validationErrors += $err
                 }
             }
         }
 
         $isValid = $this._validationErrors.Count -eq 0
-        Write-PmcTuiLog "InlineEditor._ValidateAllFields RESULT: isValid=$isValid, errorCount=$($this._validationErrors.Count)" "DEBUG"
+        # Write-PmcTuiLog "InlineEditor._ValidateAllFields RESULT: isValid=$isValid, errorCount=$($this._validationErrors.Count)" "DEBUG"
         return $isValid
     }
 
@@ -2173,13 +2173,13 @@ class InlineEditor : PmcWidget {
             $callbackText = $callback.ToString().Trim()
             # Match {} or { } or {  } etc (braces with only whitespace inside)
             if ([string]::IsNullOrWhiteSpace($callbackText) -or $callbackText -match '^\{\s*\}$') {
-                Write-PmcTuiLog "InlineEditor._InvokeCallback: Callback is null/empty, skipping" "DEBUG"
+                # Write-PmcTuiLog "InlineEditor._InvokeCallback: Callback is null/empty, skipping" "DEBUG"
                 return
             }
 
-            if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
-                Write-PmcTuiLog "InlineEditor._InvokeCallback: Invoking callback with arg type=$($arg.GetType().Name)" "DEBUG"
-            }
+            # if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
+            #     Write-PmcTuiLog "InlineEditor._InvokeCallback: Invoking callback with arg type=$($arg.GetType().Name)" "DEBUG"
+            # }
             try {
                 if ($null -ne $arg) {
                     # Use Invoke-Command with -ArgumentList to pass single arg without array wrapping
@@ -2188,16 +2188,16 @@ class InlineEditor : PmcWidget {
                 else {
                     & $callback
                 }
-                if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
-                    Write-PmcTuiLog "InlineEditor._InvokeCallback: Callback completed successfully" "DEBUG"
-                }
+                # if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
+                #     Write-PmcTuiLog "InlineEditor._InvokeCallback: Callback completed successfully" "DEBUG"
+                # }
             }
             catch {
                 # Log callback errors but DON'T rethrow - callbacks must never crash the app
                 if (Get-Command Write-PmcTuiLog -ErrorAction SilentlyContinue) {
-                    Write-PmcTuiLog "InlineEditor callback error: $($_.Exception.Message)" "ERROR"
-                    Write-PmcTuiLog "Callback code: $($callback.ToString())" "ERROR"
-                    Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
+                    # Write-PmcTuiLog "InlineEditor callback error: $($_.Exception.Message)" "ERROR"
+                    # Write-PmcTuiLog "Callback code: $($callback.ToString())" "ERROR"
+                    # Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
                 }
                 # DON'T rethrow - form submission callbacks must not crash
             }

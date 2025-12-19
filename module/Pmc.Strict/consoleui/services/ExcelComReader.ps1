@@ -58,11 +58,11 @@ class ExcelComReader {
             try {
                 $isInEditMode = $this._excelApp.Interactive -eq $false
                 if ($isInEditMode) {
-                    Write-PmcTuiLog "Excel may be in edit mode or protected view - attempting to continue" "WARNING"
+                    # Write-PmcTuiLog "Excel may be in edit mode or protected view - attempting to continue" "WARNING"
                 }
             } catch {
                 # If we can't check edit mode, log warning but continue
-                Write-PmcTuiLog "Cannot verify Excel edit mode status: $($_.Exception.Message)" "WARNING"
+                # Write-PmcTuiLog "Cannot verify Excel edit mode status: $($_.Exception.Message)" "WARNING"
             }
 
             $this._isAttached = $true
@@ -79,10 +79,10 @@ class ExcelComReader {
             }
 
             $this.IsOpen = $true
-            Write-PmcTuiLog "ExcelComReader: Attached to running Excel instance" "INFO"
+            # Write-PmcTuiLog "ExcelComReader: Attached to running Excel instance" "INFO"
 
         } catch {
-            Write-PmcTuiLog "ExcelComReader: Failed to attach to Excel - $_" "ERROR"
+            # Write-PmcTuiLog "ExcelComReader: Failed to attach to Excel - $_" "ERROR"
             throw "Excel is not running or not accessible. Please open Excel first and try again."
         }
     }
@@ -131,10 +131,10 @@ class ExcelComReader {
 
             $this.FilePath = $filePath
             $this.IsOpen = $true
-            Write-PmcTuiLog "ExcelComReader: Opened file $filePath" "INFO"
+            # Write-PmcTuiLog "ExcelComReader: Opened file $filePath" "INFO"
 
         } catch {
-            Write-PmcTuiLog "ExcelComReader: Failed to open file - $_" "ERROR"
+            # Write-PmcTuiLog "ExcelComReader: Failed to open file - $_" "ERROR"
             $this.Close()
             throw "Could not open Excel file: $_"
         }
@@ -194,7 +194,7 @@ class ExcelComReader {
             $value = $cell.Value2
             return $value
         } catch {
-            Write-PmcTuiLog "ExcelComReader: Error reading cell $cellAddress - $_" "ERROR"
+            # Write-PmcTuiLog "ExcelComReader: Error reading cell $cellAddress - $_" "ERROR"
             return $null
         } finally {
             if ($null -ne $cell) {
@@ -244,7 +244,7 @@ class ExcelComReader {
             return $cellData
 
         } catch {
-            Write-PmcTuiLog "ExcelComReader: Error reading range $startCell`:$endCell - $_" "ERROR"
+            # Write-PmcTuiLog "ExcelComReader: Error reading range $startCell`:$endCell - $_" "ERROR"
             return $cellData
         } finally {
             # Release all cell COM objects
@@ -252,7 +252,7 @@ class ExcelComReader {
                 try {
                     [Marshal]::ReleaseComObject($cell) | Out-Null
                 } catch {
-                    Write-PmcTuiLog "Failed to release COM object (cell): $($_.Exception.Message)" "WARNING"
+                    # Write-PmcTuiLog "Failed to release COM object (cell): $($_.Exception.Message)" "WARNING"
                 }
             }
             # CRITICAL FIX #2: Release Cells collection COM object
@@ -260,7 +260,7 @@ class ExcelComReader {
                 try {
                     [Marshal]::ReleaseComObject($cells) | Out-Null
                 } catch {
-                    Write-PmcTuiLog "Failed to release COM object (cells collection): $($_.Exception.Message)" "WARNING"
+                    # Write-PmcTuiLog "Failed to release COM object (cells collection): $($_.Exception.Message)" "WARNING"
                 }
             }
             # Release range COM object
@@ -268,7 +268,7 @@ class ExcelComReader {
                 try {
                     [Marshal]::ReleaseComObject($range) | Out-Null
                 } catch {
-                    Write-PmcTuiLog "Failed to release COM object (range): $($_.Exception.Message)" "WARNING"
+                    # Write-PmcTuiLog "Failed to release COM object (range): $($_.Exception.Message)" "WARNING"
                 }
             }
         }
@@ -287,7 +287,7 @@ class ExcelComReader {
                 $value = $this.ReadCell($address)
                 $cellData[$address] = $value
             } catch {
-                Write-PmcTuiLog "ExcelComReader: Error reading cell $address - $_" "WARN"
+                # Write-PmcTuiLog "ExcelComReader: Error reading cell $address - $_" "WARN"
                 $cellData[$address] = $null
             }
         }
@@ -303,7 +303,7 @@ class ExcelComReader {
 
         # KSV2-M3 FIX: Validate Worksheets collection exists before access
         if ($null -eq $this._workbook.Worksheets) {
-            Write-PmcTuiLog "Workbook has no Worksheets collection" "WARNING"
+            # Write-PmcTuiLog "Workbook has no Worksheets collection" "WARNING"
             return @()
         }
 
@@ -321,7 +321,7 @@ class ExcelComReader {
                         [Marshal]::ReleaseComObject($sheet) | Out-Null
                     }
                 } catch {
-                    Write-PmcTuiLog "Failed to release COM object (sheet): $($_.Exception.Message)" "WARNING"
+                    # Write-PmcTuiLog "Failed to release COM object (sheet): $($_.Exception.Message)" "WARNING"
                 }
             }
         } finally {
@@ -329,7 +329,7 @@ class ExcelComReader {
                 try {
                     [Marshal]::ReleaseComObject($sheets) | Out-Null
                 } catch {
-                    Write-PmcTuiLog "Failed to release COM object (sheets collection): $($_.Exception.Message)" "WARNING"
+                    # Write-PmcTuiLog "Failed to release COM object (sheets collection): $($_.Exception.Message)" "WARNING"
                 }
             }
         }
@@ -347,7 +347,7 @@ class ExcelComReader {
                 try {
                     [Marshal]::ReleaseComObject($this._worksheet) | Out-Null
                 } catch {
-                    Write-PmcTuiLog "ExcelComReader: Error releasing worksheet COM object - $_" "WARN"
+                    # Write-PmcTuiLog "ExcelComReader: Error releasing worksheet COM object - $_" "WARN"
                 }
                 $this._worksheet = $null
             }
@@ -358,13 +358,13 @@ class ExcelComReader {
                     try {
                         $this._workbook.Close($false)  # Don't save changes
                     } catch {
-                        Write-PmcTuiLog "ExcelComReader: Error closing workbook - $_" "WARN"
+                        # Write-PmcTuiLog "ExcelComReader: Error closing workbook - $_" "WARN"
                     }
                 }
                 try {
                     [Marshal]::ReleaseComObject($this._workbook) | Out-Null
                 } catch {
-                    Write-PmcTuiLog "ExcelComReader: Error releasing workbook COM object - $_" "WARN"
+                    # Write-PmcTuiLog "ExcelComReader: Error releasing workbook COM object - $_" "WARN"
                 }
                 $this._workbook = $null
             }
@@ -375,13 +375,13 @@ class ExcelComReader {
                     try {
                         $this._excelApp.Quit()
                     } catch {
-                        Write-PmcTuiLog "ExcelComReader: Error quitting Excel - $_" "WARN"
+                        # Write-PmcTuiLog "ExcelComReader: Error quitting Excel - $_" "WARN"
                     }
                 }
                 try {
                     [Marshal]::ReleaseComObject($this._excelApp) | Out-Null
                 } catch {
-                    Write-PmcTuiLog "ExcelComReader: Error releasing Excel COM object - $_" "WARN"
+                    # Write-PmcTuiLog "ExcelComReader: Error releasing Excel COM object - $_" "WARN"
                 }
                 $this._excelApp = $null
             }
@@ -393,7 +393,7 @@ class ExcelComReader {
             [System.GC]::WaitForPendingFinalizers()
             [System.GC]::Collect()
 
-            Write-PmcTuiLog "ExcelComReader: Closed" "INFO"
+            # Write-PmcTuiLog "ExcelComReader: Closed" "INFO"
         }
     }
 }

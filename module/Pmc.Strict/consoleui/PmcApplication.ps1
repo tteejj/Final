@@ -70,7 +70,7 @@ class PmcApplication {
             $this.RenderEngine.Initialize()
         }
         catch {
-            Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] FATAL: Failed to initialize RenderEngine: $($_.Exception.Message)"
+            # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] FATAL: Failed to initialize RenderEngine: $($_.Exception.Message)"
             throw
         }
 
@@ -277,11 +277,11 @@ class PmcApplication {
                 [Console]::Clear()
                 [Console]::CursorVisible = $true
                 [Console]::SetCursorPosition(0, 0)
-                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] TOO MANY RENDER ERRORS - EXITING"
-                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Error: $errorMsg"
-                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Location: $errorLocation"
-                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] The application experienced too many render errors."
-                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Please restart the application."
+                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] TOO MANY RENDER ERRORS - EXITING"
+                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Error: $errorMsg"
+                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Location: $errorLocation"
+                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] The application experienced too many render errors."
+                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Please restart the application."
 
                 [Console]::ReadKey($true) | Out-Null
                 $this.Stop()
@@ -293,8 +293,8 @@ class PmcApplication {
                 # Clear screen and show error message
                 [Console]::Clear()
                 [Console]::SetCursorPosition(0, 0)
-                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Render Error Occurred"
-                Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Error: $($_.Exception.Message)"
+                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Render Error Occurred"
+                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Error: $($_.Exception.Message)"
 
                 $key = [Console]::ReadKey($true)
                 if ($key.Key -eq 'Escape') {
@@ -308,7 +308,7 @@ class PmcApplication {
 
                 # If current screen is problematic, try to go back
                 if ($this.ScreenStack.Count -gt 1 -and $this.RenderErrorCount -gt 3) {
-                    Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Returning to previous screen due to errors..."
+                    # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Returning to previous screen due to errors..."
                     Start-Sleep -Milliseconds 500
                     $this.PopScreen()
                     $this.RenderErrorCount = 0  # Reset counter after navigation
@@ -474,12 +474,12 @@ class PmcApplication {
                 . "$PSScriptRoot/services/TaskStore.ps1"
                 $store = [TaskStore]::GetInstance()
                 if ($store.HasPendingChanges) {
-                    Write-PmcTuiLog "Flushing pending changes on exit..." "INFO"
+                    # Write-PmcTuiLog "Flushing pending changes on exit..." "INFO"
                     $store.Flush()
                 }
             }
             catch {
-                Write-PmcTuiLog "Failed to flush data on exit: $_" "ERROR"
+                # Write-PmcTuiLog "Failed to flush data on exit: $_" "ERROR"
                 # Continue with cleanup even if flush fails
             }
 
@@ -506,7 +506,7 @@ class PmcApplication {
         catch {
             # TaskStore might not be available during shutdown - safe to ignore
             if (Get-Command Write-PmcTuiLog -ErrorAction SilentlyContinue) {
-                Write-PmcTuiLog "Stop: Could not flush TaskStore: $($_.Exception.Message)" "WARNING"
+                # Write-PmcTuiLog "Stop: Could not flush TaskStore: $($_.Exception.Message)" "WARNING"
             }
         }
     }

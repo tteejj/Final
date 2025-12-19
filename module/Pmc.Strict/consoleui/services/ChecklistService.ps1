@@ -97,7 +97,7 @@ class ChecklistService {
                 }
                 $this._cacheLoadTime = [datetime]::Now
             } catch {
-                Write-PmcTuiLog "Failed to load checklist templates: $_" "ERROR"
+                # Write-PmcTuiLog "Failed to load checklist templates: $_" "ERROR"
                 $this._templatesCache = @{}
             }
         }
@@ -133,7 +133,7 @@ class ChecklistService {
             Move-Item -Path $tempFile -Destination $this._templatesFile -Force
 
         } catch {
-            Write-PmcTuiLog "Failed to save checklist templates: $_" "ERROR"
+            # Write-PmcTuiLog "Failed to save checklist templates: $_" "ERROR"
             throw
         }
     }
@@ -169,7 +169,7 @@ class ChecklistService {
                     }
                 }
             } catch {
-                Write-PmcTuiLog "Failed to load checklist instances: $_" "ERROR"
+                # Write-PmcTuiLog "Failed to load checklist instances: $_" "ERROR"
                 $this._instancesCache = @{}
             }
         }
@@ -219,7 +219,7 @@ class ChecklistService {
             Move-Item -Path $tempFile -Destination $this._instancesFile -Force
 
         } catch {
-            Write-PmcTuiLog "Failed to save checklist instances: $_" "ERROR"
+            # Write-PmcTuiLog "Failed to save checklist instances: $_" "ERROR"
             throw
         }
     }

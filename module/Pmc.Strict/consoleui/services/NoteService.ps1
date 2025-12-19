@@ -250,7 +250,7 @@ class NoteService {
             try {
                 Remove-Item $note.file -Force -ErrorAction Stop
             } catch {
-                Write-PmcTuiLog "Failed to delete note file $($note.file): $_" "ERROR"
+                # Write-PmcTuiLog "Failed to delete note file $($note.file): $_" "ERROR"
                 throw "Failed to delete note file: $($_.Exception.Message)"
             }
         }

@@ -78,8 +78,8 @@ class ProjectListScreen : StandardListScreen {
             # Write-PmcTuiLog "!!! _ConfigureListActions completed successfully !!!" "INFO"
         }
         catch {
-            Write-PmcTuiLog "!!! ERROR in _ConfigureListActions: $_" "ERROR"
-            Write-PmcTuiLog "!!! Stack: $($_.ScriptStackTrace)" "ERROR"
+            # Write-PmcTuiLog "!!! ERROR in _ConfigureListActions: $_" "ERROR"
+            # Write-PmcTuiLog "!!! Stack: $($_.ScriptStackTrace)" "ERROR"
         }
 
         # Currently uses default columns from UniversalList (works as expected)
@@ -134,7 +134,7 @@ class ProjectListScreen : StandardListScreen {
         # CRITICAL FIX PLS-C1: Add null check on GetAllProjects()
         $projects = $this.Store.GetAllProjects()
         if ($null -eq $projects) {
-            Write-PmcTuiLog "ProjectListScreen.LoadItems: GetAllProjects() returned null" "ERROR"
+            # Write-PmcTuiLog "ProjectListScreen.LoadItems: GetAllProjects() returned null" "ERROR"
             $projects = @()
         }
 
@@ -142,7 +142,7 @@ class ProjectListScreen : StandardListScreen {
         # CRITICAL FIX PLS-C2: Add null check on GetAllTasks()
         $allTasks = $this.Store.GetAllTasks()
         if ($null -eq $allTasks) {
-            Write-PmcTuiLog "ProjectListScreen.LoadItems: GetAllTasks() returned null" "WARNING"
+            # Write-PmcTuiLog "ProjectListScreen.LoadItems: GetAllTasks() returned null" "WARNING"
             $allTasks = @()
         }
         $tasksByProject = @{}
@@ -207,7 +207,7 @@ class ProjectListScreen : StandardListScreen {
 
             if ($null -eq $item -or $item.Count -eq 0) {
                 # New project
-                Write-PmcTuiLog "ProjectListScreen.GetEditFields: Creating NEW project fields" "DEBUG"
+                # Write-PmcTuiLog "ProjectListScreen.GetEditFields: Creating NEW project fields" "DEBUG"
                 return @(
                     @{ Name = 'name'; Type = 'text'; Label = 'Project'; Required = $true; Value = ''; MaxLength = $global:MAX_PROJECT_NAME_LENGTH; Width = $nameWidth }
                     @{ Name = 'description'; Type = 'text'; Label = 'Description'; Value = ''; Width = $descWidth }
@@ -215,7 +215,7 @@ class ProjectListScreen : StandardListScreen {
             }
             else {
                 # Existing project
-                Write-PmcTuiLog "ProjectListScreen.GetEditFields: Editing existing project '$($item.name)'" "DEBUG"
+                # Write-PmcTuiLog "ProjectListScreen.GetEditFields: Editing existing project '$($item.name)'" "DEBUG"
                 return @(
                     @{ Name = 'name'; Type = 'text'; Label = 'Project'; Required = $true; Value = (Get-SafeProperty $item 'name'); MaxLength = $global:MAX_PROJECT_NAME_LENGTH; Width = $nameWidth }
                     @{ Name = 'description'; Type = 'text'; Label = 'Description'; Value = (Get-SafeProperty $item 'description'); Width = $descWidth }
@@ -223,8 +223,8 @@ class ProjectListScreen : StandardListScreen {
             }
         }
         catch {
-            Write-PmcTuiLog "ProjectListScreen.GetEditFields: ERROR - $_" "ERROR"
-            Write-PmcTuiLog "Stack: $($_.ScriptStackTrace)" "ERROR"
+            # Write-PmcTuiLog "ProjectListScreen.GetEditFields: ERROR - $_" "ERROR"
+            # Write-PmcTuiLog "Stack: $($_.ScriptStackTrace)" "ERROR"
             return @()
         }
     }
@@ -232,25 +232,25 @@ class ProjectListScreen : StandardListScreen {
     # Handle item creation
     [void] OnItemCreated([hashtable]$values) {
         if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
-            Write-PmcTuiLog "ProjectListScreen.OnItemCreated: CALLED with values: $($values | ConvertTo-Json -Compress)" "DEBUG"
+            # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: CALLED with values: $($values | ConvertTo-Json -Compress)" "DEBUG"
         }
         try {
             # Validate required field
             if (-not $values.ContainsKey('name') -or [string]::IsNullOrWhiteSpace($values.name)) {
-                Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Name validation failed" "DEBUG"
+                # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Name validation failed" "DEBUG"
                 $this.SetStatusMessage("Project name is required", "error")
                 return
             }
-            Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Name validation passed" "DEBUG"
+            # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Name validation passed" "DEBUG"
 
             # Validate name length
             # HIGH FIX PLS-H1 & PLS-H2: Add null check before .Length access
             # MEDIUM FIX PLS-M4: Use constant for max length validation
             if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
-                Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Checking name length: '$($values.name)' (len=$($values.name.Length)) vs max=$global:MAX_PROJECT_NAME_LENGTH" "DEBUG"
+                # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Checking name length: '$($values.name)' (len=$($values.name.Length)) vs max=$global:MAX_PROJECT_NAME_LENGTH" "DEBUG"
             }
             if ($null -ne $values.name -and $values.name.Length -gt $global:MAX_PROJECT_NAME_LENGTH) {
-                Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Name too long" "DEBUG"
+                # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Name too long" "DEBUG"
                 $this.SetStatusMessage("Project name must be $global:MAX_PROJECT_NAME_LENGTH characters or less", "error")
                 return
             }
@@ -258,23 +258,23 @@ class ProjectListScreen : StandardListScreen {
             # Validate description length if provided
             # MEDIUM FIX PLS-M5: Use constant for max description length validation
             if ($values.ContainsKey('description') -and $values.description -and $values.description.Length -gt $global:MAX_DESCRIPTION_LENGTH) {
-                Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Description too long" "DEBUG"
+                # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Description too long" "DEBUG"
                 $this.SetStatusMessage("Description must be $global:MAX_DESCRIPTION_LENGTH characters or less", "error")
                 return
             }
 
-            Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Parsing tags..." "DEBUG"
+            # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Parsing tags..." "DEBUG"
             # LOW FIX PLS-L6: Use class-level helper methods instead of inline closures
             # Parse tags
             $tags = $this.ParseArrayField($values, 'tags')
 
-            Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Getting existing projects..." "DEBUG"
+            # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Getting existing projects..." "DEBUG"
             # Check for duplicate project name before creating
             # CRITICAL FIX PLS-C5: Add null check on GetAllProjects()
             $existingProjects = $this.Store.GetAllProjects()
             if ($null -eq $existingProjects) { $existingProjects = @() }
 
-            Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Building projectData..." "DEBUG"
+            # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Building projectData..." "DEBUG"
             $projectData = @{
                 id                       = [guid]::NewGuid().ToString()
                 name                     = $values.name
@@ -362,9 +362,9 @@ class ProjectListScreen : StandardListScreen {
             }
 
             # Use ValidationHelper for comprehensive validation (already loaded by ClassLoader)
-            Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Calling Test-ProjectValid..." "DEBUG"
+            # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Calling Test-ProjectValid..." "DEBUG"
             $validationResult = Test-ProjectValid $projectData -existingProjects $existingProjects
-            Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Validation result IsValid=$($validationResult.IsValid)" "DEBUG"
+            # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Validation result IsValid=$($validationResult.IsValid)" "DEBUG"
 
             if (-not $validationResult.IsValid) {
                 # Show ALL validation errors
@@ -375,13 +375,13 @@ class ProjectListScreen : StandardListScreen {
                         "Validation failed"
                     })
                 $this.SetStatusMessage($errorMsg, "error")
-                Write-PmcTuiLog "Project validation failed: $($validationResult.Errors -join ', ')" "ERROR"
+                # Write-PmcTuiLog "Project validation failed: $($validationResult.Errors -join ', ')" "ERROR"
                 return
             }
 
-            Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Calling Store.AddProject..." "DEBUG"
+            # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: Calling Store.AddProject..." "DEBUG"
             $success = $this.Store.AddProject($projectData)
-            Write-PmcTuiLog "ProjectListScreen.OnItemCreated: AddProject returned success=$success" "DEBUG"
+            # Write-PmcTuiLog "ProjectListScreen.OnItemCreated: AddProject returned success=$success" "DEBUG"
             if ($success) {
                 $this.SetStatusMessage("Project created: $($projectData.name)", "success")
             }
@@ -390,7 +390,7 @@ class ProjectListScreen : StandardListScreen {
             }
         }
         catch {
-            Write-PmcTuiLog "OnItemCreated exception: $_" "ERROR"
+            # Write-PmcTuiLog "OnItemCreated exception: $_" "ERROR"
             $this.SetStatusMessage("Unexpected error: $($_.Exception.Message)", "error")
         }
     }
@@ -547,7 +547,7 @@ class ProjectListScreen : StandardListScreen {
             }
         }
         catch {
-            Write-PmcTuiLog "OnItemUpdated exception: $_" "ERROR"
+            # Write-PmcTuiLog "OnItemUpdated exception: $_" "ERROR"
             $this.SetStatusMessage("Unexpected error: $($_.Exception.Message)", "error")
         }
     }
@@ -597,7 +597,7 @@ class ProjectListScreen : StandardListScreen {
     # Ensure PmcFilePicker is loaded (lazy loading pattern)
     hidden [void] EnsureFilePicker() {
         if ($null -eq ([Type]'PmcFilePicker' -as [Type])) {
-            Write-PmcTuiLog "ProjectListScreen: Lazy-loading PmcFilePicker widget" "DEBUG"
+            # Write-PmcTuiLog "ProjectListScreen: Lazy-loading PmcFilePicker widget" "DEBUG"
             . "$PSScriptRoot/../widgets/PmcFilePicker.ps1"
         }
     }
@@ -613,7 +613,7 @@ class ProjectListScreen : StandardListScreen {
         }
         catch {
             $this.SetStatusMessage("Failed to launch Excel import wizard: $($_.Exception.Message)", "error")
-            Write-PmcTuiLog "ImportFromExcel failed: $_" "ERROR"
+            # Write-PmcTuiLog "ImportFromExcel failed: $_" "ERROR"
         }
     }
 
@@ -685,7 +685,7 @@ class ProjectListScreen : StandardListScreen {
     [void] OnInlineEditCancelled() {
         # This method is called when inline edit is cancelled (e.g., Escape key)
         # ProjectListScreen relies on the base StandardListScreen behavior
-        Write-PmcTuiLog "OnInlineEditCancelled called" "DEBUG"
+        # Write-PmcTuiLog "OnInlineEditCancelled called" "DEBUG"
         # No-op: StandardListScreen handles the UI updates
     }
 
@@ -724,7 +724,7 @@ class ProjectListScreen : StandardListScreen {
                         # Write-PmcTuiLog "Screen pushed!" "INFO"
                     }
                     else {
-                        Write-PmcTuiLog "NO SELECTED ITEM" "ERROR"
+                        # Write-PmcTuiLog "NO SELECTED ITEM" "ERROR"
                     }
                 }.GetNewClosure()
             },
@@ -810,7 +810,7 @@ class ProjectListScreen : StandardListScreen {
             if ($keyInfo.KeyChar -eq 'v' -or $keyInfo.KeyChar -eq 'V') {
                 # Defensive check: ensure List exists
                 if ($null -eq $this.List) {
-                    Write-PmcTuiLog "ERROR: List is null when V pressed" "ERROR"
+                    # Write-PmcTuiLog "ERROR: List is null when V pressed" "ERROR"
                     $this.SetStatusMessage("Internal error: List not initialized", "error")
                     return $true
                 }
@@ -818,7 +818,7 @@ class ProjectListScreen : StandardListScreen {
                 $selected = $this.List.GetSelectedItem()
 
                 if ($null -eq $selected) {
-                    Write-PmcTuiLog "No project selected when V pressed" "WARNING"
+                    # Write-PmcTuiLog "No project selected when V pressed" "WARNING"
                     $this.SetStatusMessage("No project selected", "warning")
                     return $true
                 }
@@ -832,8 +832,8 @@ class ProjectListScreen : StandardListScreen {
                 }
                 catch {
                     $errorMsg = "Failed to open project view: $($_.Exception.Message)"
-                    Write-PmcTuiLog "!!! EXCEPTION: $errorMsg" "ERROR"
-                    Write-PmcTuiLog "!!! Stack trace: $($_.ScriptStackTrace)" "ERROR"
+                    # Write-PmcTuiLog "!!! EXCEPTION: $errorMsg" "ERROR"
+                    # Write-PmcTuiLog "!!! Stack trace: $($_.ScriptStackTrace)" "ERROR"
                     $this.SetStatusMessage($errorMsg, "error")
                 }
                 return $true

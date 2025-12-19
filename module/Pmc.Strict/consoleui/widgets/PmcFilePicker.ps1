@@ -112,15 +112,15 @@ class PmcFilePicker : PmcWidget {
     [void] RenderToEngine([object]$engine) {
         $this.RegisterLayout($engine)
 
-        Add-Content -Path "/tmp/pmc-filepicker-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] === FilePicker.RenderToEngine START === X=$($this.X) Y=$($this.Y) Width=$($this.Width) Height=$($this.Height) engineWidth=$($engine.Width) engineHeight=$($engine.Height)"
+        # Add-Content -Path "/tmp/pmc-filepicker-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] === FilePicker.RenderToEngine START === X=$($this.X) Y=$($this.Y) Width=$($this.Width) Height=$($this.Height) engineWidth=$($engine.Width) engineHeight=$($engine.Height)"
 
         # Begin Z-layer (above content, below dialogs)
         if ($engine.PSObject.Methods['BeginLayer']) {
-            Add-Content -Path "/tmp/pmc-filepicker-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] BeginLayer(20) called"
+            # Add-Content -Path "/tmp/pmc-filepicker-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] BeginLayer(20) called"
             $engine.BeginLayer(20)
         }
         else {
-            Add-Content -Path "/tmp/pmc-filepicker-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] WARNING: BeginLayer method not available"
+            # Add-Content -Path "/tmp/pmc-filepicker-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] WARNING: BeginLayer method not available"
         }
 
         # Theme colors
@@ -226,10 +226,10 @@ class PmcFilePicker : PmcWidget {
 
         # End Z-layer
         if ($engine.PSObject.Methods['EndLayer']) {
-            Add-Content -Path "/tmp/pmc-filepicker-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] EndLayer() called"
+            # Add-Content -Path "/tmp/pmc-filepicker-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] EndLayer() called"
             $engine.EndLayer()
         }
-        Add-Content -Path "/tmp/pmc-filepicker-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] === FilePicker.RenderToEngine END ==="
+        # Add-Content -Path "/tmp/pmc-filepicker-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] === FilePicker.RenderToEngine END ==="
     }
 
     # === Input Handling ===

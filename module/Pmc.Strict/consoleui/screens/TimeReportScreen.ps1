@@ -91,7 +91,7 @@ class TimeReportScreen : PmcScreen {
                 $this.TotalHours = 0
                 # Enhanced feedback to guide user on what to do next
                 $this.ShowStatus("No time entries found. Press 'T' to add time entries in Time Tracking screen.")
-                Write-PmcTuiLog "TimeReportScreen: No time entries found for report" "INFO"
+                # Write-PmcTuiLog "TimeReportScreen: No time entries found for report" "INFO"
                 return
             }
 

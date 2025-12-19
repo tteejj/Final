@@ -142,7 +142,7 @@ class ExcelMappingEditorScreen : StandardListScreen {
                     [bool]::Parse($required)
                 }
             } catch {
-                Write-PmcTuiLog "Invalid boolean value for required: '$required', defaulting to false" "WARNING"
+                # Write-PmcTuiLog "Invalid boolean value for required: '$required', defaulting to false" "WARNING"
                 $false
             }
 
@@ -153,7 +153,7 @@ class ExcelMappingEditorScreen : StandardListScreen {
                     [bool]::Parse($includeInExport)
                 }
             } catch {
-                Write-PmcTuiLog "Invalid boolean value for includeInExport: '$includeInExport', defaulting to true" "WARNING"
+                # Write-PmcTuiLog "Invalid boolean value for includeInExport: '$includeInExport', defaulting to true" "WARNING"
                 $true
             }
 

@@ -244,7 +244,7 @@ class ClassLoader {
 
         # Also log errors to file
         if ($level -in @("ERROR", "WARN")) {
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [ClassLoader] [$level] $message"
+            # Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [ClassLoader] [$level] $message"
         }
     }
 

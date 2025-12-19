@@ -199,7 +199,7 @@ class MenuRegistry {
             if ($global:PmcTuiLogFile) {
                 Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [ERROR] MenuRegistry: Manifest not found at '$manifestPath'"
             }
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [MenuRegistry] ERROR: Menu manifest not found at '$manifestPath'"
+            # Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [MenuRegistry] ERROR: Menu manifest not found at '$manifestPath'"
             return
         }
 
@@ -274,7 +274,7 @@ class MenuRegistry {
                 Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [ERROR] $errorMsg"
                 Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] Stack trace: $($_.ScriptStackTrace)"
             }
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [MenuRegistry] ERROR: $errorMsg"
+            # Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [MenuRegistry] ERROR: $errorMsg"
         }
     }
 

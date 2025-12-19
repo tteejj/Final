@@ -55,12 +55,12 @@ function Invoke-ErrorHandler {
 
     # Log with full details
     $logMessage = "$Context failed: $errorMsg (at $errorLocation`:$errorLine)"
-    Write-PmcTuiLog $logMessage "ERROR"
+    # Write-PmcTuiLog $logMessage "ERROR"
 
     # Log stack trace at DEBUG level (check variable exists first for StrictMode)
     $logLevel = (Get-Variable -Name 'PmcTuiLogLevel' -Scope Global -ValueOnly -ErrorAction SilentlyContinue)
     if ($logLevel -ge 3) {
-        Write-PmcTuiLog "Stack: $($ErrorRecord.ScriptStackTrace)" "DEBUG"
+        # Write-PmcTuiLog "Stack: $($ErrorRecord.ScriptStackTrace)" "DEBUG"
     }
 
     # Update status bar if provided and not silent
@@ -151,7 +151,7 @@ function Test-Precondition {
     )
 
     if (-not $Condition) {
-        Write-PmcTuiLog $ErrorMessage "ERROR"
+        # Write-PmcTuiLog $ErrorMessage "ERROR"
         
         if ($null -ne $StatusBar -and $StatusBar.PSObject.Methods['SetMessage']) {
             $StatusBar.SetMessage($ErrorMessage, 'error')

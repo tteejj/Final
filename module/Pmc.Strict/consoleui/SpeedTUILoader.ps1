@@ -50,6 +50,6 @@ try {
     # NOTE: PmcThemeEngine is loaded by Start-PmcTUI.ps1 in proper dependency order
 
 } catch {
-    Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [SpeedTUILoader] Failed to load SpeedTUI: $_"
+    # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [SpeedTUILoader] Failed to load SpeedTUI: $_"
     throw
 }

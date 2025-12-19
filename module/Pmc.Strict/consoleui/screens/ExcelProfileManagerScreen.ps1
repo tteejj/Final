@@ -111,7 +111,7 @@ class ExcelProfileManagerScreen : StandardListScreen {
     # Helper method - not part of StandardListScreen contract
     [array] LoadItems() {
         $profiles = @($this._mappingService.GetAllProfiles())
-        Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Got $($profiles.Count) profiles from service" "DEBUG"
+        # Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Got $($profiles.Count) profiles from service" "DEBUG"
 
         $activeProfile = $this._mappingService.GetActiveProfile()
         $activeId = $(if ($activeProfile) { $activeProfile['id'] } else { $null })
@@ -119,18 +119,18 @@ class ExcelProfileManagerScreen : StandardListScreen {
         # Format for display
         foreach ($profile in $profiles) {
             if ($null -ne $profile) {
-                Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Processing profile - type=$($profile.GetType().Name) isHashtable=$($profile -is [hashtable])" "DEBUG"
+                # Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Processing profile - type=$($profile.GetType().Name) isHashtable=$($profile -is [hashtable])" "DEBUG"
                 if ($profile -is [hashtable]) {
-                    Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Profile keys: $($profile.Keys -join ', ')" "DEBUG"
-                    Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Profile name='$($profile['name'])' desc='$($profile['description'])'" "DEBUG"
+                    # Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Profile keys: $($profile.Keys -join ', ')" "DEBUG"
+                    # Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Profile name='$($profile['name'])' desc='$($profile['description'])'" "DEBUG"
                 }
 
                 $profile['mapping_count'] = $(if ($profile['mappings']) { $profile['mappings'].Count } else { 0 })
                 $profile['is_active'] = $(if ($profile['id'] -eq $activeId) { "Yes" } else { "No" })
 
-                Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: After formatting - mapping_count=$($profile['mapping_count']) is_active=$($profile['is_active'])" "DEBUG"
+                # Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: After formatting - mapping_count=$($profile['mapping_count']) is_active=$($profile['is_active'])" "DEBUG"
             } else {
-                Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Null profile in list" "DEBUG"
+                # Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Null profile in list" "DEBUG"
             }
         }
 
@@ -251,7 +251,7 @@ class ExcelProfileManagerScreen : StandardListScreen {
             $this.SetStatusMessage("Active profile set to '$itemName'", "success")
             $this.LoadData()
         } catch {
-            Write-PmcTuiLog "SetActiveProfile: Error setting active profile '$itemName' - $_" "ERROR"
+            # Write-PmcTuiLog "SetActiveProfile: Error setting active profile '$itemName' - $_" "ERROR"
             $this.SetStatusMessage("Error setting active profile: $($_.Exception.Message)", "error")
         }
     }

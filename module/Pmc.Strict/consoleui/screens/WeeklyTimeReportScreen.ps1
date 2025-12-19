@@ -189,7 +189,7 @@ class WeeklyTimeReportScreen : PmcScreen {
                 # Add hours to appropriate day
                 # TS-H3 FIX: Add error handling for unsafe DateTime cast
                 if (-not $log.ContainsKey('date')) {
-                    Write-PmcTuiLog "WeeklyTimeReportScreen: Log entry missing date field" "WARNING"
+                    # Write-PmcTuiLog "WeeklyTimeReportScreen: Log entry missing date field" "WARNING"
                     continue
                 }
                 $logDate = $null
@@ -202,12 +202,12 @@ class WeeklyTimeReportScreen : PmcScreen {
                         })
                 }
                 catch {
-                    Write-PmcTuiLog "WeeklyTimeReportScreen: Failed to parse date '$($log.date)': $_" "WARNING"
+                    # Write-PmcTuiLog "WeeklyTimeReportScreen: Failed to parse date '$($log.date)': $_" "WARNING"
                     continue  # Skip this log entry
                 }
 
                 if (-not $log.ContainsKey('minutes')) {
-                    Write-PmcTuiLog "WeeklyTimeReportScreen: Log entry missing minutes field" "WARNING"
+                    # Write-PmcTuiLog "WeeklyTimeReportScreen: Log entry missing minutes field" "WARNING"
                     continue
                 }
                 $dayIndex = ($logDate.DayOfWeek.value__ + 6) % 7  # 0=Mon, 1=Tue, ..., 5=Sat, 6=Sun
@@ -223,7 +223,7 @@ class WeeklyTimeReportScreen : PmcScreen {
                     5 { $this.ProjectSummaries[$key].Sat += $hours }
                     6 { $this.ProjectSummaries[$key].Sun += $hours }
                     default {
-                        Write-PmcTuiLog "WeeklyTimeReportScreen: Unexpected day index $dayIndex" "WARNING"
+                        # Write-PmcTuiLog "WeeklyTimeReportScreen: Unexpected day index $dayIndex" "WARNING"
                     }
                 }
                 $this.ProjectSummaries[$key].Total += $hours

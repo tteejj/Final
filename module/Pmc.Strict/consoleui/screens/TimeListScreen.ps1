@@ -100,7 +100,7 @@ class TimeListScreen : StandardListScreen {
         # Write-PmcTuiLog "TimeListScreen.LoadData: LoadItems completed, checking type"
         # Write-PmcTuiLog "TimeListScreen.LoadData: items type=$($items.GetType().FullName)"
         if ($null -eq $items) {
-            Write-PmcTuiLog "TimeListScreen.LoadData: items is null, setting to empty array" "WARNING"
+            # Write-PmcTuiLog "TimeListScreen.LoadData: items is null, setting to empty array" "WARNING"
             $items = @()
         }
         # Write-PmcTuiLog "TimeListScreen.LoadData: About to count items"
@@ -116,7 +116,7 @@ class TimeListScreen : StandardListScreen {
         # CRITICAL FIX TLS-C1: Add null check on GetAllTimeLogs()
         $entries = $this.Store.GetAllTimeLogs()
         if ($null -eq $entries) {
-            Write-PmcTuiLog "TimeListScreen.LoadItems: GetAllTimeLogs() returned null" "ERROR"
+            # Write-PmcTuiLog "TimeListScreen.LoadItems: GetAllTimeLogs() returned null" "ERROR"
             $entries = @()
         }
 
@@ -142,7 +142,7 @@ class TimeListScreen : StandardListScreen {
                     # This preserves data context and prevents incorrect grouping
                     $dateStr = "INVALID:$($entry.date)"
                     $failedDateParses++
-                    Write-PmcTuiLog "TimeListScreen.LoadItems: Failed to parse date '$($entry.date)': $_" "WARNING"
+                    # Write-PmcTuiLog "TimeListScreen.LoadItems: Failed to parse date '$($entry.date)': $_" "WARNING"
                 }
             }
 
@@ -239,7 +239,7 @@ class TimeListScreen : StandardListScreen {
                     $mins = [int]($numericMinutes % 60)
                     $entry['duration'] = "{0:D2}:{1:D2}" -f $hours, $mins
                 } else {
-                    Write-PmcTuiLog "TimeListScreen.LoadItems: Invalid minutes value: $($entry.minutes)" "WARNING"
+                    # Write-PmcTuiLog "TimeListScreen.LoadItems: Invalid minutes value: $($entry.minutes)" "WARNING"
                     $entry['duration'] = "00:00"
                 }
             } else {
@@ -261,7 +261,7 @@ class TimeListScreen : StandardListScreen {
 
         # TS-M1 FIX: Notify user if there were failed date parses
         if ($failedDateParses -gt 0) {
-            Write-PmcTuiLog "TimeListScreen.LoadItems: $failedDateParses time entries had unparseable dates" "WARNING"
+            # Write-PmcTuiLog "TimeListScreen.LoadItems: $failedDateParses time entries had unparseable dates" "WARNING"
             $this.SetStatusMessage("Warning: $failedDateParses entries have invalid dates", "warning")
         }
 
@@ -339,74 +339,74 @@ class TimeListScreen : StandardListScreen {
             # Project is selected - try to get ID1/ID2 from it
             $project = $this.Store.GetProject($timeData.project)
             if ($project) {
-                Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Found project '$($timeData.project)'" "DEBUG"
+                # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Found project '$($timeData.project)'" "DEBUG"
 
                 # If project has ID1, use it (unless user already entered a value)
                 if (-not [string]::IsNullOrWhiteSpace($project.ID1) -and [string]::IsNullOrWhiteSpace($timeData.id1)) {
                     $timeData.id1 = $project.ID1
-                    Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id1 from project: '$($timeData.id1)'" "DEBUG"
+                    # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id1 from project: '$($timeData.id1)'" "DEBUG"
                 }
 
                 # If project has ID2, use it (unless user already entered a value)
                 if (-not [string]::IsNullOrWhiteSpace($project.ID2) -and [string]::IsNullOrWhiteSpace($timeData.id2)) {
                     $timeData.id2 = $project.ID2
-                    Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id2 from project: '$($timeData.id2)'" "DEBUG"
+                    # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id2 from project: '$($timeData.id2)'" "DEBUG"
                 }
             } else {
-                Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Project '$($timeData.project)' not found" "WARNING"
+                # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Project '$($timeData.project)' not found" "WARNING"
             }
         } else {
             # No project selected - clear ID1/ID2 if they should come from project
-            Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: No project selected, keeping user-entered ID1/ID2 values" "DEBUG"
+            # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: No project selected, keeping user-entered ID1/ID2 values" "DEBUG"
         }
     }
 
     # Handle item creation
     [void] OnItemCreated([hashtable]$values) {
         if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
-            Write-PmcTuiLog "TimeListScreen.OnItemCreated: CALLED with values: $($values | ConvertTo-Json -Compress)" "DEBUG"
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: CALLED with values: $($values | ConvertTo-Json -Compress)" "DEBUG"
         }
         try {
             # ENDEMIC FIX: Safe conversion with validation
             if (-not $values.ContainsKey('hours') -or [string]::IsNullOrWhiteSpace($values.hours)) {
-                Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours validation failed" "DEBUG"
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours validation failed" "DEBUG"
                 $this.SetStatusMessage("Hours field is required", "error")
                 return
             }
-            Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours validation passed" "DEBUG"
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours validation passed" "DEBUG"
 
             $hoursValue = 0.0
             try {
                 $hoursValue = [double]$values.hours
             } catch {
-                Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours conversion failed" "DEBUG"
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours conversion failed" "DEBUG"
                 $this.SetStatusMessage("Invalid hours value: $($values.hours)", "error")
                 return
             }
 
             if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
-                Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours value=$hoursValue, MAX_HOURS_PER_ENTRY=$global:MAX_HOURS_PER_ENTRY" "DEBUG"
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours value=$hoursValue, MAX_HOURS_PER_ENTRY=$global:MAX_HOURS_PER_ENTRY" "DEBUG"
             }
 
             # Validate hour range
             # MEDIUM FIX TLS-M3: Use constant for hours validation
             if ($hoursValue -le 0) {
-                Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours <= 0" "DEBUG"
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours <= 0" "DEBUG"
                 $this.SetStatusMessage("Hours must be greater than 0", "error")
                 return
             }
             if ($hoursValue -gt $global:MAX_HOURS_PER_ENTRY) {
-                Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours > MAX ($hoursValue > $global:MAX_HOURS_PER_ENTRY)" "DEBUG"
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours > MAX ($hoursValue > $global:MAX_HOURS_PER_ENTRY)" "DEBUG"
                 $this.SetStatusMessage("Hours must be $global:MAX_HOURS_PER_ENTRY or less", "error")
                 return
             }
-            Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hour range validation passed" "DEBUG"
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hour range validation passed" "DEBUG"
 
             # HIGH FIX TMS-H3: Use Math.Round instead of [int] to prevent precision loss
             # 2.75 hours = 165 minutes (not 165.0 truncated to 165)
             # CRITICAL: Cast to [int] because validation requires int type
             $minutes = [int][Math]::Round($hoursValue * 60)
-            Write-PmcTuiLog "TimeListScreen.OnItemCreated: Calculated minutes=$minutes" "DEBUG"
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Calculated minutes=$minutes" "DEBUG"
 
             # Safe date conversion
             $dateValue = [DateTime]::Today
@@ -414,10 +414,10 @@ class TimeListScreen : StandardListScreen {
                 try {
                     $dateValue = [DateTime]$values.date
                 } catch {
-                    Write-PmcTuiLog "Failed to parse date '$($values.date)', using today" "WARNING"
+                    # Write-PmcTuiLog "Failed to parse date '$($values.date)', using today" "WARNING"
                 }
             }
-            Write-PmcTuiLog "TimeListScreen.OnItemCreated: Date=$dateValue" "DEBUG"
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Date=$dateValue" "DEBUG"
 
             $timeData = @{
                 date = $dateValue
@@ -433,13 +433,13 @@ class TimeListScreen : StandardListScreen {
             # Populate ID1/ID2 from project if project is selected and IDs are empty
             $this.PopulateIDsFromProject($timeData)
 
-            Write-PmcTuiLog "TimeListScreen.OnItemCreated: About to save time entry - id1='$($timeData.id1)' id2='$($timeData.id2)'" "DEBUG"
-            Write-PmcTuiLog "TimeListScreen.OnItemCreated: Calling Store.AddTimeLog..." "DEBUG"
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: About to save time entry - id1='$($timeData.id1)' id2='$($timeData.id2)'" "DEBUG"
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Calling Store.AddTimeLog..." "DEBUG"
 
             $success = $this.Store.AddTimeLog($timeData)
-            Write-PmcTuiLog "TimeListScreen.OnItemCreated: AddTimeLog returned success=$success" "DEBUG"
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: AddTimeLog returned success=$success" "DEBUG"
             if (-not $success) {
-                Write-PmcTuiLog "TimeListScreen.OnItemCreated: Store.LastError=$($this.Store.LastError)" "ERROR"
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Store.LastError=$($this.Store.LastError)" "ERROR"
             }
 
             $statusMsg = "Time entry added: {0:F2} hours" -f $hoursValue
@@ -449,7 +449,7 @@ class TimeListScreen : StandardListScreen {
                 $this.SetStatusMessage("Failed to add time entry: $($this.Store.LastError)", "error")
             }
         } catch {
-            Write-PmcTuiLog "OnItemCreated exception: $_" "ERROR"
+            # Write-PmcTuiLog "OnItemCreated exception: $_" "ERROR"
             $this.SetStatusMessage("Unexpected error: $($_.Exception.Message)", "error")
         }
     }
@@ -493,7 +493,7 @@ class TimeListScreen : StandardListScreen {
                 try {
                     $dateValue = [DateTime]$values.date
                 } catch {
-                    Write-PmcTuiLog "Failed to parse date '$($values.date)', using today" "WARNING"
+                    # Write-PmcTuiLog "Failed to parse date '$($values.date)', using today" "WARNING"
                 }
             }
 
@@ -510,11 +510,11 @@ class TimeListScreen : StandardListScreen {
             # Populate ID1/ID2 from project if project is selected and IDs are empty
             $this.PopulateIDsFromProject($changes)
 
-            Write-PmcTuiLog "TimeListScreen.OnItemUpdated: About to save changes - id1='$($changes.id1)' id2='$($changes.id2)'" "DEBUG"
+            # Write-PmcTuiLog "TimeListScreen.OnItemUpdated: About to save changes - id1='$($changes.id1)' id2='$($changes.id2)'" "DEBUG"
 
             # Update time log via TaskStore
             if ($item.ContainsKey('id') -and -not [string]::IsNullOrWhiteSpace($item.id)) {
-                Write-PmcTuiLog "TimeListScreen.OnItemUpdated: Calling Store.UpdateTimeLog with id=$($item.id)" "DEBUG"
+                # Write-PmcTuiLog "TimeListScreen.OnItemUpdated: Calling Store.UpdateTimeLog with id=$($item.id)" "DEBUG"
                 $success = $this.Store.UpdateTimeLog($item.id, $changes)
                 if ($success) {
                     $this.SetStatusMessage("Time entry updated", "success")
@@ -528,7 +528,7 @@ class TimeListScreen : StandardListScreen {
                 $this.SetStatusMessage("Cannot update time entry without ID", "error")
             }
         } catch {
-            Write-PmcTuiLog "OnItemUpdated exception: $_" "ERROR"
+            # Write-PmcTuiLog "OnItemUpdated exception: $_" "ERROR"
             $this.SetStatusMessage("Unexpected error: $($_.Exception.Message)", "error")
         }
     }
@@ -554,25 +554,25 @@ class TimeListScreen : StandardListScreen {
     # so this is a no-op to prevent method-not-found errors
     [void] OnInlineEditConfirmed([hashtable]$values) {
         if ($null -eq $values) {
-            Write-PmcTuiLog "TimeListScreen.OnInlineEditConfirmed called with null values" "WARNING"
+            # Write-PmcTuiLog "TimeListScreen.OnInlineEditConfirmed called with null values" "WARNING"
             return
         }
-        Write-PmcTuiLog "TimeListScreen.OnInlineEditConfirmed called with values: $($values.Keys -join ',')" "DEBUG"
+        # Write-PmcTuiLog "TimeListScreen.OnInlineEditConfirmed called with values: $($values.Keys -join ',')" "DEBUG"
 
         # Route to OnItemCreated or OnItemUpdated based on mode
         $isAddMode = ($this.EditorMode -eq 'add')
 
         if ($isAddMode) {
-            Write-PmcTuiLog "OnInlineEditConfirmed: Processing ADD mode for time entry" "INFO"
+            # Write-PmcTuiLog "OnInlineEditConfirmed: Processing ADD mode for time entry" "INFO"
             $this.OnItemCreated($values)
         }
         else {
-            Write-PmcTuiLog "OnInlineEditConfirmed: Processing EDIT mode for time entry" "INFO"
+            # Write-PmcTuiLog "OnInlineEditConfirmed: Processing EDIT mode for time entry" "INFO"
             if ($this.CurrentEditItem) {
                 $this.OnItemUpdated($this.CurrentEditItem, $values)
             }
             else {
-                Write-PmcTuiLog "OnInlineEditConfirmed: EDIT mode but no CurrentEditItem!" "ERROR"
+                # Write-PmcTuiLog "OnInlineEditConfirmed: EDIT mode but no CurrentEditItem!" "ERROR"
             }
         }
     }
@@ -582,7 +582,7 @@ class TimeListScreen : StandardListScreen {
     # TimeListScreen already handles inline editing through its own callbacks,
     # so this is a no-op to prevent method-not-found errors
     [void] OnInlineEditCancelled() {
-        Write-PmcTuiLog "TimeListScreen.OnInlineEditCancelled called" "DEBUG"
+        # Write-PmcTuiLog "TimeListScreen.OnInlineEditCancelled called" "DEBUG"
         # No-op: TimeListScreen handles inline editor callbacks directly
     }
 
@@ -609,7 +609,7 @@ class TimeListScreen : StandardListScreen {
     [void] ShowDetailDialog([hashtable]$item) {
         # CRITICAL FIX TLS-C3: Add null check on $item parameter
         if ($null -eq $item) {
-            Write-PmcTuiLog "TimeListScreen.ShowDetailDialog: item parameter is null" "WARNING"
+            # Write-PmcTuiLog "TimeListScreen.ShowDetailDialog: item parameter is null" "WARNING"
             return
         }
         if (-not $item.ContainsKey('original_entries') -or $item.original_entries.Count -eq 0) {
@@ -633,7 +633,7 @@ class TimeListScreen : StandardListScreen {
             $dialog = [TimeEntryDetailDialog]::new($title, $item.original_entries)
         } catch {
             $this.SetStatusMessage("Failed to create detail dialog: $($_.Exception.Message)", "error")
-            Write-PmcTuiLog "TimeListScreen: Dialog creation failed - $_" "ERROR"
+            # Write-PmcTuiLog "TimeListScreen: Dialog creation failed - $_" "ERROR"
             return
         }
 
@@ -674,7 +674,7 @@ class TimeListScreen : StandardListScreen {
 
         # TS-M2 FIX: Show user-visible warning if timeout occurred
         if ($iterations -ge $maxIterations) {
-            Write-PmcTuiLog "TimeListScreen.ShowDetailDialog: Timeout after $maxIterations iterations (3 minutes)" "WARNING"
+            # Write-PmcTuiLog "TimeListScreen.ShowDetailDialog: Timeout after $maxIterations iterations (3 minutes)" "WARNING"
             $this.SetStatusMessage("Dialog closed due to timeout (3 minutes)", "warning")
         }
 

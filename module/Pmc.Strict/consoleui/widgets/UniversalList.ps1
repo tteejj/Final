@@ -350,7 +350,7 @@ class UniversalList : PmcWidget {
     #>
     [void] SetData([array]$data) {
         try {
-            Write-PmcTuiLog "UniversalList.SetData: START" "DEBUG"
+            # Write-PmcTuiLog "UniversalList.SetData: START" "DEBUG"
         
             if ($null -ne $data) {
                 $this._data = [object[]]@($data)
@@ -372,10 +372,10 @@ class UniversalList : PmcWidget {
             $this._ApplySearch()
 
             $this._InvokeCallback($this.OnDataChanged, $this._data)
-            Write-PmcTuiLog "UniversalList.SetData: COMPLETE ($($this._data.Count) items)" "DEBUG"
+            # Write-PmcTuiLog "UniversalList.SetData: COMPLETE ($($this._data.Count) items)" "DEBUG"
         }
         catch {
-            Write-PmcTuiLog "FATAL ERROR UniversalList.SetData: $_" "ERROR"
+            # Write-PmcTuiLog "FATAL ERROR UniversalList.SetData: $_" "ERROR"
             throw
         }
     }
@@ -947,7 +947,7 @@ class UniversalList : PmcWidget {
                 # CRITICAL FIX: Clear ONLY the content area, NOT the borders
                 # Clear from X+2 (after left border+padding) to Width-4 (before right padding+border)
                 if ($global:PmcEnableFlowDebug) {
-                    Add-Content -Path "/tmp/pmc-universallist-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] CLEARING ROW: dataIndex=$dataIndex rowY=$rowY Y=$($this.Y) selectedIndex=$($this._selectedIndex) fillWidth=$($this.Width)"
+                    # Add-Content -Path "/tmp/pmc-universallist-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] CLEARING ROW: dataIndex=$dataIndex rowY=$rowY Y=$($this.Y) selectedIndex=$($this._selectedIndex) fillWidth=$($this.Width)"
                 }
                 $engine.Fill($this.X + 2, $rowY, $this.Width - 4, 1, ' ', $textColor, $rowBg)
                 continue
@@ -1321,9 +1321,9 @@ class UniversalList : PmcWidget {
             catch {
                 # Log callback errors but DON'T rethrow - callbacks must never crash the app
                 if (Get-Command Write-PmcTuiLog -ErrorAction SilentlyContinue) {
-                    Write-PmcTuiLog "UniversalList callback error: $($_.Exception.Message)" "ERROR"
-                    Write-PmcTuiLog "Callback code: $($callback.ToString())" "ERROR"
-                    Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
+                    # Write-PmcTuiLog "UniversalList callback error: $($_.Exception.Message)" "ERROR"
+                    # Write-PmcTuiLog "Callback code: $($callback.ToString())" "ERROR"
+                    # Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
                 }
                 # DON'T rethrow - UI callbacks must not crash
             }

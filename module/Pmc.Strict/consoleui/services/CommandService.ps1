@@ -85,7 +85,7 @@ class CommandService {
                 }
                 $this._cacheLoadTime = [datetime]::Now
             } catch {
-                Write-PmcTuiLog "Failed to load commands metadata: $_" "ERROR"
+                # Write-PmcTuiLog "Failed to load commands metadata: $_" "ERROR"
                 $this._commandsCache = @{}
             }
         }
@@ -126,7 +126,7 @@ class CommandService {
             Move-Item -Path $tempFile -Destination $this._metadataFile -Force
 
         } catch {
-            Write-PmcTuiLog "Failed to save commands metadata: $_" "ERROR"
+            # Write-PmcTuiLog "Failed to save commands metadata: $_" "ERROR"
             throw
         }
     }

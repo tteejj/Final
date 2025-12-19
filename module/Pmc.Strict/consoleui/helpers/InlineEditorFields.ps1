@@ -128,7 +128,7 @@ function ConvertTo-TagsFromText {
             $validTags += $tag
         }
         else {
-            Write-PmcTuiLog "Invalid tag '$tag' - must contain only letters, numbers, underscore, or hyphen" "WARNING"
+            # Write-PmcTuiLog "Invalid tag '$tag' - must contain only letters, numbers, underscore, or hyphen" "WARNING"
         }
     }
 

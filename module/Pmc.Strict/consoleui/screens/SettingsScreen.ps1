@@ -43,7 +43,7 @@ class SettingsScreen : PmcScreen {
             # CRITICAL FIX SS-C1: Validate file exists before dot-sourcing
             $scriptPath = "$PSScriptRoot/SettingsScreen.ps1"
             if (-not (Test-Path $scriptPath)) {
-                Write-PmcTuiLog "SettingsScreen.ps1 not found at: $scriptPath" "ERROR"
+                # Write-PmcTuiLog "SettingsScreen.ps1 not found at: $scriptPath" "ERROR"
                 throw "SettingsScreen.ps1 not found"
             }
             . $scriptPath
@@ -88,11 +88,11 @@ class SettingsScreen : PmcScreen {
             if ($null -ne $tempPath -and (Test-Path $tempPath)) {
                 $dataFile = $tempPath
             } else {
-                Write-PmcTuiLog "SettingsScreen: Get-PmcTaskFilePath returned invalid path: $tempPath" "WARNING"
+                # Write-PmcTuiLog "SettingsScreen: Get-PmcTaskFilePath returned invalid path: $tempPath" "WARNING"
             }
         } catch {
             # LAYER 3: Silently fall back to default if function fails
-            Write-PmcTuiLog "SettingsScreen: Get-PmcTaskFilePath failed: $($_.Exception.Message)" "WARNING"
+            # Write-PmcTuiLog "SettingsScreen: Get-PmcTaskFilePath failed: $($_.Exception.Message)" "WARNING"
         }
 
         # Same defensive layering for current context
@@ -103,11 +103,11 @@ class SettingsScreen : PmcScreen {
             if ($null -ne $tempContext -and -not [string]::IsNullOrWhiteSpace($tempContext)) {
                 $currentContext = $tempContext
             } else {
-                Write-PmcTuiLog "SettingsScreen: Get-PmcCurrentContext returned invalid value" "WARNING"
+                # Write-PmcTuiLog "SettingsScreen: Get-PmcCurrentContext returned invalid value" "WARNING"
             }
         } catch {
             # Use default if Get-PmcCurrentContext fails
-            Write-PmcTuiLog "SettingsScreen: Get-PmcCurrentContext failed: $($_.Exception.Message)" "WARNING"
+            # Write-PmcTuiLog "SettingsScreen: Get-PmcCurrentContext failed: $($_.Exception.Message)" "WARNING"
         }
 
         $this.SettingsList = @(
@@ -328,8 +328,8 @@ class SettingsScreen : PmcScreen {
                         }
                     } catch {
                         try { $this.ShowError("Failed to load theme editor: $($_.Exception.Message)") } catch { }
-                        Write-PmcTuiLog "Failed to load ThemeEditorScreen: $_" "ERROR"
-                        Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
+                        # Write-PmcTuiLog "Failed to load ThemeEditorScreen: $_" "ERROR"
+                        # Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
                     }
                     return
                 }
@@ -385,7 +385,7 @@ class SettingsScreen : PmcScreen {
 
         # CRITICAL FIX SS-C2: Validate input before assignment
         if ($null -eq $newValue) {
-            Write-PmcTuiLog "SettingsScreen: Cannot set null value for $($setting.key)" "ERROR"
+            # Write-PmcTuiLog "SettingsScreen: Cannot set null value for $($setting.key)" "ERROR"
             $this.ShowMessage("Invalid value", "error")
             return
         }

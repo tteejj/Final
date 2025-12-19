@@ -325,7 +325,7 @@ class StandardListScreen : PmcScreen {
                 $this.StatusBar.SetLeftText($text)
             }
             catch {
-                Write-PmcTuiLog "OnItemSelected: Error accessing item properties: $_" "ERROR"
+                # Write-PmcTuiLog "OnItemSelected: Error accessing item properties: $_" "ERROR"
             }
         }
     }
@@ -564,8 +564,8 @@ class StandardListScreen : PmcScreen {
             }
         }
         catch {
-            Write-PmcTuiLog "_ConfigureListActions: Error adding custom actions: $_" "ERROR"
-            Write-PmcTuiLog "_ConfigureListActions: Error stack: $($_.ScriptStackTrace)" "ERROR"
+            # Write-PmcTuiLog "_ConfigureListActions: Error adding custom actions: $_" "ERROR"
+            # Write-PmcTuiLog "_ConfigureListActions: Error stack: $($_.ScriptStackTrace)" "ERROR"
         }
     }
 
@@ -646,7 +646,7 @@ class StandardListScreen : PmcScreen {
     #>
     [void] AddItem() {
         # DEBUG logging - ENABLED to trace add operation bugs
-        Write-PmcTuiLog "*** STANDARDLISTSCREEN.ADDITEM CALLED on type=$($this.GetType().Name) key=$($this.ScreenKey) ***" "INFO"
+        # Write-PmcTuiLog "*** STANDARDLISTSCREEN.ADDITEM CALLED on type=$($this.GetType().Name) key=$($this.ScreenKey) ***" "INFO"
 
         $this.EditorMode = 'add'
         $this.CurrentEditItem = @{}
@@ -656,9 +656,9 @@ class StandardListScreen : PmcScreen {
         # }
 
         $this.InlineEditor.LayoutMode = "horizontal"
-        Write-PmcTuiLog "StandardListScreen.AddItem: About to SetFields with $($fields.Count) fields" "DEBUG"
+        # Write-PmcTuiLog "StandardListScreen.AddItem: About to SetFields with $($fields.Count) fields" "DEBUG"
         $this.InlineEditor.SetFields($fields)
-        Write-PmcTuiLog "StandardListScreen.AddItem: SetFields completed successfully" "DEBUG"
+        # Write-PmcTuiLog "StandardListScreen.AddItem: SetFields completed successfully" "DEBUG"
         $this.InlineEditor.Title = "Add New"
 
         # Position editor at end of list (or first row if empty)
@@ -688,7 +688,7 @@ class StandardListScreen : PmcScreen {
     Item to edit
     #>
     [void] EditItem($item) {
-        Write-PmcTuiLog "*** STANDARDLISTSCREEN.EDITITEM CALLED (base class) - item type=$($item.GetType().Name) ***" "WARN"
+        # Write-PmcTuiLog "*** STANDARDLISTSCREEN.EDITITEM CALLED (base class) - item type=$($item.GetType().Name) ***" "WARN"
         if ($null -eq $item) {
             return
         }
@@ -814,7 +814,7 @@ class StandardListScreen : PmcScreen {
     #>
     hidden [void] _SaveEditedItem($values) {
         if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
-            Write-PmcTuiLog "StandardListScreen._SaveEditedItem: Mode=$($this.EditorMode) Values=$($values | ConvertTo-Json -Compress)" "DEBUG"
+            # Write-PmcTuiLog "StandardListScreen._SaveEditedItem: Mode=$($this.EditorMode) Values=$($values | ConvertTo-Json -Compress)" "DEBUG"
         }
 
         try {
@@ -827,7 +827,7 @@ class StandardListScreen : PmcScreen {
                 $this.OnItemUpdated($this.CurrentEditItem, $values)
             }
             else {
-                Write-PmcTuiLog "ERROR: EditorMode is '$($this.EditorMode)' - expected 'add' or 'edit'" "ERROR"
+                # Write-PmcTuiLog "ERROR: EditorMode is '$($this.EditorMode)' - expected 'add' or 'edit'" "ERROR"
                 $this.SetStatusMessage("Invalid editor mode", "error")
                 return
             }
@@ -839,8 +839,8 @@ class StandardListScreen : PmcScreen {
 
         }
         catch {
-            Write-PmcTuiLog "_SaveEditedItem failed: $_" "ERROR"
-            Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
+            # Write-PmcTuiLog "_SaveEditedItem failed: $_" "ERROR"
+            # Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
             $this.SetStatusMessage("Failed to save: $($_.Exception.Message)", "error")
             # Keep editor open so user can retry
         }
@@ -857,7 +857,7 @@ class StandardListScreen : PmcScreen {
     [void] OnInlineEditConfirmed([hashtable]$values) {
         # Default implementation: delegate to _SaveEditedItem which calls OnItemCreated or OnItemUpdated
         # This ensures all screens work even if they don't override this method
-        Write-PmcTuiLog "StandardListScreen.OnInlineEditConfirmed called - EditorMode=$($this.EditorMode)" "DEBUG"
+        # Write-PmcTuiLog "StandardListScreen.OnInlineEditConfirmed called - EditorMode=$($this.EditorMode)" "DEBUG"
 
         # Call save which will dispatch to OnItemCreated or OnItemUpdated
         $this._SaveEditedItem($values)
@@ -957,15 +957,15 @@ class StandardListScreen : PmcScreen {
             # CRITICAL FIX: Route to inline editor BEFORE other menu handling
             # This allows inline editor to handle Esc/Enter instead of menu stealing them
             if ($this.ShowInlineEditor) {
-                # DEBUG: Trace input to find why typing doesn't work
-                Add-Content -Path "/tmp/pmc-input-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] StandardListScreen.HandleKeyPress: ShowInlineEditor=$($this.ShowInlineEditor) Key=$($keyInfo.Key) Char='$($keyInfo.KeyChar)' InlineEditor=$($null -ne $this.InlineEditor) _fields=$($this.InlineEditor._fields.Count) _currentFieldIndex=$($this.InlineEditor._currentFieldIndex)"
-                Write-PmcTuiLog "StandardListScreen: Routing to InlineEditor (Key=$($keyInfo.Key))" "DEBUG"
+                # DEBUG: Trace input to find why typing doesn't work (COMMENTED OUT FOR PERFORMANCE)
+                # Add-Content -Path "/tmp/pmc-input-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] StandardListScreen.HandleKeyPress: ShowInlineEditor=$($this.ShowInlineEditor) Key=$($keyInfo.Key) Char='$($keyInfo.KeyChar)' InlineEditor=$($null -ne $this.InlineEditor) _fields=$($this.InlineEditor._fields.Count) _currentFieldIndex=$($this.InlineEditor._currentFieldIndex)"
+                # Write-PmcTuiLog "StandardListScreen: Routing to InlineEditor (Key=$($keyInfo.Key))" "DEBUG"
                 $handled = $this.InlineEditor.HandleInput($keyInfo)
-                Write-PmcTuiLog "StandardListScreen: After HandleInput - IsConfirmed=$($this.InlineEditor.IsConfirmed) IsCancelled=$($this.InlineEditor.IsCancelled) ShowInlineEditor=$($this.ShowInlineEditor)" "DEBUG"
+                # Write-PmcTuiLog "StandardListScreen: After HandleInput - IsConfirmed=$($this.InlineEditor.IsConfirmed) IsCancelled=$($this.InlineEditor.IsCancelled) ShowInlineEditor=$($this.ShowInlineEditor)" "DEBUG"
 
                 # Check if editor needs clear (field widget was closed)
                 if ($this.InlineEditor.NeedsClear) {
-                    Write-PmcTuiLog "StandardListScreen: Editor field widget closed - PROPAGATING CLEAR TO SCREEN" "DEBUG"
+                    # Write-PmcTuiLog "StandardListScreen: Editor field widget closed - PROPAGATING CLEAR TO SCREEN" "DEBUG"
                     # CRITICAL FIX: Propagate NeedsClear to screen to remove overlay widget rendering
                     $this.NeedsClear = $true
                     $this.InlineEditor.NeedsClear = $false  # Reset flag
@@ -974,7 +974,7 @@ class StandardListScreen : PmcScreen {
 
                 # Check if editor closed
                 if ($this.InlineEditor.IsConfirmed -or $this.InlineEditor.IsCancelled) {
-                    Write-PmcTuiLog "StandardListScreen: Editor confirmed/cancelled - closing editor NO CLEAR" "DEBUG"
+                    # Write-PmcTuiLog "StandardListScreen: Editor confirmed/cancelled - closing editor NO CLEAR" "DEBUG"
 
                     # BUG FIX: Save EditorMode BEFORE it gets cleared by OnCancelled callback
                     $wasAddMode = ($this.EditorMode -eq 'add')
@@ -988,7 +988,7 @@ class StandardListScreen : PmcScreen {
                     if ($this.RenderEngine -and $this.InlineEditor) {
                         $editorY = $this.InlineEditor.Y
                         $this.RenderEngine.InvalidateCachedRegion($editorY, $editorY + 1)
-                        Write-PmcTuiLog "StandardListScreen: Invalidated editor row Y=$editorY after close" "DEBUG"
+                        # Write-PmcTuiLog "StandardListScreen: Invalidated editor row Y=$editorY after close" "DEBUG"
                     }
 
                     # BUG FIX: Restore selectedIndex after exiting add mode
@@ -1014,7 +1014,7 @@ class StandardListScreen : PmcScreen {
                             # No items - select none (will be 0 when items are added)
                             $this.List._selectedIndex = 0
                         }
-                        Write-PmcTuiLog "StandardListScreen: Restored selectedIndex to $($this.List._selectedIndex) after add mode exit (itemCount=$itemCount)" "DEBUG"
+                        # Write-PmcTuiLog "StandardListScreen: Restored selectedIndex to $($this.List._selectedIndex) after add mode exit (itemCount=$itemCount)" "DEBUG"
                     }
 
                     # Clear EditorMode AFTER checking if it was add mode
@@ -1025,7 +1025,7 @@ class StandardListScreen : PmcScreen {
                     return $true
                 }
 
-                Write-PmcTuiLog "StandardListScreen: After close check - ShowInlineEditor=$($this.ShowInlineEditor)" "DEBUG"
+                # Write-PmcTuiLog "StandardListScreen: After close check - ShowInlineEditor=$($this.ShowInlineEditor)" "DEBUG"
 
                 # If editor handled the key, we're done
                 if ($handled) {
@@ -1201,7 +1201,7 @@ class StandardListScreen : PmcScreen {
     .SYNOPSIS
     Apply layout to content widgets
     #>
-    [void] ApplyContentLayout([object]$layoutManager, [int]$termWidth, [int]$termHeight) {
+    [void] ApplyContentLayout([PmcLayoutManager]$layoutManager, [int]$termWidth, [int]$termHeight) {
         if ($this.List) {
             $rect = $layoutManager.GetRegion('Content', $termWidth, $termHeight)
             # Write-Host "DEBUG: StandardListScreen positioning List at X=$($rect.X) Y=$($rect.Y) W=$($rect.Width) H=$($rect.Height)"

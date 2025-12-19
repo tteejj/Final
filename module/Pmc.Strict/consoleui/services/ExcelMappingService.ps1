@@ -59,30 +59,30 @@ class ExcelMappingService {
 
     # === Profile Management ===
     hidden [void] LoadProfiles() {
-        Write-PmcTuiLog "ExcelMappingService.LoadProfiles: START - file=$($this._profilesFile)" "DEBUG"
+        # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: START - file=$($this._profilesFile)" "DEBUG"
         if (Test-Path $this._profilesFile) {
             # CRITICAL FIX ES-C3: Robust JSON parsing with null validation
             try {
                 $jsonContent = Get-Content $this._profilesFile -Raw -ErrorAction Stop
-                Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Read $($jsonContent.Length) chars from file" "DEBUG"
+                # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Read $($jsonContent.Length) chars from file" "DEBUG"
                 $json = $jsonContent | ConvertFrom-Json -ErrorAction Stop
-                Write-PmcTuiLog "ExcelMappingService.LoadProfiles: JSON parsed successfully" "DEBUG"
+                # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: JSON parsed successfully" "DEBUG"
 
                 if ($null -eq $json) {
                     throw "JSON deserialization returned null"
                 }
 
-                Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Checking for active_profile_id property" "DEBUG"
+                # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Checking for active_profile_id property" "DEBUG"
                 if (-not $json.PSObject.Properties['active_profile_id']) {
                     throw "JSON missing 'active_profile_id' property"
                 }
                 $this._profilesCache = @{}
                 $this._activeProfileId = $json.active_profile_id
-                Write-PmcTuiLog "ExcelMappingService.LoadProfiles: active_profile_id=$($this._activeProfileId)" "DEBUG"
+                # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: active_profile_id=$($this._activeProfileId)" "DEBUG"
 
-                Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Found $($json.profiles.Count) profiles" "DEBUG"
+                # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Found $($json.profiles.Count) profiles" "DEBUG"
                 foreach ($profile in $json.profiles) {
-                    Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Processing profile id=$($profile.id) name=$($profile.name)" "DEBUG"
+                    # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Processing profile id=$($profile.id) name=$($profile.name)" "DEBUG"
 
                     # Check for start_cell
                     if (-not $profile.PSObject.Properties['start_cell']) {
@@ -92,7 +92,7 @@ class ExcelMappingService {
                     $mappings = @()
                     # Check if mappings property exists and is not null - JSON deserialization can omit empty arrays
                     if ($profile.PSObject.Properties['mappings'] -and $null -ne $profile.mappings) {
-                        Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Profile has $($profile.mappings.Count) mappings" "DEBUG"
+                        # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Profile has $($profile.mappings.Count) mappings" "DEBUG"
                         foreach ($mapping in $profile.mappings) {
                             # ES-M4 FIX: Type validation before casting JSON booleans
                             $requiredValue = $false
@@ -100,7 +100,7 @@ class ExcelMappingService {
                                 try {
                                     $requiredValue = [bool]$mapping.required
                                 } catch {
-                                    Write-PmcTuiLog "Invalid 'required' value for mapping $($mapping.id), defaulting to false: $_" "WARN"
+                                    # Write-PmcTuiLog "Invalid 'required' value for mapping $($mapping.id), defaulting to false: $_" "WARN"
                                 }
                             }
 
@@ -109,7 +109,7 @@ class ExcelMappingService {
                                 try {
                                     $includeInExportValue = [bool]$mapping.include_in_export
                                 } catch {
-                                    Write-PmcTuiLog "Invalid 'include_in_export' value for mapping $($mapping.id), defaulting to true: $_" "WARN"
+                                    # Write-PmcTuiLog "Invalid 'include_in_export' value for mapping $($mapping.id), defaulting to true: $_" "WARN"
                                 }
                             }
 
@@ -118,7 +118,7 @@ class ExcelMappingService {
                                 try {
                                     $sortOrderValue = [int]$mapping.sort_order
                                 } catch {
-                                    Write-PmcTuiLog "Invalid 'sort_order' value for mapping $($mapping.id), defaulting to 0: $_" "WARN"
+                                    # Write-PmcTuiLog "Invalid 'sort_order' value for mapping $($mapping.id), defaulting to 0: $_" "WARN"
                                 }
                             }
 
@@ -140,14 +140,14 @@ class ExcelMappingService {
                     try {
                         $created = [datetime]::Parse($profile.created)
                     } catch {
-                        Write-PmcTuiLog "Failed to parse created date for profile $($profile.id), using current time: $_" "WARN"
+                        # Write-PmcTuiLog "Failed to parse created date for profile $($profile.id), using current time: $_" "WARN"
                         $created = [datetime]::Now
                     }
 
                     try {
                         $modified = [datetime]::Parse($profile.modified)
                     } catch {
-                        Write-PmcTuiLog "Failed to parse modified date for profile $($profile.id), using current time: $_" "WARN"
+                        # Write-PmcTuiLog "Failed to parse modified date for profile $($profile.id), using current time: $_" "WARN"
                         $modified = [datetime]::Now
                     }
 
@@ -160,17 +160,17 @@ class ExcelMappingService {
                         created = $created
                         modified = $modified
                     }
-                    Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Cached profile id=$($profile.id) with $($mappings.Count) mappings" "DEBUG"
+                    # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: Cached profile id=$($profile.id) with $($mappings.Count) mappings" "DEBUG"
                 }
                 $this._cacheLoadTime = [datetime]::Now
-                Write-PmcTuiLog "ExcelMappingService.LoadProfiles: SUCCESS - loaded $($this._profilesCache.Count) profiles" "DEBUG"
+                # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: SUCCESS - loaded $($this._profilesCache.Count) profiles" "DEBUG"
             } catch {
-                Write-PmcTuiLog "Failed to load Excel profiles: $_" "ERROR"
-                Write-PmcTuiLog "ExcelMappingService.LoadProfiles: STACK TRACE: $($_.ScriptStackTrace)" "ERROR"
+                # Write-PmcTuiLog "Failed to load Excel profiles: $_" "ERROR"
+                # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: STACK TRACE: $($_.ScriptStackTrace)" "ERROR"
                 $this._profilesCache = @{}
             }
         } else {
-            Write-PmcTuiLog "ExcelMappingService.LoadProfiles: File not found: $($this._profilesFile)" "WARN"
+            # Write-PmcTuiLog "ExcelMappingService.LoadProfiles: File not found: $($this._profilesFile)" "WARN"
         }
     }
 
@@ -224,15 +224,15 @@ class ExcelMappingService {
                     try {
                         Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
                     } catch {
-                        Write-PmcTuiLog "Failed to clean up temp file $tempFile : $_" "WARNING"
+                        # Write-PmcTuiLog "Failed to clean up temp file $tempFile : $_" "WARNING"
                     }
                 }
                 throw
             }
 
         } catch {
-            Write-PmcTuiLog "Failed to save Excel profiles: $_" "ERROR"
-            Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
+            # Write-PmcTuiLog "Failed to save Excel profiles: $_" "ERROR"
+            # Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
             throw "Failed to save profiles: $($_.Exception.Message)"
         }
     }
@@ -424,7 +424,7 @@ class ExcelMappingService {
             throw "Mapping not found: $mappingId"
         }
         if ($matchingMappings.Count -gt 1) {
-            Write-PmcTuiLog "WARNING: Multiple mappings found with ID $mappingId in profile $profileId. Using first match." "WARN"
+            # Write-PmcTuiLog "WARNING: Multiple mappings found with ID $mappingId in profile $profileId. Using first match." "WARN"
         }
         $mapping = $matchingMappings[0]
 

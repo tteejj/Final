@@ -25,59 +25,59 @@ class NoteEditorScreen : PmcScreen {
 
     # === Constructor ===
     NoteEditorScreen([string]$noteId) : base("NoteEditor", "Note Editor") {
-        Write-PmcTuiLog "NoteEditorScreen: Constructor called for noteId=$noteId" "INFO"
+        # Write-PmcTuiLog "NoteEditorScreen: Constructor called for noteId=$noteId" "INFO"
 
         $this._noteId = $noteId
         $this._noteService = [FileNoteService]::GetInstance()
 
         # Load note metadata
-        Write-PmcTuiLog "NoteEditorScreen: Loading note metadata" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen: Loading note metadata" "DEBUG"
         $this._note = $this._noteService.GetNote($noteId)
         if (-not $this._note) {
-            Write-PmcTuiLog "NoteEditorScreen: Note not found: $noteId" "ERROR"
+            # Write-PmcTuiLog "NoteEditorScreen: Note not found: $noteId" "ERROR"
             throw "Note not found: $noteId"
         }
 
         # Update screen title
         $this.ScreenTitle = $this._note.title
-        Write-PmcTuiLog "NoteEditorScreen: Title set to '$($this._note.title)'" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen: Title set to '$($this._note.title)'" "DEBUG"
 
         # Create TextAreaEditor widget
-        Write-PmcTuiLog "NoteEditorScreen: Creating TextAreaEditor" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen: Creating TextAreaEditor" "DEBUG"
         $this._editor = [TextAreaEditor]::new()
 
-        Write-PmcTuiLog "NoteEditorScreen: Constructor complete" "INFO"
+        # Write-PmcTuiLog "NoteEditorScreen: Constructor complete" "INFO"
     }
 
     NoteEditorScreen([string]$noteId, [object]$container) : base("NoteEditor", "Note Editor", $container) {
-        Write-PmcTuiLog "NoteEditorScreen: Constructor called for noteId=$noteId" "INFO"
+        # Write-PmcTuiLog "NoteEditorScreen: Constructor called for noteId=$noteId" "INFO"
 
         $this._noteId = $noteId
         $this._noteService = [FileNoteService]::GetInstance()
 
         # Load note metadata
-        Write-PmcTuiLog "NoteEditorScreen: Loading note metadata" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen: Loading note metadata" "DEBUG"
         $this._note = $this._noteService.GetNote($noteId)
         if (-not $this._note) {
-            Write-PmcTuiLog "NoteEditorScreen: Note not found: $noteId" "ERROR"
+            # Write-PmcTuiLog "NoteEditorScreen: Note not found: $noteId" "ERROR"
             throw "Note not found: $noteId"
         }
 
         # Update screen title
         $this.ScreenTitle = $this._note.title
-        Write-PmcTuiLog "NoteEditorScreen: Title set to '$($this._note.title)'" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen: Title set to '$($this._note.title)'" "DEBUG"
 
         # Create TextAreaEditor widget
-        Write-PmcTuiLog "NoteEditorScreen: Creating TextAreaEditor" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen: Creating TextAreaEditor" "DEBUG"
         $this._editor = [TextAreaEditor]::new()
 
-        Write-PmcTuiLog "NoteEditorScreen: Constructor complete" "INFO"
+        # Write-PmcTuiLog "NoteEditorScreen: Constructor complete" "INFO"
     }
 
     # === Lifecycle Methods ===
 
     [void] Initialize([object]$renderEngine, [object]$container) {
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Called with renderEngine and container" "INFO"
+        # Write-PmcTuiLog "NoteEditorScreen.Initialize: Called with renderEngine and container" "INFO"
 
         $this.RenderEngine = $renderEngine
         $this.Container = $container
@@ -85,7 +85,7 @@ class NoteEditorScreen : PmcScreen {
         # Get terminal size
         $this.TermWidth = $renderEngine.Width
         $this.TermHeight = $renderEngine.Height
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Terminal size $($this.TermWidth)x$($this.TermHeight)" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen.Initialize: Terminal size $($this.TermWidth)x$($this.TermHeight)" "DEBUG"
 
         # Initialize layout manager
         if (-not $this.LayoutManager) {
@@ -93,12 +93,12 @@ class NoteEditorScreen : PmcScreen {
         }
 
         # Configure footer shortcuts
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Configuring footer" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen.Initialize: Configuring footer" "DEBUG"
         $this.Footer.ClearShortcuts()
         $this.Footer.AddShortcut("Ctrl+S", "Save")
         $this.Footer.AddShortcut("Ctrl+L", "Checklist")
         $this.Footer.AddShortcut("Esc", "Back")
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Footer shortcuts configured" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen.Initialize: Footer shortcuts configured" "DEBUG"
 
         # Use layout manager for Header positioning
         $headerRect = $this.LayoutManager.GetRegion('Header', $this.TermWidth, $this.TermHeight)
@@ -107,37 +107,37 @@ class NoteEditorScreen : PmcScreen {
         $this.Header.Width = $headerRect.Width
         $this.Header.Height = $headerRect.Height
         $this.Header.SetBreadcrumb(@("Notes", $this._note.title))
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Header via LayoutManager - X=$($headerRect.X) Y=$($headerRect.Y) W=$($headerRect.Width) H=$($headerRect.Height)" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen.Initialize: Header via LayoutManager - X=$($headerRect.X) Y=$($headerRect.Y) W=$($headerRect.Width) H=$($headerRect.Height)" "DEBUG"
 
         # Use layout manager for Footer positioning
         $footerRect = $this.LayoutManager.GetRegion('Footer', $this.TermWidth, $this.TermHeight)
         $this.Footer.X = $footerRect.X
         $this.Footer.Y = $footerRect.Y
         $this.Footer.Width = $footerRect.Width
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Footer via LayoutManager - X=$($footerRect.X) Y=$($footerRect.Y) W=$($footerRect.Width)" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen.Initialize: Footer via LayoutManager - X=$($footerRect.X) Y=$($footerRect.Y) W=$($footerRect.Width)" "DEBUG"
 
         # Use layout manager for StatusBar positioning
         $statusBarRect = $this.LayoutManager.GetRegion('StatusBar', $this.TermWidth, $this.TermHeight)
         $this.StatusBar.X = $statusBarRect.X
         $this.StatusBar.Y = $statusBarRect.Y
         $this.StatusBar.Width = $statusBarRect.Width
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: StatusBar via LayoutManager - X=$($statusBarRect.X) Y=$($statusBarRect.Y) W=$($statusBarRect.Width)" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen.Initialize: StatusBar via LayoutManager - X=$($statusBarRect.X) Y=$($statusBarRect.Y) W=$($statusBarRect.Width)" "DEBUG"
 
         # Use layout manager for Content (editor) positioning
         $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
         $this._editor.SetBounds($contentRect.X, $contentRect.Y, $contentRect.Width, $contentRect.Height)
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Editor via LayoutManager - X=$($contentRect.X) Y=$($contentRect.Y) W=$($contentRect.Width) H=$($contentRect.Height)" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen.Initialize: Editor via LayoutManager - X=$($contentRect.X) Y=$($contentRect.Y) W=$($contentRect.Width) H=$($contentRect.Height)" "DEBUG"
 
         # Check preferences for statistics
         $prefs = [PreferencesService]::GetInstance()
         $showStats = $prefs.GetPreference('showEditorStatistics', $false)
         $this._editor.ShowStatistics = $showStats
 
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Complete" "INFO"
+        # Write-PmcTuiLog "NoteEditorScreen.Initialize: Complete" "INFO"
     }
 
     [void] LoadData() {
-        Write-PmcTuiLog "NoteEditorScreen.LoadData: Loading note $($this._noteId)" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen.LoadData: Loading note $($this._noteId)" "DEBUG"
 
         try {
             # Load content from file
@@ -146,11 +146,11 @@ class NoteEditorScreen : PmcScreen {
             # Set in editor
             $this._editor.SetText($content)
 
-            Write-PmcTuiLog "NoteEditorScreen.LoadData: Loaded $($content.Length) characters" "DEBUG"
+            # Write-PmcTuiLog "NoteEditorScreen.LoadData: Loaded $($content.Length) characters" "DEBUG"
 
         }
         catch {
-            Write-PmcTuiLog "NoteEditorScreen.LoadData: Error - $_" "ERROR"
+            # Write-PmcTuiLog "NoteEditorScreen.LoadData: Error - $_" "ERROR"
             $this._editor.SetText("")
         }
     }
@@ -199,14 +199,14 @@ class NoteEditorScreen : PmcScreen {
 
         # Escape - Go back with auto-save
         if ($key.Key -eq [ConsoleKey]::Escape) {
-            Write-PmcTuiLog "NoteEditorScreen: ESCAPE DETECTED - Auto-saving and exiting" "INFO"
+            # Write-PmcTuiLog "NoteEditorScreen: ESCAPE DETECTED - Auto-saving and exiting" "INFO"
             if ($this._editor.Modified) {
                 try {
                     $this.SaveNote()
-                    Write-PmcTuiLog "NoteEditorScreen: Note saved successfully" "INFO"
+                    # Write-PmcTuiLog "NoteEditorScreen: Note saved successfully" "INFO"
                 }
                 catch {
-                    Write-PmcTuiLog "NoteEditorScreen: ERROR during auto-save - $_" "ERROR"
+                    # Write-PmcTuiLog "NoteEditorScreen: ERROR during auto-save - $_" "ERROR"
                     # Continue with exit even if save fails
                 }
             }
@@ -216,14 +216,14 @@ class NoteEditorScreen : PmcScreen {
 
         # Ctrl+S - Save
         if ($ctrl -and $key.Key -eq [ConsoleKey]::S) {
-            Write-PmcTuiLog "NoteEditorScreen: CTRL+S DETECTED - Saving" "INFO"
+            # Write-PmcTuiLog "NoteEditorScreen: CTRL+S DETECTED - Saving" "INFO"
             $this.SaveNote()
             return $true
         }
 
         # Ctrl+L - Convert to Checklist
         if ($ctrl -and $key.Key -eq [ConsoleKey]::L) {
-            Write-PmcTuiLog "NoteEditorScreen: CTRL+L DETECTED - Converting to checklist" "INFO"
+            # Write-PmcTuiLog "NoteEditorScreen: CTRL+L DETECTED - Converting to checklist" "INFO"
             $this.ConvertToChecklist()
             return $true
         }
@@ -252,10 +252,10 @@ class NoteEditorScreen : PmcScreen {
     }
 
     [void] SaveNote() {
-        Write-PmcTuiLog "NoteEditorScreen.SaveNote: Saving note $($this._noteId)" "INFO"
+        # Write-PmcTuiLog "NoteEditorScreen.SaveNote: Saving note $($this._noteId)" "INFO"
         
         $content = $this._editor.GetText()
-        Write-PmcTuiLog "NoteEditorScreen.SaveNote: Content length = $($content.Length)" "DEBUG"
+        # Write-PmcTuiLog "NoteEditorScreen.SaveNote: Content length = $($content.Length)" "DEBUG"
         
         $this._noteService.SaveNoteContent($this._noteId, $content)
         $this._editor.Modified = $false
@@ -269,7 +269,7 @@ class NoteEditorScreen : PmcScreen {
             # Get note content
             $content = $this._editor.GetText()
             if ([string]::IsNullOrWhiteSpace($content)) {
-                Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Note is empty" "WARN"
+                # Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Note is empty" "WARN"
                 return
             }
 
@@ -277,7 +277,7 @@ class NoteEditorScreen : PmcScreen {
             $lines = @($content -split "`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 
             if ($lines.Count -eq 0) {
-                Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: No content lines" "WARN"
+                # Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: No content lines" "WARN"
                 return
             }
 
@@ -289,7 +289,7 @@ class NoteEditorScreen : PmcScreen {
             $title = $this._note.title + " (Checklist)"
             $instance = $checklistService.CreateBlankInstance($title, "note", $this._noteId, $lines)
 
-            Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Created checklist $($instance.id)" "INFO"
+            # Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Created checklist $($instance.id)" "INFO"
 
             # Open checklist editor
             . "$PSScriptRoot/ChecklistEditorScreen.ps1"
@@ -297,12 +297,12 @@ class NoteEditorScreen : PmcScreen {
             $checklistScreen = New-Object ChecklistEditorScreen -ArgumentList $instance.id
             $global:PmcApp.PushScreen($checklistScreen)
 
-            Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Converted to checklist with $($lines.Count) items" "INFO"
+            # Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Converted to checklist with $($lines.Count) items" "INFO"
 
         }
         catch {
-            Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: ERROR - $($_.Exception.Message)" "ERROR"
-            Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Stack trace - $($_.ScriptStackTrace)" "ERROR"
+            # Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: ERROR - $($_.Exception.Message)" "ERROR"
+            # Write-PmcTuiLog "NoteEditorScreen.ConvertToChecklist: Stack trace - $($_.ScriptStackTrace)" "ERROR"
         }
     }
 
@@ -331,7 +331,7 @@ class NoteEditorScreen : PmcScreen {
             $this.StatusBar.SetRightText($statsText)
         }
         catch {
-            Write-PmcTuiLog "NoteEditorScreen.UpdateStatusBar: Error - $_" "ERROR"
+            # Write-PmcTuiLog "NoteEditorScreen.UpdateStatusBar: Error - $_" "ERROR"
             # Set fallback status
             $this.StatusBar.SetLeftText("Ln 1, Col 1")
             $this.StatusBar.SetRightText("Ready")

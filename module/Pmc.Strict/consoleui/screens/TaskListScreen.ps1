@@ -38,7 +38,7 @@ $screen = New-Object TaskListScreen
 $screen.Initialize()
 while (-not $screen.ShouldExit) {
     $output = $screen.Render()
-    Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TaskListScreen] Rendered output"
+    # Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [TaskListScreen] Rendered output"
     $key = [Console]::ReadKey($true)
     $screen.HandleInput($key)
 }
@@ -125,12 +125,12 @@ class TaskListScreen : StandardListScreen {
 
     # Constructor with container (DI-enabled)
     TaskListScreen([object]$container) : base("TaskList", "Tasks", $container) {
-        Write-PmcTuiLog "TaskListScreen: Constructor started" "DEBUG"
+        # Write-PmcTuiLog "TaskListScreen: Constructor started" "DEBUG"
         
         # Configure based on view mode (defaulting to 'active' or 'all')
         $this._InitializeTaskListScreen('active') 
         
-        Write-PmcTuiLog "TaskListScreen: Constructor completed" "DEBUG"
+        # Write-PmcTuiLog "TaskListScreen: Constructor completed" "DEBUG"
     }
 
     # Constructor with explicit view mode
@@ -281,12 +281,12 @@ class TaskListScreen : StandardListScreen {
 
             # CRITICAL: Validate menu index bounds before access
             if ($null -eq $this.MenuBar -or $null -eq $this.MenuBar.Menus) {
-                Write-PmcTuiLog "MenuBar or Menus collection is null - cannot populate menus" "ERROR"
+                # Write-PmcTuiLog "MenuBar or Menus collection is null - cannot populate menus" "ERROR"
                 continue
             }
 
             if ($menuIndex -lt 0 -or $menuIndex -ge $this.MenuBar.Menus.Count) {
-                Write-PmcTuiLog "Menu index $menuIndex out of range (0-$($this.MenuBar.Menus.Count-1))" "ERROR"
+                # Write-PmcTuiLog "Menu index $menuIndex out of range (0-$($this.MenuBar.Menus.Count-1))" "ERROR"
                 continue
             }
 
@@ -312,7 +312,7 @@ class TaskListScreen : StandardListScreen {
                 foreach ($item in $items) {
                     # MEDIUM FIX TLS-M7: Validate $item is a hashtable before indexing
                     if ($item -isnot [hashtable]) {
-                        Write-PmcTuiLog "_PopulateMenusFromRegistry: Item is not a hashtable, type: $($item.GetType().Name)" "WARNING"
+                        # Write-PmcTuiLog "_PopulateMenusFromRegistry: Item is not a hashtable, type: $($item.GetType().Name)" "WARNING"
                         continue
                     }
                     # MenuRegistry returns hashtables, use hashtable indexing
@@ -494,14 +494,14 @@ class TaskListScreen : StandardListScreen {
 
             # Return cached data if valid
             if ($this._IsCacheValid($currentKey)) {
-                Write-PmcTuiLog "LoadData: Using cached data" "DEBUG"
+                # Write-PmcTuiLog "LoadData: Using cached data" "DEBUG"
                 $this.List.SetData($this._cachedFilteredTasks)
                 return
             }
 
             # Load all tasks
             $allTasks = $this.Store.GetAllTasks()
-            Write-PmcTuiLog "LoadData: Got $($allTasks.Count) tasks from Store" "DEBUG"
+            # Write-PmcTuiLog "LoadData: Got $($allTasks.Count) tasks from Store" "DEBUG"
 
             if ($null -eq $allTasks -or $allTasks.Count -eq 0) {
                 $this.List.SetData(@())
@@ -531,7 +531,7 @@ class TaskListScreen : StandardListScreen {
             $this._cachedFilteredTasks = $organizedTasks
             $this._cacheKey = $currentKey
 
-            Write-PmcTuiLog "TaskListScreen.LoadData: Setting $($organizedTasks.Count) tasks" "DEBUG"
+            # Write-PmcTuiLog "TaskListScreen.LoadData: Setting $($organizedTasks.Count) tasks" "DEBUG"
 
             # Set data and invalidate cache (do NOT request clear - let rendering system handle it)
             $this.List.SetData($organizedTasks)
@@ -638,7 +638,7 @@ class TaskListScreen : StandardListScreen {
                     }
                     catch {
                         $taskId = $(if ($task.id) { $task.id } else { "unknown" })
-                        Write-PmcTuiLog "Format title ERROR for task ${taskId}: $($_.Exception.Message)" "ERROR"
+                        # Write-PmcTuiLog "Format title ERROR for task ${taskId}: $($_.Exception.Message)" "ERROR"
                         return "(error: ${taskId})"
                     }
                 }.GetNewClosure()
@@ -762,7 +762,7 @@ class TaskListScreen : StandardListScreen {
     [void] OnItemCreated([hashtable]$values) {
         # MEDIUM FIX TLS-M3: Add null check on $values parameter
         if ($null -eq $values) {
-            Write-PmcTuiLog "OnItemCreated called with null values" "ERROR"
+            # Write-PmcTuiLog "OnItemCreated called with null values" "ERROR"
             $this.SetStatusMessage("Cannot create task: no data provided", "error")
             return
         }
@@ -824,7 +824,7 @@ class TaskListScreen : StandardListScreen {
                     $taskData.due = $dueDate
                 }
                 catch {
-                    Write-PmcTuiLog "Failed to convert due date '$($values.due)', omitting" "WARNING"
+                    # Write-PmcTuiLog "Failed to convert due date '$($values.due)', omitting" "WARNING"
                 }
             }
 
@@ -839,7 +839,7 @@ class TaskListScreen : StandardListScreen {
                         $taskData.parent_id = $parentId
                     }
                     else {
-                        Write-PmcTuiLog "OnItemCreated: Invalid parent_id $parentId (not found), omitting" "WARNING"
+                        # Write-PmcTuiLog "OnItemCreated: Invalid parent_id $parentId (not found), omitting" "WARNING"
                         $this.SetStatusMessage("Warning: Parent task not found, creating without parent", "warning")
                     }
                 }
@@ -859,7 +859,7 @@ class TaskListScreen : StandardListScreen {
         catch {
             # LOW FIX TLS-L1: Add context to exception messages
             $taskText = $(if ($values.ContainsKey('text')) { $values.text } else { "(no title)" })
-            Write-PmcTuiLog "OnItemCreated exception while creating task '$taskText': $_" "ERROR"
+            # Write-PmcTuiLog "OnItemCreated exception while creating task '$taskText': $_" "ERROR"
             $this.SetStatusMessage("Error creating task '$taskText': $($_.Exception.Message)", "error")
         }
     }
@@ -875,7 +875,7 @@ class TaskListScreen : StandardListScreen {
         $isAddMode = ($null -eq $item)
 
         if ($isAddMode) {
-            Write-PmcTuiLog "OnItemUpdated: Processing ADD (new task) mode" "INFO"
+            # Write-PmcTuiLog "OnItemUpdated: Processing ADD (new task) mode" "INFO"
             # Create new task instead of updating existing
             $this.OnItemCreated($values)
             return
@@ -883,12 +883,12 @@ class TaskListScreen : StandardListScreen {
 
         # MEDIUM FIX TLS-M4: Add null checks on parameters
         if ($null -eq $item) {
-            Write-PmcTuiLog "OnItemUpdated called with null item in EDIT mode" "ERROR"
+            # Write-PmcTuiLog "OnItemUpdated called with null item in EDIT mode" "ERROR"
             $this.SetStatusMessage("Cannot update task: no item selected", "error")
             return
         }
         if ($null -eq $values) {
-            Write-PmcTuiLog "OnItemUpdated called with null values" "ERROR"
+            # Write-PmcTuiLog "OnItemUpdated called with null values" "ERROR"
             $this.SetStatusMessage("Cannot update task: no data provided", "error")
             return
         }
@@ -977,7 +977,7 @@ class TaskListScreen : StandardListScreen {
                 }
                 catch {
                     $this.SetStatusMessage("Invalid due date format", "warning")
-                    Write-PmcTuiLog "Failed to convert due date '$($values.due)', omitting" "WARNING"
+                    # Write-PmcTuiLog "Failed to convert due date '$($values.due)', omitting" "WARNING"
                     # Don't include due in changes - keep existing value
                 }
             }
@@ -994,14 +994,14 @@ class TaskListScreen : StandardListScreen {
                 $parentTask = $this.Store.GetTask($newParentId)
                 if (-not $parentTask) {
                     $this.SetStatusMessage("Cannot set parent: parent task not found", "error")
-                    Write-PmcTuiLog "OnItemUpdated: Invalid parent_id $newParentId, task not found" "ERROR"
+                    # Write-PmcTuiLog "OnItemUpdated: Invalid parent_id $newParentId, task not found" "ERROR"
                     return
                 }
 
                 # Check for circular dependency
                 if ($this._IsCircularDependency($newParentId, $taskId)) {
                     $this.SetStatusMessage("Cannot set parent: would create circular dependency", "error")
-                    Write-PmcTuiLog "OnItemUpdated: Circular dependency detected for task $taskId with parent $newParentId" "ERROR"
+                    # Write-PmcTuiLog "OnItemUpdated: Circular dependency detected for task $taskId with parent $newParentId" "ERROR"
                     return
                 }
 
@@ -1028,7 +1028,7 @@ class TaskListScreen : StandardListScreen {
                     # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [OnItemUpdated] LoadData() completed"
                 }
                 catch {
-                    Write-PmcTuiLog "OnItemUpdated: LoadData failed: $_" "WARNING"
+                    # Write-PmcTuiLog "OnItemUpdated: LoadData failed: $_" "WARNING"
                     # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [OnItemUpdated] LoadData() FAILED: $_"
                     $this.SetStatusMessage("Task updated but display refresh failed", "warning")
                 }
@@ -1041,7 +1041,7 @@ class TaskListScreen : StandardListScreen {
                     $this.LoadData()
                 }
                 catch {
-                    Write-PmcTuiLog "OnItemUpdated: LoadData after failure failed: $_" "WARNING"
+                    # Write-PmcTuiLog "OnItemUpdated: LoadData after failure failed: $_" "WARNING"
                 }
             }
         }
@@ -1049,7 +1049,7 @@ class TaskListScreen : StandardListScreen {
             # LOW FIX TLS-L1: Add context to exception messages
             $taskId = $(if ($null -ne $item -and (Get-SafeProperty $item 'id')) { $item.id } else { "(unknown)" })
             $taskText = $(if ($values.ContainsKey('text')) { $values.text } else { if ($null -ne $item) { (Get-SafeProperty $item 'text') } else { "(no title)" } })
-            Write-PmcTuiLog "OnItemUpdated exception while updating task '$taskText' (ID: $taskId): $_" "ERROR"
+            # Write-PmcTuiLog "OnItemUpdated exception while updating task '$taskText' (ID: $taskId): $_" "ERROR"
             $this.SetStatusMessage("Error updating task '$taskText': $($_.Exception.Message)", "error")
         }
     }
@@ -1058,13 +1058,13 @@ class TaskListScreen : StandardListScreen {
     [void] OnItemDeleted([object]$item) {
         # CRITICAL FIX TLS-C2: Add null check on $item
         if ($null -eq $item) {
-            Write-PmcTuiLog "OnItemDeleted called with null item" "ERROR"
+            # Write-PmcTuiLog "OnItemDeleted called with null item" "ERROR"
             $this.SetStatusMessage("Cannot delete: no item selected", "error")
             return
         }
         $taskId = Get-SafeProperty $item 'id'
         if ($null -eq $taskId) {
-            Write-PmcTuiLog "OnItemDeleted called with item missing id property" "ERROR"
+            # Write-PmcTuiLog "OnItemDeleted called with item missing id property" "ERROR"
             $this.SetStatusMessage("Cannot delete: task has no ID", "error")
             return
         }
@@ -1075,8 +1075,8 @@ class TaskListScreen : StandardListScreen {
             $taskText = Get-SafeProperty $item 'text'
 
             # Log detailed guidance for resolving the blocker
-            Write-PmcTuiLog "OnItemDeleted: Cannot delete parent task '$taskText' (ID: $taskId) with $childCount subtasks" "WARNING"
-            Write-PmcTuiLog "OnItemDeleted: User must either: (1) Delete each subtask individually, or (2) Reassign subtasks to different parent" "INFO"
+            # Write-PmcTuiLog "OnItemDeleted: Cannot delete parent task '$taskText' (ID: $taskId) with $childCount subtasks" "WARNING"
+            # Write-PmcTuiLog "OnItemDeleted: User must either: (1) Delete each subtask individually, or (2) Reassign subtasks to different parent" "INFO"
 
             # Show actionable error message to user
             $this.SetStatusMessage("Cannot delete: task has $childCount subtask(s). Delete or reassign each subtask first, then retry.", "error")
@@ -1104,7 +1104,7 @@ class TaskListScreen : StandardListScreen {
             # LOW FIX TLS-L1: Add context to exception messages
             $taskId = $(if ($null -ne $item) { (Get-SafeProperty $item 'id') } else { "(unknown)" })
             $taskText = $(if ($null -ne $item) { (Get-SafeProperty $item 'text') } else { "(no title)" })
-            Write-PmcTuiLog "OnItemDeleted exception while deleting task '$taskText' (ID: $taskId): $_" "ERROR"
+            # Write-PmcTuiLog "OnItemDeleted exception while deleting task '$taskText' (ID: $taskId): $_" "ERROR"
             $this.SetStatusMessage("Error deleting task '$taskText': $($_.Exception.Message)", "error")
         }
     }
@@ -1113,10 +1113,10 @@ class TaskListScreen : StandardListScreen {
     [void] OnInlineEditConfirmed([hashtable]$values) {
         # This method is called by StandardListScreen when inline editing is confirmed
         # It handles BOTH add and edit modes, since EditItem only overrides the callback for edit mode
-        Write-PmcTuiLog "OnInlineEditConfirmed called - EditorMode=$($this.EditorMode) values=$($values.Keys -join ',')" "DEBUG"
+        # Write-PmcTuiLog "OnInlineEditConfirmed called - EditorMode=$($this.EditorMode) values=$($values.Keys -join ',')" "DEBUG"
 
         if ($null -eq $values) {
-            Write-PmcTuiLog "OnInlineEditConfirmed called with null values" "WARNING"
+            # Write-PmcTuiLog "OnInlineEditConfirmed called with null values" "WARNING"
             return
         }
 
@@ -1125,17 +1125,17 @@ class TaskListScreen : StandardListScreen {
 
         if ($isAddMode) {
             # ADDING NEW TASK
-            Write-PmcTuiLog "OnInlineEditConfirmed: Processing ADD operation" "INFO"
+            # Write-PmcTuiLog "OnInlineEditConfirmed: Processing ADD operation" "INFO"
             $this.OnItemUpdated($null, $values)
         }
         else {
             # EDITING EXISTING TASK
-            Write-PmcTuiLog "OnInlineEditConfirmed: Processing EDIT operation for item=$($this.CurrentEditItem.id)" "INFO"
+            # Write-PmcTuiLog "OnInlineEditConfirmed: Processing EDIT operation for item=$($this.CurrentEditItem.id)" "INFO"
             if ($this.CurrentEditItem) {
                 $this.OnItemUpdated($this.CurrentEditItem, $values)
             }
             else {
-                Write-PmcTuiLog "OnInlineEditConfirmed: EDIT mode but no CurrentEditItem!" "ERROR"
+                # Write-PmcTuiLog "OnInlineEditConfirmed: EDIT mode but no CurrentEditItem!" "ERROR"
             }
         }
     }
@@ -1145,7 +1145,7 @@ class TaskListScreen : StandardListScreen {
         # This method is called by StandardListScreen when inline editing is cancelled
         # TaskListScreen overrides the InlineEditor callbacks, so this is rarely called
         # But we provide it for completeness and to prevent method-not-found errors
-        Write-PmcTuiLog "OnInlineEditCancelled called" "DEBUG"
+        # Write-PmcTuiLog "OnInlineEditCancelled called" "DEBUG"
         # No-op: TaskListScreen handles inline editor callbacks directly
     }
 
@@ -1175,13 +1175,13 @@ class TaskListScreen : StandardListScreen {
         }
         else {
             $this.SetStatusMessage("Failed to update task: $($this.Store.LastError)", "error")
-            Write-PmcTuiLog "ToggleTaskCompletion failed: $($this.Store.LastError)" "ERROR"
+            # Write-PmcTuiLog "ToggleTaskCompletion failed: $($this.Store.LastError)" "ERROR"
             # BUG-4 FIX: Reload data on failure to restore consistent state
             try {
                 $this.LoadData()
             }
             catch {
-                Write-PmcTuiLog "ToggleTaskCompletion: LoadData after failure failed: $_" "WARNING"
+                # Write-PmcTuiLog "ToggleTaskCompletion: LoadData after failure failed: $_" "WARNING"
             }
         }
     }
@@ -1189,10 +1189,10 @@ class TaskListScreen : StandardListScreen {
     # Custom action: Mark task complete
     [void] CompleteTask([object]$task) {
         if ($null -eq $task) {
-            Write-PmcTuiLog "CompleteTask called with null task" "WARNING"
+            # Write-PmcTuiLog "CompleteTask called with null task" "WARNING"
             return
         }
-        Write-PmcTuiLog "CompleteTask called for task: $($task.id)" "INFO"
+        # Write-PmcTuiLog "CompleteTask called for task: $($task.id)" "INFO"
 
         $taskId = Get-SafeProperty $task 'id'
         $taskText = Get-SafeProperty $task 'text'
@@ -1208,13 +1208,13 @@ class TaskListScreen : StandardListScreen {
         }
         else {
             $this.SetStatusMessage("Failed to complete task: $($this.Store.LastError)", "error")
-            Write-PmcTuiLog "CompleteTask failed: $($this.Store.LastError)" "ERROR"
+            # Write-PmcTuiLog "CompleteTask failed: $($this.Store.LastError)" "ERROR"
             # BUG-4 FIX: Reload data on failure to restore consistent state
             try {
                 $this.LoadData()
             }
             catch {
-                Write-PmcTuiLog "CompleteTask: LoadData after failure failed: $_" "WARNING"
+                # Write-PmcTuiLog "CompleteTask: LoadData after failure failed: $_" "WARNING"
             }
         }
     }
@@ -1250,7 +1250,7 @@ class TaskListScreen : StandardListScreen {
         }
         else {
             $this.SetStatusMessage("Failed to clone task: $($this.Store.LastError)", "error")
-            Write-PmcTuiLog "CloneTask failed: $($this.Store.LastError)" "ERROR"
+            # Write-PmcTuiLog "CloneTask failed: $($this.Store.LastError)" "ERROR"
         }
     }
 
@@ -1364,7 +1364,7 @@ class TaskListScreen : StandardListScreen {
             }
             else {
                 $failCount++
-                Write-PmcTuiLog "BulkCompleteSelected failed for task ${taskId}: $($this.Store.LastError)" "ERROR"
+                # Write-PmcTuiLog "BulkCompleteSelected failed for task ${taskId}: $($this.Store.LastError)" "ERROR"
             }
         }
 
@@ -1381,7 +1381,7 @@ class TaskListScreen : StandardListScreen {
             $this.LoadData()
         }
         catch {
-            Write-PmcTuiLog "BulkCompleteSelected: LoadData failed: $_" "WARNING"
+            # Write-PmcTuiLog "BulkCompleteSelected: LoadData failed: $_" "WARNING"
         }
     }
 
@@ -1401,7 +1401,7 @@ class TaskListScreen : StandardListScreen {
             # BUG-15 FIX: Check for subtasks before deletion
             if ($this._childrenIndex.ContainsKey($taskId)) {
                 $childCount = $this._childrenIndex[$taskId].Count
-                Write-PmcTuiLog "BulkDeleteSelected: Skipping task $taskId with $childCount subtasks" "WARNING"
+                # Write-PmcTuiLog "BulkDeleteSelected: Skipping task $taskId with $childCount subtasks" "WARNING"
                 $skippedCount++
                 continue
             }
@@ -1411,7 +1411,7 @@ class TaskListScreen : StandardListScreen {
             }
             else {
                 $failCount++
-                Write-PmcTuiLog "BulkDeleteSelected failed for task ${taskId}: $($this.Store.LastError)" "ERROR"
+                # Write-PmcTuiLog "BulkDeleteSelected failed for task ${taskId}: $($this.Store.LastError)" "ERROR"
             }
         }
 
@@ -1431,7 +1431,7 @@ class TaskListScreen : StandardListScreen {
     [void] SetViewMode([string]$mode) {
         $validModes = @('all', 'active', 'completed', 'overdue', 'today', 'tomorrow', 'week', 'nextactions', 'noduedate', 'month', 'agenda', 'upcoming')
         if ($mode -notin $validModes) {
-            Write-PmcTuiLog "Invalid view mode '$mode', defaulting to 'all'" "WARNING"
+            # Write-PmcTuiLog "Invalid view mode '$mode', defaulting to 'all'" "WARNING"
             $mode = 'all'
         }
 
@@ -1472,7 +1472,7 @@ class TaskListScreen : StandardListScreen {
     }
 
     # Override: Apply 70/30 split layout for List and DetailPane
-    [void] ApplyContentLayout([object]$layoutManager, [int]$termWidth, [int]$termHeight) {
+    [void] ApplyContentLayout([PmcLayoutManager]$layoutManager, [int]$termWidth, [int]$termHeight) {
         $rect = $layoutManager.GetRegion('Content', $termWidth, $termHeight)
 
         if ($this._showDetailPane -and $this.DetailPane) {
@@ -1721,13 +1721,13 @@ class TaskListScreen : StandardListScreen {
                 }.GetNewClosure() 
             },
             @{ Key = 's'; Label = 'Subtask'; Callback = {
-                    Write-PmcTuiLog "Action 's' (Subtask) triggered" "INFO"
+                    # Write-PmcTuiLog "Action 's' (Subtask) triggered" "INFO"
                     $selected = $self.List.GetSelectedItem()
                     if ($selected) {
                         $self.AddSubtask($selected)
                     }
                     else {
-                        Write-PmcTuiLog "Action 's': No item selected" "WARNING"
+                        # Write-PmcTuiLog "Action 's': No item selected" "WARNING"
                         $self.SetStatusMessage("Select a task to add a subtask", "warning")
                     }
                 }.GetNewClosure() 
@@ -1765,7 +1765,7 @@ class TaskListScreen : StandardListScreen {
 
     # Override EditItem to use InlineEditor horizontally at row position
     [void] EditItem($item) {
-        Write-PmcTuiLog "TaskListScreen.EditItem called - item.id=$(if ($item) { $item.id } else { 'NULL' })" "INFO"
+        # Write-PmcTuiLog "TaskListScreen.EditItem called - item.id=$(if ($item) { $item.id } else { 'NULL' })" "INFO"
         if ($null -eq $item) { return }
 
         # Get row position
@@ -1821,17 +1821,17 @@ class TaskListScreen : StandardListScreen {
         # Set up save callback
         $self = $this
         $taskId = $item.id
-        Write-PmcTuiLog "TaskListScreen.EditItem: Setting OnConfirmed callback for taskId=$taskId" "INFO"
+        # Write-PmcTuiLog "TaskListScreen.EditItem: Setting OnConfirmed callback for taskId=$taskId" "INFO"
         $this.InlineEditor.OnConfirmed = {
             param($values)
-            Write-PmcTuiLog "InlineEditor.OnConfirmed FIRED - taskId=$taskId values=$($values.Keys -join ',')" "INFO"
+            # Write-PmcTuiLog "InlineEditor.OnConfirmed FIRED - taskId=$taskId values=$($values.Keys -join ',')" "INFO"
             # CRITICAL FIX: Get fresh item from store, then call OnItemUpdated
             $freshItem = $self.Store.GetTask($taskId)
             if ($freshItem) {
                 $self.OnItemUpdated($freshItem, $values)
             }
             else {
-                Write-PmcTuiLog "InlineEditor.OnConfirmed - task $taskId not found!" "ERROR"
+                # Write-PmcTuiLog "InlineEditor.OnConfirmed - task $taskId not found!" "ERROR"
             }
             $self.ShowInlineEditor = $false
             $self.EditorMode = ""

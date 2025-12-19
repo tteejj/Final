@@ -291,14 +291,14 @@ class PmcWidget : Component {
         $gradientInfo = $themeEngine.GetGradientInfo($fgProp)
         
         # DEBUG: Log to file
-        Add-Content -Path "/tmp/pmc-gradient-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] WriteThemedAt: fgProp=$fgProp gradientInfo=$(if($gradientInfo){'GRADIENT'}else{'null'})"
+        # Add-Content -Path "/tmp/pmc-gradient-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] WriteThemedAt: fgProp=$fgProp gradientInfo=$(if($gradientInfo){'GRADIENT'}else{'null'})"
         
         # Get background color (always solid for now)
         $bg = $themeEngine.GetThemeColorInt($bgProp)
         
         if ($gradientInfo) {
             # Use gradient overload
-            Add-Content -Path "/tmp/pmc-gradient-debug.log" -Value "  -> GRADIENT WriteAt: Start=$($gradientInfo.Start) End=$($gradientInfo.End)"
+            # Add-Content -Path "/tmp/pmc-gradient-debug.log" -Value "  -> GRADIENT WriteAt: Start=$($gradientInfo.Start) End=$($gradientInfo.End)"
             $renderEngine.WriteAt($x, $y, $text, $gradientInfo.Start, $gradientInfo.End, $bg)
         }
         else {
@@ -639,7 +639,7 @@ class PmcWidget : Component {
         # Use visible length instead of raw .Length to account for ANSI codes
         $visibleLen = $this.GetVisibleLength($text)
         if ($text.Length -lt 50) {
-            Write-PmcTuiLog "PadText: text='$text' rawLen=$($text.Length) visibleLen=$visibleLen width=$width align=$align"
+            # Write-PmcTuiLog "PadText: text='$text' rawLen=$($text.Length) visibleLen=$visibleLen width=$width align=$align"
         }
 
         if ($visibleLen -ge $width) {

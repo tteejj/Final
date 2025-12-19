@@ -247,8 +247,8 @@ class PmcScreen {
             $this.ApplyContentLayout($layoutManager, $termWidth, $termHeight)
         }
         catch {
-            Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcScreen] FATAL ERROR PmcScreen.ApplyLayout: $_"
-            Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcScreen] Stack: $($_.ScriptStackTrace)"
+            # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcScreen] FATAL ERROR PmcScreen.ApplyLayout: $_"
+            # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcScreen] Stack: $($_.ScriptStackTrace)"
             throw
         }
     }
@@ -393,11 +393,11 @@ class PmcScreen {
             $widgetName = $(if ($widget.Name) { $widget.Name } else { $widget.GetType().Name })
             try {
                 if ($widget.PSObject.Methods['RenderToEngine']) {
-                    Write-PmcTuiLog "PmcScreen: Calling RenderToEngine on $widgetName" "DEBUG"
+                    # Write-PmcTuiLog "PmcScreen: Calling RenderToEngine on $widgetName" "DEBUG"
                     $widget.RenderToEngine($engine)
                 }
                 else {
-                    Write-PmcTuiLog "PmcScreen: Widget $widgetName missing RenderToEngine method" "WARN"
+                    # Write-PmcTuiLog "PmcScreen: Widget $widgetName missing RenderToEngine method" "WARN"
                 }
             }
             catch {
@@ -579,7 +579,7 @@ class PmcScreen {
     Widget to add
     #>
     [void] AddContentWidget([PmcWidget]$widget) {
-        Write-PmcTuiLog "PmcScreen.AddContentWidget: Adding $($widget.GetType().Name) (Total: $($this.ContentWidgets.Count + 1))" "DEBUG"
+        # Write-PmcTuiLog "PmcScreen.AddContentWidget: Adding $($widget.GetType().Name) (Total: $($this.ContentWidgets.Count + 1))" "DEBUG"
         $this.ContentWidgets.Add($widget)
 
         # Initialize if render engine available

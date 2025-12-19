@@ -81,7 +81,7 @@ function ConvertTo-SafeDate {
         try {
             return [DateTime]$values.date
         } catch {
-            Write-PmcTuiLog "Failed to parse date '$($values.date)', using today" "WARNING"
+            # Write-PmcTuiLog "Failed to parse date '$($values.date)', using today" "WARNING"
         }
     }
     return [DateTime]::Today

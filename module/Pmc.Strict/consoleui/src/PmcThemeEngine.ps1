@@ -60,7 +60,7 @@ class PmcThemeEngine {
         # DEBUG: Log to file to trace when Configure is called
         $rowProp = $properties['Foreground.Row']
         $rowType = if ($rowProp) { $rowProp.Type } else { 'null' }
-        Add-Content -Path "/tmp/pmc-configure-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] Configure called: propCount=$($properties.Count) Foreground.Row.Type=$rowType"
+        # Add-Content -Path "/tmp/pmc-configure-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] Configure called: propCount=$($properties.Count) Foreground.Row.Type=$rowType"
     }
 
     # Public Primitive: Get ANSI from Hex (for Manager)
