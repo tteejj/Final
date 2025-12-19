@@ -155,13 +155,13 @@ class PmcFooter : PmcWidget {
         $keyFg = $this.GetThemedInt('Foreground.Title')
         $textFg = $this.GetThemedInt('Foreground.Muted')
         $sepFg = $this.GetThemedInt('Border.Widget')
-        $defaultBg = -1
+        $footerBg = $this.GetThemedBgInt('Background.Footer', 1, 0)
 
         # Clear line first
         # We use Fill on the region
         $bounds = $engine.GetRegionBounds("$($this.RegionID)_Main")
         if ($bounds) {
-            $engine.Fill($bounds.X, $bounds.Y, $bounds.Width, 1, ' ', $textFg, $defaultBg)
+            $engine.Fill($bounds.X, $bounds.Y, $bounds.Width, 1, ' ', $textFg, $footerBg)
         }
 
         $currentX = $this.X
@@ -172,20 +172,20 @@ class PmcFooter : PmcWidget {
             $desc = $shortcut.Description
 
             # Write Key
-            $engine.WriteAt($currentX, $this.Y, $key, $keyFg, $defaultBg)
+            $engine.WriteAt($currentX, $this.Y, $key, $keyFg, $footerBg)
             $currentX += $key.Length
 
             # Write Separator/Desc
-            $engine.WriteAt($currentX, $this.Y, ": ", $textFg, $defaultBg)
+            $engine.WriteAt($currentX, $this.Y, ": ", $textFg, $footerBg)
             $currentX += 2
 
             # Write Desc
-            $engine.WriteAt($currentX, $this.Y, $desc, $textFg, $defaultBg)
+            $engine.WriteAt($currentX, $this.Y, $desc, $textFg, $footerBg)
             $currentX += $desc.Length
 
             # Write Pipe Separator if not last
             if ($i -lt ($this.Shortcuts.Count - 1)) {
-                $engine.WriteAt($currentX, $this.Y, " | ", $sepFg, $defaultBg)
+                $engine.WriteAt($currentX, $this.Y, " | ", $sepFg, $footerBg)
                 $currentX += 3
             }
         }

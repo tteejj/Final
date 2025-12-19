@@ -47,6 +47,7 @@ class TextAreaEditor : PmcWidget {
     [int]$TabWidth = 4
     [bool]$Modified = $false
     [bool]$EnableUndo = $false  # PERFORMANCE: Undo disabled by default for responsiveness
+    [bool]$ShowStatistics = $false
 
     # File info
     [string]$FilePath = ""
@@ -102,6 +103,27 @@ class TextAreaEditor : PmcWidget {
     }
 
     [object] GetStatistics() {
+        # Performance optimization: Don't calculate if disabled
+        if (-not $this.ShowStatistics) {
+            return [PSCustomObject]@{
+                Lines = 0
+                Words = 0
+                Chars = 0
+            }
+        }
+
+        # Use optimized C# implementation from GapBuffer if available
+        # This avoids allocating the full string and regex matching
+        if ($this._gapBuffer.PSObject.Methods['GetContentStatistics']) {
+            $stats = $this._gapBuffer.GetContentStatistics()
+            return [PSCustomObject]@{
+                Lines = $stats.Lines
+                Words = $stats.Words
+                Chars = $stats.Chars
+            }
+        }
+
+        # Fallback (slow path)
         $text = $this.GetText()
         $lines = $this.GetLineCount()
         $words = @($text -split '\s+' | Where-Object { $_ }).Count

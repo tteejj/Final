@@ -13,11 +13,11 @@ using namespace System.Collections.Generic
 Set-StrictMode -Version Latest
 
 . "$PSScriptRoot/../base/StandardListScreen.ps1"
-. "$PSScriptRoot/../services/NoteService.ps1"
+. "$PSScriptRoot/../services/FileNoteService.ps1"
 
 class NotesMenuScreen : StandardListScreen {
     # === Configuration ===
-    hidden [NoteService]$_noteService = $null
+    hidden [FileNoteService]$_noteService = $null
     hidden [string]$_ownerType = "global"
     hidden [string]$_ownerId = $null
     hidden [string]$_ownerName = ""
@@ -49,7 +49,7 @@ class NotesMenuScreen : StandardListScreen {
         $this._ownerName = $ownerName
 
         # Get note service instance
-        $this._noteService = [NoteService]::GetInstance()
+        $this._noteService = [FileNoteService]::GetInstance()
 
         # Subscribe to note changes
         # Note: Callback may be invoked when screen is not active, so check first

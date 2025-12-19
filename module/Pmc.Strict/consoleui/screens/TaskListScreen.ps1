@@ -93,6 +93,12 @@ class TaskListScreen : StandardListScreen {
     # BUG-2 FIX: Loading state flag to prevent reentrant LoadData() calls
     hidden [bool]$_isLoading = $false
 
+    # Detail pane for 70/30 split layout
+    # DetailPane shows task details on the right (30% width)
+    # Default: visible (70/30 split), toggle with 'o' key for full-width list
+    [PmcPanel]$DetailPane = $null
+    hidden [bool]$_showDetailPane = $true  # true = detail pane visible by default
+
     # Telemetry helper for tracking user actions
     hidden [void] _EmitTelemetry([string]$eventName, [hashtable]$data) {
         # TODO: Implement telemetry when metrics system is available
@@ -221,6 +227,11 @@ class TaskListScreen : StandardListScreen {
             # Write-PmcTuiLog "No match, returning FALSE" "DEBUG"
             return $false
         }.GetNewClosure()
+
+        # Initialize DetailPane for 70/30 split layout
+        $this.DetailPane = [PmcPanel]::new("Task Details")
+        $this.DetailPane.SetBorderStyle('rounded')
+        $this.AddContentWidget($this.DetailPane)
     }
 
     # Setup menu items using MenuRegistry
@@ -524,6 +535,15 @@ class TaskListScreen : StandardListScreen {
 
             # Set data and invalidate cache (do NOT request clear - let rendering system handle it)
             $this.List.SetData($organizedTasks)
+
+            # Update detail pane with currently selected item (if any) after data load
+            # This ensures detail pane shows content on initial screen load
+            if ($this.DetailPane -and $this._showDetailPane -and $organizedTasks.Count -gt 0) {
+                $selectedItem = $this.List.GetSelectedItem()
+                if ($selectedItem) {
+                    $this.OnItemSelected($selectedItem)
+                }
+            }
         }
         finally {
             $this._isLoading = $false
@@ -1451,6 +1471,183 @@ class TaskListScreen : StandardListScreen {
         $this.SetStatusMessage("Sorting by $column ($direction)", "info")
     }
 
+    # Override: Apply 70/30 split layout for List and DetailPane
+    [void] ApplyContentLayout([object]$layoutManager, [int]$termWidth, [int]$termHeight) {
+        $rect = $layoutManager.GetRegion('Content', $termWidth, $termHeight)
+
+        if ($this._showDetailPane -and $this.DetailPane) {
+            # 70/30 split
+            $listWidth = [Math]::Floor($termWidth * 0.70)
+            $detailWidth = $termWidth - $listWidth - 1  # -1 for spacing
+
+            $this.List.SetPosition($rect.X, $rect.Y)
+            $this.List.SetSize($listWidth, $rect.Height)
+
+            $this.DetailPane.SetPosition($listWidth + 1, $rect.Y)
+            $this.DetailPane.SetSize($detailWidth, $rect.Height)
+            $this.DetailPane.Visible = $true
+        } else {
+            # Full width list
+            $this.List.SetPosition($rect.X, $rect.Y)
+            $this.List.SetSize($rect.Width, $rect.Height)
+
+            if ($this.DetailPane) {
+                $this.DetailPane.Visible = $false
+            }
+        }
+
+        # Invalidate cache to force column recalculation
+        $this.List.InvalidateCache()
+    }
+
+    # Override: Update detail pane when selection changes
+    [void] OnItemSelected($item) {
+        # Call base implementation
+        ([StandardListScreen]$this).OnItemSelected($item)
+
+        # Update detail pane
+        if ($this.DetailPane -and $this._showDetailPane) {
+            if ($null -ne $item) {
+                $details = $this._FormatTaskDetails($item)
+                $this.DetailPane.SetContent($details, 'left')
+            } else {
+                $this.DetailPane.SetContent("", 'left')
+            }
+        }
+    }
+
+    # Toggle detail pane visibility
+    hidden [void] _ToggleDetailPane() {
+        $this._showDetailPane = -not $this._showDetailPane
+
+        # Force layout recalculation
+        $this.Resize($this.TermWidth, $this.TermHeight)
+
+        if ($this._showDetailPane) {
+            $this.SetStatusMessage("Detail pane visible", "info")
+            # Update with current selection
+            $selected = $this.List.GetSelectedItem()
+            if ($selected) {
+                $this.OnItemSelected($selected)
+            }
+        } else {
+            $this.SetStatusMessage("Detail pane hidden", "info")
+        }
+    }
+
+    # Format task details for display in detail pane
+    hidden [string] _FormatTaskDetails([object]$task) {
+        $sb = [System.Text.StringBuilder]::new()
+
+        $title = Get-SafeProperty $task 'text'
+        $project = Get-SafeProperty $task 'project'
+        $tags = Get-SafeProperty $task 'tags'
+        $due = Get-SafeProperty $task 'due'
+        $details = Get-SafeProperty $task 'details'
+        $priority = Get-SafeProperty $task 'priority'
+        $completed = Get-SafeProperty $task 'completed'
+
+        [void]$sb.AppendLine("Task: $title")
+        [void]$sb.AppendLine("")
+
+        if ($completed) {
+            [void]$sb.AppendLine("Status: COMPLETED")
+        } else {
+            [void]$sb.AppendLine("Status: Active")
+        }
+
+        if ($priority) {
+            [void]$sb.AppendLine("Priority: $priority")
+        }
+
+        if ($project) {
+            [void]$sb.AppendLine("Project: $project")
+        }
+
+        if ($tags -and $tags -is [array] -and $tags.Count -gt 0) {
+            [void]$sb.AppendLine("Tags: $($tags -join ', ')")
+        }
+
+        if ($due) {
+            try {
+                $dueDate = [DateTime]$due
+                [void]$sb.AppendLine("Due: $($dueDate.ToString('yyyy-MM-dd (ddd)'))")
+            } catch {
+                [void]$sb.AppendLine("Due: $due")
+            }
+        }
+
+        [void]$sb.AppendLine("")
+
+        if ($details) {
+            # Word wrap based on DetailPane width (accounting for padding and borders)
+            $wrapWidth = $(if ($this.DetailPane.Width -gt 6) { $this.DetailPane.Width - 6 } else { 30 })
+            $wrapped = $this._WrapText($details, $wrapWidth)
+            [void]$sb.AppendLine("Details:")
+            [void]$sb.AppendLine($wrapped)
+        }
+
+        return $sb.ToString()
+    }
+
+    # Word wrap text to fit within specified width
+    hidden [string] _WrapText([string]$text, [int]$width) {
+        if ([string]::IsNullOrEmpty($text)) { return "" }
+        if ($width -le 0) { return $text }
+
+        $result = [System.Collections.Generic.List[string]]::new()
+
+        # Split by existing newlines first
+        $paragraphs = $text -split "`r?`n"
+
+        foreach ($para in $paragraphs) {
+            if ([string]::IsNullOrWhiteSpace($para)) {
+                $result.Add("")
+                continue
+            }
+
+            # Wrap this paragraph
+            $words = $para -split '\s+'
+            $currentLine = ""
+
+            foreach ($word in $words) {
+                # Handle words longer than width
+                if ($word.Length -gt $width) {
+                    if ($currentLine) {
+                        $result.Add($currentLine)
+                        $currentLine = ""
+                    }
+                    # Split long word across lines
+                    for ($i = 0; $i -lt $word.Length; $i += $width) {
+                        $chunk = $word.Substring($i, [Math]::Min($width, $word.Length - $i))
+                        $result.Add($chunk)
+                    }
+                    continue
+                }
+
+                # Try adding word to current line
+                $testLine = $(if ($currentLine) { "$currentLine $word" } else { $word })
+
+                if ($testLine.Length -le $width) {
+                    $currentLine = $testLine
+                } else {
+                    # Word doesn't fit, flush current line and start new one
+                    if ($currentLine) {
+                        $result.Add($currentLine)
+                    }
+                    $currentLine = $word
+                }
+            }
+
+            # Flush last line of paragraph
+            if ($currentLine) {
+                $result.Add($currentLine)
+            }
+        }
+
+        return ($result -join "`n")
+    }
+
     # Update statistics
     hidden [void] _UpdateStats([array]$allTasks) {
         # Handle null or empty tasks
@@ -1509,6 +1706,10 @@ class TaskListScreen : StandardListScreen {
     [array] GetCustomActions() {
         $self = $this
         return @(
+            @{ Key = 'o'; Label = 'Details'; Callback = {
+                    $self._ToggleDetailPane()
+                }.GetNewClosure()
+            },
             @{ Key = 'c'; Label = 'Complete'; Callback = {
                     $selected = $self.List.GetSelectedItem()
                     $self.CompleteTask($selected)
@@ -1680,6 +1881,12 @@ class TaskListScreen : StandardListScreen {
         $ctrl = $keyInfo.Modifiers -band [ConsoleModifiers]::Control
         $alt = $keyInfo.Modifiers -band [ConsoleModifiers]::Alt
 
+        # O: Toggle detail pane visibility
+        if ($keyInfo.KeyChar -eq 'o' -or $keyInfo.KeyChar -eq 'O') {
+            $this._ToggleDetailPane()
+            return $true
+        }
+
         # Space: Toggle subtask collapse OR completion
         # NOTE: This is custom TaskListScreen behavior, not base class behavior
         if ($key -eq [ConsoleKey]::Spacebar -and -not $ctrl -and -not $alt) {
@@ -1804,7 +2011,7 @@ class TaskListScreen : StandardListScreen {
         }
 
         # Keyboard shortcuts help (one line below status)
-        $help = "F:Filter A:Add E:Edit D:Delete Space:Toggle C:Complete X:Clone 1-6:Views H:Hide S:Sort Q:Quit"
+        $help = "F:Filter A:Add E:Edit D:Delete O:Details Space:Toggle C:Complete X:Clone 1-6:Views H:Hide Q:Quit"
         $engine.WriteAt(2, $y + 1, $help, $mutedColor, $bg)
     }
 

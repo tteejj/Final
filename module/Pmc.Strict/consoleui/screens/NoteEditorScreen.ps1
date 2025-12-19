@@ -19,7 +19,7 @@ class NoteEditorScreen : PmcScreen {
     # === Configuration ===
     hidden [string]$_noteId = ""
     hidden [object]$_note = $null
-    hidden [NoteService]$_noteService = $null
+    hidden [FileNoteService]$_noteService = $null
     hidden [TextAreaEditor]$_editor = $null
     hidden [bool]$_saveOnExit = $true
 
@@ -28,7 +28,7 @@ class NoteEditorScreen : PmcScreen {
         Write-PmcTuiLog "NoteEditorScreen: Constructor called for noteId=$noteId" "INFO"
 
         $this._noteId = $noteId
-        $this._noteService = [NoteService]::GetInstance()
+        $this._noteService = [FileNoteService]::GetInstance()
 
         # Load note metadata
         Write-PmcTuiLog "NoteEditorScreen: Loading note metadata" "DEBUG"
@@ -53,7 +53,7 @@ class NoteEditorScreen : PmcScreen {
         Write-PmcTuiLog "NoteEditorScreen: Constructor called for noteId=$noteId" "INFO"
 
         $this._noteId = $noteId
-        $this._noteService = [NoteService]::GetInstance()
+        $this._noteService = [FileNoteService]::GetInstance()
 
         # Load note metadata
         Write-PmcTuiLog "NoteEditorScreen: Loading note metadata" "DEBUG"
@@ -127,6 +127,11 @@ class NoteEditorScreen : PmcScreen {
         $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
         $this._editor.SetBounds($contentRect.X, $contentRect.Y, $contentRect.Width, $contentRect.Height)
         Write-PmcTuiLog "NoteEditorScreen.Initialize: Editor via LayoutManager - X=$($contentRect.X) Y=$($contentRect.Y) W=$($contentRect.Width) H=$($contentRect.Height)" "DEBUG"
+
+        # Check preferences for statistics
+        $prefs = [PreferencesService]::GetInstance()
+        $showStats = $prefs.GetPreference('showEditorStatistics', $false)
+        $this._editor.ShowStatistics = $showStats
 
         Write-PmcTuiLog "NoteEditorScreen.Initialize: Complete" "INFO"
     }
@@ -307,19 +312,23 @@ class NoteEditorScreen : PmcScreen {
         }
 
         try {
-            # Optimized: Get stats directly from buffer
-            $stats = $this._editor.GetStatistics()
-            $lines = $stats.Lines
-            $words = $stats.Words
-            $chars = $stats.Chars
-
             # Build status message
             $modifiedFlag = $(if ($this._editor.Modified) { "*" } else { "" })
             $cursorPos = "Ln $($this._editor.CursorY + 1), Col $($this._editor.CursorX + 1)"
-            $stats = "$lines lines, $words words, $chars chars"
+            
+            # Optimized: Only get stats if enabled
+            if ($this._editor.ShowStatistics) {
+                $stats = $this._editor.GetStatistics()
+                $lines = $stats.Lines
+                $words = $stats.Words
+                $chars = $stats.Chars
+                $statsText = "$lines lines, $words words, $chars chars"
+            } else {
+                $statsText = ""
+            }
 
             $this.StatusBar.SetLeftText("$modifiedFlag$cursorPos")
-            $this.StatusBar.SetRightText($stats)
+            $this.StatusBar.SetRightText($statsText)
         }
         catch {
             Write-PmcTuiLog "NoteEditorScreen.UpdateStatusBar: Error - $_" "ERROR"

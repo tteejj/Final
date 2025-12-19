@@ -87,6 +87,7 @@ class PreferencesService {
         maxVisibleRows = 1000
         searchDebounceMs = 150
         cacheRefreshIntervalMs = 500
+        showEditorStatistics = $false
 
         # Accessibility
         screenReaderMode = $false
@@ -280,6 +281,11 @@ class PreferencesService {
                 }
                 'cacheRefreshIntervalMs' {
                     if ($value -is [int] -and $value -ge 0 -and $value -le 10000) {
+                        $validated[$key] = $value
+                    }
+                }
+                'showEditorStatistics' {
+                    if ($value -is [bool]) {
                         $validated[$key] = $value
                     }
                 }

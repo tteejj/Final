@@ -197,7 +197,7 @@ class PmcHeader : PmcWidget {
         $titleFg = $this.GetThemedInt('Foreground.Title')
         $mutedFg = $this.GetThemedInt('Foreground.Muted')
         $borderFg = $this.GetThemedInt('Border.Widget')
-        $defaultBg = -1
+        $headerBg = $this.GetThemedBgInt('Background.Header', 1, 0)
 
         # Calculate region widths (must match RegisterLayout)
         $contextWidth = [Math]::Min(30, [Math]::Max(10, $this.Width - 20))
@@ -205,21 +205,21 @@ class PmcHeader : PmcWidget {
 
         # Title
         $titleText = if ($this.Icon) { "$($this.Icon) $($this.Title)" } else { $this.Title }
-        $engine.WriteToRegion("$($this.RegionID)_Title", $titleText, $titleFg, $defaultBg)
+        $engine.WriteToRegion("$($this.RegionID)_Title", $titleText, $titleFg, $headerBg)
 
         # Context Info (Right-aligned within its region)
         if ($this.ContextInfo) {
              $ctxText = "[$($this.ContextInfo)]"
              $padCount = [Math]::Max(0, $contextWidth - $ctxText.Length)
              $paddedCtx = (" " * $padCount) + $ctxText
-             $engine.WriteToRegion("$($this.RegionID)_Context", $paddedCtx, $mutedFg, $defaultBg)
+             $engine.WriteToRegion("$($this.RegionID)_Context", $paddedCtx, $mutedFg, $headerBg)
         }
 
         # Breadcrumb
         $hasBreadcrumb = ($this.Breadcrumb -and $this.Breadcrumb.Count -gt 0)
         if ($hasBreadcrumb) {
             $crumbText = $this.Breadcrumb -join " → "
-            $engine.WriteToRegion("$($this.RegionID)_Breadcrumb", $crumbText, $mutedFg, $defaultBg)
+            $engine.WriteToRegion("$($this.RegionID)_Breadcrumb", $crumbText, $mutedFg, $headerBg)
         }
 
         # Separator
@@ -234,7 +234,7 @@ class PmcHeader : PmcWidget {
                 $char = $this.GetBoxChar('single_horizontal')
                 if ($this.BorderStyle -eq 'double') { $char = $this.GetBoxChar('double_horizontal') }
                 
-                $engine.Fill($bounds.X, $bounds.Y, $bounds.Width, 1, $char, $borderFg, $defaultBg)
+                $engine.Fill($bounds.X, $bounds.Y, $bounds.Width, 1, $char, $borderFg, $headerBg)
             }
         }
     }

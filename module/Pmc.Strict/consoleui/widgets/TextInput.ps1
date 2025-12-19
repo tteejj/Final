@@ -163,7 +163,7 @@ class TextInput : PmcWidget {
     #>
     [bool] HandleInput([ConsoleKeyInfo]$keyInfo) {
         # DEBUG: Log all input
-        Write-PmcTuiLog "TextInput.HandleInput: ENTRY - Key=$($keyInfo.Key) Char='$($keyInfo.KeyChar)' CurrentText='$($this.Text)'" "DEBUG"
+        # Write-PmcTuiLog "TextInput.HandleInput: ENTRY - Key=$($keyInfo.Key) Char='$($keyInfo.KeyChar)' CurrentText='$($this.Text)'" "DEBUG"
 
         # Enter - confirm input
         if ($keyInfo.Key -eq 'Enter') {
@@ -582,11 +582,11 @@ class TextInput : PmcWidget {
     #>
     hidden [void] _InsertChar([char]$ch) {
         # DEBUG: Log insertion attempt
-        Write-PmcTuiLog "TextInput._InsertChar: ENTRY - ch='$ch' CurrentText='$($this.Text)' Length=$($this.Text.Length) MaxLength=$($this.MaxLength)" "DEBUG"
+        # Write-PmcTuiLog "TextInput._InsertChar: ENTRY - ch='$ch' CurrentText='$($this.Text)' Length=$($this.Text.Length) MaxLength=$($this.MaxLength)" "DEBUG"
 
         # Check length limit
         if ($this.Text.Length -ge $this.MaxLength) {
-            Write-PmcTuiLog "TextInput._InsertChar: REJECTED - Text length ($($this.Text.Length)) >= MaxLength ($($this.MaxLength))" "DEBUG"
+            # Write-PmcTuiLog "TextInput._InsertChar: REJECTED - Text length ($($this.Text.Length)) >= MaxLength ($($this.MaxLength))" "DEBUG"
             return
         }
 
@@ -609,21 +609,21 @@ class TextInput : PmcWidget {
         if ($this._cursorPosition -eq $this.Text.Length) {
             # Append
             $this.Text += $ch
-            Write-PmcTuiLog "TextInput._InsertChar: Appended '$ch' -> Text='$($this.Text)'" "DEBUG"
+            # Write-PmcTuiLog "TextInput._InsertChar: Appended '$ch' -> Text='$($this.Text)'" "DEBUG"
         }
         else {
             # Insert in middle
             $before = $this.Text.Substring(0, $this._cursorPosition)
             $after = $this.Text.Substring($this._cursorPosition)
             $this.Text = $before + $ch + $after
-            Write-PmcTuiLog "TextInput._InsertChar: Inserted '$ch' at position $($this._cursorPosition) -> Text='$($this.Text)'" "DEBUG"
+            # Write-PmcTuiLog "TextInput._InsertChar: Inserted '$ch' at position $($this._cursorPosition) -> Text='$($this.Text)'" "DEBUG"
         }
 
         $this._cursorPosition++
         $this._AdjustScrollOffset()
         $this._ValidateText()
         $this._InvokeCallback($this.OnTextChanged, $this.Text)
-        Write-PmcTuiLog "TextInput._InsertChar: EXIT - Text='$($this.Text)'" "DEBUG"
+        # Write-PmcTuiLog "TextInput._InsertChar: EXIT - Text='$($this.Text)'" "DEBUG"
     }
 
     <#
