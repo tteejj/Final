@@ -181,3 +181,124 @@ at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1:
 [10:10:02.234] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
 [10:10:02.247] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
 [10:10:26.969] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-100959.log
+[10:19:28.655] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-101928.log (Level 2)
+[10:19:31.248] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[10:19:31.259] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[10:20:54.845] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-101928.log
+[10:32:36.121] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-103236.log (Level 2)
+[10:32:38.926] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[10:32:38.941] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[10:33:00.834] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-103236.log
+[10:44:49.661] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-104449.log (Level 2)
+[10:44:52.173] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[10:44:52.187] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[11:08:44.972] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-104449.log
+[11:08:47.176] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-110847.log (Level 2)
+[11:08:49.659] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[11:08:49.671] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[11:09:14.825] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-110847.log
+[13:55:04.372] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-135504.log (Level 2)
+[2025-12-18 13:55:07.331] [ERROR] Failed to load core dependencies: At /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:57 char:1
++ using namespace System.Collections.Generic
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A 'using' statement must appear before any other statements in a script.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:43 char:43
++     static [PmcThemeEngine] GetInstance() {
++                                           ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:25 char:23
++ class PmcThemeEngine {
++                       ~
+Missing closing '}' in statement block or type definition.
+[14:02:55.953] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-140255.log (Level 2)
+[2025-12-18 14:03:00.705] [ERROR] Failed to load widgets: At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1875 char:36
++     hidden [void] _MoveToNextField() {
++                                    ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1890 char:40
++     hidden [void] _MoveToPreviousField() {
++                                        ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1905 char:39
++     hidden [void] _ExpandCurrentField() {
++                                       ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:2032 char:38
++     hidden [bool] _ValidateAllFields() {
++                                      ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1787 char:57
++             if ($widget.GetType().Name -eq 'TextInput') {
++                                                         ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1783 char:58
++         if ($this._fieldWidgets.ContainsKey($fieldName)) {
++                                                          ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1770 char:70
++ …    hidden [void] _SetFieldValue([string]$fieldName, [object]$value) {
++                                                                       ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:80 char:33
++ class InlineEditor : PmcWidget {
++                                 ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:2161 char:48
++     hidden [void] _InvokeCallback([scriptblock]$callback, $arg) {
++                                                ~~~~~~~~~
+Variable is not assigned in the method.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:2161 char:59
++     hidden [void] _InvokeCallback([scriptblock]$callback, $arg) {
++                                                           ~~~~
+Variable is not assigned in the method.
+[14:04:21.190] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-140421.log (Level 2)
+[14:04:26.308] [Start-PmcTUI] DEBUG: InvocationName='/home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1' MyCommand='Start-PmcTUI.ps1'
+[14:04:26.330] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[14:04:40.960] [Start-PmcTUI] Log saved to: /home/teej/ztest/module/.pmc-data/logs/pmc-tui-20251218-140421.log
+[14:08:53.444] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-140853.log (Level 2)
+[14:08:57.518] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[14:08:57.537] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[14:09:21.556] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-140853.log
+[14:24:28.709] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-142428.log (Level 2)
+[14:24:31.126] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[14:24:31.155] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[14:24:45.662] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-142428.log
+[14:34:10.419] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-143410.log (Level 2)
+[14:34:12.930] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[14:34:12.964] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[14:34:52.112] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-143410.log
+[14:47:39.097] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-144739.log (Level 2)
+[14:47:41.689] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[14:47:41.722] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[14:47:54.421] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-144739.log
+[15:06:17.929] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-150617.log (Level 2)
+[15:06:20.550] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[15:06:20.565] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[15:06:36.723] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-150617.log
+[16:38:45.359] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-163845.log (Level 2)
+[16:38:48.107] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[16:38:48.126] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[16:42:26.678] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-163845.log
+[16:42:29.446] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-164229.log (Level 2)
+[16:42:32.254] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[16:42:32.265] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[16:42:51.259] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-164229.log
+[17:13:16.555] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-171316.log (Level 2)
+[17:13:21.026] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[17:13:21.048] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[17:13:35.574] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-171316.log
+[17:43:44.833] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20251218-174344.log (Level 2)
+[17:43:49.064] [Start-PmcTUI] DEBUG: InvocationName='.' MyCommand='Start-PmcTUI.ps1'
+[17:43:49.084] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[17:43:57.922] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20251218-174344.log

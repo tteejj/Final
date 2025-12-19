@@ -382,63 +382,16 @@ function Start-PmcTUI {
         $global:PmcContainer.Register('Theme', {
                 param($container)
                 Write-PmcTuiLog "Resolving Theme: Calling Initialize-PmcThemeSystem..." "INFO"
+                
+                # Initialize Core Theme System (Loads State, Configures Manager & Engine)
                 Initialize-PmcThemeSystem
-                $theme = Get-PmcState -Section 'Display' | Select-Object -ExpandProperty Theme
-                Write-PmcTuiLog "Theme resolved: $($theme.Hex)" "INFO"
-
-                # CRITICAL FIX: Initialize PmcThemeEngine with theme data from PMC palette
-                Write-PmcTuiLog "Loading PmcThemeEngine..." "INFO"
-                $engine = [PmcThemeEngine]::GetInstance()
-
-                # Get PMC color palette (derived from theme hex)
-                $palette = Get-PmcColorPalette
-
-                # Convert RGB objects to hex strings for PmcThemeEngine
-                $paletteHex = @{}
-                foreach ($key in $palette.Keys) {
-                    $rgb = $palette[$key]
-                    $currentHex = "#{0:X2}{1:X2}{2:X2}" -f $rgb.R, $rgb.G, $rgb.B
-                    $paletteHex[$key] = $currentHex
-                    Write-PmcTuiLog "Palette [$key] -> $currentHex (R=$($rgb.R) G=$($rgb.G) B=$($rgb.B))" "DEBUG"
-                }
-
-                # Define Default Properties (Explicitly, no engine fallbacks)
-                $p = $paletteHex
-                $properties = @{
-                    'Background.Field'        = @{ Type = 'Solid'; Color = '#000000' }
-                    'Background.FieldFocused' = @{ Type = 'Solid'; Color = $p['Primary'] }
-                    'Background.Row'          = @{ Type = 'Solid'; Color = '#000000' }
-                    'Background.RowSelected'  = @{ Type = 'Solid'; Color = $p['Primary'] }
-                    'Background.Warning'      = @{ Type = 'Solid'; Color = $p['Warning'] }
-                    'Background.MenuBar'      = @{ Type = 'Solid'; Color = $p['Border'] }
-                    'Foreground.Field'        = @{ Type = 'Solid'; Color = $p['Text'] }
-                    'Foreground.FieldFocused' = @{ Type = 'Solid'; Color = '#FFFFFF' }
-                    'Foreground.Row'          = @{ Type = 'Solid'; Color = $p['Text'] }
-                    'Foreground.RowSelected'  = @{ Type = 'Solid'; Color = '#FFFFFF' }
-                    'Foreground.Title'        = @{ Type = 'Solid'; Color = $p['Primary'] }
-                    'Foreground.Muted'        = @{ Type = 'Solid'; Color = $p['Muted'] }
-                    'Foreground.Warning'      = @{ Type = 'Solid'; Color = $p['Warning'] }
-                    'Foreground.Error'        = @{ Type = 'Solid'; Color = $p['Error'] }
-                    'Foreground.Success'      = @{ Type = 'Solid'; Color = $p['Success'] }
-                    'Border.Widget'           = @{ Type = 'Solid'; Color = $p['Border'] }
-                    'Background.TabActive'    = @{ Type = 'Solid'; Color = $p['Primary'] }
-                    'Background.TabInactive'  = @{ Type = 'Solid'; Color = '#333333' }
-                    'Foreground.TabActive'    = @{ Type = 'Solid'; Color = '#FFFFFF' }
-                    'Foreground.TabInactive'  = @{ Type = 'Solid'; Color = $p['Muted'] }
-                    'Background.Primary'      = @{ Type = 'Solid'; Color = '#000000' }
-                    'Background.Widget'       = @{ Type = 'Solid'; Color = '#1a1a1a' }
-                    'Foreground.Primary'      = @{ Type = 'Solid'; Color = $p['Text'] }
-                }
-
-                # Load theme config with palette AND properties
-                $themeConfig = @{
-                    Palette    = $paletteHex
-                    Properties = $properties
-                }
-                $engine.LoadFromConfig($themeConfig)
-                Write-PmcTuiLog "PmcThemeEngine initialized with PMC palette ($($paletteHex.Count) colors)" "INFO"
-
-                return $theme
+                
+                # Get the Manager instance (which is now the source of truth)
+                $manager = [PmcThemeManager]::GetInstance()
+                $themeHex = $manager.GetCurrentThemeHex()
+                
+                Write-PmcTuiLog "Theme initialized: $themeHex" "INFO"
+                return $manager
             }, $true)
 
         # Register ThemeManager (depends on Theme)

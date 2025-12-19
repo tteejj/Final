@@ -1,0 +1,66 @@
+[2025-12-18 14:02:55.997] [INFO] Loading PMC module...
+[2025-12-18 14:02:57.708] [INFO] PMC module loaded
+[2025-12-18 14:02:57.713] [INFO] Loading dependencies (FieldSchemas, etc.)...
+[2025-12-18 14:02:57.858] [INFO] Dependencies loaded
+[2025-12-18 14:02:57.860] [INFO] Loading SpeedTUI framework...
+[2025-12-18 14:02:59.760] [INFO] SpeedTUI framework loaded
+[2025-12-18 14:02:59.763] [INFO] Loading PraxisVT...
+[2025-12-18 14:02:59.766] [INFO] PraxisVT loaded
+[2025-12-18 14:02:59.768] [INFO] Loading core dependencies...
+[2025-12-18 14:02:59.826] [INFO] Core dependencies loaded
+[2025-12-18 14:02:59.829] [INFO] Loading widget base classes...
+[2025-12-18 14:02:59.904] [INFO] Widget base classes loaded
+[2025-12-18 14:02:59.907] [INFO] Loading services...
+[2025-12-18 14:03:00.158] [INFO] Services loaded
+[2025-12-18 14:03:00.160] [INFO] Loading helpers...
+[2025-12-18 14:03:00.448] [INFO] Helpers loaded
+[2025-12-18 14:03:00.450] [INFO] Loading widgets...
+[2025-12-18 14:03:00.705] [ERROR] Failed to load widgets: At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1875 char:36
++     hidden [void] _MoveToNextField() {
++                                    ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1890 char:40
++     hidden [void] _MoveToPreviousField() {
++                                        ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1905 char:39
++     hidden [void] _ExpandCurrentField() {
++                                       ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:2032 char:38
++     hidden [bool] _ValidateAllFields() {
++                                      ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1787 char:57
++             if ($widget.GetType().Name -eq 'TextInput') {
++                                                         ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1783 char:58
++         if ($this._fieldWidgets.ContainsKey($fieldName)) {
++                                                          ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:1770 char:70
++ …    hidden [void] _SetFieldValue([string]$fieldName, [object]$value) {
++                                                                       ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:80 char:33
++ class InlineEditor : PmcWidget {
++                                 ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:2161 char:48
++     hidden [void] _InvokeCallback([scriptblock]$callback, $arg) {
++                                                ~~~~~~~~~
+Variable is not assigned in the method.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/InlineEditor.ps1:2161 char:59
++     hidden [void] _InvokeCallback([scriptblock]$callback, $arg) {
++                                                           ~~~~
+Variable is not assigned in the method.

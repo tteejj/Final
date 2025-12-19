@@ -443,6 +443,77 @@ class HybridRenderEngine {
         }
     }
 
+    # Gradient WriteAt: Interpolates foreground color per character from fgStart to fgEnd
+    [void] WriteAt([int]$x, [int]$y, [string]$content, [int]$fgStart, [int]$fgEnd, [int]$bg) {
+        if (-not $this._inFrame -or [string]::IsNullOrEmpty($content)) { return }
+
+        # Apply Offset
+        $offsetX = 0
+        $offsetY = 0
+        if ($this._offsetStack.Count -gt 0) {
+            $current = $this._offsetStack.Peek()
+            $offsetX = $current.X
+            $offsetY = $current.Y
+        }
+        
+        $finalX = $x + $offsetX
+        $finalY = $y + $offsetY
+        $currentX = $finalX
+        
+        # Check current clip bounds
+        $clip = $null
+        if ($this._clipStack.Count -gt 0) { $clip = $this._clipStack.Peek() }
+
+        $len = $content.Length
+        for ($i = 0; $i -lt $len; $i++) {
+            # Calculate interpolation factor
+            $t = if ($len -eq 1) { 0.0 } else { [double]$i / ($len - 1) }
+            $fg = $this._LerpColor($fgStart, $fgEnd, $t)
+            
+            # Check Bounds
+            if ($finalY -ge 0 -and $finalY -lt $this.Height -and $currentX -ge 0 -and $currentX -lt $this.Width) {
+                
+                # Check Clipping
+                $isClipped = $false
+                if ($clip) {
+                    if ($currentX -lt $clip.X -or $currentX -ge $clip.R -or $finalY -lt $clip.Y -or $finalY -ge $clip.B) {
+                        $isClipped = $true
+                    }
+                }
+
+                # Check Z-Index
+                if (-not $isClipped) {
+                    if ($this._currentZ -ge $this._zBuffer[$finalY][$currentX]) {
+                        # Write with interpolated color
+                        $this._backBuffer.SetCell($currentX, $finalY, $content[$i], $fg, $bg, 0)
+                        $this._zBuffer[$finalY][$currentX] = $this._currentZ
+                        $this._UpdateDirtyBounds($currentX, $finalY)
+                    }
+                }
+            }
+            $currentX++
+        }
+    }
+
+    # Linear interpolation between two packed RGB colors
+    hidden [int] _LerpColor([int]$c1, [int]$c2, [double]$t) {
+        # Extract RGB components
+        $r1 = ($c1 -shr 16) -band 0xFF
+        $g1 = ($c1 -shr 8) -band 0xFF
+        $b1 = $c1 -band 0xFF
+        $r2 = ($c2 -shr 16) -band 0xFF
+        $g2 = ($c2 -shr 8) -band 0xFF
+        $b2 = $c2 -band 0xFF
+        
+        # Interpolate
+        $r = [int]($r1 + ($r2 - $r1) * $t)
+        $g = [int]($g1 + ($g2 - $g1) * $t)
+        $b = [int]($b1 + ($b2 - $b1) * $t)
+        
+        # Pack and return
+        return ($r -shl 16) -bor ($g -shl 8) -bor $b
+    }
+
     [void] Clear([int]$x, [int]$y, [int]$width, [int]$height) {
         # Helper to clear area using spaces
         # We construct a string of spaces and use WriteAt so Z-Index/Clipping applies automatically

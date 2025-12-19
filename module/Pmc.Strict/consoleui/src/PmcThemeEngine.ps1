@@ -51,37 +51,32 @@ class PmcThemeEngine {
         # Private constructor
     }
 
-    # Load theme from config.json structure
-    [void] LoadFromConfig([hashtable]$themeConfig) {
-        if ($themeConfig.ContainsKey('Palette')) {
-            $this._palette = $themeConfig.Palette
-        }
-        else {
-        }
-
-        if ($themeConfig.ContainsKey('Properties')) {
-            $this._properties = $themeConfig.Properties
-            # DEBUG ENABLED
-            Write-PmcTuiLog "LoadFromConfig: Loaded Properties with $($this._properties.Count) items" "INFO"
-        }
-        else {
-            # Default properties if not defined
-            $this._InitializeDefaultProperties()
-        }
-
+    # Configure engine with full state (called by PmcThemeManager)
+    [void] Configure([hashtable]$properties, [hashtable]$palette) {
+        $this._properties = $properties
+        $this._palette = $palette
         $this.InvalidateCache()
+        
+        # DEBUG: Log to file to trace when Configure is called
+        $rowProp = $properties['Foreground.Row']
+        $rowType = if ($rowProp) { $rowProp.Type } else { 'null' }
+        Add-Content -Path "/tmp/pmc-configure-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] Configure called: propCount=$($properties.Count) Foreground.Row.Type=$rowType"
+    }
+
+    # Public Primitive: Get ANSI from Hex (for Manager)
+    [string] GetAnsiFromHex([string]$hex, [bool]$background) {
+        if ([string]::IsNullOrEmpty($hex)) { return '' }
+        return $this._GetSolidAnsiCached($hex, $background)
+    }
+
+    # Public Primitive: Get Int from Hex (for Manager)
+    [int] GetIntFromHex([string]$hex) {
+        if ([string]::IsNullOrEmpty($hex)) { return -1 }
+        return $this._GetSolidIntCached($hex)
     }
 
     # Get background ANSI - handles solid or gradient
     [string] GetBackgroundAnsi([string]$propertyName, [int]$width, [int]$charIndex) {
-        if (-not $this._properties.ContainsKey($propertyName)) {
-            Write-PmcTuiLog "GetBackgroundAnsi: MISSING '$propertyName'" "WARN"
-        }
-
-        if ($this._properties.Count -eq 0) {
-            $this._InitializeDefaultProperties()
-        }
-
         if (-not $this._properties.ContainsKey($propertyName)) {
             return ''
         }
@@ -104,13 +99,7 @@ class PmcThemeEngine {
 
     # Get foreground ANSI - usually solid
     [string] GetForegroundAnsi([string]$propertyName) {
-        if ($this._properties.Count -eq 0) {
-            $this._InitializeDefaultProperties()
-        }
-
         if (-not $this._properties.ContainsKey($propertyName)) {
-            # DEBUG: Log missing property
-            Write-PmcTuiLog "MISSING THEME PROPERTY: $propertyName" "ERROR"
             return ''
         }
 
@@ -128,7 +117,6 @@ class PmcThemeEngine {
     # Returns packed RGB int (0x00RRGGBB)
     [int] GetThemeColorInt([string]$propertyName) {
         if (-not $this._properties.ContainsKey($propertyName)) {
-            # Write-PmcTuiLog "GetThemeColorInt: Property '$propertyName' not found" "ERROR"
             return 0
         }
 
@@ -139,8 +127,11 @@ class PmcThemeEngine {
             $hex = $prop.Color
         }
         elseif ($prop.Type -eq 'Gradient') {
-            # Use first stop color for gradient fallback
-            if ($prop.Stops -and $prop.Stops.Count -gt 0) {
+            # Use first color for gradient fallback
+            if ($prop.Start) {
+                $hex = $prop.Start
+            }
+            elseif ($prop.Stops -and $prop.Stops.Count -gt 0) {
                 $hex = $prop.Stops[0].Color
             }
         }
@@ -150,14 +141,33 @@ class PmcThemeEngine {
         return $this._ColorToInt($hex)
     }
 
+    # Get gradient info for a property (returns null if solid)
+    # Returns @{ Start = [int]; End = [int] } for gradient, or $null for solid
+    [object] GetGradientInfo([string]$propertyName) {
+        if (-not $this._properties.ContainsKey($propertyName)) {
+            return $null
+        }
+
+        $prop = $this._properties[$propertyName]
+        
+        if ($prop.Type -eq 'Gradient') {
+            $startHex = $prop.Start
+            $endHex = $prop.End
+            if ($startHex -and $endHex) {
+                return @{
+                    Start = $this._ColorToInt($startHex)
+                    End = $this._ColorToInt($endHex)
+                }
+            }
+        }
+
+        return $null
+    }
+
     # === INT API (For Hybrid Engine) ===
 
     # Get foreground Packed Int - usually solid
     [int] GetForegroundInt([string]$propertyName) {
-        if ($this._properties.Count -eq 0) {
-            $this._InitializeDefaultProperties()
-        }
-
         if (-not $this._properties.ContainsKey($propertyName)) {
             return -1
         }
@@ -174,10 +184,6 @@ class PmcThemeEngine {
 
     # Get background Packed Int
     [int] GetBackgroundInt([string]$propertyName, [int]$width, [int]$charIndex) {
-        if ($this._properties.Count -eq 0) {
-            $this._InitializeDefaultProperties()
-        }
-
         if (-not $this._properties.ContainsKey($propertyName)) {
             return -1
         }
@@ -254,7 +260,22 @@ class PmcThemeEngine {
     # Compute gradient as array of ANSI sequences
     hidden [string[]] _ComputeGradient([hashtable]$gradient, [int]$length, [bool]$background) {
         $result = [List[string]]::new($length)
-        $stops = $gradient.Stops | Sort-Object Position
+        
+        # Support both Stops array and simple Start/End
+        $stops = $null
+        if ($gradient.Stops) {
+            $stops = $gradient.Stops | Sort-Object Position
+        }
+        elseif ($gradient.Start -and $gradient.End) {
+            $stops = @(
+                @{ Position = 0.0; Color = $gradient.Start }
+                @{ Position = 1.0; Color = $gradient.End }
+            )
+        }
+        else {
+            # Fallback - return empty
+            return @()
+        }
 
         for ($i = 0; $i -lt $length; $i++) {
             $ratio = $(if ($length -eq 1) { 0.0 } else { $i / ($length - 1) })
@@ -268,7 +289,22 @@ class PmcThemeEngine {
     # Compute gradient as array of Ints
     hidden [int[]] _ComputeGradientInt([hashtable]$gradient, [int]$length) {
         $result = [List[int]]::new($length)
-        $stops = $gradient.Stops | Sort-Object Position
+        
+        # Support both Stops array and simple Start/End
+        $stops = $null
+        if ($gradient.Stops) {
+            $stops = $gradient.Stops | Sort-Object Position
+        }
+        elseif ($gradient.Start -and $gradient.End) {
+            $stops = @(
+                @{ Position = 0.0; Color = $gradient.Start }
+                @{ Position = 1.0; Color = $gradient.End }
+            )
+        }
+        else {
+            # Fallback - return empty
+            return @()
+        }
 
         for ($i = 0; $i -lt $length; $i++) {
             $ratio = $(if ($length -eq 1) { 0.0 } else { $i / ($length - 1) })
@@ -345,7 +381,7 @@ class PmcThemeEngine {
         }
         catch {
             # DEBUG
-            Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcThemeEngine] ANSI CONVERSION FAILED: '$hex' - $_"
+            # Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcThemeEngine] ANSI CONVERSION FAILED: '$hex' - $_"
             return ''
         }
     }
@@ -365,85 +401,6 @@ class PmcThemeEngine {
         }
         catch {
             return -1
-        }
-    }
-
-    # Initialize sensible defaults if config doesn't have Properties
-    hidden [void] _InitializeDefaultProperties() {
-        # Get theme hex from palette or use default
-        $primaryHex = $(if ($this._palette.ContainsKey('Primary')) {
-                $this._palette.Primary
-            }
-            else {
-                '#ff8833'
-            })
-
-        $textHex = $(if ($this._palette.ContainsKey('Text')) {
-                $this._palette.Text
-            }
-            else {
-                '#ffe8c8'
-            })
-
-        $mutedHex = $(if ($this._palette.ContainsKey('TextDim')) {
-                $this._palette.TextDim
-            }
-            else {
-                '#888888'
-            })
-
-        $warningHex = $(if ($this._palette.ContainsKey('Warning')) {
-                $this._palette.Warning
-            }
-            else {
-                '#ffaa00'
-            })
-
-        $errorHex = $(if ($this._palette.ContainsKey('Error')) {
-                $this._palette.Error
-            }
-            else {
-                '#ff3333'
-            })
-
-        $successHex = $(if ($this._palette.ContainsKey('Success')) {
-                $this._palette.Success
-            }
-            else {
-                '#33ff33'
-            })
-
-        $borderHex = $(if ($this._palette.ContainsKey('Border')) {
-                $this._palette.Border
-            }
-            else {
-                '#b25f24'
-            })
-
-        $this._properties = @{
-            'Background.Field'        = @{ Type = 'Solid'; Color = '#000000' }
-            'Background.FieldFocused' = @{ Type = 'Solid'; Color = $primaryHex }
-            'Background.Row'          = @{ Type = 'Solid'; Color = '#000000' }
-            'Background.RowSelected'  = @{ Type = 'Solid'; Color = $primaryHex }
-            'Background.Warning'      = @{ Type = 'Solid'; Color = $warningHex }
-            'Background.MenuBar'      = @{ Type = 'Solid'; Color = $borderHex }
-            'Foreground.Field'        = @{ Type = 'Solid'; Color = $textHex }
-            'Foreground.FieldFocused' = @{ Type = 'Solid'; Color = '#FFFFFF' }
-            'Foreground.Row'          = @{ Type = 'Solid'; Color = $textHex }
-            'Foreground.RowSelected'  = @{ Type = 'Solid'; Color = '#FFFFFF' }
-            'Foreground.Title'        = @{ Type = 'Solid'; Color = $primaryHex }
-            'Foreground.Muted'        = @{ Type = 'Solid'; Color = $mutedHex }
-            'Foreground.Warning'      = @{ Type = 'Solid'; Color = $warningHex }
-            'Foreground.Error'        = @{ Type = 'Solid'; Color = $errorHex }
-            'Foreground.Success'      = @{ Type = 'Solid'; Color = $successHex }
-            'Border.Widget'           = @{ Type = 'Solid'; Color = $borderHex }
-            'Background.TabActive'    = @{ Type = 'Solid'; Color = $primaryHex }
-            'Background.TabInactive'  = @{ Type = 'Solid'; Color = '#333333' }
-            'Foreground.TabActive'    = @{ Type = 'Solid'; Color = '#FFFFFF' }
-            'Foreground.TabInactive'  = @{ Type = 'Solid'; Color = $mutedHex }
-            'Background.Primary'      = @{ Type = 'Solid'; Color = '#000000' }
-            'Background.Widget'       = @{ Type = 'Solid'; Color = '#1a1a1a' }
-            'Foreground.Primary'      = @{ Type = 'Solid'; Color = $textHex }
         }
     }
 

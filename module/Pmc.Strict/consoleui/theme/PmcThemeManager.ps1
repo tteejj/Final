@@ -79,6 +79,10 @@ class PmcThemeManager {
             $this._colorCache = @{}
             $this._ansiCache = @{}
 
+            # Build properties and configure Engine
+            $props = $this._BuildThemeProperties()
+            [PmcThemeEngine]::GetInstance().Configure($props, $this.ColorPalette)
+
         } catch {
             # Fallback to defaults if state system not available
             $this._InitializeDefaults()
@@ -132,6 +136,10 @@ class PmcThemeManager {
             Cursor = @{ R = 51; G = 170; B = 255 }
             Status = @{ R = 136; G = 136; B = 136 }
         }
+
+        # Also configure Engine with defaults
+        $props = $this._BuildThemeProperties()
+        [PmcThemeEngine]::GetInstance().Configure($props, $this.ColorPalette)
     }
 
     <#
@@ -143,6 +151,89 @@ class PmcThemeManager {
         # For now, PMC theme is primary source of truth
         $this.SpeedTUITheme = $null
     }
+
+    # Helper method to get hex color from palette (no closure)
+    hidden [string] _GetPaletteHex([string]$role, [string]$default) {
+        if ($this.ColorPalette -and $this.ColorPalette.ContainsKey($role)) {
+            $rgb = $this.ColorPalette[$role]
+            return ("#{0:X2}{1:X2}{2:X2}" -f $rgb.R, $rgb.G, $rgb.B)
+        }
+        return $default
+    }
+
+    <#
+    .SYNOPSIS
+    Build UI properties from current palette for Engine
+    #>
+    hidden [hashtable] _BuildThemeProperties() {
+        $primaryHex = $this._GetPaletteHex('Primary', '#ff8833')
+        $textHex = $this._GetPaletteHex('Text', '#ffe8c8')
+        $mutedHex = $this._GetPaletteHex('Muted', '#888888')
+        $warningHex = $this._GetPaletteHex('Warning', '#ffaa00')
+        $errorHex = $this._GetPaletteHex('Error', '#ff3333')
+        $successHex = $this._GetPaletteHex('Success', '#33ff33')
+        $borderHex = $this._GetPaletteHex('Border', '#b25f24')
+
+        # Check if this is a gradient theme (Synthwave = #ff00ff)
+        $isSynthwave = $this.PmcTheme -and $this.PmcTheme.Hex -eq '#ff00ff'
+
+        if ($isSynthwave) {
+            return @{
+                'Background.Field'        = @{ Type = 'Solid'; Color = '#0a0015' }
+                'Background.FieldFocused' = @{ Type = 'Solid'; Color = '#2a0040' }
+                'Background.Row'          = @{ Type = 'Solid'; Color = '#0a0015' }
+                'Background.RowSelected'  = @{ Type = 'Solid'; Color = '#2a0040' }
+                'Background.Warning'      = @{ Type = 'Solid'; Color = '#332200' }
+                'Background.MenuBar'      = @{ Type = 'Solid'; Color = '#1a0030' }
+                'Background.TabActive'    = @{ Type = 'Solid'; Color = '#2a0040' }
+                'Background.TabInactive'  = @{ Type = 'Solid'; Color = '#0f001a' }
+                'Background.Primary'      = @{ Type = 'Solid'; Color = '#0a0015' }
+                'Background.Widget'       = @{ Type = 'Solid'; Color = '#0f001a' }
+                'Background.Panel'        = @{ Type = 'Solid'; Color = '#0f001a' }
+                'Foreground.Field'        = @{ Type = 'Gradient'; Start = '#ff00ff'; End = '#00ffff' }
+                'Foreground.FieldFocused' = @{ Type = 'Solid'; Color = '#ffffff' }
+                'Foreground.Row'          = @{ Type = 'Gradient'; Start = '#ff00ff'; End = '#00ffff' }
+                'Foreground.RowSelected'  = @{ Type = 'Solid'; Color = '#ffffff' }
+                'Foreground.Title'        = @{ Type = 'Gradient'; Start = '#ff00ff'; End = '#00ffff' }
+                'Foreground.Muted'        = @{ Type = 'Solid'; Color = '#666680' }
+                'Foreground.Warning'      = @{ Type = 'Solid'; Color = '#ffaa00' }
+                'Foreground.Error'        = @{ Type = 'Solid'; Color = '#ff3333' }
+                'Foreground.Success'      = @{ Type = 'Solid'; Color = '#33ff88' }
+                'Foreground.TabActive'    = @{ Type = 'Gradient'; Start = '#ff00ff'; End = '#00ffff' }
+                'Foreground.TabInactive'  = @{ Type = 'Solid'; Color = '#666680' }
+                'Foreground.Primary'      = @{ Type = 'Gradient'; Start = '#ff00ff'; End = '#00ffff' }
+                'Border.Widget'           = @{ Type = 'Solid'; Color = '#6600aa' }
+            }
+        }
+
+        return @{
+            'Background.Field'        = @{ Type = 'Solid'; Color = '#000000' }
+            'Background.FieldFocused' = @{ Type = 'Solid'; Color = $primaryHex }
+            'Background.Row'          = @{ Type = 'Solid'; Color = '#000000' }
+            'Background.RowSelected'  = @{ Type = 'Solid'; Color = $primaryHex }
+            'Background.Warning'      = @{ Type = 'Solid'; Color = $warningHex }
+            'Background.MenuBar'      = @{ Type = 'Solid'; Color = $borderHex }
+            'Background.TabActive'    = @{ Type = 'Solid'; Color = $primaryHex }
+            'Background.TabInactive'  = @{ Type = 'Solid'; Color = '#333333' }
+            'Background.Primary'      = @{ Type = 'Solid'; Color = '#000000' }
+            'Background.Widget'       = @{ Type = 'Solid'; Color = '#1a1a1a' }
+            'Background.Panel'        = @{ Type = 'Solid'; Color = '#1a1a1a' }
+            'Foreground.Field'        = @{ Type = 'Solid'; Color = $textHex }
+            'Foreground.FieldFocused' = @{ Type = 'Solid'; Color = '#FFFFFF' }
+            'Foreground.Row'          = @{ Type = 'Solid'; Color = $textHex }
+            'Foreground.RowSelected'  = @{ Type = 'Solid'; Color = '#FFFFFF' }
+            'Foreground.Title'        = @{ Type = 'Solid'; Color = $primaryHex }
+            'Foreground.Muted'        = @{ Type = 'Solid'; Color = $mutedHex }
+            'Foreground.Warning'      = @{ Type = 'Solid'; Color = $warningHex }
+            'Foreground.Error'        = @{ Type = 'Solid'; Color = $errorHex }
+            'Foreground.Success'      = @{ Type = 'Solid'; Color = $successHex }
+            'Foreground.TabActive'    = @{ Type = 'Solid'; Color = '#FFFFFF' }
+            'Foreground.TabInactive'  = @{ Type = 'Solid'; Color = $mutedHex }
+            'Foreground.Primary'      = @{ Type = 'Solid'; Color = $textHex }
+            'Border.Widget'           = @{ Type = 'Solid'; Color = $borderHex }
+        }
+    }
+
 
     # === Public API ===
 

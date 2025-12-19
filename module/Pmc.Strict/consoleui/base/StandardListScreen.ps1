@@ -983,6 +983,14 @@ class StandardListScreen : PmcScreen {
                     # CRITICAL: Also update the list's editor state to stay in sync
                     $this.List._showInlineEditor = $false
 
+                    # FIX: Invalidate the editor row region so differential renderer redraws it
+                    # Without this, the dark grey background from the inline editor remains stale
+                    if ($this.RenderEngine -and $this.InlineEditor) {
+                        $editorY = $this.InlineEditor.Y
+                        $this.RenderEngine.InvalidateCachedRegion($editorY, $editorY + 1)
+                        Write-PmcTuiLog "StandardListScreen: Invalidated editor row Y=$editorY after close" "DEBUG"
+                    }
+
                     # BUG FIX: Restore selectedIndex after exiting add mode
                     # When in add mode, selectedIndex is set to itemCount (one past the last item)
                     # When cancelled, we need to restore it to a valid row index so the user can navigate

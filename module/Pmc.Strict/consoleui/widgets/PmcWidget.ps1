@@ -262,6 +262,52 @@ class PmcWidget : Component {
         return $engine.GetBackgroundInt($role, $width, $charIndex)
     }
 
+    <#
+    .SYNOPSIS
+    Write themed text that automatically uses gradient if theme defines it
+
+    .PARAMETER renderEngine
+    The render engine (HybridRenderEngine)
+
+    .PARAMETER x
+    X coordinate
+
+    .PARAMETER y
+    Y coordinate
+
+    .PARAMETER text
+    Text to render
+
+    .PARAMETER fgProp
+    Foreground theme property (e.g., 'Foreground.Row')
+
+    .PARAMETER bgProp
+    Background theme property (e.g., 'Background.Row')
+    #>
+    [void] WriteThemedAt([object]$renderEngine, [int]$x, [int]$y, [string]$text, [string]$fgProp, [string]$bgProp) {
+        $themeEngine = [PmcThemeEngine]::GetInstance()
+        
+        # Check if foreground is gradient
+        $gradientInfo = $themeEngine.GetGradientInfo($fgProp)
+        
+        # DEBUG: Log to file
+        Add-Content -Path "/tmp/pmc-gradient-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] WriteThemedAt: fgProp=$fgProp gradientInfo=$(if($gradientInfo){'GRADIENT'}else{'null'})"
+        
+        # Get background color (always solid for now)
+        $bg = $themeEngine.GetThemeColorInt($bgProp)
+        
+        if ($gradientInfo) {
+            # Use gradient overload
+            Add-Content -Path "/tmp/pmc-gradient-debug.log" -Value "  -> GRADIENT WriteAt: Start=$($gradientInfo.Start) End=$($gradientInfo.End)"
+            $renderEngine.WriteAt($x, $y, $text, $gradientInfo.Start, $gradientInfo.End, $bg)
+        }
+        else {
+            # Use solid color
+            $fg = $themeEngine.GetThemeColorInt($fgProp)
+            $renderEngine.WriteAt($x, $y, $text, $fg, $bg)
+        }
+    }
+
 
     # === Box Drawing Methods ===
 

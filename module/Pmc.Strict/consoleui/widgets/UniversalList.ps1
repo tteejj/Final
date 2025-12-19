@@ -1006,8 +1006,15 @@ class UniversalList : PmcWidget {
                 
                 $strVal = $strVal.PadRight($colWidth)
                 
-                # 4d. Write - Direct WriteAt
-                $engine.WriteAt($cellX, $rowY, $strVal, $fg, $bg)
+                # 4d. Write - Use WriteThemedAt for gradient support on non-selected rows
+                if ($isSelected -or $isMultiSelected) {
+                    # Selected rows use solid colors for readability
+                    $engine.WriteAt($cellX, $rowY, $strVal, $fg, $bg)
+                }
+                else {
+                    # Normal rows use themed gradient (if theme defines it)
+                    $this.WriteThemedAt($engine, $cellX, $rowY, $strVal, 'Foreground.Row', 'Background.Row')
+                }
                 
                 $cellX += $colWidth
             }

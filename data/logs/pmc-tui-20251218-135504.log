@@ -1,0 +1,23 @@
+[2025-12-18 13:55:04.406] [INFO] Loading PMC module...
+[2025-12-18 13:55:05.726] [INFO] PMC module loaded
+[2025-12-18 13:55:05.730] [INFO] Loading dependencies (FieldSchemas, etc.)...
+[2025-12-18 13:55:05.851] [INFO] Dependencies loaded
+[2025-12-18 13:55:05.852] [INFO] Loading SpeedTUI framework...
+[2025-12-18 13:55:07.302] [INFO] SpeedTUI framework loaded
+[2025-12-18 13:55:07.303] [INFO] Loading PraxisVT...
+[2025-12-18 13:55:07.305] [INFO] PraxisVT loaded
+[2025-12-18 13:55:07.306] [INFO] Loading core dependencies...
+[2025-12-18 13:55:07.331] [ERROR] Failed to load core dependencies: At /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:57 char:1
++ using namespace System.Collections.Generic
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A 'using' statement must appear before any other statements in a script.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:43 char:43
++     static [PmcThemeEngine] GetInstance() {
++                                           ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:25 char:23
++ class PmcThemeEngine {
++                       ~
+Missing closing '}' in statement block or type definition.

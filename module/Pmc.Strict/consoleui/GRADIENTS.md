@@ -1,5 +1,5 @@
 # Gradient Themes Research
-## Updated: 2025-12-17 (Engine Code Verified)
+## Updated: 2025-12-18 (Widget Integration Analysis)
 
 > Research for implementing foreground/text gradient themes.  
 > Background gradients are already handled by the render engine.
@@ -55,60 +55,173 @@ $engine.WriteAt($x, $y, $gradientText)  # 3-arg version, no fg/bg
 
 ---
 
-## Implementation
+## GradientHelper.ps1 - Already Implemented
 
-### Helper Function (~20 lines)
+Located at `consoleui/helpers/GradientHelper.ps1`:
 
-```powershell
-function Get-GradientText {
-    param(
-        [string]$Text,
-        [string]$StartHex,
-        [string]$EndHex
-    )
-    
-    $sb = [System.Text.StringBuilder]::new()
-    $len = $Text.Length
-    
-    # Parse start/end colors
-    $sR = [Convert]::ToInt32($StartHex.Substring(1,2), 16)
-    $sG = [Convert]::ToInt32($StartHex.Substring(3,2), 16)
-    $sB = [Convert]::ToInt32($StartHex.Substring(5,2), 16)
-    $eR = [Convert]::ToInt32($EndHex.Substring(1,2), 16)
-    $eG = [Convert]::ToInt32($EndHex.Substring(3,2), 16)
-    $eB = [Convert]::ToInt32($EndHex.Substring(5,2), 16)
-    
-    for ($i = 0; $i -lt $len; $i++) {
-        $ratio = if ($len -eq 1) { 0 } else { $i / ($len - 1) }
-        $r = [int]($sR + ($eR - $sR) * $ratio)
-        $g = [int]($sG + ($eG - $sG) * $ratio)
-        $b = [int]($sB + ($eB - $sB) * $ratio)
-        [void]$sb.Append("`e[38;2;$r;$g;${b}m$($Text[$i])")
-    }
-    [void]$sb.Append("`e[0m")  # Reset at end
-    
-    return $sb.ToString()
-}
-```
-
-### Usage
-
-```powershell
-# Where gradient text is wanted:
-$title = Get-GradientText -Text "Synthwave Theme" -StartHex "#ff00ff" -EndHex "#00ffff"
-$engine.WriteAt($x, $y, $title)
-
-# Regular widgets unchanged:
-$engine.WriteAt($x, $y, "Normal text", $fg, $bg)
-```
+| Function | Purpose |
+|----------|---------|
+| `Get-GradientText` | Returns ANSI string with gradient |
+| `Write-GradientAt` | Writes per-char to engine with int colors |
+| `Get-SynthwaveGradient` | Preset magenta→cyan |
+| `Write-SynthwaveGradientAt` | Preset direct render |
 
 ---
 
-## Files To Modify
+## Widget Integration Analysis (2025-12-18)
 
-| File | Change |
-|------|--------|
-| `consoleui/helpers/ThemeHelper.ps1` | Add `Get-GradientText` function |
-| Any screen wanting gradients | Call helper, use 3-arg WriteAt |
+### Current Widget Pattern
 
-**Widgets unchanged. Engine unchanged.**
+All widgets use the **5-argument WriteAt** which applies uniform colors:
+
+```powershell
+$fg = $this.GetThemedInt('Foreground.Title')      # Returns packed int
+$bg = $this.GetThemedBgInt('Background.Widget', $width, 0)
+$engine.WriteAt($x, $y, "Some text", $fg, $bg)    # Uniform color
+```
+
+**Widgets bypass gradient support** by never using the 3-arg overload.
+
+### Why 5-arg vs 3-arg?
+
+| Overload | Performance | Gradient | Use Case |
+|----------|-------------|----------|----------|
+| 5-arg `(x,y,text,fg,bg)` | Fastest | ❌ No | Data rows, most UI |
+| 3-arg `(x,y,ansiText)` | ANSI parse overhead | ✅ Yes | Titles, accents |
+
+**Widgets use 5-arg for performance** - parsing ANSI per-character is slower for bulk content like list rows.
+
+### PmcThemeEngine Already Has Gradient Plumbing
+
+```powershell
+# PmcThemeEngine.GetBackgroundAnsi() supports both:
+if ($prop.Type -eq 'Solid') {
+    return $this._GetSolidAnsiCached($prop.Color, $true)
+}
+elseif ($prop.Type -eq 'Gradient') {
+    $gradient = $this._GetGradientArrayCached($propertyName, $prop, $width, $true)
+    return $gradient[$charIndex]  # Per-char gradient!
+}
+```
+
+But widgets don't call per-character - they get one color and apply to whole string.
+
+---
+
+## Implementation Strategy: Option C (Theme-Declared Gradients)
+
+### Phase 1: Theme Schema (No Widget Changes)
+
+Themes declare gradient specs in `_BuildThemeProperties`:
+
+```powershell
+'Foreground.Title' = @{ 
+    Type = 'Gradient'
+    Direction = 'Horizontal'
+    Stops = @(
+        @{ Position = 0.0; Color = '#ff00ff' }
+        @{ Position = 1.0; Color = '#00ffff' }
+    )
+}
+```
+
+### Phase 2: Helper in PmcWidget
+
+Add `WriteThemedText` that auto-detects gradient vs solid:
+
+```powershell
+[void] WriteThemedText($engine, $x, $y, $text, $fgProp, $bgProp) {
+    $propInfo = [PmcThemeEngine]::GetInstance().GetPropertyInfo($fgProp)
+    if ($propInfo.Type -eq 'Gradient') {
+        Write-GradientAt -Engine $engine -X $x -Y $y -Text $text ...
+    } else {
+        $engine.WriteAt($x, $y, $text, $this.GetThemedInt($fgProp), ...)
+    }
+}
+```
+
+### Phase 3: Opt-In Per Widget
+
+Only widgets wanting gradients upgrade to `WriteThemedText`. Others unchanged.
+
+---
+
+## Screens vs Widgets
+
+### Current Widgets (consoleui/widgets/)
+
+| Widget | Purpose | Gradient Candidate? |
+|--------|---------|---------------------|
+| PmcHeader | App title bar | ✅ Yes - titles look great |
+| PmcFooter | Keybind hints | Maybe - short text |
+| PmcMenuBar | Menu items | Maybe |
+| UniversalList | Data rows | ❌ No - performance |
+| TextInput | Input fields | ❌ No |
+| TagEditor | Tag chips | Maybe |
+| DatePicker | Calendar popup | ❌ No |
+| ProjectPicker | Project selector | ❌ No |
+
+**Most widgets don't need gradients** - they display data, not decorative text.
+
+### Screens Can Use Gradients Directly
+
+Screens control their own `RenderToEngine()`:
+
+```powershell
+# ThemeEditorScreen already does this:
+$title = Get-SynthwaveGradient "Synthwave Theme"
+$engine.WriteAt($x, $y, $title)  # 3-arg, gradient works!
+```
+
+**Screens don't need widget changes** - they can call `Get-GradientText` directly.
+
+---
+
+## Full Gradient Theme Without Widget Changes?
+
+**YES.** Here's what can be gradient TODAY without touching widgets:
+
+| Element | How | Works Now? |
+|---------|-----|------------|
+| Screen titles | Screen calls `Get-GradientText` | ✅ |
+| Theme preview text | Screen calls helper | ✅ |
+| About screen | Screen renders accent text | ✅ |
+| Help screen | Screen renders headers | ✅ |
+
+**Widgets showing data (lists, forms) stay solid** - which is correct. Data should be readable, not decorative.
+
+---
+
+## Semantic Colors (Overdue, Priority)
+
+Currently hardcoded in `UI.ps1 Get-PmcCellStyle`:
+
+```powershell
+switch ($p) {
+    '1' { return @{ Fg = 'Red';    Bold = $true } }  # HARDCODED
+    '2' { return @{ Fg = 'Yellow'; Bold = $true } }
+}
+if ($dt.Date -lt $today) { return @{ Fg = 'Red'; Bold = $true } }  # HARDCODED
+```
+
+**Fix:** Add to `_BuildThemeProperties`:
+
+```powershell
+'Semantic.Priority1' = @{ Type = 'Solid'; Color = '#ff5555' }
+'Semantic.Priority2' = @{ Type = 'Solid'; Color = '#ffcc00' }
+'Semantic.Overdue'   = @{ Type = 'Solid'; Color = '#ff3333' }
+'Semantic.DueSoon'   = @{ Type = 'Solid'; Color = '#ffaa00' }
+```
+
+Then `Get-PmcCellStyle` queries theme instead of hardcoding.
+
+---
+
+## Summary
+
+- **Gradient infrastructure exists** - Engine parses per-char ANSI
+- **Widgets don't need changes for v1** - screens can use gradients directly
+- **Widgets use 5-arg for performance** - correct for data display
+- **Option C is best** - theme declares, widgets opt-in later
+- **Semantic colors** just need properties added to theme
+- **Headers/footers** are still useful for consistent chrome

@@ -270,11 +270,9 @@ class ThemeEditorScreen : PmcScreen {
         $theme = $this.Themes[$this.SelectedIndex]
 
         try {
-            $themeManager = [PmcThemeManager]::GetInstance()
-            $themeManager.SetTheme($theme.Hex)
             $this.CurrentTheme = $theme.Name
-
             $reloadSuccess = Invoke-ThemeHotReload $theme.Hex
+            
             if ($reloadSuccess) {
                 try { $this.ShowSuccess("Theme applied! Changes visible immediately.") } catch { }
             }

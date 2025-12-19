@@ -1776,11 +1776,30 @@ class InlineEditor : PmcWidget {
 
         # Update the field's Value property
         $field.Value = $value
+
+        # CRITICAL FIX: Also update the widget if it exists
+        # This is required for "number" fields where arrow keys update the value via this method,
+        # but the UI (TextInput) wouldn't update because _GetFieldValue prioritizes reading from the widget.
+        if ($this._fieldWidgets.ContainsKey($fieldName)) {
+            $widget = $this._fieldWidgets[$fieldName]
+            
+            # Handle TextInput (used for text, number, date, project-inline)
+            if ($widget.GetType().Name -eq 'TextInput') {
+                $newText = if ($null -ne $value) { $value.ToString() } else { "" }
+                $currentText = $widget.GetText()
+                
+                # Only update if different to avoid infinite loops with OnTextChanged
+                # and to preserve cursor position when typing
+                if ($newText -ne $currentText) {
+                    $widget.SetText($newText)
+                }
+            }
+        }
     }
 
     <#
     .SYNOPSIS
-    Get preview string for field value
+    Get preview string for a field (for list view)
     #>
     hidden [string] _GetFieldValuePreview([hashtable]$field) {
         $fieldName = $field.Name

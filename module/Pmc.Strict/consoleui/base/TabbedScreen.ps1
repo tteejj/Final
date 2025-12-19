@@ -212,24 +212,10 @@ class TabbedScreen : PmcScreen {
             Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ========== TabbedScreen.OnTabChanged: Switched to tab $tabIndex '$tabName' =========="
         }
 
-        # Surgically invalidate TabPanel content region to clear old tab content
-        # Calculate Y range: contentY to contentY + max visible rows
-        # contentY = TabPanel.Y + TabBarHeight (2 rows for tabs)
-        # We need to clear the entire possible field rendering area
-        $contentY = $this.TabPanel.Y + $this.TabPanel.TabBarHeight
-        $maxRows = $this.TabPanel.Height  # Clear entire content area
-        $minY = $contentY
-        $maxY = $contentY + $maxRows
-
-        if ($this.RenderEngine) {
-            $this.RenderEngine.InvalidateCachedRegion($minY, $maxY)
-            if ($global:PmcTuiLogFile) {
-                Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] TabbedScreen.OnTabChanged: Invalidated cache region Y=$minY-$maxY (differential rendering - no full invalidation)"
-            }
-        }
-
-        # REMOVED: $this.TabPanel.Invalidate() - defeats differential renderer, causes flashing
-        # Surgical cache invalidation above is sufficient
+        # NOTE: No manual cache invalidation needed here.
+        # The differential renderer (HybridRenderEngine) automatically detects changes
+        # between front/back buffers during EndFrame() and only redraws what changed.
+        # Previously had InvalidateCachedRegion call here that caused screen flashing.
 
         # Default: update status bar
         if ($this.StatusBar) {

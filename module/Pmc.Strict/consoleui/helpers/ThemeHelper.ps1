@@ -27,45 +27,31 @@ function Invoke-ThemeHotReload {
     )
 
     try {
-        if ($global:PmcTuiLogFile) {
-            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ThemeHelper: Hot reload started (hex=$hexColor)"
+        # 1. If hex provided, save it to config first
+        if (-not [string]::IsNullOrEmpty($hexColor)) {
+            $cfg = Get-PmcConfig
+            if (-not $cfg.Display) { $cfg.Display = @{} }
+            if (-not $cfg.Display.Theme) { $cfg.Display.Theme = @{} }
+            $cfg.Display.Theme.Hex = $hexColor
+            Save-PmcConfig $cfg
         }
 
-        # 1. Reinitialize PMC theme system to update state
+        # 2. Reinitialize PMC theme system to update state
         Initialize-PmcThemeSystem -Force
 
-        # 2. Get fresh color palette from PMC
+        # 3. Get fresh color palette from PMC
         $palette = Get-PmcColorPalette
 
-        if ($global:PmcTuiLogFile) {
-            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ThemeHelper: Palette loaded with $($palette.Count) colors"
-        }
-
-        # 3. Convert RGB objects to hex strings for PmcThemeEngine
+        # 4. Convert RGB objects to hex strings for PmcThemeEngine
         $paletteHex = @{}
         foreach ($key in $palette.Keys) {
             $rgb = $palette[$key]
             $paletteHex[$key] = "#{0:X2}{1:X2}{2:X2}" -f $rgb.R, $rgb.G, $rgb.B
         }
 
-        # 4. Reload PmcThemeEngine with new palette
-        $engine = [PmcThemeEngine]::GetInstance()
-        $themeConfig = @{
-            Palette = $paletteHex
-        }
-        $engine.LoadFromConfig($themeConfig)
-
-        if ($global:PmcTuiLogFile) {
-            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ThemeHelper: PmcThemeEngine reloaded"
-        }
-
-        # 5. Reload PmcThemeManager
+        # 5. Reload PmcThemeManager (which configures the Engine)
         $themeManager = [PmcThemeManager]::GetInstance()
         $themeManager.Reload()
-
-        if ($global:PmcTuiLogFile) {
-            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ThemeHelper: PmcThemeManager reloaded"
-        }
 
         # 6. Force full screen refresh if app is running
         if ($global:PmcApp) {
@@ -79,23 +65,11 @@ function Invoke-ThemeHotReload {
 
             # Request render on next frame
             $global:PmcApp.RequestRender()
-
-            if ($global:PmcTuiLogFile) {
-                Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ThemeHelper: Screen refresh requested"
-            }
-        }
-
-        if ($global:PmcTuiLogFile) {
-            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ThemeHelper: Hot reload COMPLETE"
         }
 
         return $true
 
     } catch {
-        if ($global:PmcTuiLogFile) {
-            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ThemeHelper: ERROR during hot reload: $_"
-            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ThemeHelper: Stack: $($_.ScriptStackTrace)"
-        }
         Write-Error "Theme hot reload failed: $_"
         return $false
     }
