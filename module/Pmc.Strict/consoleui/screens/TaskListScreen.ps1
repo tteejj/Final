@@ -1527,7 +1527,11 @@ class TaskListScreen : StandardListScreen {
         if ($this._detailEditor -and $this._showDetailPane) {
             if ($null -ne $item) {
                 $desc = Get-SafeProperty $item 'description' -Default ""
-                $this._detailEditor.SetText($desc)
+                # Apply word wrap to description
+                # Calculate wrap width based on DetailPane width (or default if not visible yet)
+                $wrapWidth = $(if ($this.DetailPane.Width -gt 4) { $this.DetailPane.Width - 4 } else { 40 })
+                $wrappedDesc = $this._WrapText($desc, $wrapWidth)
+                $this._detailEditor.SetText($wrappedDesc)
             } else {
                 $this._detailEditor.SetText("")
             }
@@ -1875,9 +1879,32 @@ class TaskListScreen : StandardListScreen {
     }
 
     # Override RenderContent to call parent (which handles inline editor rendering)
-    [string] RenderContent() {
+    # Override RenderContentToEngine to handle detail pane rendering
+    [void] RenderContentToEngine([object]$engine) {
         # Call base class which handles list, filter panel, and inline editor
-        return ([StandardListScreen]$this).RenderContent()
+        ([StandardListScreen]$this).RenderContentToEngine($engine)
+
+        # Render Detail Pane if visible
+        if ($this._showDetailPane -and $this.DetailPane) {
+            # CRITICAL FIX: Clear the gap between list and detail pane to prevent artifacts
+            # The gap is 1 char wide at List.X + List.Width
+            $gapX = $this.List.X + $this.List.Width
+            $gapY = $this.List.Y
+            $gapHeight = $this.List.Height
+            
+            # Use Background.Panel for the gap to match the detail pane
+            $themeEngine = [PmcThemeEngine]::GetInstance()
+            $bg = $themeEngine.GetBackgroundInt('Background.Panel', 1, 0)
+            $fg = $themeEngine.GetForegroundInt('Foreground.Primary')
+            
+            # Fill the 1-char gap
+            $engine.Fill($gapX, $gapY, 1, $gapHeight, ' ', $fg, $bg)
+
+            # Render the detail pane (TextAreaEditor)
+            if ($this._detailEditor) {
+                $this._detailEditor.RenderToEngine($engine)
+            }
+        }
     }
 
     # Override: Additional keyboard shortcuts
@@ -1894,6 +1921,7 @@ class TaskListScreen : StandardListScreen {
                     $this.Store.UpdateTask($taskId, @{ description = $newDesc })
                 }
                 $this._detailEditMode = $false
+                $this._detailEditor.ShowCursor = $false
                 # Editor stays visible, panel stays hidden
                 # $this._detailEditor.Visible stays true
                 # $this.DetailPane.Visible stays false
@@ -1917,6 +1945,7 @@ class TaskListScreen : StandardListScreen {
                 $this.Resize($this.TermWidth, $this.TermHeight)
             }
             $this._detailEditMode = -not $this._detailEditMode
+            $this._detailEditor.ShowCursor = $this._detailEditMode
             if ($this._detailEditMode) {
                 $this.SetStatusMessage("Editing description. Esc to save.", "info")
             } else {

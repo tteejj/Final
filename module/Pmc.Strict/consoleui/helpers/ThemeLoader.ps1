@@ -12,7 +12,7 @@ Get list of available themes from themes/ directory
 Array of theme objects with Name, Hex, Description, Properties
 #>
 function Get-AvailableThemes {
-    $themesDir = Join-Path (Get-PmcRootPath) 'themes'
+    $themesDir = Join-Path $global:PmcAppRoot 'themes'
     $themes = @()
     
     if (Test-Path $themesDir) {
@@ -24,7 +24,7 @@ function Get-AvailableThemes {
             }
             catch {
                 # Debug only when flag is set
-                if ($global:PmcDebug -and $global:PmcTuiLogFile) {
+                if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
                     Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeLoader] ERROR loading $($file.Name): $_"
                 }
             }
@@ -50,23 +50,49 @@ function Load-Theme {
         [string]$themeName
     )
     
-    $themesDir = Join-Path (Get-PmcRootPath) 'themes'
+    $themesDir = Join-Path $global:PmcAppRoot 'themes'
     $themeFile = Join-Path $themesDir "$($themeName.ToLower()).json"
     
     if (Test-Path $themeFile) {
         try {
-            $theme = Get-Content $themeFile -Raw | ConvertFrom-Json
+            $themeObj = Get-Content $themeFile -Raw | ConvertFrom-Json
+            # Convert Properties from PSCustomObject to hashtable
+            $props = @{}
+            if ($themeObj.Properties) {
+                $themeObj.Properties.PSObject.Properties | ForEach-Object {
+                    $propValue = @{
+                        Type = $_.Value.Type
+                    }
+                    # Solid types have Color, Gradient types have Start/End
+                    if ($_.Value.PSObject.Properties['Color']) {
+                        $propValue['Color'] = $_.Value.Color
+                    }
+                    if ($_.Value.PSObject.Properties['Start']) {
+                        $propValue['Start'] = $_.Value.Start
+                    }
+                    if ($_.Value.PSObject.Properties['End']) {
+                        $propValue['End'] = $_.Value.End
+                    }
+                    $props[$_.Name] = $propValue
+                }
+            }
+            $theme = @{
+                Name = $themeObj.Name
+                Hex = $themeObj.Hex
+                Description = $themeObj.Description
+                Properties = $props
+            }
             return $theme
         }
         catch {
-            if ($global:PmcDebug -and $global:PmcTuiLogFile) {
-                Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeLoader] ERROR loading theme '$themeName': $_"
+            if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
+                Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeLoader] FATAL ERROR loading theme '$themeName': $_"
             }
-            return $null
+            throw "Failed to load theme '$themeName': $_"
         }
     }
     
-    if ($global:PmcDebug -and $global:PmcTuiLogFile) {
+    if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
         Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeLoader] Theme file not found: $themeFile"
     }
     return $null
@@ -92,7 +118,7 @@ function Get-ActiveTheme {
         }
     }
     catch {
-        if ($global:PmcDebug -and $global:PmcTuiLogFile) {
+        if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
             Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeLoader] ERROR reading config: $_"
         }
     }
@@ -101,7 +127,7 @@ function Get-ActiveTheme {
     
     # If theme not found, try default
     if (-not $theme -and $themeName -ne 'default') {
-        if ($global:PmcDebug -and $global:PmcTuiLogFile) {
+        if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
             Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeLoader] Theme '$themeName' not found, falling back to default"
         }
         $theme = Load-Theme -themeName 'default'

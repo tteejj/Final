@@ -56,7 +56,7 @@ function Invoke-ThemeHotReload {
         return $true
 
     } catch {
-        if ($global:PmcDebug -and $global:PmcTuiLogFile) {
+        if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
             Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeHotReload] ERROR: $_"
         }
         return $false

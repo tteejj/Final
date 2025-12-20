@@ -149,20 +149,6 @@ class DatePicker : PmcWidget {
 
     <#
     .SYNOPSIS
-    Render directly to engine (new high-performance path)
-    #>
-    [void] RenderToEngine([object]$engine) {
-        $this.RegisterLayout($engine)
-
-        # Colors (Ints)
-        # Use Panel background (usually dark/black) instead of MenuBar (often colored) to avoid "giant block" look
-        $bg = $this.GetThemedBgInt('Background.Panel', 1, 0)
-        if ($bg -eq -1) { $bg = [HybridRenderEngine]::_PackRGB(30, 30, 30) }
-        
-        # Clamp bounds immediately before drawing
-        $this._ClampToBounds($engine)
-        
-        # === LAYER ELEVATION ===
         # Ensure Popup is drawn ABOVE everything else
         if ($engine.PSObject.Methods['BeginLayer']) {
             $engine.BeginLayer(100)

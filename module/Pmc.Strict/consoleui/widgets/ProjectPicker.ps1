@@ -22,7 +22,7 @@ using namespace System.Text
 #       $selected = $picker.GetSelectedProject()
 #   }
 
-Set-StrictMode -Version Latest
+Set-StrictMode -Off
 
 # Load PmcWidget base class if not already loaded
 if (-not ([System.Management.Automation.PSTypeName]'PmcWidget').Type) {
@@ -262,64 +262,6 @@ class ProjectPicker : PmcWidget {
 
     <#
     .SYNOPSIS
-    Render directly to engine (new high-performance path)
-    #>
-    [void] RenderToEngine([object]$engine) {
-        $this.RegisterLayout($engine)
-
-
-        # Colors (Ints)
-        # Use Panel background but ensure it is OPAQUE
-        $bg = $this.GetThemedBgInt('Background.Panel', 1, 0)
-        
-        # DOUBLE BORDER FIX: Force opaque background. 
-        # If theme returns -1 (Transparent), use hardcoded Black (0,0,0) packed int.
-        if ($bg -eq -1) { 
-            # 0xFF000000 (Alpha=255) if engine supports it, or just 0 for Black RGB packed?
-            # HybridRenderEngine uses packed RGB. 0 = Black.
-            # Let's use a dark gray to be safe and visible: RGB(10,10,10)
-            $bg = [HybridRenderEngine]::_PackRGB(10, 10, 10) 
-        }
-        
-        # Force strict bounding box for visual stability
-        if ($this.Width -lt 20) { $this.Width = 20 }
-
-        # Clamp AFTER size adjustments to prevent growing off-screen
-        $this._ClampToBounds($engine)
-        
-        # === LAYER ELEVATION ===
-        # DOUBLE BORDER FIX: Ensure Popup is drawn ABOVE everything else (e.g. List Borders)
-        # by explicitly setting a high Z-Index layer.
-        if ($engine.PSObject.Methods['BeginLayer']) {
-            $engine.BeginLayer(100) # Arbitrary high number
-        }
-
-        $fg = $this.GetThemedInt('Foreground.Row')
-        $borderFg = $this.GetThemedInt('Border.Widget')
-        $primaryFg = $this.GetThemedInt('Foreground.Title')
-        $mutedFg = $this.GetThemedInt('Foreground.Muted')
-        $errorFg = $this.GetThemedInt('Foreground.Error')
-        $highlightBg = $this.GetThemedBgInt('Background.RowSelected', 1, 0)
-        $highlightFg = $this.GetThemedInt('Foreground.RowSelected')
-        
-        # 1. Fill Background (Strict Opaque)
-        $engine.Fill($this.X, $this.Y, $this.Width, $this.Height, ' ', $fg, $bg)
-        
-        # 2. Draw Box (Strict single border)
-        $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $borderFg, $bg)
-        
-        # Title
-        $title = if ($this._isCreateMode) { "Create New Project" } else { $this.Label }
-        $pad = [Math]::Max(0, [Math]::Floor(($this.Width - 4 - $title.Length) / 2))
-        $titleX = $this.X + 2 + $pad
-        # Ensure title fits
-        if ($title.Length -gt ($this.Width - 4)) {
-            $title = $title.Substring(0, $this.Width - 4)
-            $titleX = $this.X + 2
-        }
-        $engine.WriteAt($titleX, $this.Y + 1, $title, $primaryFg, $bg)
-        
-        # Count (if not in create mode)
         if (-not $this._isCreateMode) {
             $countStr = "($($this._filteredProjects.Count))"
             $engine.WriteAt($this.X + $this.Width - $countStr.Length - 2, $this.Y + 1, $countStr, $mutedFg, $bg)

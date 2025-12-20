@@ -382,7 +382,7 @@ class TagEditor : PmcWidget {
         # Colors (Ints)
         # Use Panel background
         $bg = $this.GetThemedBgInt('Background.Panel', 1, 0)
-        if ($bg -eq -1) { $bg = [HybridRenderEngine]::_PackRGB(30, 30, 30) }
+        # Fallback removed - strict theme enforcement
 
         $fg = $this.GetThemedInt('Foreground.Row')
         $borderFg = $this.GetThemedInt('Border.Widget')

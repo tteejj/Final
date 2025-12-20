@@ -341,7 +341,7 @@ class PmcMenuBar : PmcWidget {
         $highlightBg = $this.GetThemedBgInt('Background.RowSelected', 1, 0)
         $highlightFg = $this.GetThemedInt('Foreground.RowSelected')
         
-        if ($bg -eq -1) { $bg = [HybridRenderEngine]::_PackRGB(30, 30, 30) }
+        # Fallback removed - strict theme enforcement
 
         # 1. Draw Main Bar Background
         $engine.Fill($this.X, $this.Y, $this.Width, 1, ' ', $fg, $bg)
@@ -407,7 +407,7 @@ class PmcMenuBar : PmcWidget {
         $highlightFg = $this.GetThemedInt('Foreground.RowSelected')
         $mutedFg = $this.GetThemedInt('Foreground.Muted')
         
-        if ($bg -eq -1) { $bg = [HybridRenderEngine]::_PackRGB(30, 30, 30) }
+        # Fallback removed - strict theme enforcement
 
         # Draw Box in Region
         # We can use Fill/WriteToRegion

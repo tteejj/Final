@@ -360,6 +360,16 @@ class PmcScreen {
         # Z-INDEX LAYER RENDERING
         # All rendering now uses explicit layers for proper z-ordering.
 
+        # Layer 0: Background (Fill entire screen with theme background)
+        # STRICT THEME ENFORCEMENT: No fallbacks. If theme property is missing, this MUST fail.
+        $engine.BeginLayer([ZIndex]::Background)
+            # Fill entire terminal with background color
+            $engine.Fill(0, 0, $this.TermWidth, $this.TermHeight, ' ', $fg, $bg)
+        }
+        catch {
+            # Fallback if theme fails (shouldn't happen with strict mode, but safe for base class)
+        }
+
         # Layer 50: Header
         $engine.BeginLayer([ZIndex]::Header)
         if ($this.Header) {

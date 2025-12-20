@@ -25,6 +25,8 @@ function Export-ModuleMember { param([Parameter(ValueFromRemainingArguments=$tru
 
 # Type normalization helpers (helpers/ - ConsoleUI-specific)
 . (Join-Path $PSScriptRoot 'helpers/TypeNormalization.ps1')
+. (Join-Path $PSScriptRoot 'helpers/ThemeLoader.ps1')
+. (Join-Path $PSScriptRoot 'helpers/ThemeHelper.ps1')
 
 # ConsoleUI-specific PmcTemplate class (UNIQUE to deps/)
 . (Join-Path $depsDir 'PmcTemplate.ps1')

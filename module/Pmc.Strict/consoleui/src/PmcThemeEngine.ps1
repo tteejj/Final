@@ -79,7 +79,7 @@ class PmcThemeEngine {
     # Get background ANSI - handles solid or gradient
     [string] GetBackgroundAnsi([string]$propertyName, [int]$width, [int]$charIndex) {
         if (-not $this._properties.ContainsKey($propertyName)) {
-            return ''
+            throw "Theme Property Missing: '$propertyName'"
         }
 
         $prop = $this._properties[$propertyName]
@@ -101,7 +101,7 @@ class PmcThemeEngine {
     # Get foreground ANSI - usually solid
     [string] GetForegroundAnsi([string]$propertyName) {
         if (-not $this._properties.ContainsKey($propertyName)) {
-            return ''
+            throw "Theme Property Missing: '$propertyName'"
         }
 
         $prop = $this._properties[$propertyName]
@@ -118,7 +118,7 @@ class PmcThemeEngine {
     # Returns packed RGB int (0x00RRGGBB)
     [int] GetThemeColorInt([string]$propertyName) {
         if (-not $this._properties.ContainsKey($propertyName)) {
-            return 0
+            throw "Theme Property Missing: '$propertyName'"
         }
 
         $prop = $this._properties[$propertyName]
@@ -171,7 +171,7 @@ class PmcThemeEngine {
     # Get foreground Packed Int - usually solid
     [int] GetForegroundInt([string]$propertyName) {
         if (-not $this._properties.ContainsKey($propertyName)) {
-            return -1
+            throw "Theme Property Missing: '$propertyName'"
         }
 
         $prop = $this._properties[$propertyName]
@@ -187,11 +187,7 @@ class PmcThemeEngine {
     # Get background Packed Int
     [int] GetBackgroundInt([string]$propertyName, [int]$width, [int]$charIndex) {
         if (-not $this._properties.ContainsKey($propertyName)) {
-            # Targeted diagnostic: log missing properties (only if debug enabled)
-            if ((Test-Path variable:global:PmcDebug) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
-                Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeEngine] MISSING: '$propertyName' (total props: $($this._properties.Count))"
-            }
-            return -1
+            throw "Theme Property Missing: '$propertyName'"
         }
 
         $prop = $this._properties[$propertyName]

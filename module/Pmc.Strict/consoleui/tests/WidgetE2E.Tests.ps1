@@ -3,22 +3,47 @@
 
 BeforeAll {
     $moduleRoot = "/home/teej/ztest/module/Pmc.Strict/consoleui"
+    $global:PmcAppRoot = "/home/teej/ztest"
     
     # Load required classes in dependency order
     . "$moduleRoot/helpers/GapBuffer.ps1"
     . "$moduleRoot/src/PmcThemeEngine.ps1"
+    
+    # Mock Export-ModuleMember for dot-sourcing
+    function Export-ModuleMember {}
+    . "$moduleRoot/helpers/ThemeLoader.ps1"
+    
+    # Initialize theme system
+    $theme = Load-Theme "Default"
+    if ($null -eq $theme) { Write-Host "ERROR: Theme is null!" }
+    else { Write-Host "Theme loaded: $($theme.Name) with $($theme.Properties.Count) properties" }
+    [PmcThemeEngine]::GetInstance().Configure($theme.Properties, @{})
     
     # Create mock ZIndex if not exists
     if (-not ("ZIndex" -as [type])) {
         enum ZIndex { Background = 0; Content = 10; Panel = 20; Header = 50; Footer = 55; StatusBar = 65; Dropdown = 100 }
     }
     
+    # Load SpeedTUI dependencies
+    $SpeedTUIRoot = "/home/teej/ztest/lib/SpeedTUI"
+    . "$SpeedTUIRoot/Core/Logger.ps1"
+    . "$SpeedTUIRoot/Core/PerformanceMonitor.ps1"
+    . "$SpeedTUIRoot/Core/NullCheck.ps1"
+    . "$SpeedTUIRoot/Core/Internal/PerformanceCore.ps1"
+    . "$SpeedTUIRoot/Core/SimplifiedTerminal.ps1"
+    . "$SpeedTUIRoot/Core/NativeRenderCore.ps1"
+    . "$SpeedTUIRoot/Core/CellBuffer.ps1"
+    . "$SpeedTUIRoot/Core/HybridRenderEngine.ps1"
+    . "$SpeedTUIRoot/Core/Component.ps1"
+    
     # Load PmcWidget and dependent widgets
     . "$moduleRoot/widgets/PmcWidget.ps1"
     . "$moduleRoot/widgets/TextInput.ps1"
     . "$moduleRoot/widgets/DatePicker.ps1"
+    . "$moduleRoot/services/TaskStore.ps1"
     . "$moduleRoot/widgets/ProjectPicker.ps1"
     . "$moduleRoot/widgets/InlineEditor.ps1"
+    . "$moduleRoot/widgets/FilterPanel.ps1"
     . "$moduleRoot/widgets/UniversalList.ps1"
 }
 

@@ -51,6 +51,7 @@ class TextAreaEditor : PmcWidget {
     [bool]$Modified = $false
     [bool]$EnableUndo = $false  # PERFORMANCE: Undo disabled by default for responsiveness
     [bool]$ShowStatistics = $false
+    [bool]$ShowCursor = $false  # Controls cursor visibility (for focus)
 
     # File info
     [string]$FilePath = ""
@@ -222,10 +223,10 @@ class TextAreaEditor : PmcWidget {
         $selBg = $this.GetThemedBgInt('Background.RowSelected', 1, 0)
         $cursorBg = $this.GetThemedBgInt('Background.RowSelected', 1, 0)
         
-        # Fallback colors if theme not available
-        if ($textBg -eq -1) { $textBg = [HybridRenderEngine]::_PackRGB(30, 30, 30) }
-        if ($selBg -eq -1) { $selBg = [HybridRenderEngine]::_PackRGB(0, 80, 160) }
-        if ($cursorBg -eq -1) { $cursorBg = [HybridRenderEngine]::_PackRGB(200, 200, 200) }
+        # Fallback colors removed for strict theme enforcement
+        # if ($textBg -eq -1) { $textBg = [HybridRenderEngine]::_PackRGB(30, 30, 30) }
+        # if ($selBg -eq -1) { $selBg = [HybridRenderEngine]::_PackRGB(0, 80, 160) }
+        # if ($cursorBg -eq -1) { $cursorBg = [HybridRenderEngine]::_PackRGB(200, 200, 200) }
 
         # Draw background
         for ($r = 0; $r -lt $this.Height; $r++) {
@@ -314,19 +315,20 @@ class TextAreaEditor : PmcWidget {
             }
         }
 
-        # Draw cursor (inverted character at cursor position)
-        $cursorScreenY = $this.CursorY - $this.ScrollOffsetY
-        $cursorScreenX = $this.CursorX - $this.ScrollOffsetX
-        if ($cursorScreenY -ge 0 -and $cursorScreenY -lt $this.Height -and $cursorScreenX -ge 0 -and $cursorScreenX -lt $this.Width) {
-            $cursorLine = $this.GetLine($this.CursorY)
-            $cursorChar = " "  # Default to space for end-of-line cursor
-            if ($this.CursorX -ge 0 -and $this.CursorX -lt $cursorLine.Length) {
-                # Get character at cursor position as string
-                $cursorChar = [string]$cursorLine.Substring($this.CursorX, 1)
+        # Draw cursor (inverted character at cursor position) - ONLY if ShowCursor is true
+        if ($this.ShowCursor) {
+            $cursorScreenY = $this.CursorY - $this.ScrollOffsetY
+            $cursorScreenX = $this.CursorX - $this.ScrollOffsetX
+            if ($cursorScreenY -ge 0 -and $cursorScreenY -lt $this.Height -and $cursorScreenX -ge 0 -and $cursorScreenX -lt $this.Width) {
+                $cursorLine = $this.GetLine($this.CursorY)
+                $cursorChar = " "  # Default to space for end-of-line cursor
+                if ($this.CursorX -ge 0 -and $this.CursorX -lt $cursorLine.Length) {
+                    # Get character at cursor position as string
+                    $cursorChar = [string]$cursorLine.Substring($this.CursorX, 1)
+                }
+                # Draw cursor with high contrast (use selection foreground which is usually white/bright)
+                $engine.WriteAt($this.X + $cursorScreenX, $this.Y + $cursorScreenY, $cursorChar, $selFg, $cursorBg)
             }
-            # Draw cursor with inverted fg/bg (text on bright background)
-            # FIX: Use textFg instead of textBg to preserve syntax color (or base color)
-            $engine.WriteAt($this.X + $cursorScreenX, $this.Y + $cursorScreenY, $cursorChar, $textFg, $cursorBg)
         }
     }
 

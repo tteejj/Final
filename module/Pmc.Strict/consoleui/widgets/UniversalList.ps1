@@ -880,9 +880,9 @@ class UniversalList : PmcWidget {
         $highlightBg = $this.GetThemedBgInt('Background.RowSelected', 1, 0)
         $highlightFg = $this.GetThemedInt('Foreground.RowSelected')
 
-        # Fallbacks
-        if ($highlightBg -eq -1) { $highlightBg = [HybridRenderEngine]::_PackRGB(64, 94, 117) } # Blue
-        if ($highlightFg -eq -1) { $highlightFg = [HybridRenderEngine]::_PackRGB(255, 255, 255) } # White
+        # Fallbacks removed for strict theme enforcement
+        # if ($highlightBg -eq -1) { $highlightBg = [HybridRenderEngine]::_PackRGB(64, 94, 117) } # Blue
+        # if ($highlightFg -eq -1) { $highlightFg = [HybridRenderEngine]::_PackRGB(255, 255, 255) } # White
 
 
         $currentRow = 1

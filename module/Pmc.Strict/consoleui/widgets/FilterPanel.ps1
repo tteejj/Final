@@ -347,19 +347,15 @@ class FilterPanel : PmcWidget {
         $this.RegisterLayout($engine)
 
         # Colors (Ints)
-        $bg = $this.GetThemedBgInt('Background.MenuBar', 1, 0)
+        [int]$fg = 0; [int]$bg = 0; [int]$borderFg = 0; [int]$primaryFg = 0; [int]$mutedFg = 0; [int]$highlightBg = 0; [int]$highlightFg = 0
+
         $fg = $this.GetThemedInt('Foreground.Row')
+        $bg = $this.GetThemedBgInt('Background.MenuBar', 1, 0)
         $borderFg = $this.GetThemedInt('Border.Widget')
         $primaryFg = $this.GetThemedInt('Foreground.Title')
         $mutedFg = $this.GetThemedInt('Foreground.Muted')
         $highlightBg = $this.GetThemedBgInt('Background.RowSelected', 1, 0)
-        
-        if ($bg -eq -1) { $bg = [HybridRenderEngine]::_PackRGB(30, 30, 30) }
-
-        # Draw Box
-        $engine.Fill($this.X, $this.Y, $this.Width, $this.Height, ' ', $fg, $bg)
-        $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $borderFg, $bg)
-        
+        $highlightFg = $this.GetThemedInt('Foreground.RowSelected')
         # Title
         $titleText = " $($this.Title) "
         $engine.WriteToRegion("$($this.RegionID)_Title", $titleText, $primaryFg, $bg)

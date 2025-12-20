@@ -167,12 +167,13 @@ class SimpleFilePicker : PmcWidget {
         $this.RegisterLayout($engine)
 
         # Colors (Ints)
-        $bg = [HybridRenderEngine]::_PackRGB(30, 30, 30)
-        $fg = [HybridRenderEngine]::_PackRGB(231, 231, 231)
-        $highlightBg = [HybridRenderEngine]::_PackRGB(255, 255, 255)
-        $highlightFg = [HybridRenderEngine]::_PackRGB(0, 0, 0)
-        $dirColor = [HybridRenderEngine]::_PackRGB(255, 255, 0)
-        $muted = [HybridRenderEngine]::_PackRGB(150, 150, 150)
+        # Colors (Ints)
+        $bg = $this.GetThemedBgInt('Background.Panel', 1, 0)
+        $fg = $this.GetThemedInt('Foreground.Row')
+        $highlightBg = $this.GetThemedBgInt('Background.RowSelected', 1, 0)
+        $highlightFg = $this.GetThemedInt('Foreground.RowSelected')
+        $dirColor = $this.GetThemedInt('Foreground.Title')
+        $muted = $this.GetThemedInt('Foreground.Muted')
         
         # Draw Box
         $engine.Fill($this.X, $this.Y, $this.Width, $this.Height, ' ', $fg, $bg)

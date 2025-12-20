@@ -77,17 +77,22 @@ class PmcThemeManager {
             $this._ansiCache = @{}
 
             # ONE PATH: Load theme from file
+            # ONE PATH: Load theme from file
             $theme = Get-ActiveTheme
+            if ($theme) {
+                if ($theme.Properties) {
+                }
+            }
             if ($theme -and $theme.Properties) {
                 [PmcThemeEngine]::GetInstance().Configure($theme.Properties, $this.ColorPalette)
             } else {
                 # No theme file found - this should not happen
-                if ($global:PmcDebug -and $global:PmcTuiLogFile) {
+                if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
                     Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeManager] ERROR: No theme loaded"
                 }
             }
         } catch {
-            if ($global:PmcDebug -and $global:PmcTuiLogFile) {
+            if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
                 Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeManager] _Initialize ERROR: $_"
             }
         }
@@ -146,48 +151,6 @@ class PmcThemeManager {
 
         # Try color palette (RGB object → hex)
         if ($this.ColorPalette -and $this.ColorPalette.ContainsKey($role)) {
-            $rgb = $this.ColorPalette[$role]
-            if ($rgb.R -ne $null -and $rgb.G -ne $null -and $rgb.B -ne $null) {
-                return ("#{0:X2}{1:X2}{2:X2}" -f $rgb.R, $rgb.G, $rgb.B)
-            }
-        }
-
-        # Fallback to defaults based on common roles
-        return $this._GetDefaultColor($role)
-    }
-
-    <#
-    .SYNOPSIS
-    Get default color for a role
-    #>
-    hidden [string] _GetDefaultColor([string]$role) {
-        $defaultHex = $(if ($this.PmcTheme -and $this.PmcTheme.Hex) { $this.PmcTheme.Hex } else { '#33aaff' })
-
-        $result = switch ($role) {
-            'Primary' { $defaultHex }
-            'Header' { $defaultHex }
-            'Title' { $defaultHex }
-            'Info' { $defaultHex }
-            'Highlight' { $defaultHex }
-            'Border' { '#666666' }
-            'Text' { '#CCCCCC' }
-            'Body' { '#CCCCCC' }
-            'Muted' { '#888888' }
-            'Subheader' { '#888888' }
-            'Label' { '#888888' }
-            'Status' { '#888888' }
-            'Error' { '#FF4444' }
-            'Warning' { '#FFAA00' }
-            'Success' { '#44FF44' }
-            'Bright' { '#55BBFF' }
-            default { '#CCCCCC' }
-        }
-        return $result
-    }
-
-    <#
-    .SYNOPSIS
-    Get ANSI escape sequence for a color role
 
     .PARAMETER role
     Color role
