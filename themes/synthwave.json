@@ -110,7 +110,7 @@
     },
     "Border.Widget": {
       "Type": "Solid",
-      "Color": "#6600aa"
+      "Color": "#ff00ff"
     }
   }
 }

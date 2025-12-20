@@ -1918,6 +1918,14 @@ class TaskListScreen : StandardListScreen {
                 $taskId = Get-SafeProperty $selected 'id'
                 if ($taskId) {
                     $this.Store.UpdateTask($taskId, @{ description = $newDesc })
+
+                    # Invalidate the cached region for the updated row to prevent stale display
+                    $idx = $this.List.GetSelectedIndex()
+                    $offset = $this.List.GetScrollOffset()
+                    $rowY = $this.List.Y + 3 + ($idx - $offset)
+                    if ($this.RenderEngine) {
+                        $this.RenderEngine.InvalidateCachedRegion($rowY, $rowY + 1)
+                    }
                 }
                 $this._detailEditMode = $false
                 $this._detailEditor.ShowCursor = $false
@@ -1952,6 +1960,14 @@ class TaskListScreen : StandardListScreen {
                 $taskId = Get-SafeProperty $selected 'id'
                 if ($taskId) {
                     $this.Store.UpdateTask($taskId, @{ description = $newDesc })
+
+                    # Invalidate the cached region for the updated row to prevent stale display
+                    $idx = $this.List.GetSelectedIndex()
+                    $offset = $this.List.GetScrollOffset()
+                    $rowY = $this.List.Y + 3 + ($idx - $offset)
+                    if ($this.RenderEngine) {
+                        $this.RenderEngine.InvalidateCachedRegion($rowY, $rowY + 1)
+                    }
                 }
                 $this.SetStatusMessage("Description saved", "success")
             }
