@@ -231,11 +231,10 @@ class TaskListScreen : StandardListScreen {
         }.GetNewClosure()
 
         # Initialize DetailPane for 70/30 split layout
-        $this.DetailPane = [PmcPanel]::new("Task Details [70/30]")
+        $this.DetailPane = [PmcPanel]::new("Task Details")
         $this.DetailPane.SetBorderStyle('rounded')
-        $this.DetailPane.SetContent("", 'left')
+        $this.DetailPane.SetContent("Select a task to view details", 'left')
         $this.AddContentWidget($this.DetailPane)
-        $this.DetailPane.Visible = $false  # Hidden - using TextAreaEditor only
 
         # Initialize TextAreaEditor for detail editing (same position as DetailPane)
         $this._detailEditor = [TextAreaEditor]::new()

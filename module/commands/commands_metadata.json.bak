@@ -1,15 +1,15 @@
 {
+  "schema_version": 1,
   "commands": {
-    "command_text": "xxxx",
+    "description": "xxx",
     "modified": "2025-12-16T15:43:47.0000000",
     "name": "c1",
-    "description": "xxx",
-    "last_used": "2025-12-16T20:31:12.2664555-07:00",
-    "tags": null,
-    "category": "General",
-    "id": "13b59cd5-0ff0-4821-ac2d-e3685ef96475",
     "created": "2025-12-16T15:43:47.0000000",
-    "usage_count": 2
-  },
-  "schema_version": 1
+    "tags": null,
+    "command_text": "xxxx",
+    "last_used": "2025-12-20T07:40:52.9626061-07:00",
+    "usage_count": 5,
+    "category": "General",
+    "id": "13b59cd5-0ff0-4821-ac2d-e3685ef96475"
+  }
 }

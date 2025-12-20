@@ -77,12 +77,7 @@ class PmcThemeManager {
             $this._ansiCache = @{}
 
             # ONE PATH: Load theme from file
-            # ONE PATH: Load theme from file
             $theme = Get-ActiveTheme
-            if ($theme) {
-                if ($theme.Properties) {
-                }
-            }
             if ($theme -and $theme.Properties) {
                 [PmcThemeEngine]::GetInstance().Configure($theme.Properties, $this.ColorPalette)
             } else {
@@ -151,6 +146,19 @@ class PmcThemeManager {
 
         # Try color palette (RGB object → hex)
         if ($this.ColorPalette -and $this.ColorPalette.ContainsKey($role)) {
+            $rgb = $this.ColorPalette[$role]
+            if ($rgb.R -ne $null -and $rgb.G -ne $null -and $rgb.B -ne $null) {
+                return ("#{0:X2}{1:X2}{2:X2}" -f $rgb.R, $rgb.G, $rgb.B)
+            }
+        }
+
+        # STRICT THEME ENFORCEMENT: No fallbacks.
+        throw "Theme Property Missing: '$role'"
+    }
+
+    <#
+    .SYNOPSIS
+    Get ANSI escape sequence for a color role
 
     .PARAMETER role
     Color role
@@ -400,53 +408,4 @@ class PmcThemeManager {
             return @{ R = 0; G = 0; B = 0 }
         }
     }
-
-    <#
-    .SYNOPSIS
-    Convert RGB to hex color
-
-    .PARAMETER r
-    Red component (0-255)
-
-    .PARAMETER g
-    Green component (0-255)
-
-    .PARAMETER b
-    Blue component (0-255)
-
-    .OUTPUTS
-    Hex color string (e.g., "#33aaff")
-    #>
-    [string] RgbToHex([int]$r, [int]$g, [int]$b) {
-        return ("#{0:X2}{1:X2}{2:X2}" -f $r, $g, $b)
-    }
-
-    <#
-    .SYNOPSIS
-    Get all available color roles
-
-    .OUTPUTS
-    Array of color role names
-    #>
-    [string[]] GetAvailableRoles() {
-        $roles = [List[string]]::new()
-
-        # Add from StyleTokens
-        if ($this.StyleTokens) {
-            $roles.AddRange($this.StyleTokens.Keys)
-        }
-
-        # Add from ColorPalette
-        if ($this.ColorPalette) {
-            foreach ($key in $this.ColorPalette.Keys) {
-                if (-not $roles.Contains($key)) {
-                    $roles.Add($key)
-                }
-            }
-        }
-
-        return $roles.ToArray()
-    }
 }
-
-# Classes exported automatically in PowerShell 5.1+

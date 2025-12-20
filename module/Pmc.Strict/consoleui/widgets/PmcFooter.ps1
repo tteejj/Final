@@ -167,9 +167,6 @@ class PmcFooter : PmcWidget {
         # Join with separator
         $footerText = $parts -join " | "
 
-        # MARKER: Using Foreground.Primary for gradient
-        # Use WriteThemedToRegion for automatic gradient support
-
         # Use WriteThemedToRegion for automatic gradient support
         # Use Foreground.Primary which supports gradient rendering from theme config
         $this.WriteThemedToRegion($engine, "$($this.RegionID)_Main", $footerText, 'Foreground.Primary', 'Background.Footer')

@@ -363,6 +363,9 @@ class PmcScreen {
         # Layer 0: Background (Fill entire screen with theme background)
         # STRICT THEME ENFORCEMENT: No fallbacks. If theme property is missing, this MUST fail.
         $engine.BeginLayer([ZIndex]::Background)
+        try {
+            $fg = $this.GetThemedInt('Foreground.Primary')
+            $bg = $this.GetThemedInt('Background.Primary')
             # Fill entire terminal with background color
             $engine.Fill(0, 0, $this.TermWidth, $this.TermHeight, ' ', $fg, $bg)
         }
@@ -642,6 +645,42 @@ class PmcScreen {
         catch {
             return $null
         }
+    }
+
+    <#
+    .SYNOPSIS
+    Get themed foreground color as packed RGB integer
+
+    .PARAMETER role
+    Theme property name (e.g., 'Foreground.Primary')
+
+    .OUTPUTS
+    Int - Packed RGB integer or -1
+    #>
+    [int] GetThemedInt([string]$role) {
+        $engine = [PmcThemeEngine]::GetInstance()
+        return $engine.GetForegroundInt($role)
+    }
+
+    <#
+    .SYNOPSIS
+    Get themed background color as packed RGB integer
+
+    .PARAMETER role
+    Theme property name (e.g., 'Background.Primary')
+
+    .PARAMETER width
+    Width for gradient calculation
+
+    .PARAMETER charIndex
+    Character index for gradient calculation
+
+    .OUTPUTS
+    Int - Packed RGB integer or -1
+    #>
+    [int] GetThemedBgInt([string]$role, [int]$width, [int]$charIndex) {
+        $engine = [PmcThemeEngine]::GetInstance()
+        return $engine.GetBackgroundInt($role, $width, $charIndex)
     }
 
     <#
