@@ -234,7 +234,7 @@ class TaskListScreen : StandardListScreen {
         $this.DetailPane = [PmcPanel]::new("Task Details")
         $this.DetailPane.SetBorderStyle('single')
         $this.DetailPane.SetContent("Select a task to view details", 'left')
-        $this.AddContentWidget($this.DetailPane)
+        # $this.AddContentWidget($this.DetailPane) # Handled manually in RenderContentToEngine
 
         # Initialize TextAreaEditor for detail editing (same position as DetailPane)
         $this._detailEditor = [TextAreaEditor]::new()
@@ -1479,18 +1479,40 @@ class TaskListScreen : StandardListScreen {
             $this.List.SetPosition($rect.X, $rect.Y)
             $this.List.SetSize($listWidth, $rect.Height)
 
+            # CRITICAL FIX: Re-calculate and apply columns to match new list width
+            # This ensures percentages in GetColumns() use the new $listWidth
+            $newCols = $this.GetColumns()
+            $this.List.SetColumns($newCols)
+
             $this.DetailPane.SetPosition($rect.X + $listWidth + 1, $rect.Y)
             $this.DetailPane.SetSize($detailWidth, $rect.Height)
             $this.DetailPane.Visible = $true
-            # Position TextAreaEditor in same location as DetailPane
+            $this.DetailPane.ShowBorder = $true # Ensure border is on
+            
+            # Position TextAreaEditor INSIDE the DetailPane (inset by 1 for border + 1 for padding = 2)
+            # This prevents overwriting the border and fixes cursor alignment
             if ($this._detailEditor) {
-                $this._detailEditor.SetBounds($rect.X + $listWidth + 1, $rect.Y, $detailWidth, $rect.Height)
+                $editorX = $rect.X + $listWidth + 1 + 2
+                $editorY = $rect.Y + 1
+                $editorW = $detailWidth - 4
+                $editorH = $rect.Height - 2
+                
+                # Ensure dimensions are positive
+                if ($editorW -lt 1) { $editorW = 1 }
+                if ($editorH -lt 1) { $editorH = 1 }
+
+                $this._detailEditor.SetBounds($editorX, $editorY, $editorW, $editorH)
+                # Visibility is controlled in RenderContentToEngine, but ensure it's technically 'visible' for input
                 $this._detailEditor.Visible = $true
             }
         } else {
             # Full width list
             $this.List.SetPosition($rect.X, $rect.Y)
             $this.List.SetSize($rect.Width, $rect.Height)
+
+            # CRITICAL FIX: Re-calculate columns for full width
+            $newCols = $this.GetColumns()
+            $this.List.SetColumns($newCols)
 
             if ($this.DetailPane) {
             if ($this._detailEditor) {
@@ -1896,14 +1918,17 @@ class TaskListScreen : StandardListScreen {
             # Fill the 1-char gap
             $engine.Fill($gapX, $gapY, 1, $gapHeight, ' ', $fg, $bg)
 
-            # Render detail pane or editor depending on mode
+            # ALWAYS render DetailPane first to draw the border and title
+            # This acts as the container
+            $this.DetailPane.RenderToEngine($engine)
+
             if ($this._detailEditMode -and $this._detailEditor) {
-                # Edit mode: render TextAreaEditor
+                # Edit mode: render TextAreaEditor ON TOP of the panel content area
+                # (It is positioned inside the border by ApplyContentLayout)
                 $this._detailEditor.RenderToEngine($engine)
-            } else {
-                # View mode: render DetailPane with border
-                $this.DetailPane.RenderToEngine($engine)
-            }
+            } 
+            # Note: In view mode, DetailPane handles rendering the text content itself
+            # because we set it via SetContent() in OnItemSelected
         }
     }
 

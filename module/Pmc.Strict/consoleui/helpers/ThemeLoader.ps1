@@ -156,9 +156,15 @@ function Set-ActiveTheme {
     
     $cfg.Display.Theme.Active = $themeName.ToLower()
     
-    # Remove old Properties and Hex - no longer needed in config
+    # Load the theme to get its hex color
+    $theme = Load-Theme -themeName $themeName
+    if ($theme -and $theme.Hex) {
+        $cfg.Display.Theme.Hex = $theme.Hex
+    }
+    
+    # Remove old Properties - no longer needed in config
     if ($cfg.Display.Theme.Properties) { $cfg.Display.Theme.Remove('Properties') }
-    if ($cfg.Display.Theme.Hex) { $cfg.Display.Theme.Remove('Hex') }
+    # Do NOT remove Hex - we just updated it
     
     Save-PmcConfig $cfg
 }
