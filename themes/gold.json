@@ -1,0 +1,111 @@
+{
+    "Name": "Gold",
+    "Hex": "#ffaa33",
+    "Description": "Rich golden yellow",
+    "Properties": {
+        "Background.Field": {
+            "Type": "Solid",
+            "Color": "#1a1005"
+        },
+        "Background.FieldFocused": {
+            "Type": "Solid",
+            "Color": "#3d2a0a"
+        },
+        "Background.Row": {
+            "Type": "Solid",
+            "Color": "#1a1005"
+        },
+        "Background.RowSelected": {
+            "Type": "Solid",
+            "Color": "#3d2a0a"
+        },
+        "Background.Warning": {
+            "Type": "Solid",
+            "Color": "#332200"
+        },
+        "Background.MenuBar": {
+            "Type": "Solid",
+            "Color": "#2a1a08"
+        },
+        "Background.TabActive": {
+            "Type": "Solid",
+            "Color": "#3d2a0a"
+        },
+        "Background.TabInactive": {
+            "Type": "Solid",
+            "Color": "#100a03"
+        },
+        "Background.Primary": {
+            "Type": "Solid",
+            "Color": "#1a1005"
+        },
+        "Background.Widget": {
+            "Type": "Solid",
+            "Color": "#100a03"
+        },
+        "Background.Panel": {
+            "Type": "Solid",
+            "Color": "#100a03"
+        },
+        "Background.Header": {
+            "Type": "Solid",
+            "Color": "#2a1a08"
+        },
+        "Background.Footer": {
+            "Type": "Solid",
+            "Color": "#2a1a08"
+        },
+        "Foreground.Field": {
+            "Type": "Solid",
+            "Color": "#ffeecc"
+        },
+        "Foreground.FieldFocused": {
+            "Type": "Solid",
+            "Color": "#ffffff"
+        },
+        "Foreground.Row": {
+            "Type": "Solid",
+            "Color": "#ffeecc"
+        },
+        "Foreground.RowSelected": {
+            "Type": "Solid",
+            "Color": "#ffffff"
+        },
+        "Foreground.Title": {
+            "Type": "Solid",
+            "Color": "#ffaa33"
+        },
+        "Foreground.Muted": {
+            "Type": "Solid",
+            "Color": "#aa8855"
+        },
+        "Foreground.Warning": {
+            "Type": "Solid",
+            "Color": "#ffaa00"
+        },
+        "Foreground.Error": {
+            "Type": "Solid",
+            "Color": "#ff3333"
+        },
+        "Foreground.Success": {
+            "Type": "Solid",
+            "Color": "#33ff88"
+        },
+        "Foreground.TabActive": {
+            "Type": "Solid",
+            "Color": "#ffffff"
+        },
+        "Foreground.TabInactive": {
+            "Type": "Solid",
+            "Color": "#aa8855"
+        },
+        "Foreground.Primary": {
+            "Type": "Solid",
+            "Color": "#ffaa33"
+        },
+        "Border.Widget": {
+            "Type": "Solid",
+            "Color": "#cc8822"
+        }
+    }
+}

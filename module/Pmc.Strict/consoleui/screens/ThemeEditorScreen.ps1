@@ -105,42 +105,22 @@ class ThemeEditorScreen : PmcScreen {
         $this.ShowStatus("Loading themes...")
 
         try {
-            $this.Themes = @(
-                @{ Name = "Default";    Hex = "#33aaff"; Description = "Classic blue" }
-                @{ Name = "Ocean";      Hex = "#33aaff"; Description = "Cool ocean blue" }
-                @{ Name = "Lime";       Hex = "#33cc66"; Description = "Fresh lime green" }
-                @{ Name = "Purple";     Hex = "#9966ff"; Description = "Vibrant purple" }
-                @{ Name = "Slate";      Hex = "#8899aa"; Description = "Cool blue-gray" }
-                @{ Name = "Forest";     Hex = "#228844"; Description = "Deep forest green" }
-                @{ Name = "Sunset";     Hex = "#ff8833"; Description = "Warm sunset orange" }
-                @{ Name = "Rose";       Hex = "#ff6699"; Description = "Soft rose pink" }
-                @{ Name = "Sky";        Hex = "#66ccff"; Description = "Bright sky blue" }
-                @{ Name = "Gold";       Hex = "#ffaa33"; Description = "Rich golden yellow" }
-                # === SYNTHWAVE GRADIENT THEME ===
-                @{ Name = "Synthwave";  Hex = "#ff00ff"; Description = "GRADIENT: MAGENTA → CYAN" }
-            )
-
+            # Load themes from theme files
+            $this.Themes = Get-AvailableThemes
+            
+            # Get current theme name from config
             try {
                 $cfg = Get-PmcConfig
-                $currentHex = $null
-                if ((Get-Member -InputObject $cfg -Name Display -MemberType Properties) -and
-                    $cfg.Display -and
-                    (Get-Member -InputObject $cfg.Display -Name Theme -MemberType Properties) -and
-                    $cfg.Display.Theme -and
-                    (Get-Member -InputObject $cfg.Display.Theme -Name Hex -MemberType Properties)) {
-                    $currentHex = $cfg.Display.Theme.Hex
-                }
-                if ($currentHex) {
+                if ($cfg -and $cfg.Display -and $cfg.Display.Theme -and $cfg.Display.Theme.Active) {
+                    $activeTheme = $cfg.Display.Theme.Active
                     foreach ($theme in $this.Themes) {
-                        if ($theme.Hex -eq $currentHex) {
+                        if ($theme.Name.ToLower() -eq $activeTheme.ToLower()) {
                             $this.CurrentTheme = $theme.Name
                             break
                         }
                     }
                 }
-                else { $this.CurrentTheme = "Default" }
-            }
-            catch { $this.CurrentTheme = "Default" }
+            } catch { }
 
             $count = $(if ($this.Themes) { $this.Themes.Count } else { 0 })
             $this.ShowSuccess("$count themes available")
@@ -271,7 +251,7 @@ class ThemeEditorScreen : PmcScreen {
 
         try {
             $this.CurrentTheme = $theme.Name
-            $reloadSuccess = Invoke-ThemeHotReload $theme.Hex
+            $reloadSuccess = Invoke-ThemeHotReload $theme.Name
             
             if ($reloadSuccess) {
                 try { $this.ShowSuccess("Theme applied! Changes visible immediately.") } catch { }

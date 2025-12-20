@@ -23,37 +23,23 @@ Invoke-ThemeHotReload  # Reload current theme
 #>
 function Invoke-ThemeHotReload {
     param(
-        [string]$hexColor = $null
+        [string]$themeName = $null
     )
 
     try {
-        # 1. If hex provided, save it to config first
-        if (-not [string]::IsNullOrEmpty($hexColor)) {
-            $cfg = Get-PmcConfig
-            if (-not $cfg.Display) { $cfg.Display = @{} }
-            if (-not $cfg.Display.Theme) { $cfg.Display.Theme = @{} }
-            $cfg.Display.Theme.Hex = $hexColor
-            Save-PmcConfig $cfg
+        # 1. If theme name provided, save it to config
+        if (-not [string]::IsNullOrEmpty($themeName)) {
+            Set-ActiveTheme -themeName $themeName
         }
 
         # 2. Reinitialize PMC theme system to update state
         Initialize-PmcThemeSystem -Force
 
-        # 3. Get fresh color palette from PMC
-        $palette = Get-PmcColorPalette
-
-        # 4. Convert RGB objects to hex strings for PmcThemeEngine
-        $paletteHex = @{}
-        foreach ($key in $palette.Keys) {
-            $rgb = $palette[$key]
-            $paletteHex[$key] = "#{0:X2}{1:X2}{2:X2}" -f $rgb.R, $rgb.G, $rgb.B
-        }
-
-        # 5. Reload PmcThemeManager (which configures the Engine)
+        # 3. Reload PmcThemeManager (which loads from theme file)
         $themeManager = [PmcThemeManager]::GetInstance()
         $themeManager.Reload()
 
-        # 6. Force full screen refresh if app is running
+        # 4. Force full screen refresh if app is running
         if ($global:PmcApp) {
             # Request clear to invalidate render buffer
             $global:PmcApp.RenderEngine.RequestClear()
@@ -70,7 +56,9 @@ function Invoke-ThemeHotReload {
         return $true
 
     } catch {
-        Write-Error "Theme hot reload failed: $_"
+        if ($global:PmcDebug -and $global:PmcTuiLogFile) {
+            Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeHotReload] ERROR: $_"
+        }
         return $false
     }
 }

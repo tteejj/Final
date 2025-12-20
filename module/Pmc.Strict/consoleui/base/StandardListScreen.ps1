@@ -567,16 +567,6 @@ class StandardListScreen : PmcScreen {
             $this.List.AddAction('e', 'Edit', $editAction)
         }
 
-        if ($this.AllowDelete) {
-            $deleteAction = {
-                $currentScreen = $global:PmcApp.CurrentScreen
-                $selectedItem = $currentScreen.List.GetSelectedItem()
-                if ($null -ne $selectedItem) {
-                    $currentScreen.DeleteItem($selectedItem)
-                }
-            }.GetNewClosure()
-            $this.List.AddAction('d', 'Delete', $deleteAction)
-        }
 
         # Add custom actions from subclass
         try {
@@ -1109,6 +1099,15 @@ class StandardListScreen : PmcScreen {
                 if ($keyInfo.KeyChar -eq 'r' -or $keyInfo.KeyChar -eq 'R') {
                     # Refresh
                     $this.RefreshList()
+                    return $true
+                }
+
+                # Delete key: Delete selected item
+                if ($keyInfo.Key -eq [ConsoleKey]::Delete -and $this.AllowDelete) {
+                    $selectedItem = $this.List.GetSelectedItem()
+                    if ($null -ne $selectedItem) {
+                        $this.DeleteItem($selectedItem)
+                    }
                     return $true
                 }
             }

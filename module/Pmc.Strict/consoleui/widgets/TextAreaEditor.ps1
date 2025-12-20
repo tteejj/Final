@@ -216,11 +216,11 @@ class TextAreaEditor : PmcWidget {
         }
 
         # Theme colors - use consistent theme for ALL text
-        $textFg = $this.GetThemedInt('Foreground.Body')
-        $textBg = $this.GetThemedBgInt('Background.Input', 1, 0)
-        $selFg = $this.GetThemedInt('Foreground.Selected')
-        $selBg = $this.GetThemedBgInt('Background.Selected', 1, 0)
-        $cursorBg = $this.GetThemedBgInt('Background.Cursor', 1, 0)
+        $textFg = $this.GetThemedInt('Foreground.Row')
+        $textBg = $this.GetThemedBgInt('Background.Field', 1, 0)
+        $selFg = $this.GetThemedInt('Foreground.RowSelected')
+        $selBg = $this.GetThemedBgInt('Background.RowSelected', 1, 0)
+        $cursorBg = $this.GetThemedBgInt('Background.RowSelected', 1, 0)
         
         # Fallback colors if theme not available
         if ($textBg -eq -1) { $textBg = [HybridRenderEngine]::_PackRGB(30, 30, 30) }

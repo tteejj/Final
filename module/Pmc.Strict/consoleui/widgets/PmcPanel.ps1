@@ -143,7 +143,7 @@ class PmcPanel : PmcWidget {
         $borderColor = $this.GetThemedInt('Border.Widget')
         $titleColor = $this.GetThemedInt('Foreground.Title')
         $textColor = $this.GetThemedInt('Foreground.Row')
-        $bg = -1 # Transparent default? Or theme bg? Panels usually transparent or specific bg.
+        $bg = $this.GetThemedBgInt('Background.Widget', 1, 0)
         
         # Draw Border
         if ($this.ShowBorder) {

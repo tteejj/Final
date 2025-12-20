@@ -98,6 +98,8 @@ class TaskListScreen : StandardListScreen {
     # Default: visible (70/30 split), toggle with 'o' key for full-width list
     [PmcPanel]$DetailPane = $null
     hidden [bool]$_showDetailPane = $true  # true = detail pane visible by default
+    hidden [bool]$_detailEditMode = $false  # true = editing detail panel
+    hidden [TextAreaEditor]$_detailEditor = $null  # Editor for detail content
 
     # Telemetry helper for tracking user actions
     hidden [void] _EmitTelemetry([string]$eventName, [hashtable]$data) {
@@ -231,8 +233,14 @@ class TaskListScreen : StandardListScreen {
         # Initialize DetailPane for 70/30 split layout
         $this.DetailPane = [PmcPanel]::new("Task Details [70/30]")
         $this.DetailPane.SetBorderStyle('rounded')
-        $this.DetailPane.SetContent("Select a task to view details", 'left')
+        $this.DetailPane.SetContent("", 'left')
         $this.AddContentWidget($this.DetailPane)
+        $this.DetailPane.Visible = $false  # Hidden - using TextAreaEditor only
+
+        # Initialize TextAreaEditor for detail editing (same position as DetailPane)
+        $this._detailEditor = [TextAreaEditor]::new()
+        $this._detailEditor.Visible = $true  # Visible by default - 'd' key activates edit mode
+        $this.AddContentWidget($this._detailEditor)
     }
 
     # Setup menu items using MenuRegistry
@@ -1488,12 +1496,20 @@ class TaskListScreen : StandardListScreen {
             $this.DetailPane.SetPosition($rect.X + $listWidth + 1, $rect.Y)
             $this.DetailPane.SetSize($detailWidth, $rect.Height)
             $this.DetailPane.Visible = $true
+            # Position TextAreaEditor in same location as DetailPane
+            if ($this._detailEditor) {
+                $this._detailEditor.SetBounds($rect.X + $listWidth + 1, $rect.Y, $detailWidth, $rect.Height)
+                $this._detailEditor.Visible = $true
+            }
         } else {
             # Full width list
             $this.List.SetPosition($rect.X, $rect.Y)
             $this.List.SetSize($rect.Width, $rect.Height)
 
             if ($this.DetailPane) {
+            if ($this._detailEditor) {
+                $this._detailEditor.Visible = $false
+            }
                 $this.DetailPane.Visible = $false
             }
         }
@@ -1507,13 +1523,13 @@ class TaskListScreen : StandardListScreen {
         # Call base implementation
         ([StandardListScreen]$this).OnItemSelected($item)
 
-        # Update detail pane
-        if ($this.DetailPane -and $this._showDetailPane) {
+        # Load description into TextAreaEditor instead of showing task metadata
+        if ($this._detailEditor -and $this._showDetailPane) {
             if ($null -ne $item) {
-                $details = $this._FormatTaskDetails($item)
-                $this.DetailPane.SetContent($details, 'left')
+                $desc = Get-SafeProperty $item 'description' -Default ""
+                $this._detailEditor.SetText($desc)
             } else {
-                $this.DetailPane.SetContent("", 'left')
+                $this._detailEditor.SetText("")
             }
         }
     }
@@ -1866,6 +1882,53 @@ class TaskListScreen : StandardListScreen {
 
     # Override: Additional keyboard shortcuts
     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
+        # PRIORITY: If in detail edit mode, route input to TextAreaEditor
+        if ($this._detailEditMode -and $this._detailEditor) {
+            # Escape exits edit mode (same as pressing d again)
+            if ($keyInfo.Key -eq [ConsoleKey]::Escape) {
+                # Save and exit edit mode
+                $selected = $this.List.GetSelectedItem()
+                $newDesc = $this._detailEditor.GetText()
+                $taskId = Get-SafeProperty $selected 'id'
+                if ($taskId) {
+                    $this.Store.UpdateTask($taskId, @{ description = $newDesc })
+                }
+                $this._detailEditMode = $false
+                # Editor stays visible, panel stays hidden
+                # $this._detailEditor.Visible stays true
+                # $this.DetailPane.Visible stays false
+                $this.OnItemSelected($selected)
+                $this.SetStatusMessage("Description saved", "success")
+                return $true
+            }
+            # Route all other keys to editor
+            return $this._detailEditor.HandleInput($keyInfo)
+        }
+
+        # D: Toggle edit mode - BEFORE parent call so it takes priority
+        if ($keyInfo.KeyChar -eq 'd' -or $keyInfo.KeyChar -eq 'D') {
+            $selected = $this.List.GetSelectedItem()
+            if (-not $selected) {
+                $this.SetStatusMessage("Select a task first", "warning")
+                return $true
+            }
+            if (-not $this._showDetailPane) {
+                $this._showDetailPane = $true
+                $this.Resize($this.TermWidth, $this.TermHeight)
+            }
+            $this._detailEditMode = -not $this._detailEditMode
+            if ($this._detailEditMode) {
+                $this.SetStatusMessage("Editing description. Esc to save.", "info")
+            } else {
+                $newDesc = $this._detailEditor.GetText()
+                $taskId = Get-SafeProperty $selected 'id'
+                if ($taskId) {
+                    $this.Store.UpdateTask($taskId, @{ description = $newDesc })
+                }
+                $this.SetStatusMessage("Description saved", "success")
+            }
+            return $true
+        }
         # CRITICAL: If inline editor is showing, let IT handle input first
         # Otherwise parent will steal Enter/Esc keys
         if ($this.ShowInlineEditor -and $null -ne $this.InlineEditor) {
@@ -1888,6 +1951,7 @@ class TaskListScreen : StandardListScreen {
             $this._ToggleDetailPane()
             return $true
         }
+
 
         # Space: Toggle subtask collapse OR completion
         # NOTE: This is custom TaskListScreen behavior, not base class behavior
@@ -2018,7 +2082,7 @@ class TaskListScreen : StandardListScreen {
         }
 
         # Keyboard shortcuts help (one line below status)
-        $help = "F:Filter A:Add E:Edit D:Delete O:Details Space:Toggle C:Complete X:Clone 1-6:Views H:Hide Q:Quit"
+        $help = "F:Filter A:Add E:Edit Del:Delete D:Edit O:Details Space:Toggle C:Complete X:Clone 1-6:Views H:Hide Q:Quit"
         $engine.WriteAt(2, $y + 1, $help, $mutedColor, $bg)
     }
 
