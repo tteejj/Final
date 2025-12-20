@@ -232,7 +232,7 @@ class TaskListScreen : StandardListScreen {
 
         # Initialize DetailPane for 70/30 split layout
         $this.DetailPane = [PmcPanel]::new("Task Details")
-        $this.DetailPane.SetBorderStyle('rounded')
+        $this.DetailPane.SetBorderStyle('single')
         $this.DetailPane.SetContent("Select a task to view details", 'left')
         $this.AddContentWidget($this.DetailPane)
 
@@ -1522,17 +1522,29 @@ class TaskListScreen : StandardListScreen {
         # Call base implementation
         ([StandardListScreen]$this).OnItemSelected($item)
 
-        # Load description into TextAreaEditor instead of showing task metadata
-        if ($this._detailEditor -and $this._showDetailPane) {
+        # Update both DetailPane and TextAreaEditor with task description
+        if ($this._showDetailPane) {
             if ($null -ne $item) {
                 $desc = Get-SafeProperty $item 'description' -Default ""
                 # Apply word wrap to description
                 # Calculate wrap width based on DetailPane width (or default if not visible yet)
                 $wrapWidth = $(if ($this.DetailPane.Width -gt 4) { $this.DetailPane.Width - 4 } else { 40 })
                 $wrappedDesc = $this._WrapText($desc, $wrapWidth)
-                $this._detailEditor.SetText($wrappedDesc)
+
+                # Update both widgets
+                if ($this._detailEditor) {
+                    $this._detailEditor.SetText($wrappedDesc)
+                }
+                if ($this.DetailPane) {
+                    $this.DetailPane.SetContent($wrappedDesc, 'left')
+                }
             } else {
-                $this._detailEditor.SetText("")
+                if ($this._detailEditor) {
+                    $this._detailEditor.SetText("")
+                }
+                if ($this.DetailPane) {
+                    $this.DetailPane.SetContent("Select a task to view details", 'left')
+                }
             }
         }
     }
@@ -1899,9 +1911,13 @@ class TaskListScreen : StandardListScreen {
             # Fill the 1-char gap
             $engine.Fill($gapX, $gapY, 1, $gapHeight, ' ', $fg, $bg)
 
-            # Render the detail pane (TextAreaEditor)
-            if ($this._detailEditor) {
+            # Render detail pane or editor depending on mode
+            if ($this._detailEditMode -and $this._detailEditor) {
+                # Edit mode: render TextAreaEditor
                 $this._detailEditor.RenderToEngine($engine)
+            } else {
+                # View mode: render DetailPane with border
+                $this.DetailPane.RenderToEngine($engine)
             }
         }
     }

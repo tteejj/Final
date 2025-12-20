@@ -139,11 +139,11 @@ class PmcPanel : PmcWidget {
     [void] RenderToEngine([object]$engine) {
         $this.RegisterLayout($engine)
 
-        # Colors (Ints)
-        $borderColor = $this.GetThemedInt('Border.Widget')
-        $titleColor = $this.GetThemedInt('Foreground.Title')
-        $textColor = $this.GetThemedInt('Foreground.Row')
-        $bg = $this.GetThemedBgInt('Background.Widget', 1, 0)
+        # Colors (Ints) - Match UniversalList color methods for consistency
+        $borderColor = $this.GetThemedColorInt('Border.Widget')
+        $titleColor = $this.GetThemedColorInt('Foreground.Title')
+        $textColor = $this.GetThemedColorInt('Foreground.Row')
+        $bg = $this.GetThemedColorInt('Background.Row')
         
         # Draw Border
         if ($this.ShowBorder) {
