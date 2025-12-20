@@ -391,6 +391,12 @@ class PmcScreen {
         # Write-PmcTuiLog "PmcScreen.RenderToEngine: Rendering $($this.ContentWidgets.Count) content widgets" "DEBUG"
         foreach ($widget in $this.ContentWidgets) {
             $widgetName = $(if ($widget.Name) { $widget.Name } else { $widget.GetType().Name })
+
+            # Skip widgets that are explicitly hidden via Visible property
+            if ($widget.PSObject.Properties['Visible'] -and -not $widget.Visible) {
+                continue
+            }
+
             try {
                 if ($widget.PSObject.Methods['RenderToEngine']) {
                     # Write-PmcTuiLog "PmcScreen: Calling RenderToEngine on $widgetName" "DEBUG"

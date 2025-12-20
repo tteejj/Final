@@ -13,7 +13,7 @@ using namespace System.Collections.Generic
 Set-StrictMode -Version Latest
 
 . "$PSScriptRoot/../base/StandardListScreen.ps1"
-. "$PSScriptRoot/../services/FileNoteService.ps1"
+
 
 class NotesMenuScreen : StandardListScreen {
     # === Configuration ===

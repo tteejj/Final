@@ -57,10 +57,11 @@ class PmcThemeEngine {
         $this._palette = $palette
         $this.InvalidateCache()
         
-        # DEBUG: Log to file to trace when Configure is called
-        $rowProp = $properties['Foreground.Row']
-        $rowType = if ($rowProp) { $rowProp.Type } else { 'null' }
-        # Add-Content -Path "/tmp/pmc-configure-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] Configure called: propCount=$($properties.Count) Foreground.Row.Type=$rowType"
+        # Targeted diagnostic: log when Configure is called (only if debug enabled)
+        if ((Test-Path variable:global:PmcDebug) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
+            $propList = ($properties.Keys | Sort-Object) -join ', '
+            Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeEngine] Configure: $($properties.Count) properties: $propList"
+        }
     }
 
     # Public Primitive: Get ANSI from Hex (for Manager)
@@ -186,6 +187,10 @@ class PmcThemeEngine {
     # Get background Packed Int
     [int] GetBackgroundInt([string]$propertyName, [int]$width, [int]$charIndex) {
         if (-not $this._properties.ContainsKey($propertyName)) {
+            # Targeted diagnostic: log missing properties (only if debug enabled)
+            if ((Test-Path variable:global:PmcDebug) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
+                Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeEngine] MISSING: '$propertyName' (total props: $($this._properties.Count))"
+            }
             return -1
         }
 

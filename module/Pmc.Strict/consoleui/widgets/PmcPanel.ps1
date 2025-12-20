@@ -147,7 +147,7 @@ class PmcPanel : PmcWidget {
         
         # Draw Border
         if ($this.ShowBorder) {
-            $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $this.BorderStyle, $borderColor, $bg)
+            $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $borderColor, $bg, $this.BorderStyle)
             
             # Draw Title
             if ($this.ShowTitle -and $this.PanelTitle) {

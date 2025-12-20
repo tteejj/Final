@@ -51,6 +51,7 @@ PmcWidget provides the foundation for all PMC UI components:
 class PmcWidget : Component {
     # === PMC-Specific Properties ===
     [string]$Name = ""                    # Widget name for debugging
+    [bool]$Visible = $true                # Widget visibility (default: true)
     [hashtable]$LayoutConstraints = @{}   # Named region constraints
     [string]$RegionID = ""                # Engine Layout Region ID
 
@@ -264,6 +265,15 @@ class PmcWidget : Component {
 
     <#
     .SYNOPSIS
+    Get gradient info for a property (returns null if solid)
+    #>
+    [object] GetGradientInfo([string]$propertyName) {
+        $engine = [PmcThemeEngine]::GetInstance()
+        return $engine.GetGradientInfo($propertyName)
+    }
+
+    <#
+    .SYNOPSIS
     Write themed text that automatically uses gradient if theme defines it
 
     .PARAMETER renderEngine
@@ -305,6 +315,45 @@ class PmcWidget : Component {
             # Use solid color
             $fg = $themeEngine.GetThemeColorInt($fgProp)
             $renderEngine.WriteAt($x, $y, $text, $fg, $bg)
+        }
+    }
+
+    <#
+    .SYNOPSIS
+    Write themed text to a specific region, automatically handling gradients
+    
+    .PARAMETER renderEngine
+    The render engine (HybridRenderEngine)
+    
+    .PARAMETER regionId
+    Target region ID
+    
+    .PARAMETER text
+    Text to render
+    
+    .PARAMETER fgProp
+    Foreground theme property
+    
+    .PARAMETER bgProp
+    Background theme property
+    #>
+    [void] WriteThemedToRegion([object]$renderEngine, [string]$regionId, [string]$text, [string]$fgProp, [string]$bgProp) {
+        $themeEngine = [PmcThemeEngine]::GetInstance()
+        
+        # Check if foreground is gradient
+        $gradientInfo = $themeEngine.GetGradientInfo($fgProp)
+        
+        # Get background color (always solid for now)
+        $bg = $themeEngine.GetThemeColorInt($bgProp)
+        
+        if ($gradientInfo) {
+            # Use gradient overload
+            $renderEngine.WriteToRegion($regionId, $text, $gradientInfo.Start, $gradientInfo.End, $bg)
+        }
+        else {
+            # Use solid color
+            $fg = $themeEngine.GetThemeColorInt($fgProp)
+            $renderEngine.WriteToRegion($regionId, $text, $fg, $bg)
         }
     }
 

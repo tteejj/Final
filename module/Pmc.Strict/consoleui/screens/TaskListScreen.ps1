@@ -229,8 +229,9 @@ class TaskListScreen : StandardListScreen {
         }.GetNewClosure()
 
         # Initialize DetailPane for 70/30 split layout
-        $this.DetailPane = [PmcPanel]::new("Task Details")
+        $this.DetailPane = [PmcPanel]::new("Task Details [70/30]")
         $this.DetailPane.SetBorderStyle('rounded')
+        $this.DetailPane.SetContent("Select a task to view details", 'left')
         $this.AddContentWidget($this.DetailPane)
     }
 
@@ -1473,17 +1474,18 @@ class TaskListScreen : StandardListScreen {
 
     # Override: Apply 70/30 split layout for List and DetailPane
     [void] ApplyContentLayout([PmcLayoutManager]$layoutManager, [int]$termWidth, [int]$termHeight) {
+        # Don't call base - we handle everything ourselves
         $rect = $layoutManager.GetRegion('Content', $termWidth, $termHeight)
 
         if ($this._showDetailPane -and $this.DetailPane) {
-            # 70/30 split
-            $listWidth = [Math]::Floor($termWidth * 0.70)
-            $detailWidth = $termWidth - $listWidth - 1  # -1 for spacing
+            # 70/30 split within the content region
+            $listWidth = [Math]::Floor($rect.Width * 0.70)
+            $detailWidth = $rect.Width - $listWidth - 1  # -1 for spacing
 
             $this.List.SetPosition($rect.X, $rect.Y)
             $this.List.SetSize($listWidth, $rect.Height)
 
-            $this.DetailPane.SetPosition($listWidth + 1, $rect.Y)
+            $this.DetailPane.SetPosition($rect.X + $listWidth + 1, $rect.Y)
             $this.DetailPane.SetSize($detailWidth, $rect.Height)
             $this.DetailPane.Visible = $true
         } else {
@@ -1996,15 +1998,20 @@ class TaskListScreen : StandardListScreen {
         $viewMode = $(if ($this._viewMode) { $this._viewMode.ToUpper() } else { 'ALL' })
         $engine.WriteAt(2, $y, "View: $viewMode", $labelColor, $bg)
 
-        # Stats
+        # Stats (with null safety)
         $statsX = 20
-        $engine.WriteAt($statsX, $y, "Total: $($this._stats.Total)", $labelColor, $bg)
-        $engine.WriteAt($statsX + 15, $y, "Active: $($this._stats.Active)", $valueColor, $bg)
-        $engine.WriteAt($statsX + 30, $y, "Done: $($this._stats.Completed)", $labelColor, $bg)
+        $total = if ($this._stats.ContainsKey('Total')) { $this._stats.Total } else { 0 }
+        $active = if ($this._stats.ContainsKey('Active')) { $this._stats.Active } else { 0 }
+        $completed = if ($this._stats.ContainsKey('Completed')) { $this._stats.Completed } else { 0 }
+        $overdue = if ($this._stats.ContainsKey('Overdue')) { $this._stats.Overdue } else { 0 }
 
-        if ($this._stats.Overdue -gt 0) {
+        $engine.WriteAt($statsX, $y, "Total: $total", $labelColor, $bg)
+        $engine.WriteAt($statsX + 15, $y, "Active: $active", $valueColor, $bg)
+        $engine.WriteAt($statsX + 30, $y, "Done: $completed", $labelColor, $bg)
+
+        if ($overdue -gt 0) {
             $errorColor = $this.Header.GetThemedColorInt('Foreground.Error')
-            $engine.WriteAt($statsX + 45, $y, "Overdue: $($this._stats.Overdue)", $errorColor, $bg)
+            $engine.WriteAt($statsX + 45, $y, "Overdue: $overdue", $errorColor, $bg)
         }
         else {
             $engine.WriteAt($statsX + 45, $y, "Overdue: 0", $mutedColor, $bg)

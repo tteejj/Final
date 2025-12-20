@@ -151,44 +151,28 @@ class PmcFooter : PmcWidget {
 
         $this.RegisterLayout($engine)
 
-        # Colors (Ints)
-        $keyFg = $this.GetThemedInt('Foreground.Title')
-        $textFg = $this.GetThemedInt('Foreground.Muted')
-        $sepFg = $this.GetThemedInt('Border.Widget')
-        $footerBg = $this.GetThemedBgInt('Background.Footer', 1, 0)
-
-        # Clear line first
-        # We use Fill on the region
-        $bounds = $engine.GetRegionBounds("$($this.RegionID)_Main")
-        if ($bounds) {
-            $engine.Fill($bounds.X, $bounds.Y, $bounds.Width, 1, ' ', $textFg, $footerBg)
-        }
-
-        $currentX = $this.X
-        
+        # Build the footer text as a single string with inline formatting
+        # This allows gradient themes to work properly across the entire footer
+        $parts = @()
         for ($i = 0; $i -lt $this.Shortcuts.Count; $i++) {
             $shortcut = $this.Shortcuts[$i]
             $key = $shortcut.Key
             $desc = $shortcut.Description
 
-            # Write Key
-            $engine.WriteAt($currentX, $this.Y, $key, $keyFg, $footerBg)
-            $currentX += $key.Length
-
-            # Write Separator/Desc
-            $engine.WriteAt($currentX, $this.Y, ": ", $textFg, $footerBg)
-            $currentX += 2
-
-            # Write Desc
-            $engine.WriteAt($currentX, $this.Y, $desc, $textFg, $footerBg)
-            $currentX += $desc.Length
-
-            # Write Pipe Separator if not last
-            if ($i -lt ($this.Shortcuts.Count - 1)) {
-                $engine.WriteAt($currentX, $this.Y, " | ", $sepFg, $footerBg)
-                $currentX += 3
-            }
+            # Format: "Key: Description"
+            $part = "${key}: ${desc}"
+            $parts += $part
         }
+
+        # Join with separator
+        $footerText = $parts -join " | "
+
+        # MARKER: Using Foreground.Primary for gradient
+        # Use WriteThemedToRegion for automatic gradient support
+
+        # Use WriteThemedToRegion for automatic gradient support
+        # Use Foreground.Primary which supports gradient rendering from theme config
+        $this.WriteThemedToRegion($engine, "$($this.RegionID)_Main", $footerText, 'Foreground.Primary', 'Background.Footer')
     }
 
     # === Helper Methods ===

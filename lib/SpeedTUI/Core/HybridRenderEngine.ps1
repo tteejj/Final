@@ -975,6 +975,24 @@ class HybridRenderEngine {
         $this._currentZ = $oldZ
     }
 
+    [void] WriteToRegion([string]$regionId, [string]$content, [int]$fgStart, [int]$fgEnd, [int]$bg) {
+        $bounds = $this.GetRegionBounds($regionId)
+        if ($null -eq $bounds) { return }
+        
+        # Apply region z-index temporarily
+        $oldZ = $this._currentZ
+        $this._currentZ = $bounds.ZIndex
+        
+        # Set clip to region bounds
+        $this.PushClip($bounds.X, $bounds.Y, $bounds.Width, $bounds.Height)
+        
+        # Write at region origin (0,0 relative to region) using Gradient WriteAt
+        $this.WriteAt($bounds.X, $bounds.Y, $content, $fgStart, $fgEnd, $bg)
+        
+        $this.PopClip()
+        $this._currentZ = $oldZ
+    }
+
     # Define a grid of columns within a parent region
     # columns: array of hashtables @{ Name='...'; Width=... } or just widths
     # Returns: array of generated region IDs

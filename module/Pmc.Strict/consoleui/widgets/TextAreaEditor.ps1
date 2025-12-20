@@ -38,6 +38,9 @@ class TextAreaEditor : PmcWidget {
     [int]$SelectionEndX = 0     # Where selection ends (current cursor)
     [int]$SelectionEndY = 0
 
+    # Internal clipboard (app-only, performant)
+    static [string]$_clipboard = ""
+
     # Undo/redo with full state tracking
     hidden [System.Collections.ArrayList]$_undoStack
     hidden [System.Collections.ArrayList]$_redoStack
@@ -212,51 +215,118 @@ class TextAreaEditor : PmcWidget {
             return
         }
 
+        # Theme colors - use consistent theme for ALL text
+        $textFg = $this.GetThemedInt('Foreground.Body')
+        $textBg = $this.GetThemedBgInt('Background.Input', 1, 0)
+        $selFg = $this.GetThemedInt('Foreground.Selected')
+        $selBg = $this.GetThemedBgInt('Background.Selected', 1, 0)
+        $cursorBg = $this.GetThemedBgInt('Background.Cursor', 1, 0)
+        
+        # Fallback colors if theme not available
+        if ($textBg -eq -1) { $textBg = [HybridRenderEngine]::_PackRGB(30, 30, 30) }
+        if ($selBg -eq -1) { $selBg = [HybridRenderEngine]::_PackRGB(0, 80, 160) }
+        if ($cursorBg -eq -1) { $cursorBg = [HybridRenderEngine]::_PackRGB(200, 200, 200) }
+
         # Draw background
-        # Use WriteAt with style string instead of FillRect
-        $bgLine = $this.Style + (" " * $this.Width)
         for ($r = 0; $r -lt $this.Height; $r++) {
-            $engine.WriteAt($this.X, $this.Y + $r, $bgLine)
+            $engine.WriteAt($this.X, $this.Y + $r, (" " * $this.Width), $textFg, $textBg)
+        }
+
+        # Normalize selection bounds
+        $hasSelection = ($this.SelectionMode -ne [SelectionMode]::None)
+        $selStartLine = 0; $selEndLine = 0; $selStartCol = 0; $selEndCol = 0
+        if ($hasSelection) {
+            $selStartLine = [Math]::Min($this.SelectionAnchorY, $this.SelectionEndY)
+            $selEndLine = [Math]::Max($this.SelectionAnchorY, $this.SelectionEndY)
+            if ($selStartLine -eq $selEndLine) {
+                $selStartCol = [Math]::Min($this.SelectionAnchorX, $this.SelectionEndX)
+                $selEndCol = [Math]::Max($this.SelectionAnchorX, $this.SelectionEndX)
+            } else {
+                if ($this.SelectionAnchorY -lt $this.SelectionEndY) {
+                    $selStartCol = $this.SelectionAnchorX
+                    $selEndCol = $this.SelectionEndX
+                } else {
+                    $selStartCol = $this.SelectionEndX
+                    $selEndCol = $this.SelectionAnchorX
+                }
+            }
         }
 
         # Calculate visible range
         $startLine = $this.ScrollOffsetY
         $endLine = [Math]::Min($this.GetLineCount() - 1, $startLine + $this.Height - 1)
 
-        # Draw text content
+        # Draw text content with selection highlighting
         for ($i = 0; $i -le ($endLine - $startLine); $i++) {
             $lineIndex = $startLine + $i
             $lineText = $this.GetLine($lineIndex)
+            $screenY = $this.Y + $i
             
             # Handle horizontal scrolling
-            if ($this.ScrollOffsetX -lt $lineText.Length) {
-                $visibleText = $lineText.Substring($this.ScrollOffsetX)
-                if ($visibleText.Length -gt $this.Width) {
-                    $visibleText = $visibleText.Substring(0, $this.Width)
-                }
+            $visibleStart = $this.ScrollOffsetX
+            $visibleEnd = [Math]::Min($lineText.Length, $visibleStart + $this.Width)
+            
+            if ($visibleStart -lt $lineText.Length) {
+                $visibleText = $lineText.Substring($visibleStart, [Math]::Min($this.Width, $lineText.Length - $visibleStart))
                 
-                # Draw the line
-                # Use WriteAt with style prepended
-                $engine.WriteAt($this.X, $this.Y + $i, $this.Style + $visibleText)
+                # Check if this line has selection
+                if ($hasSelection -and $lineIndex -ge $selStartLine -and $lineIndex -le $selEndLine) {
+                    # Determine selection range on this line
+                    $lineSelStart = 0
+                    $lineSelEnd = $lineText.Length
+                    
+                    if ($this.SelectionMode -eq [SelectionMode]::Block) {
+                        # Block Selection: Fixed columns for all lines
+                        $blockStart = [Math]::Min($this.SelectionAnchorX, $this.SelectionEndX)
+                        $blockEnd = [Math]::Max($this.SelectionAnchorX, $this.SelectionEndX)
+                        
+                        $lineSelStart = $blockStart
+                        $lineSelEnd = $blockEnd
+                    }
+                    else {
+                        # Stream Selection
+                        if ($lineIndex -eq $selStartLine) { $lineSelStart = $selStartCol }
+                        if ($lineIndex -eq $selEndLine) { $lineSelEnd = $selEndCol }
+                    }
+                    
+                    # Adjust for scroll offset
+                    $lineSelStart = [Math]::Max(0, $lineSelStart - $visibleStart)
+                    $lineSelEnd = [Math]::Max(0, $lineSelEnd - $visibleStart)
+                    $lineSelEnd = [Math]::Min($lineSelEnd, $this.Width)
+                    
+                    # Draw text in three parts: before, selected, after
+                    if ($lineSelStart -gt 0) {
+                        $beforeText = $visibleText.Substring(0, [Math]::Min($lineSelStart, $visibleText.Length))
+                        $engine.WriteAt($this.X, $screenY, $beforeText, $textFg, $textBg)
+                    }
+                    if ($lineSelEnd -gt $lineSelStart -and $lineSelStart -lt $visibleText.Length) {
+                        $selText = $visibleText.Substring($lineSelStart, [Math]::Min($lineSelEnd - $lineSelStart, $visibleText.Length - $lineSelStart))
+                        $engine.WriteAt($this.X + $lineSelStart, $screenY, $selText, $selFg, $selBg)
+                    }
+                    if ($lineSelEnd -lt $visibleText.Length) {
+                        $afterText = $visibleText.Substring($lineSelEnd)
+                        $engine.WriteAt($this.X + $lineSelEnd, $screenY, $afterText, $textFg, $textBg)
+                    }
+                } else {
+                    # No selection on this line
+                    $engine.WriteAt($this.X, $screenY, $visibleText, $textFg, $textBg)
+                }
             }
         }
 
-        # Draw selection if active
-        if ($this.SelectionMode -ne [SelectionMode]::None) {
-            $selStartLine = [Math]::Min($this.SelectionAnchorY, $this.SelectionEndY)
-            $selEndLine = [Math]::Max($this.SelectionAnchorY, $this.SelectionEndY)
-            $selStartCol = [Math]::Min($this.SelectionAnchorX, $this.SelectionEndX)
-            $selEndCol = [Math]::Max($this.SelectionAnchorX, $this.SelectionEndX)
-
-            for ($i = 0; $i -le ($endLine - $startLine); $i++) {
-                $lineIndex = $startLine + $i
-                
-                if ($this.IsLineSelected($lineIndex, $selStartLine, $selEndLine, $selStartCol, $selEndCol)) {
-                    # Simple full line selection highlighting for now
-                    # In a real implementation, we'd highlight only selected characters
-                    # This requires more complex rendering logic
-                }
+        # Draw cursor (inverted character at cursor position)
+        $cursorScreenY = $this.CursorY - $this.ScrollOffsetY
+        $cursorScreenX = $this.CursorX - $this.ScrollOffsetX
+        if ($cursorScreenY -ge 0 -and $cursorScreenY -lt $this.Height -and $cursorScreenX -ge 0 -and $cursorScreenX -lt $this.Width) {
+            $cursorLine = $this.GetLine($this.CursorY)
+            $cursorChar = " "  # Default to space for end-of-line cursor
+            if ($this.CursorX -ge 0 -and $this.CursorX -lt $cursorLine.Length) {
+                # Get character at cursor position as string
+                $cursorChar = [string]$cursorLine.Substring($this.CursorX, 1)
             }
+            # Draw cursor with inverted fg/bg (text on bright background)
+            # FIX: Use textFg instead of textBg to preserve syntax color (or base color)
+            $engine.WriteAt($this.X + $cursorScreenX, $this.Y + $cursorScreenY, $cursorChar, $textFg, $cursorBg)
         }
     }
 
@@ -731,16 +801,94 @@ class TextAreaEditor : PmcWidget {
         $this.EnsureCursorVisible()
     }
 
+    # Get text in selection range (efficient - no regex)
+    hidden [string] GetSelectedText() {
+        if ($this.SelectionMode -eq [SelectionMode]::None) { return "" }
+        
+        # Normalize anchor and end (anchor might be after end if selecting backwards)
+        $startLine = [Math]::Min($this.SelectionAnchorY, $this.SelectionEndY)
+        $endLine = [Math]::Max($this.SelectionAnchorY, $this.SelectionEndY)
+        
+        if ($startLine -eq $endLine) {
+            $startCol = [Math]::Min($this.SelectionAnchorX, $this.SelectionEndX)
+            $endCol = [Math]::Max($this.SelectionAnchorX, $this.SelectionEndX)
+        } else {
+            if ($this.SelectionAnchorY -lt $this.SelectionEndY) {
+                $startCol = $this.SelectionAnchorX
+                $endCol = $this.SelectionEndX
+            } else {
+                $startCol = $this.SelectionEndX
+                $endCol = $this.SelectionAnchorX
+            }
+        }
+        
+        $startPos = $this.GetPositionFromLineCol($startLine, $startCol)
+        $endPos = $this.GetPositionFromLineCol($endLine, $endCol)
+        $length = $endPos - $startPos
+        
+        if ($length -le 0) { return "" }
+        return $this._gapBuffer.GetText($startPos, $length)
+    }
+
     [void] DeleteSelection() {
-        # Simplified: just clear selection for now
-        # Real implementation would delete the selected text range
+        if ($this.SelectionMode -eq [SelectionMode]::None) { return }
+        
+        # Get normalized positions
+        $startLine = [Math]::Min($this.SelectionAnchorY, $this.SelectionEndY)
+        $endLine = [Math]::Max($this.SelectionAnchorY, $this.SelectionEndY)
+        
+        if ($startLine -eq $endLine) {
+            $startCol = [Math]::Min($this.SelectionAnchorX, $this.SelectionEndX)
+            $endCol = [Math]::Max($this.SelectionAnchorX, $this.SelectionEndX)
+        } else {
+            if ($this.SelectionAnchorY -lt $this.SelectionEndY) {
+                $startCol = $this.SelectionAnchorX
+                $endCol = $this.SelectionEndX
+            } else {
+                $startCol = $this.SelectionEndX
+                $endCol = $this.SelectionAnchorX
+            }
+        }
+        
+        $startPos = $this.GetPositionFromLineCol($startLine, $startCol)
+        $endPos = $this.GetPositionFromLineCol($endLine, $endCol)
+        $length = $endPos - $startPos
+        
+        if ($length -gt 0) {
+            $this._gapBuffer.Delete($startPos, $length)
+            $this._lineIndexDirty = $true
+            $this.Modified = $true
+            
+            # Move cursor to start of deleted region
+            $this.CursorY = $startLine
+            $this.CursorX = $startCol
+            $this.EnsureCursorVisible()
+        }
+        
         $this.ClearSelection()
     }
 
-    # Clipboard operations (stubs)
-    [void] Copy() { }
-    [void] Cut() { }
-    [void] Paste() { }
+    # Clipboard operations (internal clipboard - no system clipboard for performance)
+    [void] Copy() {
+        $text = $this.GetSelectedText()
+        if ($text) {
+            [TextAreaEditor]::_clipboard = $text
+        }
+    }
+
+    [void] Cut() {
+        $this.Copy()
+        $this.DeleteSelection()
+    }
+
+    [void] Paste() {
+        if ([TextAreaEditor]::_clipboard) {
+            if ($this.SelectionMode -ne [SelectionMode]::None) {
+                $this.DeleteSelection()
+            }
+            $this.InsertString([TextAreaEditor]::_clipboard)
+        }
+    }
 
     # Undo/Redo (stubs)
     [void] SaveUndoState() { }

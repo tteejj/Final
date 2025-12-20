@@ -1,0 +1,38 @@
+[2025-12-19 19:51:37.406] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-19 19:51:37.419] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-19 19:51:37.421] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-19 19:51:37.422] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-19 19:51:37.424] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-19 19:51:37.425] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-19 19:51:37.427] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-19 19:51:37.428] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-19 19:51:37.430] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-19 19:51:37.431] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-19 19:51:37.432] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-19 19:51:37.434] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-19 19:51:37.459] ServiceContainer: Resolving 'Application'...
+[2025-12-19 19:51:37.463] ServiceContainer: Resolving 'Theme'...
+[2025-12-19 19:51:37.895] [ERROR] ServiceContainer: Failed to resolve 'Theme': The variable '$global:PmcDebug' cannot be retrieved because it has not been set.
+[2025-12-19 19:51:37.898] Stack trace: at Configure, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 61
+at _InitializeDefaults, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 142
+at _Initialize, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 88
+at PmcThemeManager, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 43
+at GetInstance, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 52
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 395
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 459
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 517
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-19 19:51:37.906] [ERROR] ServiceContainer: Failed to resolve 'Application': The variable '$global:PmcDebug' cannot be retrieved because it has not been set.
+[2025-12-19 19:51:37.907] Stack trace: at Configure, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 61
+at _InitializeDefaults, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 142
+at _Initialize, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 88
+at PmcThemeManager, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 43
+at GetInstance, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 52
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 395
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 459
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 517
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37

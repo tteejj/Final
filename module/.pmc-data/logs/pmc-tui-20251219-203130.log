@@ -1,0 +1,14 @@
+[2025-12-19 20:31:35.500] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-19 20:31:35.523] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-19 20:31:35.525] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-19 20:31:35.527] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-19 20:31:35.529] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-19 20:31:35.530] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-19 20:31:35.532] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-19 20:31:35.534] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-19 20:31:35.536] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-19 20:31:35.538] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-19 20:31:35.540] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-19 20:31:35.543] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-19 20:31:35.574] ServiceContainer: Resolving 'Application'...
+[2025-12-19 20:31:35.577] ServiceContainer: Resolving 'Theme'...

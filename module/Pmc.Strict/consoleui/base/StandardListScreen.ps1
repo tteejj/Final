@@ -172,36 +172,63 @@ class StandardListScreen : PmcScreen {
     # === Layout Methods ===
 
     [void] Resize([int]$width, [int]$height) {
-        # Call base implementation first (handles Header, Footer, MenuBar)
-        ([PmcScreen]$this).Resize($width, $height)
+        # Set dimensions first
+        $this.TermWidth = $width
+        $this.TermHeight = $height
 
-        # Resize List to fit content area
-        if ($this.List) {
-            # LAYOUTMANAGER FIX: Use LayoutManager for content positioning instead of hardcoded values
-            if (-not $this.LayoutManager) {
-                $this.LayoutManager = [PmcLayoutManager]::new()
-                $this.LayoutManager.DefineRegion('ListContent', 0, 6, '100%', 'FILL')
-            }
-            # Ensure ListContent region exists (may not if LayoutManager was set externally)
-            try {
-                $contentRect = $this.LayoutManager.GetRegion('ListContent', $width, $height)
-            } catch {
-                # Fallback: define the region now
-                $this.LayoutManager.DefineRegion('ListContent', 0, 6, '100%', 'FILL')
-                $contentRect = $this.LayoutManager.GetRegion('ListContent', $width, $height)
-            }
-            $this.List.SetPosition($contentRect.X, $contentRect.Y)
-            $this.List.SetSize($contentRect.Width, $contentRect.Height)
+        # Ensure LayoutManager exists
+        if (-not $this.LayoutManager) {
+            $this.LayoutManager = [PmcLayoutManager]::new()
+            $this.LayoutManager.DefineRegion('ListContent', 0, 6, '100%', 'FILL')
         }
-        
+
+        # Apply layout to Header, Footer, MenuBar, StatusBar via base
+        if ($this.MenuBar) {
+            $rect = $this.LayoutManager.GetRegion('MenuBar', $width, $height)
+            $this.MenuBar.SetPosition($rect.X, $rect.Y)
+            $this.MenuBar.SetSize($rect.Width, $rect.Height)
+        }
+        if ($this.Header) {
+            $rect = $this.LayoutManager.GetRegion('Header', $width, $height)
+            $this.Header.SetPosition($rect.X, $rect.Y)
+            $this.Header.SetSize($rect.Width, $rect.Height)
+        }
+        if ($this.Footer) {
+            $rect = $this.LayoutManager.GetRegion('Footer', $width, $height)
+            $this.Footer.SetPosition($rect.X, $rect.Y)
+            $this.Footer.SetSize($rect.Width, $rect.Height)
+        }
+        if ($this.StatusBar) {
+            $rect = $this.LayoutManager.GetRegion('StatusBar', $width, $height)
+            $this.StatusBar.SetPosition($rect.X, $rect.Y)
+            $this.StatusBar.SetSize($rect.Width, $rect.Height)
+        }
+
+        # CRITICAL FIX: Let subclasses apply their own content layout AFTER chrome
+        # Subclasses like TaskListScreen override ApplyContentLayout for 70/30 split
+        $this.ApplyContentLayout($this.LayoutManager, $width, $height)
+
         # Resize overlays
         if ($this.FilterPanel) {
             $this.FilterPanel.SetPosition([Math]::Max(0, [Math]::Floor(($width - 80) / 2)), 5)
         }
-        
-        # InlineEditor resizes itself based on active row usually, but strictly:
-        if ($this.InlineEditor) {
-            # Default bounds (will be overridden by list row logic)
+
+        # InlineEditor resizes itself based on active row usually
+    }
+
+    # Default content layout - subclasses override for custom layouts like 70/30 split
+    [void] ApplyContentLayout([PmcLayoutManager]$layoutManager, [int]$termWidth, [int]$termHeight) {
+        # Full-width list for standard list screens
+        if ($this.List) {
+            try {
+                $contentRect = $layoutManager.GetRegion('ListContent', $termWidth, $termHeight)
+            } catch {
+                # Fallback: define the region now
+                $layoutManager.DefineRegion('ListContent', 0, 6, '100%', 'FILL')
+                $contentRect = $layoutManager.GetRegion('ListContent', $termWidth, $termHeight)
+            }
+            $this.List.SetPosition($contentRect.X, $contentRect.Y)
+            $this.List.SetSize($contentRect.Width, $contentRect.Height)
         }
     }
 
@@ -1197,18 +1224,6 @@ class StandardListScreen : PmcScreen {
 
     # === Helper Methods ===
 
-    <#
-    .SYNOPSIS
-    Apply layout to content widgets
-    #>
-    [void] ApplyContentLayout([PmcLayoutManager]$layoutManager, [int]$termWidth, [int]$termHeight) {
-        if ($this.List) {
-            $rect = $layoutManager.GetRegion('Content', $termWidth, $termHeight)
-            # Write-Host "DEBUG: StandardListScreen positioning List at X=$($rect.X) Y=$($rect.Y) W=$($rect.Width) H=$($rect.Height)"
-            $this.List.SetPosition($rect.X, $rect.Y)
-            $this.List.SetSize($rect.Width, $rect.Height)
-        }
-    }
     
     <#
     .SYNOPSIS

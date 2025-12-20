@@ -193,47 +193,46 @@ class PmcHeader : PmcWidget {
     [void] RenderToEngine([object]$engine) {
         $this.RegisterLayout($engine)
 
-        # Colors (Ints)
-        $titleFg = $this.GetThemedInt('Foreground.Title')
-        $mutedFg = $this.GetThemedInt('Foreground.Muted')
+        # Colors (Ints for solid colors)
         $borderFg = $this.GetThemedInt('Border.Widget')
-        $headerBg = $this.GetThemedBgInt('Background.Header', 1, 0)
 
         # Calculate region widths (must match RegisterLayout)
         $contextWidth = [Math]::Min(30, [Math]::Max(10, $this.Width - 20))
         $titleWidth = [Math]::Max(10, $this.Width - $contextWidth)
 
-        # Title
+        # Title - Use WriteThemedToRegion for automatic gradient support
         $titleText = if ($this.Icon) { "$($this.Icon) $($this.Title)" } else { $this.Title }
-        $engine.WriteToRegion("$($this.RegionID)_Title", $titleText, $titleFg, $headerBg)
+        $this.WriteThemedToRegion($engine, "$($this.RegionID)_Title", $titleText, 'Foreground.Title', 'Background.Header')
 
         # Context Info (Right-aligned within its region)
         if ($this.ContextInfo) {
              $ctxText = "[$($this.ContextInfo)]"
              $padCount = [Math]::Max(0, $contextWidth - $ctxText.Length)
              $paddedCtx = (" " * $padCount) + $ctxText
-             $engine.WriteToRegion("$($this.RegionID)_Context", $paddedCtx, $mutedFg, $headerBg)
+             $this.WriteThemedToRegion($engine, "$($this.RegionID)_Context", $paddedCtx, 'Foreground.Muted', 'Background.Header')
         }
 
-        # Breadcrumb
+        # Breadcrumb - Use WriteThemedToRegion for gradient support
         $hasBreadcrumb = ($this.Breadcrumb -and $this.Breadcrumb.Count -gt 0)
         if ($hasBreadcrumb) {
             $crumbText = $this.Breadcrumb -join " → "
-            $engine.WriteToRegion("$($this.RegionID)_Breadcrumb", $crumbText, $mutedFg, $headerBg)
+            $this.WriteThemedToRegion($engine, "$($this.RegionID)_Breadcrumb", $crumbText, 'Foreground.Muted', 'Background.Header')
         }
 
         # Separator
         if ($this.ShowSeparator) {
             $sepRegion = if ($hasBreadcrumb) { "$($this.RegionID)_Separator_Breadcrumb" } else { "$($this.RegionID)_Separator_Simple" }
-            
+
             # Fill with line char
-            # We need bounds for Fill. 
+            # We need bounds for Fill.
             $bounds = $engine.GetRegionBounds($sepRegion)
             if ($bounds) {
                 # Determine char based on style
                 $char = $this.GetBoxChar('single_horizontal')
                 if ($this.BorderStyle -eq 'double') { $char = $this.GetBoxChar('double_horizontal') }
-                
+
+                # Get background color for separator
+                $headerBg = $this.GetThemedBgInt('Background.Header', 1, 0)
                 $engine.Fill($bounds.X, $bounds.Y, $bounds.Width, 1, $char, $borderFg, $headerBg)
             }
         }

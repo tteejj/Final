@@ -5,7 +5,35 @@
     },
     "Theme": {
       "Hex": "#ff00ff",
-      "Enabled": true
+      "Enabled": true,
+      "Properties": {
+        "Background.Field": { "Type": "Solid", "Color": "#0a0015" },
+        "Background.FieldFocused": { "Type": "Solid", "Color": "#2a0040" },
+        "Background.Row": { "Type": "Solid", "Color": "#0a0015" },
+        "Background.RowSelected": { "Type": "Solid", "Color": "#2a0040" },
+        "Background.Warning": { "Type": "Solid", "Color": "#332200" },
+        "Background.MenuBar": { "Type": "Solid", "Color": "#1a0030" },
+        "Background.TabActive": { "Type": "Solid", "Color": "#2a0040" },
+        "Background.TabInactive": { "Type": "Solid", "Color": "#0f001a" },
+        "Background.Primary": { "Type": "Solid", "Color": "#0a0015" },
+        "Background.Widget": { "Type": "Solid", "Color": "#0f001a" },
+        "Background.Panel": { "Type": "Solid", "Color": "#0f001a" },
+        "Background.Header": { "Type": "Solid", "Color": "#1a0030" },
+        "Background.Footer": { "Type": "Solid", "Color": "#1a0030" },
+        "Foreground.Field": { "Type": "Gradient", "Start": "#ff00ff", "End": "#00ffff" },
+        "Foreground.FieldFocused": { "Type": "Solid", "Color": "#ffffff" },
+        "Foreground.Row": { "Type": "Gradient", "Start": "#ff00ff", "End": "#00ffff" },
+        "Foreground.RowSelected": { "Type": "Solid", "Color": "#ffffff" },
+        "Foreground.Title": { "Type": "Gradient", "Start": "#ff00ff", "End": "#00ffff" },
+        "Foreground.Muted": { "Type": "Solid", "Color": "#666680" },
+        "Foreground.Warning": { "Type": "Solid", "Color": "#ffaa00" },
+        "Foreground.Error": { "Type": "Solid", "Color": "#ff3333" },
+        "Foreground.Success": { "Type": "Solid", "Color": "#33ff88" },
+        "Foreground.TabActive": { "Type": "Gradient", "Start": "#ff00ff", "End": "#00ffff" },
+        "Foreground.TabInactive": { "Type": "Solid", "Color": "#666680" },
+        "Foreground.Primary": { "Type": "Gradient", "Start": "#ff00ff", "End": "#00ffff" },
+        "Border.Widget": { "Type": "Solid", "Color": "#6600aa" }
+      }
     }
   }
 }

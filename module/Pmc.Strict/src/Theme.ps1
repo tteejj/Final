@@ -22,6 +22,7 @@ function Initialize-PmcThemeSystem {
     try {
         if ($cfg.Display -and $cfg.Display.Theme) {
             if ($cfg.Display.Theme.Hex) { $theme.Hex = ($cfg.Display.Theme.Hex.ToString()) }
+            if ($cfg.Display.Theme.Properties) { $theme.Properties = $cfg.Display.Theme.Properties }
             if ($cfg.Display.Theme.Enabled -ne $null) { } # reserved for future toggles
         }
         if ($cfg.Display -and $cfg.Display.Icons -and $cfg.Display.Icons.Mode) {
@@ -55,9 +56,14 @@ function Initialize-PmcThemeSystem {
     try {
         if (([System.Management.Automation.PSTypeName]'PmcThemeManager').Type) {
             [void][PmcThemeManager]::GetInstance()
+            # NOTE: Do NOT call Reload() here - it causes issues during initialization
+            # The manager will be properly initialized via Start-PmcTUI.ps1's Theme service registration
         }
     } catch {
         # PmcThemeManager may not be loaded yet (e.g., during module import)
+        if ((Test-Path variable:global:PmcDebug) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
+            Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [Theme] PmcThemeManager init failed: $_"
+        }
     }
 }
 

@@ -1,8 +1,7 @@
 # start.ps1 - Portable entry point for PMC TUI
 # Works on both Windows and Linux - keeps all files within program folder
 param(
-    [switch]$DebugLog,
-    [int]$LogLevel = 0
+    [int]$debug = 0    # 0=off, 1=errors, 2=info, 3=verbose
 )
 
 Set-StrictMode -Version Latest
@@ -35,7 +34,7 @@ try {
     . "$script:AppRoot/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1"
     
     # Now call the function explicitly
-    Start-PmcTUI -DebugLog:$DebugLog -LogLevel $LogLevel
+    Start-PmcTUI -debug $debug
 }
 catch {
     Write-Host "PMC TUI Error: $_" -ForegroundColor Red
