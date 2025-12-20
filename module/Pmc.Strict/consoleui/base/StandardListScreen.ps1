@@ -1037,7 +1037,7 @@ class StandardListScreen : PmcScreen {
                     # Clear EditorMode AFTER checking if it was add mode
                     $this.EditorMode = ""
 
-                    # NOTE: NeedsClear NOT set - screen should not clear when closing inline editor
+                    $this.NeedsClear = $true  # FIX: Set NeedsClear to clear stale editor row
                     # MUST return true to trigger re-render
                     return $true
                 }

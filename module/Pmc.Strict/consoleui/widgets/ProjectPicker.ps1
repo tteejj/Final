@@ -262,19 +262,42 @@ class ProjectPicker : PmcWidget {
 
     <#
     .SYNOPSIS
+    Render project picker to engine
+    #>
+    [void] RenderToEngine([object]$engine) {
+        # Clamp to bounds
+        $this._ClampToBounds($engine)
+        
+        # Begin layer elevation (popup z-order)
+        if ($engine.PSObject.Methods['BeginLayer']) {
+            $engine.BeginLayer(100)
+        }
+        
+        # Get themed colors
+        $borderFg = $this.GetThemedInt('Border.Widget')
+        $fg = $this.GetThemedInt('Foreground.Row')
+        $bg = $this.GetThemedBgInt('Background.Row', $this.Width, 0)
+        $primaryFg = $this.GetThemedInt('Foreground.Primary')
+        $mutedFg = $this.GetThemedInt('Foreground.Muted')
+        $highlightBg = $this.GetThemedBgInt('Background.RowSelected', $this.Width, 0)
+        $highlightFg = $this.GetThemedInt('Foreground.RowSelected')
+        $errorFg = $this.GetThemedInt('Foreground.Error')
+        
+        # Draw border box
+        $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $borderFg, $bg)
+        
+        # Draw title
+        $titleText = " $($this.Label) "
+        $engine.WriteAt($this.X + 2, $this.Y, $titleText, $primaryFg, $bg)
+        
+        # Draw count (if not in create mode)
         if (-not $this._isCreateMode) {
             $countStr = "($($this._filteredProjects.Count))"
             $engine.WriteAt($this.X + $this.Width - $countStr.Length - 2, $this.Y + 1, $countStr, $mutedFg, $bg)
         }
         
         # Separator line under title
-        $engine.Fill($this.X + 1, $this.Y + 2, $this.Width - 2, 1, '─', $borderFg, $bg)
-        
-        # Search Box or List...
-        
-        # (Rest of rendering logic)
-        
-
+        $engine.Fill($this.X + 1, $this.Y + 2, $this.Width - 2, 1, [char]0x2500, $borderFg, $bg)
 
         if ($this._isCreateMode) {
             # Create Input at Y+3
@@ -359,16 +382,12 @@ class ProjectPicker : PmcWidget {
             $engine.WriteAt($this.X + 2, $this.Y + $this.Height - 1, $this.PadText($this._errorMessage, $this.Width - 4, 'left'), $errorFg, $bg)
         }
         
-        # === END LAYER ELEVATION ===
-        if ($engine.PSObject.Methods['BeginLayer']) {
-            $engine.BeginLayer(0)
+        # End layer elevation
+        if ($engine.PSObject.Methods['EndLayer']) {
+            $engine.EndLayer()
         }
     }
 
-    <#
-    .SYNOPSIS
-    Ensure widget stays within screen bounds
-    #>
     <#
     .SYNOPSIS
     Ensure widget stays within screen bounds (Engine Viewport)

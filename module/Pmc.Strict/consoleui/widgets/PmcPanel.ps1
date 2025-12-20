@@ -137,6 +137,10 @@ class PmcPanel : PmcWidget {
     Render directly to engine (new high-performance path)
     #>
     [void] RenderToEngine([object]$engine) {
+        # DEBUG: Conditional logging
+        if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
+            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcPanel.RenderToEngine] CALLED X=$($this.X) Y=$($this.Y) W=$($this.Width) H=$($this.Height) ShowBorder=$($this.ShowBorder)"
+        }
         $this.RegisterLayout($engine)
 
         # Colors (Ints) - Match UniversalList color methods for consistency

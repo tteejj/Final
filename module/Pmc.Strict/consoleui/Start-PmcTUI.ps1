@@ -547,13 +547,6 @@ function Start-PmcTUI {
                 }
 
             }
-            'BlockedTasks' {
-                # Write-PmcTuiLog "Creating BlockedTasksScreen with container..." "INFO"
-                $screen = [BlockedTasksScreen]::new($global:PmcContainer)
-                # Write-PmcTuiLog "Pushing screen to app..." "INFO"
-                $global:PmcApp.PushScreen($screen)
-                # Write-PmcTuiLog "Screen pushed successfully" "INFO"
-            }
             'Demo' {
                 # Write-PmcTuiLog "Loading DemoScreen (not containerized)..." "INFO"
                 . "$PSScriptRoot/DemoScreen.ps1"

@@ -14,7 +14,6 @@ using namespace System.Globalization
 #
 #   # Render
 #   $ansiOutput = $picker.Render()
-#   Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [DatePicker] Rendering date picker"
 #
 #   # Handle input
 #   $key = [Console]::ReadKey($true)
@@ -71,9 +70,6 @@ class DatePicker : PmcWidget {
     hidden [int]$_cursorPosition = 0                      # Text cursor position
 
     # === Constructor ===
-    # NOTE: This widget shows ONLY the calendar mode for visual date selection.
-    # For text-based date entry (parsing "today", "next friday", etc.), use DateTextEntry widget.
-    # DatePicker is designed for inline display at column positions in list views.
     DatePicker() : base("DatePicker") {
         $this.Width = 35
         $this.Height = 14
@@ -149,6 +145,20 @@ class DatePicker : PmcWidget {
 
     <#
     .SYNOPSIS
+    Render date picker to engine
+    #>
+    [void] RenderToEngine([object]$engine) {
+        # DEBUG: Conditional logging for rendering issues
+        if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
+            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [DatePicker.RenderToEngine] CALLED X=$($this.X) Y=$($this.Y) W=$($this.Width) H=$($this.Height)"
+        }
+
+        # Clamp to bounds
+        $this._ClampToBounds($engine)
+
+        # Get background color first (needed for Fill and DrawBox)
+        $bg = $this.GetThemedBgInt('Background.Row', $this.Width, 0)
+
         # Ensure Popup is drawn ABOVE everything else
         if ($engine.PSObject.Methods['BeginLayer']) {
             $engine.BeginLayer(100)
@@ -163,6 +173,11 @@ class DatePicker : PmcWidget {
         $highlightBg = $this.GetThemedBgInt('Background.RowSelected', 1, 0)
         $highlightFg = $this.GetThemedInt('Foreground.RowSelected')
 
+        # DEBUG: Log colors
+        if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
+            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [DatePicker.RenderToEngine] Colors: bg=$bg borderFg=$borderFg"
+        }
+
         # Draw Box (Panel Background)
         $engine.Fill($this.X, $this.Y, $this.Width, $this.Height, ' ', $fg, $bg)
         $engine.DrawBox($this.X, $this.Y, $this.Width, $this.Height, $borderFg, $bg)
@@ -173,9 +188,7 @@ class DatePicker : PmcWidget {
         $engine.WriteAt($this.X + 2 + $pad, $this.Y + 1, $title, $primaryFg, $bg)
         
         # Status
-        # Status
         $currentValue = "Current: " + $this._selectedDate.ToString("yyyy-MM-dd ddd")
-        # Pad to ensure line clearing
         $engine.WriteAt($this.X + 2, $this.Y + 2, $this.PadText($currentValue, $this.Width - 4, 'left'), $fg, $bg)
         
         # Calendar Header
@@ -194,12 +207,8 @@ class DatePicker : PmcWidget {
         $startDayOfWeek = [int]$firstDay.DayOfWeek
         $today = [DateTime]::Today
         
-        # Manually calculate grid positions since it's a specialized layout
         for ($week = 0; $week -lt 6; $week++) {
             $rowY = $this.Y + 6 + $week
-            # Calculate X offset to center the grid (approx 20 chars wide: "Su Mo Tu We Th Fr Sa")
-            # Day Names string is 20 chars wide.
-            # Align center similar to day names pad
             $padGrid = [Math]::Max(0, [Math]::Floor(($this.Width - 4 - 20) / 2))
             $startX = $this.X + 2 + $padGrid
             
@@ -232,7 +241,6 @@ class DatePicker : PmcWidget {
         
         # Help
         $helpText = "Enter: Select"
-        # Pad help text to clear any potential artifacts from previous renders
         $engine.WriteAt($this.X + 2, $this.Y + $this.Height - 3, $this.PadText($helpText, $this.Width - 4, 'left'), $mutedFg, $bg)
         
         # Error
@@ -240,9 +248,14 @@ class DatePicker : PmcWidget {
             $engine.WriteAt($this.X + 2, $this.Y + $this.Height - 1, $this.PadText($this._errorMessage, $this.Width - 4, 'left'), $errorFg, $bg)
         }
         
-        # === END LAYER ELEVATION ===
-        if ($engine.PSObject.Methods['BeginLayer']) {
-            $engine.BeginLayer(0)
+        # End layer elevation
+        if ($engine.PSObject.Methods['EndLayer']) {
+            $engine.EndLayer()
+        }
+
+        # DEBUG: Log completion
+        if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
+            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [DatePicker.RenderToEngine] COMPLETE"
         }
     }
 
@@ -281,13 +294,6 @@ class DatePicker : PmcWidget {
 
     <#
     .SYNOPSIS
-    Render the date picker widget
-
-    .OUTPUTS
-    ANSI string ready for display
-    #>
-    <#
-    .SYNOPSIS
     Render the date picker widget (Legacy)
     #>
     [string] Render() {
@@ -300,7 +306,6 @@ class DatePicker : PmcWidget {
         $this._isCalendarMode = -not $this._isCalendarMode
         $this._errorMessage = ""
 
-        # When switching to calendar mode, parse text input first
         if ($this._isCalendarMode) {
             $parsed = $this._ParseTextInput()
             if ($parsed) {
@@ -309,181 +314,9 @@ class DatePicker : PmcWidget {
             }
         }
         else {
-            # Switching to text mode - populate with current selected date
             $this._textInput = $this._selectedDate.ToString("yyyy-MM-dd")
             $this._cursorPosition = $this._textInput.Length
         }
-    }
-
-    hidden [void] _RenderTextMode([StringBuilder]$sb, [string]$borderColor, [string]$textColor, [string]$primaryColor, [string]$errorColor, [string]$reset) {
-        # Instructions (row 2)
-        $instructions = "Type: today, tomorrow, next fri, +7, eom, YYYY-MM-DD"
-        $sb.Append($this.BuildMoveTo($this.X, $this.Y + 2))
-        $sb.Append($borderColor)
-        $sb.Append($this.GetBoxChar('single_vertical'))
-        $sb.Append($textColor)
-        $sb.Append(" " + $this.TruncateText($instructions, $this.Width - 3))
-        $sb.Append($borderColor)
-        $sb.Append($this.BuildMoveTo($this.X + $this.Width - 1, $this.Y + 2))
-        $sb.Append($this.GetBoxChar('single_vertical'))
-
-        # Input field (row 4)
-        $sb.Append($this.BuildMoveTo($this.X, $this.Y + 4))
-        $sb.Append($borderColor)
-        $sb.Append($this.GetBoxChar('single_vertical'))
-        $sb.Append($primaryColor)
-        $sb.Append(" Input: ")
-        $sb.Append($textColor)
-
-        # Show input with cursor
-        $displayInput = $this._textInput
-        $maxInputWidth = $this.Width - 11
-        if ($displayInput.Length -gt $maxInputWidth) {
-            $displayInput = $displayInput.Substring($displayInput.Length - $maxInputWidth)
-        }
-        $sb.Append($displayInput)
-        $sb.Append("_")  # Cursor
-        $sb.Append(" " * [Math]::Max(0, $maxInputWidth - $displayInput.Length - 1))
-
-        $sb.Append($borderColor)
-        $sb.Append($this.BuildMoveTo($this.X + $this.Width - 1, $this.Y + 4))
-        $sb.Append($this.GetBoxChar('single_vertical'))
-
-        # Examples (rows 6-10)
-        $examples = @(
-            "Examples:",
-            "  today, tomorrow",
-            "  next monday, next fri",
-            "  +7 (7 days from now)",
-            "  eom (end of month)",
-            "  2025-03-15"
-        )
-
-        for ($i = 0; $i -lt $examples.Count; $i++) {
-            $row = $this.Y + 6 + $i
-            $sb.Append($this.BuildMoveTo($this.X, $row))
-            $sb.Append($borderColor)
-            $sb.Append($this.GetBoxChar('single_vertical'))
-            $sb.Append($textColor)
-            $sb.Append(" " + $this.PadText($examples[$i], $this.Width - 3, 'left'))
-            $sb.Append($borderColor)
-            $sb.Append($this.BuildMoveTo($this.X + $this.Width - 1, $row))
-            $sb.Append($this.GetBoxChar('single_vertical'))
-        }
-    }
-
-    hidden [void] _RenderCalendar([StringBuilder]$sb, [string]$borderColor, [string]$textColor, [string]$primaryColor, [string]$mutedColor, [string]$successColor, [string]$reset) {
-        # Month/Year header (row 2)
-        $monthYear = $this._calendarMonth.ToString("MMMM yyyy")
-        $sb.Append($this.BuildMoveTo($this.X, $this.Y + 2))
-        $sb.Append($borderColor)
-        $sb.Append($this.GetBoxChar('single_vertical'))
-        $sb.Append($primaryColor)
-        $sb.Append(" " + $this.PadText($monthYear, $this.Width - 3, 'center'))
-        $sb.Append($borderColor)
-        $sb.Append($this.BuildMoveTo($this.X + $this.Width - 1, $this.Y + 2))
-        $sb.Append($this.GetBoxChar('single_vertical'))
-
-        # Day names (row 3)
-        $dayNames = "Su Mo Tu We Th Fr Sa"
-        $sb.Append($this.BuildMoveTo($this.X, $this.Y + 3))
-        $sb.Append($borderColor)
-        $sb.Append($this.GetBoxChar('single_vertical'))
-        $sb.Append($primaryColor)
-        $sb.Append(" " + $this.PadText($dayNames, $this.Width - 3, 'center'))
-        $sb.Append($borderColor)
-        $sb.Append($this.BuildMoveTo($this.X + $this.Width - 1, $this.Y + 3))
-        $sb.Append($this.GetBoxChar('single_vertical'))
-
-        # Calendar grid (rows 4-9, 6 weeks max)
-        $firstDay = [DateTime]::new($this._calendarMonth.Year, $this._calendarMonth.Month, 1)
-        $daysInMonth = [DateTime]::DaysInMonth($this._calendarMonth.Year, $this._calendarMonth.Month)
-        $startDayOfWeek = [int]$firstDay.DayOfWeek  # 0 = Sunday
-
-        $today = [DateTime]::Today
-
-        for ($week = 0; $week -lt 6; $week++) {
-            $row = $this.Y + 4 + $week
-            $sb.Append($this.BuildMoveTo($this.X, $row))
-            $sb.Append($borderColor)
-            $sb.Append($this.GetBoxChar('single_vertical'))
-
-            $line = " "
-            for ($dow = 0; $dow -lt 7; $dow++) {
-                $dayNum = ($week * 7 + $dow) - $startDayOfWeek + 1
-
-                if ($dayNum -ge 1 -and $dayNum -le $daysInMonth) {
-                    $thisDate = [DateTime]::new($this._calendarMonth.Year, $this._calendarMonth.Month, $dayNum)
-                    $dayStr = $dayNum.ToString().PadLeft(2)
-
-                    # Highlight logic
-                    $isSelected = ($thisDate.Date -eq $this._selectedDate.Date)
-                    $isToday = ($thisDate.Date -eq $today)
-
-                    if ($isSelected) {
-                        $line += $successColor + "[$dayStr]" + $textColor
-                    }
-                    elseif ($isToday) {
-                        $line += $primaryColor + " $dayStr " + $textColor
-                    }
-                    else {
-                        $line += " $dayStr "
-                    }
-                }
-                else {
-                    $line += "    "
-                }
-            }
-
-            $sb.Append($textColor)
-            # Don't pad/truncate calendar lines - they contain ANSI codes that confuse length calculation
-            $sb.Append($line)
-            # Pad with spaces to fill remaining width (calendar is fixed format, no ANSI in padding)
-            $visibleLength = ($line -replace '\e\[[0-9;]*m', '').Length
-            $padding = [Math]::Max(0, $this.Width - 3 - $visibleLength)
-            $sb.Append(' ' * $padding)
-            $sb.Append($borderColor)
-            $sb.Append($this.BuildMoveTo($this.X + $this.Width - 1, $row))
-            $sb.Append($this.GetBoxChar('single_vertical'))
-        }
-
-        # Navigation hints (row 10)
-        $hints = "Arrows: Navigate | PgUp/Dn: Month | Home/End: Month edges"
-        $sb.Append($this.BuildMoveTo($this.X, $this.Y + 10))
-        $sb.Append($borderColor)
-        $sb.Append($this.GetBoxChar('single_vertical'))
-        $sb.Append($mutedColor)
-        $sb.Append(" " + $this.TruncateText($hints, $this.Width - 3))
-        $sb.Append($borderColor)
-        $sb.Append($this.BuildMoveTo($this.X + $this.Width - 1, $this.Y + 10))
-        $sb.Append($this.GetBoxChar('single_vertical'))
-    }
-
-    hidden [bool] _HandleTextInput([ConsoleKeyInfo]$keyInfo) {
-        switch ($keyInfo.Key) {
-            'Backspace' {
-                if ($this._textInput.Length -gt 0) {
-                    $this._textInput = $this._textInput.Substring(0, $this._textInput.Length - 1)
-                    $this._errorMessage = ""
-                }
-                return $true
-            }
-            'Delete' {
-                # Clear entire input
-                $this._textInput = ""
-                $this._errorMessage = ""
-                return $true
-            }
-            default {
-                # Add printable characters
-                if ($keyInfo.KeyChar -ge 32 -and $keyInfo.KeyChar -le 126) {
-                    $this._textInput += $keyInfo.KeyChar
-                    $this._errorMessage = ""
-                }
-                return $true
-            }
-        }
-        return $false
     }
 
     hidden [bool] _HandleCalendarInput([ConsoleKeyInfo]$keyInfo) {
@@ -517,19 +350,16 @@ class DatePicker : PmcWidget {
                 $changed = $true
             }
             'Home' {
-                # Start of month
                 $this._selectedDate = [DateTime]::new($this._selectedDate.Year, $this._selectedDate.Month, 1)
                 $changed = $true
             }
             'End' {
-                # End of month
                 $daysInMonth = [DateTime]::DaysInMonth($this._selectedDate.Year, $this._selectedDate.Month)
                 $this._selectedDate = [DateTime]::new($this._selectedDate.Year, $this._selectedDate.Month, $daysInMonth)
                 $changed = $true
             }
         }
 
-        # Update calendar month if selected date moved to different month
         if ($changed) {
             if ($this._selectedDate.Month -ne $this._calendarMonth.Month -or
                 $this._selectedDate.Year -ne $this._calendarMonth.Year) {
@@ -550,78 +380,46 @@ class DatePicker : PmcWidget {
         }
 
         try {
-            # Today
-            if ($input -eq 'today') {
-                return [DateTime]::Today
-            }
+            if ($input -eq 'today') { return [DateTime]::Today }
+            if ($input -eq 'tomorrow') { return [DateTime]::Today.AddDays(1) }
 
-            # Tomorrow
-            if ($input -eq 'tomorrow') {
-                return [DateTime]::Today.AddDays(1)
-            }
-
-            # Relative days (+N or -N)
             if ($input -match '^([+-]?\d+)$') {
                 $days = [int]$Matches[1]
                 return [DateTime]::Today.AddDays($days)
             }
 
-            # End of month
             if ($input -eq 'eom') {
                 $today = [DateTime]::Today
                 $daysInMonth = [DateTime]::DaysInMonth($today.Year, $today.Month)
                 return [DateTime]::new($today.Year, $today.Month, $daysInMonth)
             }
 
-            # Next [day of week]
             if ($input -match '^next\s+(\w+)') {
                 $dayName = $Matches[1]
                 $targetDay = $this._ParseDayOfWeek($dayName)
-
                 if ($targetDay -ne $null) {
                     $today = [DateTime]::Today
                     $daysUntil = (([int]$targetDay - [int]$today.DayOfWeek + 7) % 7)
-                    if ($daysUntil -eq 0) { $daysUntil = 7 }  # Next week if today
+                    if ($daysUntil -eq 0) { $daysUntil = 7 }
                     return $today.AddDays($daysUntil)
                 }
             }
 
-            # Just day of week (next occurrence)
             $targetDay = $this._ParseDayOfWeek($input)
             if ($targetDay -ne $null) {
                 $today = [DateTime]::Today
                 $daysUntil = (([int]$targetDay - [int]$today.DayOfWeek + 7) % 7)
-                if ($daysUntil -eq 0) { $daysUntil = 7 }  # Next week if today
+                if ($daysUntil -eq 0) { $daysUntil = 7 }
                 return $today.AddDays($daysUntil)
             }
 
-            # Month day (e.g., "jan 15", "march 3")
-            if ($input -match '^(\w+)\s+(\d+)') {
-                $monthName = $Matches[1]
-                $day = [int]$Matches[2]
-                $month = $this._ParseMonth($monthName)
-
-                if ($month -gt 0 -and $day -ge 1 -and $day -le 31) {
-                    $year = [DateTime]::Today.Year
-                    # If date has passed this year, use next year
-                    $testDate = [DateTime]::new($year, $month, $day)
-                    if ($testDate -lt [DateTime]::Today) {
-                        $year++
-                    }
-                    return [DateTime]::new($year, $month, $day)
-                }
-            }
-
-            # ISO date format (YYYY-MM-DD)
             if ($input -match '^\d{4}-\d{2}-\d{2}$') {
                 $parsed = [DateTime]::ParseExact($input, 'yyyy-MM-dd', [CultureInfo]::InvariantCulture)
                 return $parsed
             }
 
-            # Try general DateTime parse
             $parsed = [DateTime]::Parse($input, [CultureInfo]::InvariantCulture)
             return $parsed
-
         }
         catch {
             $this._errorMessage = "Invalid date: $input"
@@ -634,7 +432,6 @@ class DatePicker : PmcWidget {
 
     hidden [object] _ParseDayOfWeek([string]$name) {
         $name = $name.ToLower()
-
         switch -Regex ($name) {
             '^su(n|nday)?$' { return [DayOfWeek]::Sunday }
             '^mo(n|nday)?$' { return [DayOfWeek]::Monday }
@@ -644,29 +441,7 @@ class DatePicker : PmcWidget {
             '^fr(i|iday)?$' { return [DayOfWeek]::Friday }
             '^sa(t|turday)?$' { return [DayOfWeek]::Saturday }
         }
-
         return $null
-    }
-
-    hidden [int] _ParseMonth([string]$name) {
-        $name = $name.ToLower()
-
-        switch -Regex ($name) {
-            '^jan(uary)?$' { return 1 }
-            '^feb(ruary)?$' { return 2 }
-            '^mar(ch)?$' { return 3 }
-            '^apr(il)?$' { return 4 }
-            '^may$' { return 5 }
-            '^jun(e)?$' { return 6 }
-            '^jul(y)?$' { return 7 }
-            '^aug(ust)?$' { return 8 }
-            '^sep(tember)?$' { return 9 }
-            '^oct(ober)?$' { return 10 }
-            '^nov(ember)?$' { return 11 }
-            '^dec(ember)?$' { return 12 }
-        }
-
-        return 0
     }
 
     hidden [void] _InvokeCallback([scriptblock]$callback, $arg) {

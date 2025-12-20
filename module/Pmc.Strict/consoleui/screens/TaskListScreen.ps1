@@ -574,13 +574,12 @@ class TaskListScreen : StandardListScreen {
         $testSafe = ${function:Global:Test-SafeProperty}
 
         # Calculate column widths based on terminal width
-        # Account for 4 separators (2 spaces each = 8 chars total) between 5 columns
+        # Account for 3 separators (2 spaces each = 6 chars total) between 4 columns (Details column removed)
         $availableWidth = $(if ($this.List -and $this.List.Width -gt 4) { $this.List.Width - 4 - 8 } else { 105 })
-        $titleWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.32))
-        $detailsWidth = [Math]::Max(15, [Math]::Floor($availableWidth * 0.22))
-        $dueWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.12))
-        $projectWidth = [Math]::Max(12, [Math]::Floor($availableWidth * 0.16))
-        $tagsWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.18))
+        $titleWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.40))
+        $dueWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.15))
+        $projectWidth = [Math]::Max(12, [Math]::Floor($availableWidth * 0.20))
+        $tagsWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.25))
 
         return @(
             @{
@@ -611,6 +610,7 @@ class TaskListScreen : StandardListScreen {
                     # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [SkipRowHighlight]   Result: $skip"
                     return $skip
                 }.GetNewClosure()
+
                 Format           = { param($task, $cellInfo)
                     try {
                         $t = & $getSafe $task 'title'
@@ -650,6 +650,7 @@ class TaskListScreen : StandardListScreen {
                         return "(error: ${taskId})"
                     }
                 }.GetNewClosure()
+
                 Color            = { param($task)
                     if (& $getSafe $task 'completed') {
                         $mutedColor = $self.List.GetThemedFg('Foreground.Muted')
@@ -663,18 +664,6 @@ class TaskListScreen : StandardListScreen {
                     }
                     return $self.List.GetThemedFg('Foreground.Row')
                 }.GetNewClosure()
-            }
-            @{
-                Name   = 'details'
-                Label  = 'Details'
-                Width  = $detailsWidth
-                Align  = 'left'
-                Format = { param($task, $cellInfo)
-                    $d = & $getSafe $task 'details'
-                    if ($d -and $d.Length -gt $detailsWidth) { return $d.Substring(0, $detailsWidth - 3) + "..." }
-                    return $(if ($null -ne $d) { $d } else { '' })
-                }.GetNewClosure()
-                Color  = { return $self.List.GetThemedFg('Foreground.Muted') }.GetNewClosure()
             }
             @{
                 Name   = 'due'
@@ -721,6 +710,7 @@ class TaskListScreen : StandardListScreen {
                     if ($p -and $p.Length -gt $projectWidth) { return $p.Substring(0, $projectWidth - 3) + "..." }
                     return $(if ($null -ne $p) { $p } else { '' })
                 }.GetNewClosure()
+
                 Color  = { return $self.List.GetThemedFg('Foreground.Row') }.GetNewClosure()
             }
             @{
@@ -741,7 +731,6 @@ class TaskListScreen : StandardListScreen {
                     if ($t -and $t.Length -gt $tagsWidth) { return $t.Substring(0, $tagsWidth - 3) + "..." }
                     return $(if ($null -ne $t) { $t } else { '' })
                 }.GetNewClosure()
-                Color  = { return $self.List.GetThemedFg('Foreground.Muted') }.GetNewClosure()
             }
         )
     }
@@ -751,15 +740,13 @@ class TaskListScreen : StandardListScreen {
         # CRITICAL: Match column widths from GetColumns() for proper alignment
         # Calculate field widths using same logic as GetColumns()
         $availableWidth = $(if ($this.List -and $this.List.Width -gt 4) { $this.List.Width - 4 - 8 } else { 105 })
-        $textWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.32))
-        $detailsWidth = [Math]::Max(15, [Math]::Floor($availableWidth * 0.22))
-        $dueWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.12))
-        $projectWidth = [Math]::Max(12, [Math]::Floor($availableWidth * 0.16))
-        $tagsWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.18))
+        $textWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.40))
+        $dueWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.15))
+        $projectWidth = [Math]::Max(12, [Math]::Floor($availableWidth * 0.20))
+        $tagsWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.25))
 
         return @(
             @{ Name = 'text'; Label = 'Task'; Type = 'text'; Value = (Get-SafeProperty $item 'text'); Required = $true; MaxLength = 200; Width = $textWidth }
-            @{ Name = 'details'; Label = 'Details'; Type = 'text'; Value = (Get-SafeProperty $item 'details'); Width = $detailsWidth }
             @{ Name = 'due'; Label = 'Due'; Type = 'date'; Value = (Get-SafeProperty $item 'due'); Width = $dueWidth }
             @{ Name = 'project'; Label = 'Project'; Type = 'project'; Value = (Get-SafeProperty $item 'project'); Width = $projectWidth }
             @{ Name = 'tags'; Label = 'Tags'; Type = 'tags'; Value = (Get-SafeProperty $item 'tags'); Width = $tagsWidth }
@@ -1824,17 +1811,15 @@ class TaskListScreen : StandardListScreen {
 
         # Build fields for inline editor - PERCENTAGE-BASED widths
         # CRITICAL FIX: Calculate based on available terminal width using SAME formula as GetColumns()
-        # Account for 4 separators (2 spaces each = 8 chars total) between 5 columns
+        # Account for 3 separators (2 spaces each = 6 chars total) between 4 columns (Details column removed)
         $availableWidth = $this.List.Width - 4 - 8  # Subtract borders and column separators
         $textWidth = [Math]::Floor($availableWidth * [TaskListScreen]::COL_WIDTH_TEXT)
-        $detailsWidth = [Math]::Floor($availableWidth * [TaskListScreen]::COL_WIDTH_DETAILS)
         $dueWidth = [Math]::Floor($availableWidth * [TaskListScreen]::COL_WIDTH_DUE)
         $projectWidth = [Math]::Floor($availableWidth * [TaskListScreen]::COL_WIDTH_PROJECT)
         $tagsWidth = [Math]::Floor($availableWidth * [TaskListScreen]::COL_WIDTH_TAGS)
 
         $fields = @(
             @{ Name = 'text'; Label = ''; Type = 'text'; Value = (Get-SafeProperty $item 'text'); Required = $true; MaxLength = 200; Width = $textWidth }
-            @{ Name = 'details'; Label = ''; Type = 'text'; Value = (Get-SafeProperty $item 'details'); Width = $detailsWidth }
             @{ Name = 'due'; Label = ''; Type = 'date'; Value = (Get-SafeProperty $item 'due'); Width = $dueWidth }
             @{ Name = 'project'; Label = ''; Type = 'project'; Value = (Get-SafeProperty $item 'project'); Width = $projectWidth }
             @{ Name = 'tags'; Label = ''; Type = 'tags'; Value = (Get-SafeProperty $item 'tags'); Width = $tagsWidth }
