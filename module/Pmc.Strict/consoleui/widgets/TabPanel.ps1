@@ -323,135 +323,102 @@ class TabPanel : PmcWidget {
         }
 
         if ($this.Tabs.Count -eq 0) {
-            $this._RenderEmptyToEngine($engine)
+            # Render empty state
+            $engine.WriteAt($this.X, $this.Y, "No tabs defined", "Foreground.Secondary")
             if ($engine.PSObject.Methods['EndLayer']) {
                 $engine.EndLayer()
             }
             return
         }
 
-        # Colors from theme
-        $tabActiveBg = $this.GetThemedColorInt('Background.TabActive')
-        $tabActiveText = $this.GetThemedColorInt('Foreground.TabActive')
-        $tabInactiveBg = $this.GetThemedColorInt('Background.TabInactive')
-        $tabInactiveText = $this.GetThemedColorInt('Foreground.TabInactive')
-        $borderColor = $this.GetThemedColorInt('Border.Widget')
-        $labelColor = $this.GetThemedColorInt('Foreground.Muted')
-        $valueColor = $this.GetThemedColorInt('Foreground.Field')
-        $selectBg = $this.GetThemedColorInt('Background.RowSelected')
-        $selectText = $this.GetThemedColorInt('Foreground.RowSelected')
-        $bg = $this.GetThemedColorInt('Background.Primary') # Default background
-
-
-        # 1. Render Tab Bar (Top Row)
+        # 1. Render Tab Bar
         $currentX = $this.X
-
         for ($i = 0; $i -lt $this.Tabs.Count; $i++) {
             $tab = $this.Tabs[$i]
-            $isActive = ($i -eq $this.CurrentTabIndex)
-
-            # Tab label with optional number
-            $label = $(if ($this.ShowTabNumbers) { "[$($i+1)] $($tab.Name)" } else { $tab.Name })
-            $tabWidth = $label.Length + 4  # Padding
-
-            $drawBg = $(if ($isActive) { $tabActiveBg } else { $tabInactiveBg })
-            $drawFg = $(if ($isActive) { $tabActiveText } else { $tabInactiveText })
-
-            $engine.WriteAt($currentX, $this.Y, " $label ", $drawFg, $drawBg)
-            $currentX += $tabWidth
+            $isCurrent = ($i -eq $this.CurrentTabIndex)
+            
+            $label = $tab.Name
+            if ($this.ShowTabNumbers) {
+                $label = "[$($i+1)] $label"
+            }
+            
+            # Add padding
+            $label = " $label "
+            
+            if ($isCurrent) {
+                # Active Tab
+                $bg = $this.GetThemedInt("Background.Accent")
+                $fg = $this.GetThemedInt("Foreground.Primary")
+                $engine.WriteAt($currentX, $this.Y, $label, $fg, $bg)
+            } else {
+                # Inactive Tab
+                $bg = $this.GetThemedInt("Background.Panel")
+                $fg = $this.GetThemedInt("Foreground.Secondary")
+                $engine.WriteAt($currentX, $this.Y, $label, $fg, $bg)
+            }
+            
+            $currentX += $label.Length + 1
         }
 
-        # Fill rest of tab bar line
-        $remaining = $this.Width - ($currentX - $this.X)
-        if ($remaining -gt 0) {
-            $engine.Fill($currentX, $this.Y, $remaining, 1, ' ', $tabInactiveText, $tabInactiveBg)
-        }
+        # 2. Render Separator
+        $sepColor = $this.GetThemedInt("Foreground.Border")
+        $engine.DrawLine($this.X, $this.Y + 1, $this.Width, $false, $sepColor)
 
-        # 2. Separator Line
-        $separatorY = $this.Y + 1
-        $engine.Fill($this.X, $separatorY, $this.Width, 1, '─', $borderColor, $bg)
-
-
-        # 3. Render Content Area
+        # 3. Render Content (Fields)
         $tab = $this.GetCurrentTab()
-        if ($null -eq $tab) { return }
-
-        $contentY = $this.Y + $this.TabBarHeight
-        $visibleRows = $this.Height - $this.TabBarHeight - 2
-        
-        # Calculate indices
-        $startIndex = $tab.ScrollOffset
-        $endIndex = [Math]::Min($startIndex + $visibleRows, $tab.Fields.Count)
-        
-        $row = 0
-        for ($i = $startIndex; $i -lt $endIndex; $i++) {
-            $field = $tab.Fields[$i]
-            $isSelected = ($i -eq $this.SelectedFieldIndex)
-
-            $y = $contentY + $row + 1 # +1 for padding? Match legacy logic
-            # Legacy used $contentY + $row + 1. TabBarHeight is 2. So Y is Y+2. content start is Y+3.
-            # Let's trust legacy logic: $y = $contentY + $row + 1
-
-            $x = $this.X + $this.ContentPadding
-
-            $drawBg = $(if ($isSelected) { $selectBg } else { $bg })
-            $drawFg = $(if ($isSelected) { $selectText } else { $valueColor })
-            $lblColor = $(if ($isSelected) { $selectText } else { $labelColor })
-
-            # Render Label
-            $label = $field.Label
-            if ($label.Length -gt $this.LabelWidth - 2) {
-                $label = $label.Substring(0, $this.LabelWidth - 5) + "..."
+        if ($tab) {
+            $startY = $this.Y + 2
+            $fields = $tab.Fields
+            
+            # Handle scrolling
+            if (-not $tab.ContainsKey('ScrollOffset')) { $tab.ScrollOffset = 0 }
+            
+            $visibleRows = $this.Height - 2 - 1 # Height - TabBar - Separator
+            
+            for ($i = 0; $i -lt $visibleRows; $i++) {
+                $fieldIndex = $tab.ScrollOffset + $i
+                if ($fieldIndex -ge $fields.Count) { break }
+                
+                $field = $fields[$fieldIndex]
+                $isSelected = ($fieldIndex -eq $this.SelectedFieldIndex)
+                $rowY = $startY + $i
+                
+                # Render Label
+                $labelColor = $this.GetThemedInt("Foreground.Secondary")
+                $engine.WriteAt($this.X + 2, $rowY, $field.Label.PadRight($this.LabelWidth), $labelColor)
+                
+                # Render Value
+                $valueX = $this.X + 2 + $this.LabelWidth + 1
+                $valueWidth = $this.Width - ($valueX - $this.X) - 2
+                $displayValue = if ($field.Value) { $field.Value.ToString() } else { "" }
+                
+                if ($displayValue.Length -gt $valueWidth) {
+                    $displayValue = $displayValue.Substring(0, $valueWidth - 3) + "..."
+                }
+                
+                if ($isSelected) {
+                    $bg = $this.GetThemedInt("Background.Selection")
+                    $fg = $this.GetThemedInt("Foreground.Selection")
+                    $engine.WriteAt($valueX, $rowY, $displayValue.PadRight($valueWidth), $fg, $bg)
+                } else {
+                    $fg = $this.GetThemedInt("Foreground.Primary")
+                    $engine.WriteAt($valueX, $rowY, $displayValue, $fg)
+                }
             }
-            $engine.WriteAt($x, $y, $label.PadRight($this.LabelWidth), $lblColor, $drawBg)
-
-            # Render Value
-            $maxValueWidth = $this.Width - $this.LabelWidth - ($this.ContentPadding * 2)
-            $value = $(if ($null -ne $field.Value) { [string]$field.Value } else { "(empty)" })
-            if ($value.Length -gt $maxValueWidth) {
-                $value = $value.Substring(0, $maxValueWidth - 3) + "..."
+            
+            # Scroll indicators if needed
+            if ($tab.ScrollOffset -gt 0) {
+                $engine.WriteAt($this.X + $this.Width - 1, $startY, "^", "Foreground.Accent")
             }
-
-            $valX = $x + $this.LabelWidth
-            $engine.WriteAt($valX, $y, $value.PadRight($maxValueWidth), $drawFg, $drawBg)
-
-            $row++
+            if (($tab.ScrollOffset + $visibleRows) -lt $fields.Count) {
+                $engine.WriteAt($this.X + $this.Width - 1, $startY + $visibleRows - 1, "v", "Foreground.Accent")
+            }
         }
 
-        # Clear remaining
-        for ($i = $row; $i -lt $visibleRows; $i++) {
-            $y = $contentY + $i + 1
-            $engine.Fill($this.X, $y, $this.Width, 1, ' ', $valueColor, $bg)
-        }
-
-        # Scroll Indicators
-        if ($tab.ScrollOffset -gt 0) {
-            $engine.WriteAt($this.X + $this.Width - 3, $contentY + 1, "↑", $borderColor, $bg)
-        }
-        if ($endIndex -lt $tab.Fields.Count) {
-            # Legacy used $this.Y + $this.Height - 2
-            $engine.WriteAt($this.X + $this.Width - 3, $this.Y + $this.Height - 2, "↓", $borderColor, $bg)
-        }
-
-        # End Z-layer
         if ($engine.PSObject.Methods['EndLayer']) {
             $engine.EndLayer()
         }
     }
-
-    hidden [void] _RenderEmptyToEngine([object]$engine) {
-        $msg = "No tabs configured"
-        $x = $this.X + [Math]::Floor(($this.Width - $msg.Length) / 2)
-        $y = $this.Y + [Math]::Floor($this.Height / 2)
-        
-        $mutedColor = $this.GetThemedColorInt('Foreground.Muted')
-        $bg = $this.GetThemedColorInt('Background.Primary')
-        
-        $engine.Fill($this.X, $this.Y, $this.Width, $this.Height, ' ', $mutedColor, $bg)
-        $engine.WriteAt($x, $y, $msg, $mutedColor, $bg)
-    }
-
-    [string] Render() { return "" }
 
     # === Helper Methods ===
 

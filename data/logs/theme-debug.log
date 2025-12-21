@@ -71,3 +71,56 @@
 [20:03:44.399] [Load-Theme] Looking for: /home/teej/ztest/themes/gold.json (exists=True)
 [20:03:44.403] [Load-Theme] JSON loaded. Name='Gold' Hex='#ffaa33'
 [20:03:44.443] [Load-Theme] Returning theme with Hex='#ffaa33'
+[07:54:21.353] === THEME SELF-HEAL START ===
+[07:54:21.362] Config path: /home/teej/ztest/config.json
+[07:54:21.378] Config loaded. Active=gold, Hex=#ffaa33, hasHex=True
+[07:54:21.382] Hex already present, no repair needed
+[07:54:21.642] [Load-Theme] themeName='gold' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:54:21.647] [Load-Theme] Looking for: /home/teej/ztest/themes/gold.json (exists=True)
+[07:54:21.657] [Load-Theme] JSON loaded. Name='Gold' Hex='#ffaa33'
+[07:54:21.682] [Load-Theme] Returning theme with Hex='#ffaa33'
+[09:07:54.823] === THEME SELF-HEAL START ===
+[09:07:54.834] Config path: /home/teej/ztest/config.json
+[09:07:54.850] Config loaded. Active=gold, Hex=#ffaa33, hasHex=True
+[09:07:54.855] Hex already present, no repair needed
+[09:07:55.152] [Load-Theme] themeName='gold' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:07:55.157] [Load-Theme] Looking for: /home/teej/ztest/themes/gold.json (exists=True)
+[09:07:55.162] [Load-Theme] JSON loaded. Name='Gold' Hex='#ffaa33'
+[09:07:55.188] [Load-Theme] Returning theme with Hex='#ffaa33'
+[09:15:59.685] === THEME SELF-HEAL START ===
+[09:15:59.698] Config path: /home/teej/ztest/config.json
+[09:15:59.714] Config loaded. Active=gold, Hex=#ffaa33, hasHex=True
+[09:15:59.719] Hex already present, no repair needed
+[09:16:00.017] [Load-Theme] themeName='gold' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:16:00.022] [Load-Theme] Looking for: /home/teej/ztest/themes/gold.json (exists=True)
+[09:16:00.027] [Load-Theme] JSON loaded. Name='Gold' Hex='#ffaa33'
+[09:16:00.052] [Load-Theme] Returning theme with Hex='#ffaa33'
+[10:00:37.364] === THEME SELF-HEAL START ===
+[10:00:37.371] Config path: /home/teej/ztest/config.json
+[10:00:37.379] Config loaded. Active=gold, Hex=#ffaa33, hasHex=True
+[10:00:37.382] Hex already present, no repair needed
+[10:00:37.540] [Load-Theme] themeName='gold' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:00:37.543] [Load-Theme] Looking for: /home/teej/ztest/themes/gold.json (exists=True)
+[10:00:37.546] [Load-Theme] JSON loaded. Name='Gold' Hex='#ffaa33'
+[10:00:37.562] [Load-Theme] Returning theme with Hex='#ffaa33'
+[10:04:06.970] [Set-ActiveTheme] Starting for themeName='Cyberpunk'
+[10:04:06.974] [Set-ActiveTheme] Set Active='cyberpunk'
+[10:04:06.975] [Load-Theme] themeName='Cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:04:06.976] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:04:06.978] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:04:06.984] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:04:06.985] [Set-ActiveTheme] Set Hex='#00f3ff'
+[10:04:06.987] [Set-ActiveTheme] Calling Save-PmcConfig...
+[10:04:06.993] [Set-ActiveTheme] Save-PmcConfig returned
+[10:04:07.012] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:04:07.012] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:04:07.013] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:04:07.015] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:23:07.601] === THEME SELF-HEAL START ===
+[10:23:07.607] Config path: /home/teej/ztest/config.json
+[10:23:07.614] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[10:23:07.616] Hex already present, no repair needed
+[10:23:07.777] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:23:07.780] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:23:07.783] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:23:07.800] [Load-Theme] Returning theme with Hex='#00f3ff'

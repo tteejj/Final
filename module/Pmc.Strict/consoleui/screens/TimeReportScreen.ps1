@@ -167,46 +167,6 @@ class TimeReportScreen : PmcScreen {
             $this._RenderReportToEngine($engine)
         }
     }
-    
-    [string] RenderContent() { return "" }
-
-    hidden [void] _RenderEmptyStateToEngine([object]$engine) {
-        $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
-
-        # Colors
-        $textColor = $this.Header.GetThemedColorInt('Foreground.Field')
-        $mutedColor = $this.Header.GetThemedColorInt('Foreground.Muted')
-        $bg = $this.Header.GetThemedColorInt('Background.Primary')
-
-        # Main message
-        $message = "No time entries to report"
-        $x = $contentRect.X + [Math]::Floor(($contentRect.Width - $message.Length) / 2)
-        $y = $contentRect.Y + [Math]::Floor($contentRect.Height / 2) - 1
-        $engine.WriteAt($x, $y, $message, $textColor, $bg)
-
-        # Helpful guidance
-        $hint = "Press 'T' to add time entries in Time Tracking screen"
-        $hintX = $contentRect.X + [Math]::Floor(($contentRect.Width - $hint.Length) / 2)
-        $engine.WriteAt($hintX, $y + 2, $hint, $mutedColor, $bg)
-    }
-
-    hidden [void] _RenderReportToEngine([object]$engine) {
-        $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
-
-        # Colors
-        $textColor = $this.Header.GetThemedColorInt('Foreground.Field')
-        $highlightColor = $this.Header.GetThemedColorInt('Foreground.FieldFocused')
-        $mutedColor = $this.Header.GetThemedColorInt('Foreground.Muted')
-        $headerColor = $this.Header.GetThemedColorInt('Foreground.Muted')
-        $successColor = $this.Header.GetThemedColorInt('Foreground.Success')
-        $warningColor = $this.Header.GetThemedColorInt('Warning')
-        $bg = $this.Header.GetThemedColorInt('Background.Primary')
-        
-        $y = $contentRect.Y + 1
-
-        # Title
-        $engine.WriteAt($contentRect.X + 4, $y, "Time Summary by Project", $highlightColor, $bg)
-        $y += 2
 
         # Column headers
         $headerY = $y

@@ -92,7 +92,7 @@
       "AuditorTL": "",
       "Period4End": null,
       "Contact1Phone": "",
-      "ID2": "222",
+      "ID2": "",
       "Software1Vendor": null,
       "Software2Vendor": null,
       "ProjFolder": "",
@@ -128,7 +128,7 @@
       "T2020": "",
       "AuditType": "",
       "Period3End": null,
-      "modified": "2025-12-21T07:58:56.2269291-07:00",
+      "modified": "2025-12-21T07:58:50.8112006-07:00",
       "description": "",
       "Software1Version": null,
       "AuditPeriodTo": null,
@@ -256,18 +256,6 @@
       "created": "2025-12-18T10:46:02.1815971-07:00",
       "timestamp": "2025-12-18T10:46:02.1843193-07:00",
       "task": ""
-    },
-    {
-      "id2": "222",
-      "project": "p2",
-      "created": "2025-12-21T08:02:53.4210093-07:00",
-      "task": "",
-      "timestamp": "2025-12-21T08:02:53.4449869-07:00",
-      "minutes": 60,
-      "date": "2025-12-21T00:00:00",
-      "id": "e93bc19e-0012-42a6-8268-d32d92de4270",
-      "id1": "111",
-      "notes": ""
     }
   ]
 }

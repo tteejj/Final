@@ -1,8 +1,8 @@
 {
   "Display": {
     "Theme": {
-      "Active": "gold",
-      "Hex": "#ffaa33"
+      "Hex": "#00f3ff",
+      "Active": "cyberpunk"
     },
     "Icons": {
       "Mode": "emoji"

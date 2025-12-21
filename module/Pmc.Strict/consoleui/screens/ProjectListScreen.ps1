@@ -763,19 +763,6 @@ class ProjectListScreen : StandardListScreen {
         )
     }
 
-    # Override Render to show file picker overlay
-    # Override RenderContentToEngine to show file picker overlay
-    [void] RenderContentToEngine([object]$engine) {
-        # Base render (List + standard overlays)
-        ([StandardListScreen]$this).RenderContentToEngine($engine)
-
-        # Render file picker overlay if showing
-        if ($this.ShowFilePicker -and $null -ne $this.FilePicker) {
-            # FilePicker has RenderToEngine
-            $this.FilePicker.RenderToEngine($engine)
-        }
-    }
-
     [string] RenderContent() { return "" }
 
     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {

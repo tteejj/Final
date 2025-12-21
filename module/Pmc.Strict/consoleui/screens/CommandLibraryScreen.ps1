@@ -18,23 +18,6 @@ Manage a library of saved commands:
 - Add/Edit/Delete commands
 - Copy commands to clipboard
 - Track usage statistics
-- Search and filter commands
-#>
-class CommandLibraryScreen : StandardListScreen {
-    hidden [CommandService]$_commandService = $null
-
-    # Static: Register menu items
-    static [void] RegisterMenuItems([object]$registry) {
-        $registry.AddMenuItem('Tools', 'Command Library', 'C', {
-            . "$PSScriptRoot/CommandLibraryScreen.ps1"
-            $global:PmcApp.PushScreen((New-Object -TypeName CommandLibraryScreen))
-        }, 10)
-    }
-
-    # Legacy constructor (backward compatible)
-    CommandLibraryScreen() : base("CommandLibrary", "Command Library") {
-        $this._InitializeScreen()
-    }
 
     # Container constructor
     CommandLibraryScreen([object]$container) : base("CommandLibrary", "Command Library", $container) {
@@ -82,20 +65,6 @@ class CommandLibraryScreen : StandardListScreen {
     [array] GetColumns() {
         # Calculate column widths dynamically based on available width
         # Account for 2 separators (2 spaces each = 4 chars total) between 3 columns
-        $availableWidth = $(if ($this.List -and $this.List.Width -gt 4) { $this.List.Width - 4 - 4 } else { 103 })
-        $nameWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.30))
-        $categoryWidth = [Math]::Max(12, [Math]::Floor($availableWidth * 0.20))
-        $descWidth = [Math]::Max(30, [Math]::Floor($availableWidth * 0.50))
-
-        return @(
-            @{ Name='name'; Label='Name'; Width=$nameWidth }
-            @{ Name='category'; Label='Category'; Width=$categoryWidth }
-            @{ Name='description'; Label='Command'; Width=$descWidth }
-        )
-    }
-
-    # Load data and refresh list
-    [void] LoadData() {
         $items = $this.LoadItems()
         $this.List.SetData($items)
     }

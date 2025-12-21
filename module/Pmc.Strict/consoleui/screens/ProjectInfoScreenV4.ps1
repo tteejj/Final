@@ -140,18 +140,21 @@ class ProjectInfoScreenV4 : TabbedScreen {
     }
 
     hidden [void] _BuildTabs() {
-        # Clear existing tabs
-        $this.TabPanel.Tabs.Clear()
+        $this.TabPanel.ClearTabs()
 
-        # Tab 1: Identity (removed ProjFolder and CAAName - they're in Files tab)
+        # Tab 1: Identity
         $this.TabPanel.AddTab('Identity', @(
-                @{Name = 'ID1'; Label = 'ID1'; Value = $this._GetValue('ID1'); Type = 'text' }
-                @{Name = 'ID2'; Label = 'ID2'; Value = $this._GetValue('ID2'); Type = 'text' }
+                @{Name = 'ID1'; Label = 'Project ID'; Value = $this._GetValue('ID1'); Type = 'text' }
+                @{Name = 'ID2'; Label = 'Secondary ID'; Value = $this._GetValue('ID2'); Type = 'text' }
+                @{Name = 'Name'; Label = 'Project Name'; Value = $this._GetValue('Name'); Type = 'text' }
+                @{Name = 'Description'; Label = 'Description'; Value = $this._GetValue('Description'); Type = 'text' }
             ))
 
-        # Tab 2: Request (removed RequestName and T2020 - they're in Files tab)
+        # Tab 2: Request
         $this.TabPanel.AddTab('Request', @(
-                @{Name = 'AssignedDate'; Label = 'Assigned Date'; Value = $this._GetValue('AssignedDate'); Type = 'date' }
+                @{Name = 'RequestType'; Label = 'Request Type'; Value = $this._GetValue('RequestType'); Type = 'text' }
+                @{Name = 'Priority'; Label = 'Priority'; Value = $this._GetValue('Priority'); Type = 'text' }
+                @{Name = 'Status'; Label = 'Status'; Value = $this._GetValue('Status'); Type = 'text' }
                 @{Name = 'DueDate'; Label = 'Due Date'; Value = $this._GetValue('DueDate'); Type = 'date' }
                 @{Name = 'BFDate'; Label = 'BF Date'; Value = $this._GetValue('BFDate'); Type = 'date' }
                 @{Name = 'RequestDate'; Label = 'Request Date'; Value = $this._GetValue('RequestDate'); Type = 'date' }

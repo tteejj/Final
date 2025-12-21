@@ -109,6 +109,7 @@ function Load-Theme {
                 Hex = $themeObj.Hex
                 Description = $themeObj.Description
                 Properties = $props
+                Warning = $(if ($props.ContainsKey('Foreground.Warning')) { $props['Foreground.Warning'] } else { 'Red' })
             }
             if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Load-Theme] Returning theme with Hex='$($theme.Hex)'" -ErrorAction SilentlyContinue }
             return $theme

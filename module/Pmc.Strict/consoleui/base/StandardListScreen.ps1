@@ -556,6 +556,14 @@ class StandardListScreen : PmcScreen {
             $this.List.AddAction('a', 'Add', $addAction)
         }
 
+        if ($this.AllowDelete) {
+            $deleteAction = {
+                $currentScreen = $global:PmcApp.CurrentScreen
+                $currentScreen.DeleteItem($currentScreen.List.GetSelectedItem())
+            }.GetNewClosure()
+            $this.List.AddAction('d', 'Delete', $deleteAction)
+        }
+
         if ($this.AllowEdit) {
             $editAction = {
                 $currentScreen = $global:PmcApp.CurrentScreen

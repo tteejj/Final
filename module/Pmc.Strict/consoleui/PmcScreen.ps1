@@ -163,6 +163,22 @@ class PmcScreen {
     Override to perform initialization when screen is displayed
     #>
     [void] OnEnter() {
+        # Ensure cursor is hidden by default (widgets will handle their own cursor rendering)
+        try {
+            [Console]::CursorVisible = $false
+        } catch {
+            # Ignore if console not available (e.g. in tests)
+        }
+
+        # Ensure menu bar is populated if empty
+        if ($null -ne $this.MenuBar -and $this.MenuBar.Menus.Count -eq 0) {
+            # Write-PmcTuiLog "PmcScreen.OnEnter: MenuBar empty, attempting to populate from registry" "DEBUG"
+            if ($null -ne $global:PmcMenuRegistry) {
+                # Write-PmcTuiLog "PmcScreen.OnEnter: Registry found, rebuilding menus" "DEBUG"
+                $global:PmcMenuRegistry.BuildMenuBar($this.MenuBar)
+            }
+        }
+
         $this.IsActive = $true
         $this.LoadData()
 
