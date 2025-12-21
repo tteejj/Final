@@ -207,6 +207,7 @@ try {
     . "$PSScriptRoot/services/ExcelMappingService.ps1"
     . "$PSScriptRoot/services/MenuRegistry.ps1"
     . "$PSScriptRoot/services/NoteService.ps1"
+    . "$PSScriptRoot/services/FileNoteService.ps1"
     . "$PSScriptRoot/services/PreferencesService.ps1"
     . "$PSScriptRoot/services/TaskStore.ps1"
     # Write-PmcTuiLog "Services loaded" "INFO"

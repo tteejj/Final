@@ -1,0 +1,160 @@
+[2025-12-20 20:03:44.172] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-20 20:03:44.177] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-20 20:03:44.178] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-20 20:03:44.179] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-20 20:03:44.180] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-20 20:03:44.181] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-20 20:03:44.182] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-20 20:03:44.182] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-20 20:03:44.183] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-20 20:03:44.184] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-20 20:03:44.185] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-20 20:03:44.186] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-20 20:03:44.206] ServiceContainer: Resolving 'Application'...
+[2025-12-20 20:03:44.209] ServiceContainer: Resolving 'Theme'...
+[2025-12-20 20:03:44.497] ServiceContainer: Resolved 'Theme' successfully
+[2025-12-20 20:03:44.593] ServiceContainer: Resolving 'ThemeManager'...
+[2025-12-20 20:03:44.595] ServiceContainer: Resolved 'ThemeManager' successfully
+[2025-12-20 20:03:44.613] ServiceContainer: Resolved 'Application' successfully
+[2025-12-20 20:03:44.615] ServiceContainer: Resolving 'MenuRegistry'...
+[2025-12-20 20:03:44.633] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2025-12-20 20:03:44.658] MenuRegistry: Loaded manifest with 23 entries
+[2025-12-20 20:03:44.690] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2025-12-20 20:03:44.692] MenuRegistry: Registered screen factory 'TimeListScreen' in container (viewMode=)
+[2025-12-20 20:03:44.732] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-20 20:03:44.735] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2025-12-20 20:03:44.737] MenuRegistry: Registered screen factory 'ChecklistsLauncherScreen' in container (viewMode=)
+[2025-12-20 20:03:44.739] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-20 20:03:44.741] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2025-12-20 20:03:44.743] MenuRegistry: Registered screen factory 'ExcelImportScreen' in container (viewMode=)
+[2025-12-20 20:03:44.745] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-20 20:03:44.747] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2025-12-20 20:03:44.748] MenuRegistry: Registered screen factory 'SettingsScreen' in container (viewMode=)
+[2025-12-20 20:03:44.750] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-20 20:03:44.752] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2025-12-20 20:03:44.754] MenuRegistry: Registered screen factory 'TaskListScreen_Default' in container (viewMode=)
+[2025-12-20 20:03:44.755] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-20 20:03:44.757] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2025-12-20 20:03:44.759] MenuRegistry: Registered screen factory 'NotesMenuScreen' in container (viewMode=)
+[2025-12-20 20:03:44.761] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-20 20:03:44.763] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2025-12-20 20:03:44.764] MenuRegistry: Registered screen factory 'CommandLibraryScreen' in container (viewMode=)
+[2025-12-20 20:03:44.766] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-20 20:03:44.770] ServiceContainer: Registered 'TaskListScreen_NextActions' (singleton=False)
+[2025-12-20 20:03:44.772] MenuRegistry: Registered screen factory 'TaskListScreen_NextActions' in container (viewMode=nextactions)
+[2025-12-20 20:03:44.773] MenuRegistry: Registered 'Next Actions' in 'Tasks' menu (hotkey=N order=35)
+[2025-12-20 20:03:44.776] ServiceContainer: Registered 'TaskListScreen_Tomorrow' (singleton=False)
+[2025-12-20 20:03:44.777] MenuRegistry: Registered screen factory 'TaskListScreen_Tomorrow' in container (viewMode=tomorrow)
+[2025-12-20 20:03:44.779] MenuRegistry: Registered 'Tomorrow' in 'Tasks' menu (hotkey=T order=15)
+[2025-12-20 20:03:44.781] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2025-12-20 20:03:44.782] MenuRegistry: Registered screen factory 'ExcelProfileManagerScreen' in container (viewMode=)
+[2025-12-20 20:03:44.784] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-20 20:03:44.786] ServiceContainer: Registered 'TaskListScreen_Agenda' (singleton=False)
+[2025-12-20 20:03:44.787] MenuRegistry: Registered screen factory 'TaskListScreen_Agenda' in container (viewMode=agenda)
+[2025-12-20 20:03:44.789] MenuRegistry: Registered 'Agenda View' in 'Tasks' menu (hotkey=A order=50)
+[2025-12-20 20:03:44.791] ServiceContainer: Registered 'TaskListScreen_Today' (singleton=False)
+[2025-12-20 20:03:44.792] MenuRegistry: Registered screen factory 'TaskListScreen_Today' in container (viewMode=today)
+[2025-12-20 20:03:44.794] MenuRegistry: Registered 'Today' in 'Tasks' menu (hotkey=Y order=10)
+[2025-12-20 20:03:44.796] ServiceContainer: Registered 'TaskListScreen_Week' (singleton=False)
+[2025-12-20 20:03:44.797] MenuRegistry: Registered screen factory 'TaskListScreen_Week' in container (viewMode=week)
+[2025-12-20 20:03:44.799] MenuRegistry: Registered 'Week View' in 'Tasks' menu (hotkey=W order=20)
+[2025-12-20 20:03:44.801] ServiceContainer: Registered 'TaskListScreen_NoDate' (singleton=False)
+[2025-12-20 20:03:44.803] MenuRegistry: Registered screen factory 'TaskListScreen_NoDate' in container (viewMode=noduedate)
+[2025-12-20 20:03:44.804] MenuRegistry: Registered 'No Due Date' in 'Tasks' menu (hotkey=D order=40)
+[2025-12-20 20:03:44.807] ServiceContainer: Registered 'TaskListScreen_Upcoming' (singleton=False)
+[2025-12-20 20:03:44.808] MenuRegistry: Registered screen factory 'TaskListScreen_Upcoming' in container (viewMode=upcoming)
+[2025-12-20 20:03:44.809] MenuRegistry: Registered 'Upcoming' in 'Tasks' menu (hotkey=U order=25)
+[2025-12-20 20:03:44.817] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2025-12-20 20:03:44.819] MenuRegistry: Registered screen factory 'ThemeEditorScreen' in container (viewMode=)
+[2025-12-20 20:03:44.820] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-20 20:03:44.823] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2025-12-20 20:03:44.824] MenuRegistry: Registered screen factory 'ProjectListScreen' in container (viewMode=)
+[2025-12-20 20:03:44.826] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-20 20:03:44.831] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2025-12-20 20:03:44.832] MenuRegistry: Registered screen factory 'HelpViewScreen' in container (viewMode=)
+[2025-12-20 20:03:44.834] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-20 20:03:44.836] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2025-12-20 20:03:44.837] MenuRegistry: Registered screen factory 'ChecklistTemplatesFolderScreen' in container (viewMode=)
+[2025-12-20 20:03:44.839] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-20 20:03:44.841] ServiceContainer: Registered 'TaskListScreen_Month' (singleton=False)
+[2025-12-20 20:03:44.842] MenuRegistry: Registered screen factory 'TaskListScreen_Month' in container (viewMode=month)
+[2025-12-20 20:03:44.846] MenuRegistry: Registered 'Month View' in 'Tasks' menu (hotkey=M order=45)
+[2025-12-20 20:03:44.848] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2025-12-20 20:03:44.850] MenuRegistry: Registered screen factory 'TimeReportScreen' in container (viewMode=)
+[2025-12-20 20:03:44.852] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-20 20:03:44.854] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2025-12-20 20:03:44.856] MenuRegistry: Registered screen factory 'WeeklyTimeReportScreen' in container (viewMode=)
+[2025-12-20 20:03:44.857] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-20 20:03:44.862] ServiceContainer: Registered 'TaskListScreen_Overdue' (singleton=False)
+[2025-12-20 20:03:44.864] MenuRegistry: Registered screen factory 'TaskListScreen_Overdue' in container (viewMode=overdue)
+[2025-12-20 20:03:44.866] MenuRegistry: Registered 'Overdue' in 'Tasks' menu (hotkey=O order=30)
+[2025-12-20 20:03:44.868] ServiceContainer: Resolving 'TaskListScreen'...
+[2025-12-20 20:03:44.871] ServiceContainer: Resolving 'TaskStore'...
+[2025-12-20 20:03:45.218] ServiceContainer: Resolved 'TaskStore' successfully
+[2025-12-20 20:03:46.264] _PopulateMenusFromRegistry: Menu 'Tasks' has 10 items from registry (array)
+[2025-12-20 20:03:46.292] _PopulateMenusFromRegistry: Menu 'Tools' has 4 items from registry (array)
+[2025-12-20 20:03:46.296] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2025-12-20 20:03:46.300] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2025-12-20 20:03:46.305] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2025-12-20 20:03:46.309] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2025-12-20 20:03:46.311] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2025-12-20 20:03:53.051] ServiceContainer: Resolving 'NotesMenuScreen'...
+[2025-12-20 20:03:53.211] ServiceContainer: Resolved 'NotesMenuScreen' successfully
+[2025-12-20 20:04:01.615] PreferencesService: Preferences path: /home/teej/ztest/module/Pmc.Strict/.pmc-data/preferences.json
+[2025-12-20 20:04:01.621] PreferencesService: No preferences file found, using defaults
+[2025-12-20 20:06:31.687] ServiceContainer: Resolving 'TimeListScreen'...
+[2025-12-20 20:06:31.908] ServiceContainer: Resolved 'TimeListScreen' successfully
+[2025-12-20 20:06:38.730] ServiceContainer: Resolving 'WeeklyTimeReportScreen'...
+[2025-12-20 20:06:38.789] ServiceContainer: Resolved 'WeeklyTimeReportScreen' successfully
+[2025-12-20 20:06:39.003] [ERROR] Widget render error: RenderContent render failed: Theme Property Missing: 'Warning'
+[2025-12-20 20:06:39.008] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 121
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at _RenderReportToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1: line 291
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1: line 256
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 394
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 599
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-20 20:06:39.009] [ERROR] TargetObject: Theme Property Missing: 'Warning'
+[2025-12-20 20:06:39.011] [ERROR] InvocationInfo:             throw "Theme Property Missing: '$propertyName'"
+
+[2025-12-20 20:06:43.704] [ERROR] Widget render error: RenderContent render failed: Theme Property Missing: 'Warning'
+[2025-12-20 20:06:43.709] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 121
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at _RenderReportToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1: line 291
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1: line 256
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 394
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 599
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-20 20:06:43.710] [ERROR] TargetObject: Theme Property Missing: 'Warning'
+[2025-12-20 20:06:43.710] [ERROR] InvocationInfo:             throw "Theme Property Missing: '$propertyName'"
+
+[2025-12-20 20:07:00.499] [ERROR] Widget render error: RenderContent render failed: Theme Property Missing: 'Warning'
+[2025-12-20 20:07:00.500] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 121
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at _RenderReportToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1: line 291
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1: line 256
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 394
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 599
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-20 20:07:00.501] [ERROR] TargetObject: Theme Property Missing: 'Warning'
+[2025-12-20 20:07:00.502] [ERROR] InvocationInfo:             throw "Theme Property Missing: '$propertyName'"
+
+[2025-12-20 20:07:02.628] [ERROR] Widget render error: RenderContent render failed: Theme Property Missing: 'Warning'
+[2025-12-20 20:07:02.629] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 121
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at _RenderReportToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1: line 291
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1: line 256
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 394
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 599
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-20 20:07:02.630] [ERROR] TargetObject: Theme Property Missing: 'Warning'
+[2025-12-20 20:07:02.630] [ERROR] InvocationInfo:             throw "Theme Property Missing: '$propertyName'"
+

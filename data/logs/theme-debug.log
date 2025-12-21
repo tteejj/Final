@@ -63,3 +63,11 @@
 [19:54:06.116] [Load-Theme] Looking for: /home/teej/ztest/themes/gold.json (exists=True)
 [19:54:06.118] [Load-Theme] JSON loaded. Name='Gold' Hex='#ffaa33'
 [19:54:06.120] [Load-Theme] Returning theme with Hex='#ffaa33'
+[20:03:44.098] === THEME SELF-HEAL START ===
+[20:03:44.113] Config path: /home/teej/ztest/config.json
+[20:03:44.132] Config loaded. Active=gold, Hex=#ffaa33, hasHex=True
+[20:03:44.136] Hex already present, no repair needed
+[20:03:44.394] [Load-Theme] themeName='gold' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[20:03:44.399] [Load-Theme] Looking for: /home/teej/ztest/themes/gold.json (exists=True)
+[20:03:44.403] [Load-Theme] JSON loaded. Name='Gold' Hex='#ffaa33'
+[20:03:44.443] [Load-Theme] Returning theme with Hex='#ffaa33'
