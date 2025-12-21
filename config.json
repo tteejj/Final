@@ -1,10 +1,11 @@
 {
   "Display": {
+    "Theme": {
+      "Active": "gold",
+      "Hex": "#ffaa33"
+    },
     "Icons": {
       "Mode": "emoji"
-    },
-    "Theme": {
-      "Active": "synthwave"
     }
   }
 }

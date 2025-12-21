@@ -359,6 +359,39 @@ function Start-PmcTUI {
     # Write-PmcTuiLog "Starting PMC TUI with screen: $StartScreen" "INFO"
 
     try {
+        # === Theme Self-Healing ===
+        # CRITICAL FIX: Ensure theme configuration is valid before starting
+        # If Active theme is set but Hex/Properties are missing, force a reload to populate them
+        $debugLogPath = Join-Path (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent) 'data/logs/theme-debug.log'
+        try {
+            Add-Content -Path $debugLogPath -Value "[$(Get-Date -F 'HH:mm:ss.fff')] === THEME SELF-HEAL START ===" -ErrorAction SilentlyContinue
+            $root = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
+            $configPath = Join-Path $root 'config.json'
+            Add-Content -Path $debugLogPath -Value "[$(Get-Date -F 'HH:mm:ss.fff')] Config path: $configPath" -ErrorAction SilentlyContinue
+            if (Test-Path $configPath) {
+                $cfg = Get-Content $configPath -Raw | ConvertFrom-Json
+                # STRICT MODE FIX: Safely check for Hex property existence
+                $hasHex = $cfg.Display -and $cfg.Display.Theme -and $cfg.Display.Theme.PSObject.Properties['Hex']
+                $hexValue = if ($hasHex) { $cfg.Display.Theme.Hex } else { $null }
+                Add-Content -Path $debugLogPath -Value "[$(Get-Date -F 'HH:mm:ss.fff')] Config loaded. Active=$($cfg.Display.Theme.Active), Hex=$hexValue, hasHex=$hasHex" -ErrorAction SilentlyContinue
+                if ($cfg.Display -and $cfg.Display.Theme -and $cfg.Display.Theme.Active) {
+                    if (-not $hasHex) {
+                        Add-Content -Path $debugLogPath -Value "[$(Get-Date -F 'HH:mm:ss.fff')] Missing Hex - calling Set-ActiveTheme for '$($cfg.Display.Theme.Active)'" -ErrorAction SilentlyContinue
+                        Set-ActiveTheme -themeName $cfg.Display.Theme.Active
+                        Add-Content -Path $debugLogPath -Value "[$(Get-Date -F 'HH:mm:ss.fff')] Set-ActiveTheme completed successfully" -ErrorAction SilentlyContinue
+                    } else {
+                        Add-Content -Path $debugLogPath -Value "[$(Get-Date -F 'HH:mm:ss.fff')] Hex already present, no repair needed" -ErrorAction SilentlyContinue
+                    }
+                }
+            } else {
+                Add-Content -Path $debugLogPath -Value "[$(Get-Date -F 'HH:mm:ss.fff')] Config file not found at: $configPath" -ErrorAction SilentlyContinue
+            }
+        } catch {
+            Add-Content -Path $debugLogPath -Value "[$(Get-Date -F 'HH:mm:ss.fff')] EXCEPTION: $_" -ErrorAction SilentlyContinue
+            Add-Content -Path $debugLogPath -Value "[$(Get-Date -F 'HH:mm:ss.fff')] Stack: $($_.ScriptStackTrace)" -ErrorAction SilentlyContinue
+            # Continue startup - theme will use defaults
+        }
+
         # === Clear stale global state ===
         # CRITICAL FIX: Clear shared menu bar and registry singleton to ensure fresh menus are loaded
         # This fixes the issue where Notes and Checklist screens don't appear after manifest updates

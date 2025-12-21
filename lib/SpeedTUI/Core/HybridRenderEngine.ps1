@@ -305,6 +305,17 @@ class HybridRenderEngine {
         $this._cursorY = $y + $offsetY
     }
 
+    # Shows the hardware cursor (makes it visible on screen)
+    [void] ShowCursor() {
+        [Console]::CursorVisible = $true
+    }
+
+    # Hides the hardware cursor (makes it invisible)
+    [void] HideCursor() {
+        [Console]::CursorVisible = $false
+    }
+
+
     # -------------------------------------------------------------------------
     # DRAWING API
     # -------------------------------------------------------------------------

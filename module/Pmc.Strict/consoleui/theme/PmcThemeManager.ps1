@@ -62,6 +62,10 @@ class PmcThemeManager {
     #>
     hidden [void] _Initialize() {
         try {
+            if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
+                Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeManager] _Initialize started"
+            }
+
             # Load PMC theme from state (for StyleTokens)
             $displayState = Get-PmcState -Section 'Display'
             if ($displayState) {
@@ -78,6 +82,10 @@ class PmcThemeManager {
 
             # ONE PATH: Load theme from file
             $theme = Get-ActiveTheme
+            if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
+                Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeManager] Active theme name: '$($theme.Name)' Hex: '$($theme.Hex)' Props: $($theme.Properties.Count)"
+            }
+
             if ($theme -and $theme.Properties) {
                 [PmcThemeEngine]::GetInstance().Configure($theme.Properties, $this.ColorPalette)
             } else {

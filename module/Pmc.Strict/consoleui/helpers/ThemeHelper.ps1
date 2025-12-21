@@ -27,17 +27,30 @@ function Invoke-ThemeHotReload {
     )
 
     try {
+        if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
+            Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeHotReload] Starting hot reload for theme: '$themeName'"
+        }
+
         # 1. If theme name provided, save it to config
         if (-not [string]::IsNullOrEmpty($themeName)) {
             Set-ActiveTheme -themeName $themeName
+            if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
+                Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeHotReload] Set-ActiveTheme completed"
+            }
         }
 
         # 2. Reinitialize PMC theme system to update state
         Initialize-PmcThemeSystem -Force
+        if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
+            Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeHotReload] Initialize-PmcThemeSystem -Force completed"
+        }
 
         # 3. Reload PmcThemeManager (which loads from theme file)
         $themeManager = [PmcThemeManager]::GetInstance()
         $themeManager.Reload()
+        if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
+            Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeHotReload] PmcThemeManager.Reload completed"
+        }
 
         # 4. Force full screen refresh if app is running
         if ($global:PmcApp) {

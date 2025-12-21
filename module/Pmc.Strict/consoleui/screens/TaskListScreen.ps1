@@ -1891,7 +1891,7 @@ class TaskListScreen : StandardListScreen {
         # BUG FIX: Set EditorMode and CurrentEditItem so SkipRowHighlight works correctly
         $this.EditorMode = 'edit'
         $this.CurrentEditItem = $item
-        $this.ShowInlineEditor = $true
+        # $this.ShowInlineEditor = $true  <-- REMOVED: We use DetailPane, so don't hide the list row!
         # NOTE: NeedsClear NOT set - inline editing should not clear the screen
         $this.SetStatusMessage("Editing inline - Tab=next field, Enter=save, Esc=cancel", "success")
     }
@@ -1910,13 +1910,17 @@ class TaskListScreen : StandardListScreen {
             $gapY = $this.List.Y
             $gapHeight = $this.List.Height
             
-            # Use Background.Panel for the gap to match the detail pane
+            # Use Background.Primary for the gap to match the global background
             $themeEngine = [PmcThemeEngine]::GetInstance()
-            $bg = $themeEngine.GetBackgroundInt('Background.Panel', 1, 0)
+            $bg = $themeEngine.GetThemeColorInt('Background.Primary')
             $fg = $themeEngine.GetForegroundInt('Foreground.Primary')
             
             # Fill the 1-char gap
             $engine.Fill($gapX, $gapY, 1, $gapHeight, ' ', $fg, $bg)
+
+            # CRITICAL FIX: Clean the entire detail pane area before rendering
+            # This wipes out any artifacts (double borders, cursors) from previous edit mode
+            $engine.Fill($this.DetailPane.X, $this.DetailPane.Y, $this.DetailPane.Width, $this.DetailPane.Height, ' ', $fg, $bg)
 
             # ALWAYS render DetailPane first to draw the border and title
             # This acts as the container
@@ -1955,6 +1959,20 @@ class TaskListScreen : StandardListScreen {
                 }
                 $this._detailEditMode = $false
                 $this._detailEditor.ShowCursor = $false
+                $this.DetailPane.SetBorderStyle('single') # Reset border style
+                
+                # Explicitly hide hardware cursor to prevent "stuck cursor" artifact
+                if ($this.RenderEngine) {
+                    $this.RenderEngine.HideCursor()
+                    
+                    # CRITICAL FIX: Invalidate detail pane region to clear TextAreaEditor artifacts
+                    if ($this.DetailPane) {
+                        $startY = $this.DetailPane.Y
+                        $endY = [Math]::Min($startY + $this.DetailPane.Height - 1, $this.RenderEngine.Height - 1)
+                        $this.RenderEngine.InvalidateCachedRegion($startY, $endY)
+                    }
+                }
+
                 # Editor stays visible, panel stays hidden
                 # $this._detailEditor.Visible stays true
                 # $this.DetailPane.Visible stays false
@@ -1979,9 +1997,27 @@ class TaskListScreen : StandardListScreen {
             }
             $this._detailEditMode = -not $this._detailEditMode
             $this._detailEditor.ShowCursor = $this._detailEditMode
+            
+            # Visual indicator for active edit mode
             if ($this._detailEditMode) {
+                $this.DetailPane.SetBorderStyle('double')
                 $this.SetStatusMessage("Editing description. Esc to save.", "info")
             } else {
+                $this.DetailPane.SetBorderStyle('single')
+                
+                # Explicitly hide cursor when toggling off via 'd'
+                if ($this.RenderEngine) {
+                    $this.RenderEngine.HideCursor()
+                    
+                    # CRITICAL FIX: Invalidate detail pane region to clear TextAreaEditor artifacts
+                    if ($this.DetailPane) {
+                        $startY = $this.DetailPane.Y
+                        $endY = [Math]::Min($startY + $this.DetailPane.Height - 1, $this.RenderEngine.Height - 1)
+                        $this.RenderEngine.InvalidateCachedRegion($startY, $endY)
+                    }
+                }
+                
+                # Save changes
                 $newDesc = $this._detailEditor.GetText()
                 $taskId = Get-SafeProperty $selected 'id'
                 if ($taskId) {
