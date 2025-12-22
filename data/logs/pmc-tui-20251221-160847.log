@@ -1,0 +1,92 @@
+[2025-12-21 16:08:50.481] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-21 16:08:50.485] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-21 16:08:50.486] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-21 16:08:50.487] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-21 16:08:50.488] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-21 16:08:50.488] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-21 16:08:50.489] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-21 16:08:50.490] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-21 16:08:50.491] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-21 16:08:50.492] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-21 16:08:50.493] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-21 16:08:50.494] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-21 16:08:50.506] ServiceContainer: Resolving 'Application'...
+[2025-12-21 16:08:50.507] ServiceContainer: Resolving 'Theme'...
+[2025-12-21 16:08:50.685] ServiceContainer: Resolved 'Theme' successfully
+[2025-12-21 16:08:50.748] ServiceContainer: Resolving 'ThemeManager'...
+[2025-12-21 16:08:50.750] ServiceContainer: Resolved 'ThemeManager' successfully
+[2025-12-21 16:08:50.763] ServiceContainer: Resolved 'Application' successfully
+[2025-12-21 16:08:50.764] ServiceContainer: Resolving 'MenuRegistry'...
+[2025-12-21 16:08:50.775] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2025-12-21 16:08:50.790] MenuRegistry: Loaded manifest with 14 entries
+[2025-12-21 16:08:50.810] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2025-12-21 16:08:50.811] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-21 16:08:50.822] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-21 16:08:50.824] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2025-12-21 16:08:50.825] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-21 16:08:50.826] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-21 16:08:50.839] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2025-12-21 16:08:50.840] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-21 16:08:50.841] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-21 16:08:50.842] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2025-12-21 16:08:50.843] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-21 16:08:50.844] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-21 16:08:50.846] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2025-12-21 16:08:50.847] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-21 16:08:50.848] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-21 16:08:50.849] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2025-12-21 16:08:50.850] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-21 16:08:50.852] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-21 16:08:50.853] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2025-12-21 16:08:50.854] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-21 16:08:50.855] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-21 16:08:50.856] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2025-12-21 16:08:50.857] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-21 16:08:50.858] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-21 16:08:50.860] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2025-12-21 16:08:50.861] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-21 16:08:50.862] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-21 16:08:50.863] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2025-12-21 16:08:50.864] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-21 16:08:50.865] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-21 16:08:50.867] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2025-12-21 16:08:50.868] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-21 16:08:50.869] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-21 16:08:50.870] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2025-12-21 16:08:50.871] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-21 16:08:50.872] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-21 16:08:50.874] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2025-12-21 16:08:50.875] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-21 16:08:50.876] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-21 16:08:50.877] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2025-12-21 16:08:50.878] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-21 16:08:50.879] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-21 16:08:50.881] ServiceContainer: Resolving 'TaskListScreen'...
+[2025-12-21 16:08:50.882] ServiceContainer: Resolving 'TaskStore'...
+[2025-12-21 16:08:51.150] ServiceContainer: Resolved 'TaskStore' successfully
+[2025-12-21 16:08:51.903] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2025-12-21 16:08:51.921] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2025-12-21 16:08:51.935] _PopulateMenusFromRegistry: Menu 'Tools' has 4 items from registry (array)
+[2025-12-21 16:08:51.938] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2025-12-21 16:08:51.941] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2025-12-21 16:08:51.943] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2025-12-21 16:08:51.945] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2025-12-21 16:08:58.508] ServiceContainer: Resolving 'ProjectListScreen'...
+[2025-12-21 16:08:58.579] ServiceContainer: Resolved 'ProjectListScreen' successfully
+[2025-12-21 16:09:00.356] ServiceContainer: Registered 'ProjectInfoScreenV4' (singleton=False)
+[2025-12-21 16:09:00.357] ServiceContainer: Resolving 'ProjectInfoScreenV4'...
+[2025-12-21 16:09:00.424] ServiceContainer: Resolved 'ProjectInfoScreenV4' successfully
+[2025-12-21 16:09:00.521] [ERROR] Widget render error: RenderContent render failed: Theme Property Missing: 'Foreground.Secondary'
+[2025-12-21 16:09:00.521] [ERROR] Stack: at GetForegroundInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 174
+at GetThemedInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 258
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/TabPanel.ps1: line 327
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/TabbedScreen.ps1: line 452
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectInfoScreenV4.ps1: line 612
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 410
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 599
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-21 16:09:00.522] [ERROR] TargetObject: Theme Property Missing: 'Foreground.Secondary'
+[2025-12-21 16:09:00.526] [ERROR] InvocationInfo:             throw "Theme Property Missing: '$propertyName'"
+

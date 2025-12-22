@@ -300,7 +300,7 @@ class TabbedScreen : PmcScreen {
         # For first field (row=0): Y+2+0+1 = Y+3
         # For visibleIndex N: Y + TabBarHeight + N + 1
         $contentY = $this.TabPanel.Y + $this.TabPanel.TabBarHeight
-        $editorY = $contentY + $visibleIndex + 1
+        $editorY = $contentY + $visibleIndex
 
         if ($global:PmcTuiLogFile) {
             Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] TabbedScreen.EditCurrentField: field='$($field.Name)' fieldIndex=$fieldIndex visibleIndex=$visibleIndex"

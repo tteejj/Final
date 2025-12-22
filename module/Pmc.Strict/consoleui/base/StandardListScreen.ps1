@@ -134,7 +134,8 @@ class StandardListScreen : PmcScreen {
     # === Constructor (backward compatible - no container) ===
     StandardListScreen([string]$key, [string]$title) : base($key, $title) {
         # UniversalList has its own status and action footer, so disable the screen's StatusBar
-        $this.StatusBar = $null
+        # FIX: Re-enable StatusBar for delete confirmation and messages
+        # $this.StatusBar = $null
 
         # Initialize components
         $this._InitializeComponents()
@@ -143,7 +144,8 @@ class StandardListScreen : PmcScreen {
     # === Constructor (with ServiceContainer) ===
     StandardListScreen([string]$key, [string]$title, [object]$container) : base($key, $title, $container) {
         # UniversalList has its own status and action footer, so disable the screen's StatusBar
-        $this.StatusBar = $null
+        # FIX: Re-enable StatusBar for delete confirmation and messages
+        # $this.StatusBar = $null
 
         # Initialize components
         $this._InitializeComponents()

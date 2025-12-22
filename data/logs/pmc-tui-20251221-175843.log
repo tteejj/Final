@@ -1,0 +1,90 @@
+[2025-12-21 17:58:47.925] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-21 17:58:47.931] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-21 17:58:47.932] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-21 17:58:47.933] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-21 17:58:47.934] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-21 17:58:47.936] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-21 17:58:47.938] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-21 17:58:47.939] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-21 17:58:47.940] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-21 17:58:47.941] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-21 17:58:47.942] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-21 17:58:47.943] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-21 17:58:47.962] ServiceContainer: Resolving 'Application'...
+[2025-12-21 17:58:47.965] ServiceContainer: Resolving 'Theme'...
+[2025-12-21 17:58:48.238] ServiceContainer: Resolved 'Theme' successfully
+[2025-12-21 17:58:48.333] ServiceContainer: Resolving 'ThemeManager'...
+[2025-12-21 17:58:48.336] ServiceContainer: Resolved 'ThemeManager' successfully
+[2025-12-21 17:58:48.354] ServiceContainer: Resolved 'Application' successfully
+[2025-12-21 17:58:48.355] ServiceContainer: Resolving 'MenuRegistry'...
+[2025-12-21 17:58:48.370] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2025-12-21 17:58:48.391] MenuRegistry: Loaded manifest with 14 entries
+[2025-12-21 17:58:48.424] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2025-12-21 17:58:48.426] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-21 17:58:48.444] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-21 17:58:48.446] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2025-12-21 17:58:48.465] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-21 17:58:48.467] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-21 17:58:48.469] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2025-12-21 17:58:48.471] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-21 17:58:48.472] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-21 17:58:48.475] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2025-12-21 17:58:48.476] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-21 17:58:48.479] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-21 17:58:48.481] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2025-12-21 17:58:48.482] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-21 17:58:48.484] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-21 17:58:48.486] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2025-12-21 17:58:48.488] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-21 17:58:48.490] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-21 17:58:48.492] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2025-12-21 17:58:48.493] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-21 17:58:48.496] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-21 17:58:48.498] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2025-12-21 17:58:48.499] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-21 17:58:48.501] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-21 17:58:48.504] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2025-12-21 17:58:48.505] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-21 17:58:48.506] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-21 17:58:48.508] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2025-12-21 17:58:48.510] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-21 17:58:48.512] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-21 17:58:48.514] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2025-12-21 17:58:48.516] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-21 17:58:48.518] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-21 17:58:48.520] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2025-12-21 17:58:48.521] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-21 17:58:48.523] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-21 17:58:48.525] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2025-12-21 17:58:48.526] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-21 17:58:48.528] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-21 17:58:48.531] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2025-12-21 17:58:48.532] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-21 17:58:48.534] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-21 17:58:48.537] ServiceContainer: Resolving 'TaskListScreen'...
+[2025-12-21 17:58:48.539] ServiceContainer: Resolving 'TaskStore'...
+[2025-12-21 17:58:48.919] ServiceContainer: Resolved 'TaskStore' successfully
+[2025-12-21 17:58:49.951] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2025-12-21 17:58:49.990] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2025-12-21 17:58:49.992] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2025-12-21 17:58:49.996] _PopulateMenusFromRegistry: Menu 'Tools' has 4 items from registry (array)
+[2025-12-21 17:58:49.999] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2025-12-21 17:58:50.002] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2025-12-21 17:58:50.005] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2025-12-21 17:59:02.728] ServiceContainer: Resolving 'ProjectListScreen'...
+[2025-12-21 17:59:02.825] ServiceContainer: Resolved 'ProjectListScreen' successfully
+[2025-12-21 17:59:03.686] ServiceContainer: Registered 'ProjectInfoScreenV4' (singleton=False)
+[2025-12-21 17:59:03.687] ServiceContainer: Resolving 'ProjectInfoScreenV4'...
+[2025-12-21 17:59:03.786] ServiceContainer: Resolved 'ProjectInfoScreenV4' successfully
+[2025-12-21 17:59:03.971] [ERROR] Widget render error: RenderContent render failed: Cannot find an overload for "WriteAt" and the argument count: "4".
+[2025-12-21 17:59:03.972] [ERROR] Stack: at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/TabPanel.ps1: line 395
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/TabbedScreen.ps1: line 452
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ProjectInfoScreenV4.ps1: line 612
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 410
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 233
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 457
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 599
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-21 17:59:03.972] [ERROR] TargetObject: 
+[2025-12-21 17:59:03.974] [ERROR] InvocationInfo:                 $engine.WriteAt($this.X + 2, $rowY, $field.Label.PadRight($this.LabelWidth), $labelColor)
+

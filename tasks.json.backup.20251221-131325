@@ -169,14 +169,13 @@
       "id": "2deb7b38-e408-447f-be0d-c832c1d69888",
       "status": "pending",
       "due": null,
-      "description": "",
       "tags": [],
       "created": "2025-12-21T13:12:52.9253392-07:00",
       "parent_id": "48a2998a-432b-4cd8-861c-81875cbab19d",
       "project": "",
       "completed": false,
       "text": "subtask1 ",
-      "modified": "2025-12-21T13:13:25.2494331-07:00"
+      "modified": "2025-12-21T13:12:52.9253392-07:00"
     }
   ],
   "settings": {}

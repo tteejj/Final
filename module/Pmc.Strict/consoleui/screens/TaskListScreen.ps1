@@ -1985,7 +1985,8 @@ class TaskListScreen : StandardListScreen {
         }
 
         # D: Toggle edit mode - BEFORE parent call so it takes priority
-        if ($keyInfo.KeyChar -eq 'd' -or $keyInfo.KeyChar -eq 'D') {
+        # FIX: Changed to Shift+D only to avoid conflict with 'd' (Delete)
+        if ($keyInfo.KeyChar -eq 'D') {
             $selected = $this.List.GetSelectedItem()
             if (-not $selected) {
                 $this.SetStatusMessage("Select a task first", "warning")
@@ -2188,7 +2189,7 @@ class TaskListScreen : StandardListScreen {
         }
 
         # Keyboard shortcuts help (one line below status)
-        $help = "F:Filter A:Add E:Edit Del:Delete D:Edit O:Details Space:Toggle C:Complete X:Clone 1-6:Views H:Hide Q:Quit"
+        $help = "F:Filter A:Add E:Edit Del:Delete Shift+D:EditDetails O:Details Space:Toggle C:Complete X:Clone 1-6:Views H:Hide Q:Quit"
         $engine.WriteAt(2, $y + 1, $help, $mutedColor, $bg)
     }
 

@@ -1,0 +1,81 @@
+[2025-12-21 19:28:27.913] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-21 19:28:27.921] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-21 19:28:27.923] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-21 19:28:27.925] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-21 19:28:27.927] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-21 19:28:27.929] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-21 19:28:27.932] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-21 19:28:27.933] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-21 19:28:27.935] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-21 19:28:27.937] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-21 19:28:27.940] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-21 19:28:27.941] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-21 19:28:27.964] ServiceContainer: Resolving 'Application'...
+[2025-12-21 19:28:27.967] ServiceContainer: Resolving 'Theme'...
+[2025-12-21 19:28:28.262] ServiceContainer: Resolved 'Theme' successfully
+[2025-12-21 19:28:28.376] ServiceContainer: Resolving 'ThemeManager'...
+[2025-12-21 19:28:28.378] ServiceContainer: Resolved 'ThemeManager' successfully
+[2025-12-21 19:28:28.396] ServiceContainer: Resolved 'Application' successfully
+[2025-12-21 19:28:28.398] ServiceContainer: Resolving 'MenuRegistry'...
+[2025-12-21 19:28:28.413] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2025-12-21 19:28:28.436] MenuRegistry: Loaded manifest with 14 entries
+[2025-12-21 19:28:28.474] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2025-12-21 19:28:28.476] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-21 19:28:28.498] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-21 19:28:28.501] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2025-12-21 19:28:28.502] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-21 19:28:28.505] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-21 19:28:28.507] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2025-12-21 19:28:28.509] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-21 19:28:28.511] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-21 19:28:28.513] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2025-12-21 19:28:28.514] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-21 19:28:28.557] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-21 19:28:28.560] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2025-12-21 19:28:28.561] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-21 19:28:28.563] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-21 19:28:28.565] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2025-12-21 19:28:28.566] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-21 19:28:28.568] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-21 19:28:28.570] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2025-12-21 19:28:28.571] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-21 19:28:28.573] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-21 19:28:28.576] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2025-12-21 19:28:28.577] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-21 19:28:28.579] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-21 19:28:28.581] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2025-12-21 19:28:28.582] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-21 19:28:28.584] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-21 19:28:28.586] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2025-12-21 19:28:28.587] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-21 19:28:28.589] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-21 19:28:28.592] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2025-12-21 19:28:28.593] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-21 19:28:28.595] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-21 19:28:28.597] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2025-12-21 19:28:28.598] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-21 19:28:28.600] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-21 19:28:28.602] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2025-12-21 19:28:28.603] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-21 19:28:28.605] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-21 19:28:28.608] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2025-12-21 19:28:28.609] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-21 19:28:28.611] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-21 19:28:28.613] ServiceContainer: Resolving 'TaskListScreen'...
+[2025-12-21 19:28:28.616] ServiceContainer: Resolving 'TaskStore'...
+[2025-12-21 19:28:29.027] ServiceContainer: Resolved 'TaskStore' successfully
+[2025-12-21 19:28:30.047] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2025-12-21 19:28:30.074] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2025-12-21 19:28:30.081] _PopulateMenusFromRegistry: Menu 'Tools' has 4 items from registry (array)
+[2025-12-21 19:28:30.085] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2025-12-21 19:28:30.089] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2025-12-21 19:28:30.093] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2025-12-21 19:28:30.096] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2025-12-21 19:28:35.139] ServiceContainer: Resolving 'ProjectListScreen'...
+[2025-12-21 19:28:35.261] ServiceContainer: Resolved 'ProjectListScreen' successfully
+[2025-12-21 19:28:36.756] ServiceContainer: Registered 'ProjectInfoScreenV4' (singleton=False)
+[2025-12-21 19:28:36.758] ServiceContainer: Resolving 'ProjectInfoScreenV4'...
+[2025-12-21 19:28:36.893] ServiceContainer: Resolved 'ProjectInfoScreenV4' successfully
+[2025-12-21 19:28:39.636] TabbedScreen.EditCurrentField: field='ID1' fieldIndex=0 visibleIndex=0
+[2025-12-21 19:28:39.638] TabbedScreen.EditCurrentField: TabPanel.Y=8 TabBarHeight=2 contentY=10
+[2025-12-21 19:28:39.639] TabbedScreen.EditCurrentField: Calculated editor position: X=26 Y=11
