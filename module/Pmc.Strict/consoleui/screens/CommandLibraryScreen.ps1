@@ -18,6 +18,9 @@ Manage a library of saved commands:
 - Add/Edit/Delete commands
 - Copy commands to clipboard
 - Track usage statistics
+#>
+class CommandLibraryScreen : StandardListScreen {
+    hidden [object]$_commandService = $null
 
     # Container constructor
     CommandLibraryScreen([object]$container) : base("CommandLibrary", "Command Library", $container) {
@@ -54,6 +57,14 @@ Manage a library of saved commands:
         }.GetNewClosure()
     }
 
+    # Required by StandardListScreen - loads and displays data
+    [void] LoadData() {
+        $items = $this.LoadItems()
+        $columns = $this.GetColumns()
+        $this.List.SetColumns($columns)
+        $this.List.SetData($items)
+    }
+
     # === Abstract Method Implementations ===
 
     # Get entity type for store operations
@@ -63,10 +74,20 @@ Manage a library of saved commands:
 
     # Define columns for list display
     [array] GetColumns() {
-        # Calculate column widths dynamically based on available width
-        # Account for 2 separators (2 spaces each = 4 chars total) between 3 columns
-        $items = $this.LoadItems()
-        $this.List.SetData($items)
+        # Calculate column widths dynamically based on List widget width
+        # Account for 2 separators (2 spaces each = 4 chars) between 3 columns + borders
+        $availableWidth = $(if ($this.List -and $this.List.Width -gt 4) { $this.List.Width - 4 - 4 } else { 110 })
+        
+        # Proportions: Name=30%, Category=20%, Command=50%
+        $nameWidth = [Math]::Max(15, [Math]::Floor($availableWidth * 0.30))
+        $categoryWidth = [Math]::Max(10, [Math]::Floor($availableWidth * 0.20))
+        $commandWidth = [Math]::Max(20, [Math]::Floor($availableWidth * 0.50))
+        
+        return @(
+            @{ Name = 'name'; Label = 'Name'; Width = $nameWidth; Align = 'left' }
+            @{ Name = 'category'; Label = 'Category'; Width = $categoryWidth; Align = 'left' }
+            @{ Name = 'command_text'; Label = 'Command'; Width = $commandWidth; Align = 'left' }
+        )
     }
 
     # Load items from data store

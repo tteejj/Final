@@ -385,8 +385,12 @@ class TabPanel : PmcWidget {
                 $rowY = $startY + $i
                 
                 # Render Label
-                $labelColor = $this.GetThemedInt("Foreground.Secondary")
-                $engine.WriteAt($this.X + 2, $rowY, $field.Label.PadRight($this.LabelWidth), $labelColor, -1)
+                if ($isSelected) {
+                    $labelBg = $this.GetThemedInt("Background.Selection"); $labelFg = $this.GetThemedInt("Foreground.Selection")
+                } else {
+                    $labelBg = $this.GetThemedInt("Background.Primary"); $labelFg = $this.GetThemedInt("Foreground.Secondary")
+                }
+                $engine.WriteAt($this.X + 2, $rowY, $field.Label.PadRight($this.LabelWidth), $labelFg, $labelBg)
                 
                 # Render Value
                 $valueX = $this.X + 2 + $this.LabelWidth + 1

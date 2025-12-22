@@ -367,7 +367,7 @@ class ProjectInfoScreenV4 : TabbedScreen {
     # === File Actions ===
 
     hidden [void] _HandleFileAction([string]$action) {
-        # Write-PmcTuiLog "ProjectInfoScreenV4._HandleFileAction: action=$action ProjectName='$($this.ProjectName)'" "INFO"
+        Write-PmcTuiLog "ProjectInfoScreenV4._HandleFileAction: action=$action ProjectName='$($this.ProjectName)'" "INFO"
         switch ($action) {
             '_action_notes' {
                 # Open NotesMenuScreen for this project
@@ -424,6 +424,7 @@ class ProjectInfoScreenV4 : TabbedScreen {
 
     hidden [void] _BrowseForFile([string]$fieldName, [bool]$directoriesOnly) {
         # Get current value as starting path
+        Write-PmcTuiLog "ProjectInfoScreenV4._BrowseForFile: fieldName=$fieldName directoriesOnly=$directoriesOnly" "INFO"
         $startPath = $this._GetValue($fieldName)
         if ([string]::IsNullOrWhiteSpace($startPath)) {
             $startPath = [Environment]::GetFolderPath('UserProfile')
@@ -433,6 +434,7 @@ class ProjectInfoScreenV4 : TabbedScreen {
         $this.FilePicker = [PmcFilePicker]::new($startPath, $directoriesOnly)
         $this.ShowFilePicker = $true
         $this.FilePickerFieldName = $fieldName
+        Write-PmcTuiLog "ProjectInfoScreenV4._BrowseForFile: FilePicker created, ShowFilePicker=$($this.ShowFilePicker)" "INFO"
     }
 
     hidden [void] _OpenFile([string]$path, [string]$app) {
