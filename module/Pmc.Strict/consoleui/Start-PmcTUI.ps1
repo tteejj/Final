@@ -197,6 +197,7 @@ try {
     . "$PSScriptRoot/services/CommandService.ps1"
     . "$PSScriptRoot/services/ExcelComReader.ps1"
     . "$PSScriptRoot/services/ExcelMappingService.ps1"
+    . "$PSScriptRoot/services/ExcelCopyService.ps1"
     . "$PSScriptRoot/services/MenuRegistry.ps1"
     . "$PSScriptRoot/services/NoteService.ps1"
     . "$PSScriptRoot/services/FileNoteService.ps1"
@@ -518,7 +519,13 @@ function Start-PmcTUI {
                 return [ExcelMappingService]::GetInstance()
             }, $true)
 
-        # 10. PreferencesService (no dependencies)
+        # 10. ExcelCopyService (no dependencies)
+        $global:PmcContainer.Register('ExcelCopyService', {
+                param($container)
+                return [ExcelCopyService]::GetInstance()
+            }, $true)
+
+        # 11. PreferencesService (no dependencies)
         # Write-PmcTuiLog "Registering PreferencesService..." "INFO"
         $global:PmcContainer.Register('PreferencesService', {
                 param($container)
@@ -526,7 +533,7 @@ function Start-PmcTUI {
                 return [PreferencesService]::GetInstance()
             }, $true)
 
-        # 11. Screen factories (depend on Application, TaskStore, etc.)
+        # 12. Screen factories (depend on Application, TaskStore, etc.)
         # Write-PmcTuiLog "Registering screen factories..." "INFO"
 
         $global:PmcContainer.Register('TaskListScreen', {

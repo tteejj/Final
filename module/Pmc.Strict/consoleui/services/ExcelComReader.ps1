@@ -336,6 +336,68 @@ class ExcelComReader {
         return $names
     }
 
+    # Write value to a cell (values only, no formatting)
+    [void] WriteCell([string]$cellAddress, [object]$value) {
+        if (-not $this.IsOpen -or $null -eq $this._worksheet) {
+            throw "No worksheet is active"
+        }
+
+        if (-not $this.IsValidCellAddress($cellAddress)) {
+            throw "Invalid Excel cell address: $cellAddress (expected format like 'A1' or 'W3')"
+        }
+
+        $range = $null
+        try {
+            $range = $this._worksheet.Range($cellAddress)
+            if ($null -eq $range) {
+                throw "Failed to get Range object for cell $cellAddress"
+            }
+
+            # Use Value2 for values-only (no formatting)
+            $range.Value2 = $value
+
+        } catch {
+            throw "Failed to write cell $cellAddress : $_"
+        } finally {
+            # Release COM objects
+            if ($null -ne $range) {
+                try {
+                    [Marshal]::ReleaseComObject($range) | Out-Null
+                } catch {
+                    # Write-PmcTuiLog "Failed to release COM object (range): $($_.Exception.Message)" "WARNING"
+                }
+            }
+
+            # CRITICAL: Aggressive COM cleanup to prevent memory leaks
+            [System.GC]::Collect()
+            [System.GC]::WaitForPendingFinalizers()
+        }
+    }
+
+    # Write multiple cells (batch operation)
+    [void] WriteCells([hashtable]$cellValueMap) {
+        if (-not $this.IsOpen -or $null -eq $this._worksheet) {
+            throw "No worksheet is active"
+        }
+
+        foreach ($address in $cellValueMap.Keys) {
+            $this.WriteCell($address, $cellValueMap[$address])
+        }
+    }
+
+    # Save workbook (without closing)
+    [void] SaveWorkbook() {
+        if (-not $this.IsOpen -or $null -eq $this._workbook) {
+            throw "No workbook is open"
+        }
+
+        try {
+            $this._workbook.Save()
+        } catch {
+            throw "Failed to save workbook: $_"
+        }
+    }
+
     # Close and cleanup
     # NOTE: Caller MUST call Close() explicitly - PowerShell classes do not support finalizers
     [void] Close() {
