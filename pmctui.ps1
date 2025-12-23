@@ -60,7 +60,8 @@ $null = New-Item -ItemType Directory -Path (Join-Path $InstallPath "data/backups
 # Create initial tasks.json with required settings property (at root, not data/)
 $tasksJsonPath = Join-Path $InstallPath "tasks.json"
 if (-not (Test-Path $tasksJsonPath)) {
-    @{tasks=@();projects=@();notes=@();checklists=@();templates=@();settings=@{}} | ConvertTo-Json -Depth 10 | Set-Content -Path $tasksJsonPath -Encoding UTF8
+    $jsonContent = @{tasks=@();projects=@();notes=@();checklists=@();templates=@();settings=@{}} | ConvertTo-Json -Depth 10
+    [System.IO.File]::WriteAllText($tasksJsonPath, $jsonContent, [System.Text.UTF8Encoding]::new($false))
 }
 
 
