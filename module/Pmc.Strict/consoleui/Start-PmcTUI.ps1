@@ -160,15 +160,7 @@ catch {
     throw
 }
 
-# Write-PmcTuiLog "Loading PraxisVT..." "INFO"
-try {
-    . "$PSScriptRoot/../src/PraxisVT.ps1"
-    # Write-PmcTuiLog "PraxisVT loaded" "INFO"
-}
-catch {
-    # Write-PmcTuiLog "Failed to load PraxisVT: $_" "ERROR"
-    throw
-}
+# REMOVED: PraxisVT loading - not used by TUI (archived 2025-12-21)
 
 # Write-PmcTuiLog "Loading core dependencies..." "INFO"
 try {
