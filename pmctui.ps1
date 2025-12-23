@@ -57,6 +57,13 @@ foreach ($file in $files) {
 $null = New-Item -ItemType Directory -Path (Join-Path $InstallPath "data/logs") -Force
 $null = New-Item -ItemType Directory -Path (Join-Path $InstallPath "data/backups") -Force
 
+# Create initial tasks.json with required settings property (at root, not data/)
+$tasksJsonPath = Join-Path $InstallPath "tasks.json"
+if (-not (Test-Path $tasksJsonPath)) {
+    @{tasks=@();projects=@();notes=@();checklists=@();templates=@();settings=@{}} | ConvertTo-Json -Depth 10 | Set-Content -Path $tasksJsonPath -Encoding UTF8
+}
+
+
 Write-Host ""
 Write-Host "======================================" -ForegroundColor Green
 Write-Host "Installation complete! ($count files)" -ForegroundColor Green
