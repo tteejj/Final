@@ -637,7 +637,7 @@ class ProjectInfoScreenV4 : TabbedScreen {
         } else {
             # Multiple profiles, show picker
             . "$PSScriptRoot/../widgets/ProfilePickerDialog.ps1"
-            $picker = [ProfilePickerDialog]::new($profiles, "Select Import Profile")
+            $picker = New-Object ProfilePickerDialog -ArgumentList @($profiles, "Select Import Profile")
             
             $self = $this
             $svc = $importService
@@ -698,7 +698,7 @@ class ProjectInfoScreenV4 : TabbedScreen {
         } else {
             # Multiple profiles, show picker
             . "$PSScriptRoot/../widgets/ProfilePickerDialog.ps1"
-            $picker = [ProfilePickerDialog]::new($profiles, "Select Export Profile")
+            $picker = New-Object ProfilePickerDialog -ArgumentList @($profiles, "Select Export Profile")
             
             $self = $this
             $svc = $exportService
@@ -742,7 +742,10 @@ class ProjectInfoScreenV4 : TabbedScreen {
         # Simple synchronous dialog handling
         # Note: For full async dialog support, this would need to integrate with the screen's
         # overlay system similar to FilePicker. For now, we use blocking input loop.
-        $host.UI.RawUI.FlushInputBuffer()
+        $rawUI = $global:Host.UI.RawUI
+        if ($rawUI) {
+            $rawUI.FlushInputBuffer()
+        }
         
         while (-not $picker.IsComplete) {
             # Render background + dialog
