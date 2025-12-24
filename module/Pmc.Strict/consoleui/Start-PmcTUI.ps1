@@ -91,8 +91,8 @@ $global:PmcEnableFlowDebug = $false
 function Write-PmcTuiLog {
     param([string]$Message, [string]$Level = "INFO")
 
-    # Skip if logging disabled
-    if (-not $global:PmcTuiLogFile) { return }
+    # PERF FIX 4.1: Early exit before any string formatting
+    if (-not $global:PmcTuiLogFile -or $global:PmcTuiLogLevel -eq 0) { return }
 
     # Filter by log level
     $levelValue = switch ($Level) {
@@ -224,6 +224,7 @@ try {
     . "$PSScriptRoot/helpers/ThemeHelper.ps1"
     . "$PSScriptRoot/helpers/TypeNormalization.ps1"
     . "$PSScriptRoot/helpers/ValidationHelper.ps1"
+    . "$PSScriptRoot/helpers/BackupCleanupHelper.ps1"  # FIX 7.2: Cleanup stale backups
     # Write-PmcTuiLog "Helpers loaded" "INFO"
 }
 catch {
@@ -355,10 +356,14 @@ function Start-PmcTUI {
     # Write-PmcTuiLog "Starting PMC TUI with screen: $StartScreen" "INFO"
 
     try {
+        # === FIX 7.2: Cleanup stale backup files at startup ===
+        $root = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
+        Invoke-BackupCleanup -RootPath $root
+
         # === Theme Self-Healing ===
         # CRITICAL FIX: Ensure theme configuration is valid before starting
         # If Active theme is set but Hex/Properties are missing, force a reload to populate them
-        $debugLogPath = Join-Path (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent) 'data/logs/theme-debug.log'
+        $debugLogPath = Join-Path $root 'data/logs/theme-debug.log'
         try {
             Add-Content -Path $debugLogPath -Value "[$(Get-Date -F 'HH:mm:ss.fff')] === THEME SELF-HEAL START ===" -ErrorAction SilentlyContinue
             $root = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent

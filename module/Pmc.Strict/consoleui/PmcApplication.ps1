@@ -46,6 +46,7 @@ class PmcApplication {
     # === Rendering State ===
     [bool]$IsDirty = $true  # Dirty flag - true when redraw needed
     [int]$RenderErrorCount = 0  # Track consecutive render errors for recovery
+    [datetime]$LastRenderError = [datetime]::MinValue  # Track last error time for time-based reset
 
     # === Automation Support ===
     [string]$AutomationCommandFile = ""  # Path to command file for automation
@@ -267,9 +268,12 @@ class PmcApplication {
                 Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [ERROR] Stack: $($_.ScriptStackTrace)"
             }
 
-            # Increment error count
-            if (-not $this.RenderErrorCount) { $this.RenderErrorCount = 0 }
+            # FIX 4.2: Time-based error count reset - clear counter if no errors for 5 seconds
+            if ((Get-Date) - $this.LastRenderError -gt [TimeSpan]::FromSeconds(5)) {
+                $this.RenderErrorCount = 0
+            }
             $this.RenderErrorCount++
+            $this.LastRenderError = Get-Date
 
             # If too many errors, then we need to fail
             if ($this.RenderErrorCount -gt 10) {
@@ -469,22 +473,14 @@ class PmcApplication {
 
         }
         finally {
-            # CRITICAL: Flush pending changes before exit
+            # FIX 7.1: Use Dispose for proper cleanup
             try {
-                . "$PSScriptRoot/services/TaskStore.ps1"
-                $store = [TaskStore]::GetInstance()
-                if ($store.HasPendingChanges) {
-                    # Write-PmcTuiLog "Flushing pending changes on exit..." "INFO"
-                    $store.Flush()
-                }
+                $this.Dispose()
             }
             catch {
-                # Write-PmcTuiLog "Failed to flush data on exit: $_" "ERROR"
-                # Continue with cleanup even if flush fails
+                # Fallback cleanup if Dispose fails
+                [Console]::CursorVisible = $true
             }
-
-            # Cleanup
-            [Console]::CursorVisible = $true
             [Console]::Clear()
         }
     }
@@ -702,6 +698,54 @@ Screen Stack Depth: $($this.ScreenStack.Count)
             Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] RequestRender called from: $($caller.Command) at line $($caller.ScriptLineNumber)"
         }
         $this.IsDirty = $true
+    }
+
+    <#
+    .SYNOPSIS
+    Clean up resources on application shutdown
+
+    .DESCRIPTION
+    FIX 7.1: Explicit disposal pattern for:
+    - Flushing pending data
+    - Clearing event handlers
+    - Resetting singletons for clean restart
+    - Restoring terminal state
+    #>
+    [void] Dispose() {
+        # Flush pending data
+        try {
+            $store = [TaskStore]::GetInstance()
+            if ($null -ne $store -and $store.HasPendingChanges) {
+                $store.Flush()
+            }
+        }
+        catch {
+            # Log but continue cleanup
+            if ($global:PmcTuiLogFile) {
+                Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [WARNING] Dispose: Could not flush TaskStore: $_"
+            }
+        }
+
+        # Clear event handlers to break reference cycles
+        $this.OnTerminalResize = $null
+        $this.OnError = $null
+
+        # Reset singletons to allow clean restart
+        $global:PmcApp = $null
+        $global:PmcContainer = $null
+        $global:PmcSharedMenuBar = $null
+
+        # Reset theme singletons
+        try {
+            [PmcThemeManager]::_instance = $null
+            [PmcThemeEngine]::_instance = $null
+        }
+        catch {
+            # May fail if classes not loaded - safe to ignore
+        }
+
+        # Restore terminal state
+        [Console]::CursorVisible = $true
     }
 }
 
