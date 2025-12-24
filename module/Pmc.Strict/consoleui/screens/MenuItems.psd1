@@ -35,6 +35,22 @@
         ScreenFile = 'ChecklistTemplatesFolderScreen.ps1'
     }
 
+    'ExcelImportProfileManagerScreen' = @{
+        Menu = 'Tools'
+        Label = 'Excel Import Profiles'
+        Hotkey = 'I'
+        Order = 40
+        ScreenFile = 'ExcelImportProfileManagerScreen.ps1'
+    }
+
+    'TextExportProfileManagerScreen' = @{
+        Menu = 'Tools'
+        Label = 'T2020 Export Profiles'
+        Hotkey = 'E'
+        Order = 45
+        ScreenFile = 'TextExportProfileManagerScreen.ps1'
+    }
+
     # ===== PROJECTS MENU =====
     'ProjectListScreen' = @{
         Menu = 'Projects'

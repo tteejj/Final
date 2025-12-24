@@ -250,6 +250,9 @@ class ProjectInfoScreenV4 : TabbedScreen {
                 @{Name = 'ProjFolder'; Label = 'Project Folder'; Value = $this._GetValue('ProjFolder'); Type = 'text'; Hint = 'Path to project folder (press B to browse)' }
                 @{Name = '_action_folder_browse'; Label = '> Browse Folder'; Value = 'Select folder'; Type = 'readonly'; IsAction = $true }
                 @{Name = '_action_folder_open'; Label = '> Open Folder'; Value = 'Open in File Explorer'; Type = 'readonly'; IsAction = $true }
+                @{Name = '_separator5'; Label = '--- Excel Integration ---'; Value = ''; Type = 'readonly' }
+                @{Name = '_action_excel_import'; Label = '> Import from Excel'; Value = 'Fill project fields from Excel'; Type = 'readonly'; IsAction = $true }
+                @{Name = '_action_text_export'; Label = '> Generate T2020 Text'; Value = 'Export to T2020.txt'; Type = 'readonly'; IsAction = $true }
             ))
     }
 
@@ -418,6 +421,12 @@ class ProjectInfoScreenV4 : TabbedScreen {
             '_action_folder_open' {
                 $path = $this._GetValue('ProjFolder')
                 $this._OpenFolder($path)
+            }
+            '_action_excel_import' {
+                $this._ExcelImport()
+            }
+            '_action_text_export' {
+                $this._TextExport()
             }
         }
     }
@@ -606,6 +615,156 @@ class ProjectInfoScreenV4 : TabbedScreen {
         }.GetNewClosure()
 
         $global:PmcApp.PushScreen($pickerScreen)
+    }
+
+    hidden [void] _ExcelImport() {
+        # Load ExcelImportService
+        . "$PSScriptRoot/../services/ExcelImportService.ps1"
+        $importService = [ExcelImportService]::GetInstance()
+
+        $profiles = @($importService.GetAllProfiles())
+
+        if ($profiles.Count -eq 0) {
+            if ($this.StatusBar) {
+                $this.StatusBar.SetRightText("No import profiles. Create via Tools > Excel Import Profiles")
+            }
+            return
+        }
+
+        if ($profiles.Count -eq 1) {
+            # Only one profile, use it directly
+            $this._ExecuteImportWithProfile($profiles[0], $importService)
+        } else {
+            # Multiple profiles, show picker
+            . "$PSScriptRoot/../widgets/ProfilePickerDialog.ps1"
+            $picker = [ProfilePickerDialog]::new($profiles, "Select Import Profile")
+            
+            $self = $this
+            $svc = $importService
+            $picker.OnProfileSelected = {
+                param($selectedProfile)
+                $self._ExecuteImportWithProfile($selectedProfile, $svc)
+            }.GetNewClosure()
+            
+            # Show dialog as overlay
+            $this._ShowProfilePicker($picker)
+        }
+    }
+
+    hidden [void] _ExecuteImportWithProfile([object]$profile, [object]$importService) {
+        if ($this.StatusBar) {
+            $this.StatusBar.SetRightText("Importing with profile: $($profile.name)...")
+        }
+        
+        try {
+            $result = $importService.ExecuteImport($profile.id, $this.ProjectName, $this.Store)
+
+            if ($result.errors.Count -eq 0) {
+                if ($this.StatusBar) {
+                    $this.StatusBar.SetRightText("Imported $($result.successful_imports) fields from '$($profile.name)'")
+                }
+                $this.LoadData()
+                $this.NeedsClear = $true
+            } else {
+                if ($this.StatusBar) {
+                    $firstErr = $result.errors[0]
+                    $this.StatusBar.SetRightText("Import error: $($firstErr.error_message)")
+                }
+            }
+        } catch {
+            if ($this.StatusBar) {
+                $this.StatusBar.SetRightText("Import failed: $($_.Exception.Message)")
+            }
+        }
+    }
+
+    hidden [void] _TextExport() {
+        # Load TextExportService
+        . "$PSScriptRoot/../services/TextExportService.ps1"
+        $exportService = [TextExportService]::GetInstance()
+
+        $profiles = @($exportService.GetAllProfiles())
+
+        if ($profiles.Count -eq 0) {
+            if ($this.StatusBar) {
+                $this.StatusBar.SetRightText("No export profiles. Create via Tools > T2020 Export Profiles")
+            }
+            return
+        }
+
+        if ($profiles.Count -eq 1) {
+            # Only one profile, use it directly
+            $this._ExecuteExportWithProfile($profiles[0], $exportService)
+        } else {
+            # Multiple profiles, show picker
+            . "$PSScriptRoot/../widgets/ProfilePickerDialog.ps1"
+            $picker = [ProfilePickerDialog]::new($profiles, "Select Export Profile")
+            
+            $self = $this
+            $svc = $exportService
+            $picker.OnProfileSelected = {
+                param($selectedProfile)
+                $self._ExecuteExportWithProfile($selectedProfile, $svc)
+            }.GetNewClosure()
+            
+            # Show dialog as overlay
+            $this._ShowProfilePicker($picker)
+        }
+    }
+
+    hidden [void] _ExecuteExportWithProfile([object]$profile, [object]$exportService) {
+        if ($this.StatusBar) {
+            $this.StatusBar.SetRightText("Exporting with profile: $($profile.name)...")
+        }
+        
+        try {
+            $result = $exportService.ExecuteExport($profile.id, $this.ProjectName, $this.Store)
+
+            if ($null -ne $result.output_path -and $result.errors.Count -eq 0) {
+                $filename = Split-Path $result.output_path -Leaf
+                if ($this.StatusBar) {
+                    $this.StatusBar.SetRightText("Exported to: $filename")
+                }
+            } elseif ($result.errors.Count -gt 0) {
+                $firstErr = $result.errors[0]
+                if ($this.StatusBar) {
+                    $this.StatusBar.SetRightText("Export error: $($firstErr.error_message)")
+                }
+            }
+        } catch {
+            if ($this.StatusBar) {
+                $this.StatusBar.SetRightText("Export failed: $($_.Exception.Message)")
+            }
+        }
+    }
+
+    hidden [void] _ShowProfilePicker([object]$picker) {
+        # Simple synchronous dialog handling
+        # Note: For full async dialog support, this would need to integrate with the screen's
+        # overlay system similar to FilePicker. For now, we use blocking input loop.
+        $host.UI.RawUI.FlushInputBuffer()
+        
+        while (-not $picker.IsComplete) {
+            # Render background + dialog
+            if ($global:PmcApp -and $global:PmcApp.RenderEngine) {
+                $engine = $global:PmcApp.RenderEngine
+                $engine.Clear()
+                $this.RenderContentToEngine($engine)
+                
+                # Center the picker
+                $picker.X = [Math]::Max(2, [Math]::Floor(($engine.Width - $picker.Width) / 2))
+                $picker.Y = [Math]::Max(2, [Math]::Floor(($engine.Height - $picker.Height) / 2))
+                $picker.RenderToEngine($engine)
+                
+                $engine.Flush()
+            }
+            
+            # Wait for input
+            $key = [Console]::ReadKey($true)
+            $picker.HandleInput($key)
+        }
+        
+        $this.NeedsClear = $true
     }
 
     # === Rendering Override ===

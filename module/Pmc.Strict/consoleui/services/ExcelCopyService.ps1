@@ -426,6 +426,27 @@ class ExcelCopyService {
 
     # === Sheet Discovery ===
 
+    # Get sheets from any Excel file (temporary open, get names, close)
+    # Use this when user picks a file but hasn't saved the profile yet
+    [array] GetSheetsFromFile([string]$filePath) {
+        if ([string]::IsNullOrWhiteSpace($filePath)) {
+            return @()
+        }
+
+        if (-not (Test-Path $filePath)) {
+            throw "File not found: $filePath"
+        }
+
+        $reader = [ExcelComReader]::new()
+        try {
+            $reader.OpenFile($filePath)
+            return $reader.GetSheetNames()
+        } finally {
+            # ALWAYS close - no file stays open
+            $reader.Close()
+        }
+    }
+
     [array] GetSourceSheets([string]$profileId) {
         if (-not $this._profilesCache.ContainsKey($profileId)) {
             return @()

@@ -355,3 +355,11 @@
 [17:55:27.271] [Load-Theme] Looking for: /home/teej/ztest/themes/synthwave.json (exists=True)
 [17:55:27.276] [Load-Theme] JSON loaded. Name='Synthwave' Hex='#ff00ff'
 [17:55:27.323] [Load-Theme] Returning theme with Hex='#ff00ff'
+[16:06:17.567] === THEME SELF-HEAL START ===
+[16:06:17.572] Config path: /home/teej/ztest/config.json
+[16:06:17.580] Config loaded. Active=synthwave, Hex=#ff00ff, hasHex=True
+[16:06:17.582] Hex already present, no repair needed
+[16:06:17.736] [Load-Theme] themeName='synthwave' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:06:17.739] [Load-Theme] Looking for: /home/teej/ztest/themes/synthwave.json (exists=True)
+[16:06:17.741] [Load-Theme] JSON loaded. Name='Synthwave' Hex='#ff00ff'
+[16:06:17.757] [Load-Theme] Returning theme with Hex='#ff00ff'
