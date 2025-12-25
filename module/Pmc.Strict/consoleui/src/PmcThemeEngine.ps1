@@ -57,6 +57,12 @@ class PmcThemeEngine {
         $this._palette = $palette
         $this.InvalidateCache()
         
+        # Clear RenderCache to invalidate cached cells with stale colors
+        $cacheType = ([System.Management.Automation.PSTypeName]'RenderCache').Type
+        if ($cacheType) {
+            [RenderCache]::GetInstance().Clear()
+        }
+        
         # Targeted diagnostic: log when Configure is called (only if debug enabled)
         if ((Test-Path variable:global:PmcDebug) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
             $propList = ($properties.Keys | Sort-Object) -join ', '

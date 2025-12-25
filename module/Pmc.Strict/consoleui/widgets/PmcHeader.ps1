@@ -244,6 +244,12 @@ class PmcHeader : PmcWidget {
         # Pre-compute layout based on current size
         # Called by base class when bounds change
     }
+
+    # === RenderCache Support ===
+    [string] GetContentHash() {
+        $bc = if ($this.Breadcrumb) { $this.Breadcrumb -join '_' } else { '' }
+        return "$($this.Title)|$($this.Icon)|${bc}|$($this.ContextInfo)|$($this.Width)"
+    }
 }
 
 # Classes exported automatically in PowerShell 5.1+

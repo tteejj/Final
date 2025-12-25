@@ -226,6 +226,12 @@ class PmcFooter : PmcWidget {
         $footer.AddShortcut("Tab", "Next Field")
         return $footer
     }
+
+    # === RenderCache Support ===
+    [string] GetContentHash() {
+        $keys = ($this.Shortcuts | ForEach-Object { $_.Key }) -join '_'
+        return "${keys}|$($this.Width)"
+    }
 }
 
 # Classes exported automatically in PowerShell 5.1+

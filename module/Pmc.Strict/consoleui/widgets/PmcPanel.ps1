@@ -256,6 +256,11 @@ class PmcPanel : PmcWidget {
         $panel.SetBorderStyle('double')
         return $panel
     }
+
+    # === RenderCache Support ===
+    [string] GetContentHash() {
+        return "$($this.PanelTitle)|$($this.ContentText)|$($this.Width)|$($this.Height)"
+    }
 }
 
 # Classes exported automatically in PowerShell 5.1+

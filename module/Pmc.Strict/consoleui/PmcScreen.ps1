@@ -197,6 +197,12 @@ class PmcScreen {
     [void] OnDoExit() {
         $this.IsActive = $false
 
+        # Clear RenderCache to prevent stale content on screen transitions
+        $cacheType = ([System.Management.Automation.PSTypeName]'RenderCache').Type
+        if ($cacheType) {
+            [RenderCache]::GetInstance().Clear()
+        }
+
         if ($this.OnExitHandler) {
             & $this.OnExitHandler $this
         }
@@ -393,9 +399,7 @@ class PmcScreen {
         $engine.BeginLayer([ZIndex]::Header)
         if ($this.Header) {
             try {
-                if ($this.Header.PSObject.Methods['RenderToEngine']) {
-                    $this.Header.RenderToEngine($engine)
-                }
+                $this._RenderWidgetWithCache($engine, $this.Header, [ZIndex]::Header)
             }
             catch {
                 $this._HandleWidgetRenderError("Header", $_, $engine, 1)
@@ -417,7 +421,6 @@ class PmcScreen {
         # Layer 20: Panel (content widgets like FilterPanel, DatePicker, etc.)
         $engine.BeginLayer([ZIndex]::Panel)
         $widgetRow = 10
-        # Write-PmcTuiLog "PmcScreen.RenderToEngine: Rendering $($this.ContentWidgets.Count) content widgets" "DEBUG"
         foreach ($widget in $this.ContentWidgets) {
             $widgetName = $(if ($widget.Name) { $widget.Name } else { $widget.GetType().Name })
 
@@ -427,13 +430,7 @@ class PmcScreen {
             }
 
             try {
-                if ($widget.PSObject.Methods['RenderToEngine']) {
-                    # Write-PmcTuiLog "PmcScreen: Calling RenderToEngine on $widgetName" "DEBUG"
-                    $widget.RenderToEngine($engine)
-                }
-                else {
-                    # Write-PmcTuiLog "PmcScreen: Widget $widgetName missing RenderToEngine method" "WARN"
-                }
+                $this._RenderWidgetWithCache($engine, $widget, [ZIndex]::Panel)
             }
             catch {
                 $this._HandleWidgetRenderError($widgetName, $_, $engine, $widgetRow)
@@ -445,9 +442,7 @@ class PmcScreen {
         $engine.BeginLayer([ZIndex]::Footer)
         if ($this.Footer) {
             try {
-                if ($this.Footer.PSObject.Methods['RenderToEngine']) {
-                    $this.Footer.RenderToEngine($engine)
-                }
+                $this._RenderWidgetWithCache($engine, $this.Footer, [ZIndex]::Footer)
             }
             catch {
                 $footerRow = [Math]::Max(20, $this.TermHeight - 4)
@@ -459,9 +454,7 @@ class PmcScreen {
         $engine.BeginLayer([ZIndex]::StatusBar)
         if ($this.StatusBar) {
             try {
-                if ($this.StatusBar.PSObject.Methods['RenderToEngine']) {
-                    $this.StatusBar.RenderToEngine($engine)
-                }
+                $this._RenderWidgetWithCache($engine, $this.StatusBar, [ZIndex]::StatusBar)
             }
             catch {
                 $statusRow = [Math]::Max(22, $this.TermHeight - 2)
@@ -474,13 +467,30 @@ class PmcScreen {
         $engine.BeginLayer([ZIndex]::Dropdown)
         if ($this.MenuBar) {
             try {
-                if ($this.MenuBar.PSObject.Methods['RenderToEngine']) {
-                    $this.MenuBar.RenderToEngine($engine)
-                }
+                $this._RenderWidgetWithCache($engine, $this.MenuBar, [ZIndex]::Dropdown)
             }
             catch {
                 $this._HandleWidgetRenderError("MenuBar", $_, $engine, 0)
             }
+        }
+    }
+
+    <#
+    .SYNOPSIS
+    Render a widget with cache support
+    
+    .DESCRIPTION
+    Attempts to use RenderWithCache if available, falls back to RenderToEngine.
+    This is the integration point for the RenderCache system.
+    #>
+    hidden [void] _RenderWidgetWithCache([object]$engine, [object]$widget, [int]$zIndex) {
+        if ($widget.PSObject.Methods['RenderWithCache']) {
+            # Use cache-aware rendering
+            $widget.RenderWithCache($engine, $zIndex)
+        }
+        elseif ($widget.PSObject.Methods['RenderToEngine']) {
+            # Fallback to direct rendering
+            $widget.RenderToEngine($engine)
         }
     }
 

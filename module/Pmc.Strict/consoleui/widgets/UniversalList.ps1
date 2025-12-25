@@ -471,6 +471,26 @@ class UniversalList : PmcWidget {
 
     <#
     .SYNOPSIS
+    Get content hash for RenderCache (opt-in caching)
+    
+    .DESCRIPTION
+    Returns a hash of the widget's current visual state.
+    Cache will hit if:
+    - Same selected index
+    - Same scroll offset
+    - Same data count
+    - Same cache generation (internal invalidation)
+    
+    .OUTPUTS
+    String hash of widget state
+    #>
+    [string] GetContentHash() {
+        # Include all state that affects visual output
+        return "$($this._selectedIndex):$($this._scrollOffset):$($this._filteredData.Count):$($this._cacheGeneration):$($this._sortColumn):$($this._sortAscending)"
+    }
+
+    <#
+    .SYNOPSIS
     Set sort column and direction
 
     .PARAMETER columnName

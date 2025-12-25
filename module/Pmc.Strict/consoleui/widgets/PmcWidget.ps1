@@ -737,7 +737,103 @@ class PmcWidget : Component {
         # Truncate with ellipsis
         return $text.Substring(0, $maxWidth - 3) + "..."
     }
+
+    # =========================================================================
+    # RENDER CACHE SUPPORT
+    # =========================================================================
+
+    <#
+    .SYNOPSIS
+    Get content hash for cache key validation (opt-in caching)
+    
+    .DESCRIPTION
+    Override this method in subclasses to enable caching.
+    Return a string that uniquely identifies the widget's current visual state.
+    Return empty string to disable caching for this widget.
+    
+    .OUTPUTS
+    String hash of widget state, or empty string to disable caching
+    
+    .EXAMPLE
+    # In UniversalList:
+    [string] GetContentHash() {
+        return "$($this._selectedIndex):$($this._scrollOffset):$($this._filteredData.Count)"
+    }
+    #>
+    [string] GetContentHash() {
+        # Default: no caching - subclasses override to opt-in
+        return ""
+    }
+
+    <#
+    .SYNOPSIS
+    Render with cache support
+    
+    .DESCRIPTION
+    Wrapper around RenderToEngine that checks RenderCache first.
+    If cache hit, replays cached cells directly.
+    If cache miss, renders normally and stores result.
+    
+    Widgets that don't override GetContentHash() will always render (no caching).
+    
+    .PARAMETER engine
+    HybridRenderEngine instance
+    
+    .PARAMETER zIndex
+    Z-layer for this widget (used in cache key and replay)
+    #>
+    [void] RenderWithCache([object]$engine, [int]$zIndex) {
+        # Get content hash - empty means caching disabled for this widget
+        $contentHash = $this.GetContentHash()
+        
+        if ([string]::IsNullOrEmpty($contentHash)) {
+            # Caching disabled - render directly
+            $this.RenderToEngine($engine)
+            return
+        }
+        
+        # Check if RenderCache is available
+        $cacheType = ([System.Management.Automation.PSTypeName]'RenderCache').Type
+        if (-not $cacheType) {
+            # RenderCache not loaded - render directly
+            $this.RenderToEngine($engine)
+            return
+        }
+        
+        # Build cache key
+        $key = [RenderCache]::BuildKey(
+            $this.GetType().Name,
+            $this.Name,
+            $this.X,
+            $this.Y,
+            $this.Width,
+            $this.Height,
+            $zIndex
+        )
+        
+        $cache = [RenderCache]::GetInstance()
+        $cached = $null
+        
+        # Try cache lookup
+        if ($cache.TryGet($key, $contentHash, [ref]$cached)) {
+            # Cache HIT - replay directly to engine
+            $engine.WriteFromCache($cached)
+            return
+        }
+        
+        # Cache MISS - render normally
+        $this.RenderToEngine($engine)
+        
+        # Capture and store (only if engine supports it)
+        if ($engine.PSObject.Methods['CaptureWidget']) {
+            $snapshot = $engine.CaptureWidget($this.X, $this.Y, $this.Width, $this.Height, $zIndex)
+            if ($null -ne $snapshot) {
+                $cache.Store($key, $contentHash, $snapshot)
+            }
+        }
+    }
 }
 
 
 # Classes and functions are exported automatically in PowerShell 5.1+
+

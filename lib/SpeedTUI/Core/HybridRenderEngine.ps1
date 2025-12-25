@@ -1050,4 +1050,134 @@ class HybridRenderEngine {
         $sorted = $children | Sort-Object { $this._regions[$_].X }
         return $sorted
     }
+
+    # -------------------------------------------------------------------------
+    # RENDER CACHE INTEGRATION
+    # -------------------------------------------------------------------------
+
+    <#
+    .SYNOPSIS
+    Capture a widget's rendered cells from the backbuffer
+    
+    .DESCRIPTION
+    Used by RenderCache to snapshot a widget's output after RenderToEngine().
+    Captures cells from the backbuffer within the specified bounds.
+    
+    .PARAMETER x, y
+    Top-left corner of widget
+    
+    .PARAMETER width, height
+    Widget dimensions
+    
+    .PARAMETER zIndex
+    Z-layer the widget was rendered at
+    
+    .OUTPUTS
+    CachedWidget with cell snapshot
+    #>
+    [object] CaptureWidget([int]$x, [int]$y, [int]$width, [int]$height, [int]$zIndex) {
+        # Ensure RenderCache classes are loaded
+        $cachedType = ([System.Management.Automation.PSTypeName]'CachedWidget').Type
+        if (-not $cachedType) {
+            # RenderCache not loaded - return null
+            return $null
+        }
+        
+        # Create cached widget
+        $cached = [CachedWidget]::new($x, $y, $width, $height, $zIndex)
+        
+        # Clamp bounds to screen
+        $startX = [Math]::Max(0, $x)
+        $startY = [Math]::Max(0, $y)
+        $endX = [Math]::Min($this.Width, $x + $width)
+        $endY = [Math]::Min($this.Height, $y + $height)
+        
+        $captureWidth = $endX - $startX
+        $captureHeight = $endY - $startY
+        
+        if ($captureWidth -le 0 -or $captureHeight -le 0) {
+            return $null
+        }
+        
+        # Create cell array [row][col]
+        $cells = [object[]]::new($captureHeight)
+        
+        for ($row = 0; $row -lt $captureHeight; $row++) {
+            $cells[$row] = [object[]]::new($captureWidth)
+            $screenY = $startY + $row
+            
+            for ($col = 0; $col -lt $captureWidth; $col++) {
+                $screenX = $startX + $col
+                
+                # Copy cell from backbuffer
+                $cell = $this._backBuffer.GetCell($screenX, $screenY)
+                
+                # Store as hashtable (lighter than cloning Cell objects)
+                $cells[$row][$col] = @{
+                    Char = $cell.Char
+                    Fg = $cell.ForegroundRgb
+                    Bg = $cell.BackgroundRgb
+                    Attr = $cell.Attributes
+                }
+            }
+        }
+        
+        $cached.Cells = $cells
+        return $cached
+    }
+
+    <#
+    .SYNOPSIS
+    Write cached cells directly to the backbuffer
+    
+    .DESCRIPTION
+    Used by RenderCache to replay a cached widget's cells.
+    Writes cells directly without re-rendering the widget.
+    Respects Z-index from cached data.
+    
+    .PARAMETER cached
+    CachedWidget with cell snapshot
+    #>
+    [void] WriteFromCache([object]$cached) {
+        if ($null -eq $cached -or $null -eq $cached.Cells) {
+            return
+        }
+        
+        # Set Z-index for proper layering
+        $oldZ = $this._currentZ
+        $this._currentZ = $cached.ZIndex
+        
+        $startX = $cached.X
+        $startY = $cached.Y
+        $cells = $cached.Cells
+        
+        for ($row = 0; $row -lt $cells.Count; $row++) {
+            $screenY = $startY + $row
+            
+            if ($screenY -lt 0 -or $screenY -ge $this.Height) { continue }
+            
+            $rowCells = $cells[$row]
+            for ($col = 0; $col -lt $rowCells.Count; $col++) {
+                $screenX = $startX + $col
+                
+                if ($screenX -lt 0 -or $screenX -ge $this.Width) { continue }
+                
+                # Check Z-index (same logic as WriteAt)
+                if ($this._currentZ -ge $this._zBuffer[$screenY][$screenX]) {
+                    $cell = $rowCells[$col]
+                    
+                    # Write to backbuffer
+                    $this._backBuffer.SetCell($screenX, $screenY, $cell.Char, $cell.Fg, $cell.Bg, $cell.Attr)
+                    
+                    # Update Z buffer
+                    $this._zBuffer[$screenY][$screenX] = $this._currentZ
+                    
+                    # Update dirty bounds
+                    $this._UpdateDirtyBounds($screenX, $screenY)
+                }
+            }
+        }
+        
+        $this._currentZ = $oldZ
+    }
 }
