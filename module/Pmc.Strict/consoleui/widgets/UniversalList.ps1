@@ -134,6 +134,14 @@ class CellInfo {
     }
 }
 
+class CachedRow {
+    [string]$Text
+    [int[]]$Foregrounds
+    [int[]]$Backgrounds
+    [byte[]]$Attributes
+    [string]$ContentHash
+}
+
 class UniversalList : PmcWidget {
     # === Public Properties ===
     [string]$Title = "List"                    # List title
@@ -952,7 +960,6 @@ class UniversalList : PmcWidget {
 
             # If beyond data, fill with background (preserve borders!)
             if ($dataIndex -ge $itemCount) {
-                # BORDER FIX: Fill ONLY content area (X+1 to Width-2), not borders
                 $engine.Fill($this.X + 1, $rowY, $this.Width - 2, 1, ' ', $textColor, $rowBg)
                 continue
             }
@@ -961,37 +968,69 @@ class UniversalList : PmcWidget {
             $isSelected = ($dataIndex -eq $this._selectedIndex)
             $isMultiSelected = $this._selectedIndices.Contains($dataIndex)
 
-            # Skip rendering selected row if inline editor is active (editor will render in its place)
-            # But clear the row to avoid visual artifacts
+            # Skip rendering selected row if inline editor is active
             if ($isSelected -and $this._showInlineEditor) {
-                # CRITICAL FIX: Clear ONLY the content area, NOT the borders
-                # Clear from X+2 (after left border+padding) to Width-4 (before right padding+border)
-                if ($global:PmcEnableFlowDebug) {
-                    # Add-Content -Path "/tmp/pmc-universallist-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] CLEARING ROW: dataIndex=$dataIndex rowY=$rowY Y=$($this.Y) selectedIndex=$($this._selectedIndex) fillWidth=$($this.Width)"
-                }
                 $engine.Fill($this.X + 2, $rowY, $this.Width - 4, 1, ' ', $textColor, $rowBg)
                 continue
             }
+
+            # --- ROW CACHING LOGIC ---
+            # Calculate Cache Key
+            # Key depends on: Data Item, Selection State, Column Widths, Theme Generation?
+            # We use a simplified key for now: "DataIndex_IsSelected_IsMulti_Width_Gen"
+            # Ideally we hash the item content too, but that's expensive.
+            # We rely on InvalidateCache() when data changes.
+            $cacheKey = "${dataIndex}_${isSelected}_${isMultiSelected}_$($this.Width)_$($this._cacheGeneration)"
             
-            # Colors for this row
-            $fg = $textColor
-            $bg = $rowBg
-            
-            if ($isSelected) {
-                $fg = $selFg
-                $bg = $selBg
+            $cached = $null
+            if ($this._rowCache.ContainsKey($cacheKey)) {
+                $cached = $this._rowCache[$cacheKey]
+                # Update LRU
+                if ($this._cacheAccessOrder.Contains($cacheKey)) {
+                    [void]$this._cacheAccessOrder.Remove($cacheKey)
+                }
+                [void]$this._cacheAccessOrder.AddLast($cacheKey)
             }
-            elseif ($isMultiSelected) {
-                $fg = $successColor
-                $bg = $rowBg
+
+            if ($null -ne $cached) {
+                # HIT: Write cached row
+                $engine.WriteRow($this.X + 2, $rowY, $cached.Text, $cached.Foregrounds, $cached.Backgrounds, $cached.Attributes)
+                continue
             }
+
+            # MISS: Build Row
+            $rowWidth = $this.Width - 4 # Inside borders
+            $rowText = [System.Text.StringBuilder]::new($rowWidth)
+            $rowFgs = [int[]]::new($rowWidth)
+            $rowBgs = [int[]]::new($rowWidth)
+            $rowAttrs = [byte[]]::new($rowWidth)
             
-            # RENDERING FIX: Fill entire row background FIRST to clear any editor artifacts
-            # This ensures the previous inline editor's background doesn't bleed through
-            $engine.Fill($this.X + 1, $rowY, $this.Width - 2, 1, ' ', $fg, $bg)
+            # Default colors
+            $defFg = $textColor
+            $defBg = $rowBg
+            if ($isSelected) { $defFg = $selFg; $defBg = $selBg }
+            elseif ($isMultiSelected) { $defFg = $successColor; $defBg = $rowBg }
+
+            # Fill defaults
+            for ($k = 0; $k -lt $rowWidth; $k++) {
+                $rowFgs[$k] = $defFg
+                $rowBgs[$k] = $defBg
+                $rowAttrs[$k] = 0
+            }
+
+            # Gradient Support (if not selected)
+            if (-not $isSelected -and -not $isMultiSelected) {
+                $gradFgs = [PmcThemeEngine]::GetInstance().GetGradientIntArray('Foreground.Row', $rowWidth)
+                if ($gradFgs.Count -eq $rowWidth) {
+                    # Copy gradient
+                    for ($k = 0; $k -lt $rowWidth; $k++) {
+                        $rowFgs[$k] = $gradFgs[$k]
+                    }
+                }
+            }
+
+            $currentX = 0
             
-            # Render Cells
-            $cellX = $this.X + 2
             for ($c = 0; $c -lt $this._columns.Count; $c++) {
                 $col = $this._columns[$c]
                 
@@ -1004,40 +1043,74 @@ class UniversalList : PmcWidget {
                     $colWidth = $col.Width
                 }
                 
-                # 4a. Get Value
+                # Get Value & Format
                 $val = $this._GetItemProperty($item, $col.Name)
-                
-                # 4b. Format Value
                 if ($col.ContainsKey('Format') -and $col.Format) {
-                    try {
-                        $val = & $col.Format $item $null
-                    }
-                    catch {
-                        # Format callback failed - use raw value
-                    }
+                    try { $val = & $col.Format $item $null } catch {}
                 }
-                
                 $strVal = $(if ($val -ne $null) { $val.ToString() } else { "" })
                 
-                # 4c. Clip & Pad
-                if ($strVal.Length -gt $colWidth) {
-                    $strVal = $strVal.Substring(0, $colWidth)
-                }
-                
+                # Clip & Pad
+                if ($strVal.Length -gt $colWidth) { $strVal = $strVal.Substring(0, $colWidth) }
                 $strVal = $strVal.PadRight($colWidth)
                 
-                # 4d. Write - Use WriteThemedAt for gradient support on non-selected rows
-                if ($isSelected -or $isMultiSelected) {
-                    # Selected rows use solid colors for readability
-                    $engine.WriteAt($cellX, $rowY, $strVal, $fg, $bg)
-                }
-                else {
-                    # Normal rows use themed gradient (if theme defines it)
-                    $this.WriteThemedAt($engine, $cellX, $rowY, $strVal, 'Foreground.Row', 'Background.Row')
+                # Append to Row
+                [void]$rowText.Append($strVal)
+                
+                # Apply Colors (Gradient support if not selected)
+                if (-not $isSelected -and -not $isMultiSelected) {
+                    # Use Theme Engine for gradient
+                    # We need to map column property to theme property?
+                    # Currently WriteThemedAt uses 'Foreground.Row' and 'Background.Row'
+                    # which are usually solid.
+                    # But if we want gradient, we need PmcThemeEngine to give us the array.
+                    
+                    # For now, we stick to solid colors for performance unless specified.
+                    # If we want per-column coloring (e.g. status), we need logic here.
+                    # But UniversalList usually uses uniform row color.
+                    
+                    # TODO: If we want per-cell formatting (e.g. red text), we need to parse $strVal for ANSI?
+                    # UniversalList Format callbacks might return ANSI!
+                    # If $strVal contains ANSI, we need to parse it into the arrays.
+                    # This is complex.
+                    
+                    # For now, we assume Format returns PLAIN TEXT.
+                    # If Format returns ANSI, this optimization breaks (text length mismatch).
+                    # UniversalList documentation says Format returns string.
+                    # But some users might return ANSI.
+                    # If they do, we need a full ANSI parser here.
+                    
+                    # Simplification: We assume plain text for now.
                 }
                 
-                $cellX += $colWidth
+                $currentX += $colWidth
             }
+
+            # Pad remaining width if any
+            if ($rowText.Length -lt $rowWidth) {
+                [void]$rowText.Append(' ' * ($rowWidth - $rowText.Length))
+            }
+            
+            # Create Cache Entry
+            $newCache = [CachedRow]::new()
+            $newCache.Text = $rowText.ToString()
+            $newCache.Foregrounds = $rowFgs
+            $newCache.Backgrounds = $rowBgs
+            $newCache.Attributes = $rowAttrs
+            
+            # Store
+            $this._rowCache[$cacheKey] = $newCache
+            [void]$this._cacheAccessOrder.AddLast($cacheKey)
+            
+            # Evict if full
+            if ($this._cacheAccessOrder.Count -gt $this._maxCacheSize) {
+                $oldest = $this._cacheAccessOrder.First.Value
+                [void]$this._cacheAccessOrder.RemoveFirst()
+                $this._rowCache.Remove($oldest)
+            }
+            
+            # Write
+            $engine.WriteRow($this.X + 2, $rowY, $newCache.Text, $newCache.Foregrounds, $newCache.Backgrounds, $newCache.Attributes)
         }
         
         # 5. Status Footer (Item Count)

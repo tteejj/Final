@@ -152,6 +152,9 @@ catch {
 
 # Write-PmcTuiLog "Loading SpeedTUI framework..." "INFO"
 try {
+    # Load PmcCache Core Class (Unified Caching) - Required for ThemeEngine and others
+    . "$PSScriptRoot/../Core/PmcCache.ps1"
+    
     . "$PSScriptRoot/SpeedTUILoader.ps1"
     # Write-PmcTuiLog "SpeedTUI framework loaded" "INFO"
 }

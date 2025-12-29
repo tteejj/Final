@@ -29,15 +29,8 @@ class PmcThemeEngine {
     hidden [hashtable]$_properties = @{}
     hidden [hashtable]$_palette = @{}
 
-    # Cache: key = "PropertyName_Width_Generation", value = string[] of ANSI sequences
-    hidden [hashtable]$_gradientCache = @{}
-    hidden [hashtable]$_solidCache = @{}
-
-    # Int Caches
-    hidden [hashtable]$_solidIntCache = @{}
-    hidden [hashtable]$_gradientIntCache = @{}
-
-    hidden [int]$_cacheGeneration = 0
+    # Unified Cache
+    hidden [PmcCache]$_cache
 
     # Singleton access
     static [PmcThemeEngine] GetInstance() {
@@ -48,7 +41,7 @@ class PmcThemeEngine {
     }
 
     PmcThemeEngine() {
-        # Private constructor
+        $this._cache = [PmcCache]::GetInstance()
     }
 
     # Configure engine with full state (called by PmcThemeManager)
@@ -213,55 +206,63 @@ class PmcThemeEngine {
         return -1
     }
 
+    # Public: Get gradient array as Ints (for bulk rendering)
+    [int[]] GetGradientIntArray([string]$propertyName, [int]$width) {
+        if (-not $this._properties.ContainsKey($propertyName)) { return @() }
+        $prop = $this._properties[$propertyName]
+        
+        if ($prop.Type -eq 'Gradient') {
+            return $this._GetGradientIntArrayCached($propertyName, $prop, $width)
+        }
+        
+        return @()
+    }
+
     # Cached solid color ANSI
     hidden [string] _GetSolidAnsiCached([string]$color, [bool]$background) {
-        $cacheKey = "${color}_${background}_$($this._cacheGeneration)"
-
-        if ($this._solidCache.ContainsKey($cacheKey)) {
-            return $this._solidCache[$cacheKey]
-        }
+        $cacheKey = "solid_ansi:${color}_${background}"
+        
+        $cached = $this._cache.Get("Theme", $cacheKey)
+        if ($null -ne $cached) { return $cached }
 
         $ansi = $this._ColorToAnsi($color, $background)
-        $this._solidCache[$cacheKey] = $ansi
+        $this._cache.Set("Theme", $cacheKey, $ansi)
         return $ansi
     }
 
     # Cached solid color Int
     hidden [int] _GetSolidIntCached([string]$color) {
-        $cacheKey = "${color}_$($this._cacheGeneration)"
+        $cacheKey = "solid_int:${color}"
 
-        if ($this._solidIntCache.ContainsKey($cacheKey)) {
-            return $this._solidIntCache[$cacheKey]
-        }
+        $cached = $this._cache.Get("Theme", $cacheKey)
+        if ($null -ne $cached) { return $cached }
 
         $intColor = $this._ColorToInt($color)
-        $this._solidIntCache[$cacheKey] = $intColor
+        $this._cache.Set("Theme", $cacheKey, $intColor)
         return $intColor
     }
 
     # Cached gradient array
     hidden [string[]] _GetGradientArrayCached([string]$propertyName, [hashtable]$gradient, [int]$width, [bool]$background) {
-        $cacheKey = "${propertyName}_${width}_${background}_$($this._cacheGeneration)"
+        $cacheKey = "grad_ansi:${propertyName}_${width}_${background}"
 
-        if ($this._gradientCache.ContainsKey($cacheKey)) {
-            return $this._gradientCache[$cacheKey]
-        }
+        $cached = $this._cache.Get("Theme", $cacheKey)
+        if ($null -ne $cached) { return $cached }
 
         $array = $this._ComputeGradient($gradient, $width, $background)
-        $this._gradientCache[$cacheKey] = $array
+        $this._cache.Set("Theme", $cacheKey, $array)
         return $array
     }
 
     # Cached gradient Int array
     hidden [int[]] _GetGradientIntArrayCached([string]$propertyName, [hashtable]$gradient, [int]$width) {
-        $cacheKey = "${propertyName}_${width}_INT_$($this._cacheGeneration)"
+        $cacheKey = "grad_int:${propertyName}_${width}"
 
-        if ($this._gradientIntCache.ContainsKey($cacheKey)) {
-            return $this._gradientIntCache[$cacheKey]
-        }
+        $cached = $this._cache.Get("Theme", $cacheKey)
+        if ($null -ne $cached) { return $cached }
 
         $array = $this._ComputeGradientInt($gradient, $width)
-        $this._gradientIntCache[$cacheKey] = $array
+        $this._cache.Set("Theme", $cacheKey, $array)
         return $array
     }
 
@@ -414,10 +415,6 @@ class PmcThemeEngine {
 
     # Clear all caches (call on theme reload)
     [void] InvalidateCache() {
-        $this._cacheGeneration++
-        $this._gradientCache.Clear()
-        $this._solidCache.Clear()
-        $this._solidIntCache.Clear()
-        $this._gradientIntCache.Clear()
+        $this._cache.ClearRegion("Theme")
     }
 }

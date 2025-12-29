@@ -341,16 +341,20 @@ class TimeListScreen : StandardListScreen {
             if ($project) {
                 # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Found project '$($timeData.project)'" "DEBUG"
 
+                # CRITICAL FIX: Use Get-SafeProperty for safe cross-type property access
+                $projectId1 = Get-SafeProperty $project 'ID1'
+                $projectId2 = Get-SafeProperty $project 'ID2'
+
                 # If project has ID1, use it (unless user already entered a value)
-                if (-not [string]::IsNullOrWhiteSpace($project.ID1) -and [string]::IsNullOrWhiteSpace($timeData.id1)) {
-                    $timeData.id1 = $project.ID1
-                    # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id1 from project: '$($timeData.id1)'" "DEBUG"
+                if (-not [string]::IsNullOrWhiteSpace($projectId1) -and [string]::IsNullOrWhiteSpace($timeData.id1)) {
+                    $timeData.id1 = $projectId1
+                    Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id1 from project: '$($timeData.id1)'" "DEBUG"
                 }
 
                 # If project has ID2, use it (unless user already entered a value)
-                if (-not [string]::IsNullOrWhiteSpace($project.ID2) -and [string]::IsNullOrWhiteSpace($timeData.id2)) {
-                    $timeData.id2 = $project.ID2
-                    # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id2 from project: '$($timeData.id2)'" "DEBUG"
+                if (-not [string]::IsNullOrWhiteSpace($projectId2) -and [string]::IsNullOrWhiteSpace($timeData.id2)) {
+                    $timeData.id2 = $projectId2
+                    Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id2 from project: '$($timeData.id2)'" "DEBUG"
                 }
             } else {
                 # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Project '$($timeData.project)' not found" "WARNING"

@@ -160,6 +160,35 @@ public class NativeCellBuffer
         }
     }
 
+    public void WriteRow(int x, int y, string text, int[] fg, int[] bg, byte[] attr, int clipMinX, int clipMaxX)
+    {
+        if (y < 0 || y >= _height) return;
+        if (string.IsNullOrEmpty(text)) return;
+
+        int len = text.Length;
+        
+        // Calculate effective bounds
+        int startX = Math.Max(0, x);
+        int endX = Math.Min(x + len, _width);
+        
+        // Apply clipping
+        startX = Math.Max(startX, clipMinX);
+        endX = Math.Min(endX, clipMaxX);
+        
+        if (startX >= endX) return;
+
+        for (int col = startX; col < endX; col++)
+        {
+            int i = col - x;
+            ref NativeCell cell = ref _cells[y, col];
+            cell.Char = text[i];
+            
+            if (fg != null && i < fg.Length) cell.ForegroundRgb = fg[i];
+            if (bg != null && i < bg.Length) cell.BackgroundRgb = bg[i];
+            if (attr != null && i < attr.Length) cell.Attributes = attr[i];
+        }
+    }
+
     /// <summary>
     /// Build minimal ANSI output representing differences between this buffer and another.
     /// This is the CORE of differential rendering - the hottest path.

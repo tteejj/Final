@@ -307,9 +307,25 @@ class PmcWidget : Component {
         $bg = $themeEngine.GetThemeColorInt($bgProp)
         
         if ($gradientInfo) {
-            # Use gradient overload
-            # Add-Content -Path "/tmp/pmc-gradient-debug.log" -Value "  -> GRADIENT WriteAt: Start=$($gradientInfo.Start) End=$($gradientInfo.End)"
-            $renderEngine.WriteAt($x, $y, $text, $gradientInfo.Start, $gradientInfo.End, $bg)
+            # OPTIMIZATION: Use WriteRow with pre-calculated gradient array
+            $width = $this.GetVisibleLength($text)
+            $gradArray = $themeEngine.GetGradientIntArray($fgProp, $width)
+            
+            if ($gradArray.Count -eq $width) {
+                # Construct arrays for WriteRow
+                $bgs = [int[]]::new($width)
+                $attrs = [byte[]]::new($width)
+                
+                # Fill BG (solid)
+                for ($i = 0; $i -lt $width; $i++) { $bgs[$i] = $bg }
+                
+                # Call WriteRow
+                $renderEngine.WriteRow($x, $y, $text, $gradArray, $bgs, $attrs)
+            }
+            else {
+                # Fallback to interpolation if array generation fails
+                $renderEngine.WriteAt($x, $y, $text, $gradientInfo.Start, $gradientInfo.End, $bg)
+            }
         }
         else {
             # Use solid color
@@ -347,8 +363,35 @@ class PmcWidget : Component {
         $bg = $themeEngine.GetThemeColorInt($bgProp)
         
         if ($gradientInfo) {
-            # Use gradient overload
-            $renderEngine.WriteToRegion($regionId, $text, $gradientInfo.Start, $gradientInfo.End, $bg)
+            # OPTIMIZATION: Use WriteRow via WriteToRegion logic?
+            # HybridRenderEngine.WriteToRegion doesn't support WriteRow directly yet.
+            # But we can manually calculate bounds and call WriteRow.
+            
+            $bounds = $renderEngine.GetRegionBounds($regionId)
+            if ($null -ne $bounds) {
+                $width = $this.GetVisibleLength($text)
+                $gradArray = $themeEngine.GetGradientIntArray($fgProp, $width)
+                
+                if ($gradArray.Count -eq $width) {
+                    # Apply region context
+                    $renderEngine.BeginLayer($bounds.ZIndex)
+                    $renderEngine.PushClip($bounds.X, $bounds.Y, $bounds.Width, $bounds.Height)
+                    
+                    # Construct arrays
+                    $bgs = [int[]]::new($width)
+                    $attrs = [byte[]]::new($width)
+                    for ($i = 0; $i -lt $width; $i++) { $bgs[$i] = $bg }
+                    
+                    # WriteRow at region origin
+                    $renderEngine.WriteRow($bounds.X, $bounds.Y, $text, $gradArray, $bgs, $attrs)
+                    
+                    $renderEngine.PopClip()
+                    $renderEngine.EndLayer()
+                }
+                else {
+                    $renderEngine.WriteToRegion($regionId, $text, $gradientInfo.Start, $gradientInfo.End, $bg)
+                }
+            }
         }
         else {
             # Use solid color

@@ -410,6 +410,43 @@ class HybridRenderEngine {
     [void] WriteAt([int]$x, [int]$y, [string]$content, [int]$fg, [int]$bg) {
         if (-not $this._inFrame -or [string]::IsNullOrEmpty($content)) { return }
 
+        # OPTIMIZATION: Use WriteRow if available (Native Speedup)
+        # We need to construct arrays, but for solid colors we can pass null?
+        # NativeCellBuffer.WriteRow signature: (int x, int y, string text, int[] fgs, int[] bgs, byte[] attrs, ...)
+        # If we pass null arrays, NativeCellBuffer might crash or not handle it.
+        # We need to check NativeRenderCore.ps1 implementation.
+        # Assuming we need to fill arrays.
+        
+        # However, creating arrays in PowerShell might be slower than the loop for short strings.
+        # But for long strings (like fills), WriteRow is much faster.
+        # Threshold: 10 chars?
+        
+        if ($content.Length -gt 5) {
+             # Construct arrays
+             $len = $content.Length
+             $fgs = [int[]]::new($len)
+             $bgs = [int[]]::new($len)
+             $attrs = [byte[]]::new($len)
+             
+             # Fill arrays (Array.Fill is fast)
+             # PowerShell 7+ supports [Array]::Fill
+             # Or loop.
+             
+             # Actually, if we modify NativeCellBuffer.WriteRow to accept single int for solid color, that would be best.
+             # But we can't easily change C# signature without recompiling.
+             # So we fill arrays.
+             
+             for ($i = 0; $i -lt $len; $i++) {
+                 $fgs[$i] = $fg
+                 $bgs[$i] = $bg
+                 $attrs[$i] = 0
+             }
+             
+             $this.WriteRow($x, $y, $content, $fgs, $bgs, $attrs)
+             return
+        }
+
+        # Fallback to loop for short strings
         # Apply Offset
         $offsetX = 0
         $offsetY = 0
@@ -503,6 +540,71 @@ class HybridRenderEngine {
                 }
             }
             $currentX++
+        }
+    }
+
+    # Bulk Row Write - Optimized for UniversalList
+    [void] WriteRow([int]$x, [int]$y, [string]$text, [int[]]$fgs, [int[]]$bgs, [byte[]]$attrs) {
+        if (-not $this._inFrame -or [string]::IsNullOrEmpty($text)) { return }
+
+        # Apply Offset
+        $offsetX = 0; $offsetY = 0
+        if ($this._offsetStack.Count -gt 0) {
+            $current = $this._offsetStack.Peek()
+            $offsetX = $current.X; $offsetY = $current.Y
+        }
+        $finalX = $x + $offsetX
+        $finalY = $y + $offsetY
+
+        if ($finalY -lt 0 -or $finalY -ge $this.Height) { return }
+
+        # Calculate Clip
+        $minX = 0; $maxX = $this.Width
+        if ($this._clipStack.Count -gt 0) {
+            $clip = $this._clipStack.Peek()
+            if ($finalY -lt $clip.Y -or $finalY -ge $clip.B) { return } # Row outside clip Y
+            $minX = [Math]::Max(0, $clip.X)
+            $maxX = [Math]::Min($this.Width, $clip.R)
+        }
+
+        # Native Path
+        if ($this._backBuffer.GetType().Name -eq 'NativeCellBuffer') {
+            $this._backBuffer.WriteRow($finalX, $finalY, $text, $fgs, $bgs, $attrs, $minX, $maxX)
+            
+            # Update Z-Buffer & Dirty Bounds
+            $len = $text.Length
+            $startX = [Math]::Max($finalX, $minX)
+            $endX = [Math]::Min($finalX + $len, $maxX)
+            
+            if ($startX -lt $endX) {
+                $zRow = $this._zBuffer[$finalY]
+                $z = $this._currentZ
+                # Bulk update Z-buffer if possible, otherwise loop
+                for ($cx = $startX; $cx -lt $endX; $cx++) {
+                    $zRow[$cx] = $z
+                }
+                $this._UpdateDirtyBounds($startX, $finalY)
+                $this._UpdateDirtyBounds($endX - 1, $finalY)
+            }
+        } else {
+            # Fallback Path (Loop)
+            $len = $text.Length
+            $currentX = $finalX
+            
+            for ($i = 0; $i -lt $len; $i++) {
+                if ($currentX -ge $minX -and $currentX -lt $maxX) {
+                    if ($this._currentZ -ge $this._zBuffer[$finalY][$currentX]) {
+                        $fg = if ($fgs -and $i -lt $fgs.Length) { $fgs[$i] } else { -1 }
+                        $bg = if ($bgs -and $i -lt $bgs.Length) { $bgs[$i] } else { -1 }
+                        $at = if ($attrs -and $i -lt $attrs.Length) { $attrs[$i] } else { 0 }
+                        
+                        $this._backBuffer.SetCell($currentX, $finalY, $text[$i], $fg, $bg, $at)
+                        $this._zBuffer[$finalY][$currentX] = $this._currentZ
+                        $this._UpdateDirtyBounds($currentX, $finalY)
+                    }
+                }
+                $currentX++
+            }
         }
     }
 

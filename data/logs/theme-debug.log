@@ -400,3 +400,24 @@
 [07:12:53.920] [Load-Theme] Looking for: /home/teej/ztest/themes/synthwave.json (exists=True)
 [07:12:53.924] [Load-Theme] JSON loaded. Name='Synthwave' Hex='#ff00ff'
 [07:12:53.952] [Load-Theme] Returning theme with Hex='#ff00ff'
+[20:35:00.874] === THEME SELF-HEAL START ===
+[20:35:00.882] Config path: /home/teej/ztest/config.json
+[20:35:00.895] Config loaded. Active=synthwave, Hex=#ff00ff, hasHex=True
+[20:35:00.899] Hex already present, no repair needed
+[20:35:01.183] [Load-Theme] themeName='synthwave' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[20:35:01.188] [Load-Theme] Looking for: /home/teej/ztest/themes/synthwave.json (exists=True)
+[20:35:01.193] [Load-Theme] JSON loaded. Name='Synthwave' Hex='#ff00ff'
+[20:35:01.222] [Load-Theme] Returning theme with Hex='#ff00ff'
+[20:37:28.345] [Set-ActiveTheme] Starting for themeName='Cyberpunk'
+[20:37:28.349] [Set-ActiveTheme] Set Active='cyberpunk'
+[20:37:28.350] [Load-Theme] themeName='Cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[20:37:28.351] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[20:37:28.353] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[20:37:28.355] [Load-Theme] Returning theme with Hex='#00f3ff'
+[20:37:28.356] [Set-ActiveTheme] Set Hex='#00f3ff'
+[20:37:28.358] [Set-ActiveTheme] Calling Save-PmcConfig...
+[20:37:28.368] [Set-ActiveTheme] Save-PmcConfig returned
+[20:37:28.395] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[20:37:28.397] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[20:37:28.398] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[20:37:28.401] [Load-Theme] Returning theme with Hex='#00f3ff'
