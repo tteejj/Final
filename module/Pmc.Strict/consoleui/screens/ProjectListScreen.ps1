@@ -631,12 +631,9 @@ class ProjectListScreen : StandardListScreen {
         $this.SetStatusMessage("Project ${action}: $projectName", "success")
     }
 
-    # === Input Handling ===
-
+    # Open project folder
     # Open project folder
     [void] OpenProjectFolder([object]$project) {
-        $this.EnsureFilePicker()
-
         if ($null -eq $project) { return }
 
         $folderPath = Get-SafeProperty $project 'ProjFolder'
@@ -653,16 +650,6 @@ class ProjectListScreen : StandardListScreen {
                 $this.SetStatusMessage("Path is not a directory: $folderPath", "error")
                 return
             }
-
-            # HIGH FIX PLS-H4: Check read permissions before accessing
-            try {
-                $null = Get-ChildItem -Path $resolvedPath -ErrorAction Stop | Select-Object -First 1
-            }
-            catch [System.UnauthorizedAccessException] {
-                $this.SetStatusMessage("Access denied to folder: $folderPath", "error")
-                return
-            }
-
             $folderPath = $resolvedPath.Path
         }
         catch {
@@ -671,14 +658,69 @@ class ProjectListScreen : StandardListScreen {
         }
 
         try {
-            # Show integrated file picker to browse the project folder
-            $this.FilePicker = [PmcFilePicker]::new($folderPath, $true)
-            $this.ShowFilePicker = $true
-            $this.SetStatusMessage("Browsing folder: $folderPath", "info")
+            if ($global:IsWindows) {
+                # Start-Process on Windows
+                Start-Process -FilePath $folderPath
+            }
+            else {
+                # xdg-open on Linux
+                & xdg-open $folderPath
+            }
+            $this.SetStatusMessage("Opening folder: $folderPath", "success")
         }
         catch {
-            $this.SetStatusMessage("Failed to open file picker: $($_.Exception.Message)", "error")
+            $this.SetStatusMessage("Failed to open folder: $($_.Exception.Message)", "error")
         }
+    }
+
+    # Helper to open a file from a project property
+    hidden [void] _OpenFile([object]$project, [string]$propertyName) {
+        if ($null -eq $project) { return }
+
+        $fileName = Get-SafeProperty $project $propertyName
+        if ([string]::IsNullOrWhiteSpace($fileName)) {
+            $this.SetStatusMessage("Project has no $propertyName set", "warning")
+            return
+        }
+
+        $folderPath = Get-SafeProperty $project 'ProjFolder'
+        if ([string]::IsNullOrWhiteSpace($folderPath)) {
+            $this.SetStatusMessage("Project has no folder path set", "warning")
+            return
+        }
+
+        $fullPath = Join-Path $folderPath $fileName
+        
+        if (-not (Test-Path $fullPath)) {
+            $this.SetStatusMessage("File not found: $fileName", "error")
+            return
+        }
+
+        try {
+            $p = New-Object System.Diagnostics.ProcessStartInfo
+            $p.FileName = $fullPath
+            $p.UseShellExecute = $true
+            [System.Diagnostics.Process]::Start($p) | Out-Null
+            $this.SetStatusMessage("Opened: $fileName", "success")
+        }
+        catch {
+            $this.SetStatusMessage("Failed to open file: $($_.Exception.Message)", "error")
+        }
+    }
+
+    # Open T2020 file
+    [void] OpenT2020([object]$project) {
+        $this._OpenFile($project, 'T2020')
+    }
+
+    # Open CAA file
+    [void] OpenCAA([object]$project) {
+        $this._OpenFile($project, 'CAAName')
+    }
+
+    # Open Request file
+    [void] OpenRequest([object]$project) {
+        $this._OpenFile($project, 'RequestName')
     }
 
     # Called by StandardListScreen when inline editing is cancelled
@@ -699,15 +741,10 @@ class ProjectListScreen : StandardListScreen {
                 }.GetNewClosure()
             },
             @{ Key = 'v'; Label = 'View'; Callback = {
-                    # Write-PmcTuiLog "!!! GetCustomActions V KEY CALLBACK FIRED !!!" "INFO"
                     $selected = $self.List.GetSelectedItem()
-                    # Write-PmcTuiLog "Selected: $($selected | ConvertTo-Json -Compress)" "INFO"
                     if ($selected) {
                         $projectName = Get-SafeProperty $selected 'name'
-                        # Write-PmcTuiLog "Project name: $projectName" "INFO"
-                        # Use container to resolve screen (avoids type resolution at parse time)
                         if (-not $global:PmcContainer.IsRegistered('ProjectInfoScreenV4')) {
-                            # Write-PmcTuiLog "Registering ProjectInfoScreenV4" "INFO"
                             $screenPath = "$PSScriptRoot/ProjectInfoScreenV4.ps1"
                             $global:PmcContainer.Register('ProjectInfoScreenV4', {
                                     param($c)
@@ -715,16 +752,9 @@ class ProjectListScreen : StandardListScreen {
                                     return New-Object ProjectInfoScreenV4 -ArgumentList $c
                                 }.GetNewClosure(), $false)
                         }
-                        # Write-PmcTuiLog "Resolving screen" "INFO"
                         $screen = $global:PmcContainer.Resolve('ProjectInfoScreenV4')
-                        # Write-PmcTuiLog "Setting project: $projectName" "INFO"
                         $screen.SetProject($projectName)
-                        # Write-PmcTuiLog "Pushing screen" "INFO"
                         $global:PmcApp.PushScreen($screen)
-                        # Write-PmcTuiLog "Screen pushed!" "INFO"
-                    }
-                    else {
-                        # Write-PmcTuiLog "NO SELECTED ITEM" "ERROR"
                     }
                 }.GetNewClosure()
             },
@@ -739,7 +769,7 @@ class ProjectListScreen : StandardListScreen {
                     try {
                         if ($PSVersionTable.PSVersion.Major -ge 6) {
                             # PowerShell Core - check for Excel COM object on Windows
-                            if ($IsWindows) {
+                            if ($global:IsWindows) {
                                 $excelAvailable = $null -ne (Get-Command excel.exe -ErrorAction SilentlyContinue)
                             }
                         }
@@ -758,6 +788,21 @@ class ProjectListScreen : StandardListScreen {
                     else {
                         $self.SetStatusMessage("Excel is not installed or not available", "error")
                     }
+                }.GetNewClosure()
+            },
+            @{ Key = 't'; Label = 'T2020'; Callback = {
+                    $selected = $self.List.GetSelectedItem()
+                    $self.OpenT2020($selected)
+                }.GetNewClosure()
+            },
+            @{ Key = 'c'; Label = 'CAA'; Callback = {
+                    $selected = $self.List.GetSelectedItem()
+                    $self.OpenCAA($selected)
+                }.GetNewClosure()
+            },
+            @{ Key = 'q'; Label = 'Request'; Callback = {
+                    $selected = $self.List.GetSelectedItem()
+                    $self.OpenRequest($selected)
                 }.GetNewClosure()
             }
         )
@@ -845,6 +890,27 @@ class ProjectListScreen : StandardListScreen {
                 $this.ImportFromExcel()
                 return $true
             }
+            
+            # Custom key: T = Open T2020
+            if ($keyInfo.KeyChar -eq 't' -or $keyInfo.KeyChar -eq 'T') {
+                $selected = $this.List.GetSelectedItem()
+                $this.OpenT2020($selected)
+                return $true
+            }
+
+            # Custom key: C = Open CAA
+            if ($keyInfo.KeyChar -eq 'c' -or $keyInfo.KeyChar -eq 'C') {
+                $selected = $this.List.GetSelectedItem()
+                $this.OpenCAA($selected)
+                return $true
+            }
+
+            # Custom key: Q = Open Request
+            if ($keyInfo.KeyChar -eq 'q' -or $keyInfo.KeyChar -eq 'Q') {
+                $selected = $this.List.GetSelectedItem()
+                $this.OpenRequest($selected)
+                return $true
+            }
         }  # End of editor/filter check
 
         # If file picker is showing, route input to it
@@ -872,9 +938,3 @@ class ProjectListScreen : StandardListScreen {
         return $false
     }
 }
-
-# REMAINING FIXES DOCUMENTED (non-critical):
-# HIGH: PLS-H1 (line 335), H2 (line 604), H4 (line 349), H5 (line 494) - String.Length null checks
-# MEDIUM: 9 issues - Error handling, validation improvements
-# LOW: 11 issues - Code quality, constants, DRY principle
-# All CRITICAL safety issues FIXED (7/7)

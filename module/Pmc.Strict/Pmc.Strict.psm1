@@ -629,6 +629,9 @@ try {
     # Loading UniversalDisplay.ps1...
     . $PSScriptRoot/src/UniversalDisplay.ps1
     # [OK] UniversalDisplay.ps1 loaded
+} catch {
+    Write-Host "  [ERROR] UniversalDisplay.ps1 failed: $_" -ForegroundColor Red
+    throw
 }
 
 try {

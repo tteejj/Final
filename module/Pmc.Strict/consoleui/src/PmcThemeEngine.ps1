@@ -272,10 +272,10 @@ class PmcThemeEngine {
         
         # Support both Stops array and simple Start/End
         $stops = $null
-        if ($gradient.Stops) {
+        if ($gradient.PSObject.Properties['Stops'] -and $gradient.Stops) {
             $stops = $gradient.Stops | Sort-Object Position
         }
-        elseif ($gradient.Start -and $gradient.End) {
+        elseif ($gradient.PSObject.Properties['Start'] -and $gradient.Start -and $gradient.PSObject.Properties['End'] -and $gradient.End) {
             $stops = @(
                 @{ Position = 0.0; Color = $gradient.Start }
                 @{ Position = 1.0; Color = $gradient.End }
@@ -301,10 +301,10 @@ class PmcThemeEngine {
         
         # Support both Stops array and simple Start/End
         $stops = $null
-        if ($gradient.Stops) {
+        if ($gradient.PSObject.Properties['Stops'] -and $gradient.Stops) {
             $stops = $gradient.Stops | Sort-Object Position
         }
-        elseif ($gradient.Start -and $gradient.End) {
+        elseif ($gradient.PSObject.Properties['Start'] -and $gradient.Start -and $gradient.PSObject.Properties['End'] -and $gradient.End) {
             $stops = @(
                 @{ Position = 0.0; Color = $gradient.Start }
                 @{ Position = 1.0; Color = $gradient.End }

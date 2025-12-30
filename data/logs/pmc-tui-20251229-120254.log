@@ -1,0 +1,118 @@
+[2025-12-29 12:02:57.117] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-29 12:02:57.120] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-29 12:02:57.121] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-29 12:02:57.122] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-29 12:02:57.123] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-29 12:02:57.124] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-29 12:02:57.125] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-29 12:02:57.126] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-29 12:02:57.127] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-29 12:02:57.128] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-29 12:02:57.129] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2025-12-29 12:02:57.129] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-29 12:02:57.130] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2025-12-29 12:02:57.131] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2025-12-29 12:02:57.132] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-29 12:02:57.149] ServiceContainer: Resolving 'Application'...
+[2025-12-29 12:02:57.150] ServiceContainer: Resolving 'Theme'...
+[2025-12-29 12:02:57.378] ServiceContainer: Resolved 'Theme' successfully
+[2025-12-29 12:02:57.453] ServiceContainer: Resolving 'ThemeManager'...
+[2025-12-29 12:02:57.455] ServiceContainer: Resolved 'ThemeManager' successfully
+[2025-12-29 12:02:57.466] ServiceContainer: Resolved 'Application' successfully
+[2025-12-29 12:02:57.467] ServiceContainer: Resolving 'MenuRegistry'...
+[2025-12-29 12:02:57.476] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2025-12-29 12:02:57.490] MenuRegistry: Loaded manifest with 16 entries
+[2025-12-29 12:02:57.510] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2025-12-29 12:02:57.511] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-29 12:02:57.527] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-29 12:02:57.529] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2025-12-29 12:02:57.530] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-29 12:02:57.531] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-29 12:02:57.532] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2025-12-29 12:02:57.533] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-29 12:02:57.534] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-29 12:02:57.536] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2025-12-29 12:02:57.536] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-29 12:02:57.537] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-29 12:02:57.539] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2025-12-29 12:02:57.539] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-29 12:02:57.541] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-29 12:02:57.542] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2025-12-29 12:02:57.542] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-29 12:02:57.544] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-29 12:02:57.545] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2025-12-29 12:02:57.550] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2025-12-29 12:02:57.551] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2025-12-29 12:02:57.552] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2025-12-29 12:02:57.553] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-29 12:02:57.554] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-29 12:02:57.555] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2025-12-29 12:02:57.556] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-29 12:02:57.557] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-29 12:02:57.558] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2025-12-29 12:02:57.559] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-29 12:02:57.560] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-29 12:02:57.561] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2025-12-29 12:02:57.562] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-29 12:02:57.563] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-29 12:02:57.564] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2025-12-29 12:02:57.565] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-29 12:02:57.566] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-29 12:02:57.567] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2025-12-29 12:02:57.568] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-29 12:02:57.569] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-29 12:02:57.570] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2025-12-29 12:02:57.571] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-29 12:02:57.572] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-29 12:02:57.573] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2025-12-29 12:02:57.574] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2025-12-29 12:02:57.575] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2025-12-29 12:02:57.576] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2025-12-29 12:02:57.577] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-29 12:02:57.578] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-29 12:02:57.579] ServiceContainer: Resolving 'TaskListScreen'...
+[2025-12-29 12:02:57.581] ServiceContainer: Resolving 'TaskStore'...
+[2025-12-29 12:02:57.933] ServiceContainer: Resolved 'TaskStore' successfully
+[2025-12-29 12:02:58.478] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2025-12-29 12:02:58.493] _PopulateMenusFromRegistry: Menu 'Tools' has 6 items from registry (array)
+[2025-12-29 12:02:58.495] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2025-12-29 12:02:58.497] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2025-12-29 12:02:58.500] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2025-12-29 12:02:58.502] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2025-12-29 12:02:58.503] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2025-12-29 12:02:59.270] [ERROR] Widget render error: Header render failed: The property 'Stops' cannot be found on this object. Verify that the property exists.
+[2025-12-29 12:02:59.270] [ERROR] Stack: at _ComputeGradientInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 304
+at _GetGradientIntArrayCached, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 264
+at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 215
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcHeader.ps1: line 205
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 402
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-29 12:02:59.271] [ERROR] TargetObject: 
+[2025-12-29 12:02:59.273] [ERROR] InvocationInfo:         if ($gradient.Stops) {
+
+[2025-12-29 12:02:59.732] [ERROR] Widget render error: Footer render failed: The property 'Stops' cannot be found on this object. Verify that the property exists.
+[2025-12-29 12:02:59.733] [ERROR] Stack: at _ComputeGradientInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 304
+at _GetGradientIntArrayCached, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 264
+at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 215
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcFooter.ps1: line 172
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 445
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-29 12:02:59.733] [ERROR] TargetObject: 
+[2025-12-29 12:02:59.734] [ERROR] InvocationInfo:         if ($gradient.Stops) {
+
