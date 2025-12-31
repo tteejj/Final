@@ -76,6 +76,22 @@ class ProjectListScreen : StandardListScreen {
         try {
             $this._ConfigureListActions()
             # Write-PmcTuiLog "!!! _ConfigureListActions completed successfully !!!" "INFO"
+
+            # Explicitly add actions to footer for ProjectListScreen
+            if ($this.Footer) {
+                if ($this.AllowAdd) { $this.Footer.AddShortcut('a', 'Add') }
+                if ($this.AllowEdit) { $this.Footer.AddShortcut('e', 'Edit') }
+                if ($this.AllowDelete) { $this.Footer.AddShortcut('d', 'Delete') }
+                
+                # Add custom actions
+                $this.Footer.AddShortcut('t', 'T2020')
+                $this.Footer.AddShortcut('c', 'CAA')
+                $this.Footer.AddShortcut('q', 'Request')
+                $this.Footer.AddShortcut('o', 'Open Folder')
+                $this.Footer.AddShortcut('r', 'Archive')
+                $this.Footer.AddShortcut('v', 'View')
+                $this.Footer.AddShortcut('i', 'Import')
+            }
         }
         catch {
             # Write-PmcTuiLog "!!! ERROR in _ConfigureListActions: $_" "ERROR"
