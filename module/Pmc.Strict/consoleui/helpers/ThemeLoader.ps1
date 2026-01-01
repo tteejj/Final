@@ -56,21 +56,40 @@ function Load-Theme {
         $debugLog = Join-Path (Split-Path (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent) -Parent) 'data/logs/theme-debug.log'
     } catch { }
     
-    $themesDir = Join-Path $global:PmcAppRoot 'themes'
+    # Handle null PmcAppRoot
+    $themesDir = $null
+    if ($global:PmcAppRoot -and (Test-Path -Path $global:PmcAppRoot -ErrorAction SilentlyContinue)) {
+        $themesDir = Join-Path $global:PmcAppRoot 'themes'
+    }
     if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Load-Theme] themeName='$themeName' PmcAppRoot='$($global:PmcAppRoot)' themesDir='$themesDir'" -ErrorAction SilentlyContinue }
     
-    # Fallback search if global root fails
-    if (-not (Test-Path $themesDir)) {
+    # Fallback search if global root empty or themes dir doesn't exist
+    if (-not $themesDir -or -not (Test-Path $themesDir -ErrorAction SilentlyContinue)) {
         if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Load-Theme] themesDir not found, searching fallbacks..." -ErrorAction SilentlyContinue }
+        
+        # Build search paths - include explicit module-relative paths for when PSScriptRoot is empty
+        $moduleRoot = Split-Path (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent) -Parent
         $searchPaths = @(
             $PSScriptRoot,
             (Split-Path $PSScriptRoot -Parent),
             (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent),
-            (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent)
-        )
+            (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent),
+            $moduleRoot
+        ) | Where-Object { $_ }  # Filter out nulls
+        
+        # If all are empty, try to derive from this script's location
+        if ($searchPaths.Count -eq 0) {
+            # Hardcoded fallback: navigate from module structure
+            $searchPaths = @(
+                (Get-Location).Path,
+                (Join-Path (Get-Location).Path 'themes')
+            )
+        }
+        
         foreach ($path in $searchPaths) {
-            if ($path -and (Test-Path (Join-Path $path "themes"))) {
-                $themesDir = Join-Path $path "themes"
+            $testPath = Join-Path $path "themes"
+            if ($path -and (Test-Path $testPath -ErrorAction SilentlyContinue)) {
+                $themesDir = $testPath
                 if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Load-Theme] Found themes at fallback: $themesDir" -ErrorAction SilentlyContinue }
                 break
             }
@@ -189,12 +208,55 @@ function Set-ActiveTheme {
     } catch { }
     if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Set-ActiveTheme] Starting for themeName='$themeName'" -ErrorAction SilentlyContinue }
     
-    $cfg = Get-PmcConfig
-    if (-not $cfg) { $cfg = @{} }
-    if (-not $cfg.Display) { $cfg.Display = @{} }
-    if (-not $cfg.Display.Theme) { $cfg.Display.Theme = @{} }
+    # Read config.json directly - don't rely on Get-PmcConfig which may not be in scope
+    $configPath = $null
+    if ($global:PmcAppRoot) {
+        $configPath = Join-Path $global:PmcAppRoot 'config.json'
+    } else {
+        # Fallback: derive from script location
+        $configPath = Join-Path (Split-Path (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent) -Parent) 'config.json'
+    }
     
-    $cfg.Display.Theme.Active = $themeName.ToLower()
+    if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Set-ActiveTheme] Reading config from: $configPath" -ErrorAction SilentlyContinue }
+    
+    $cfg = @{}
+    if (Test-Path $configPath) {
+        try {
+            $json = Get-Content -Path $configPath -Raw -Encoding UTF8
+            $cfgObj = $json | ConvertFrom-Json
+            # Convert PSCustomObject to hashtable recursively
+            $cfg = @{}
+            foreach ($prop in $cfgObj.PSObject.Properties) {
+                $cfg[$prop.Name] = $prop.Value
+            }
+        } catch {
+            if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Set-ActiveTheme] ERROR reading config: $_" -ErrorAction SilentlyContinue }
+        }
+    }
+    
+    # Ensure Display exists and is a hashtable
+    if (-not $cfg.ContainsKey('Display') -or -not $cfg.Display) { 
+        $cfg['Display'] = @{} 
+    } elseif ($cfg.Display -isnot [hashtable]) {
+        $displayHash = @{}
+        foreach ($prop in $cfg.Display.PSObject.Properties) {
+            $displayHash[$prop.Name] = $prop.Value
+        }
+        $cfg['Display'] = $displayHash
+    }
+    
+    # Ensure Theme exists and is a hashtable
+    if (-not $cfg.Display.ContainsKey('Theme') -or -not $cfg.Display.Theme) { 
+        $cfg.Display['Theme'] = @{} 
+    } elseif ($cfg.Display.Theme -isnot [hashtable]) {
+        $themeHash = @{}
+        foreach ($prop in $cfg.Display.Theme.PSObject.Properties) {
+            $themeHash[$prop.Name] = $prop.Value
+        }
+        $cfg.Display['Theme'] = $themeHash
+    }
+    
+    $cfg.Display.Theme['Active'] = $themeName.ToLower()
     if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Set-ActiveTheme] Set Active='$($cfg.Display.Theme.Active)'" -ErrorAction SilentlyContinue }
     
     # Load the theme to get its hex color
@@ -207,15 +269,25 @@ function Set-ActiveTheme {
         if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Set-ActiveTheme] Theme has no Hex property!" -ErrorAction SilentlyContinue }
         throw "Set-ActiveTheme: Theme '$themeName' loaded but has no Hex property defined"
     }
-    $cfg.Display.Theme.Hex = $theme.Hex
+    $cfg.Display.Theme['Hex'] = $theme.Hex
     if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Set-ActiveTheme] Set Hex='$($cfg.Display.Theme.Hex)'" -ErrorAction SilentlyContinue }
     
-    # Remove old Properties - no longer needed in config (STRICT MODE FIX: safe check)
-    if ($cfg.Display.Theme.PSObject.Properties['Properties']) { $cfg.Display.Theme.PSObject.Properties.Remove('Properties') }
+    # Remove old Properties - no longer needed in config
+    try {
+        if ($cfg.Display.Theme -is [hashtable]) {
+            $cfg.Display.Theme.Remove('Properties')
+        }
+    } catch { }
     
-    if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Set-ActiveTheme] Calling Save-PmcConfig..." -ErrorAction SilentlyContinue }
-    Save-PmcConfig $cfg
-    if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Set-ActiveTheme] Save-PmcConfig returned" -ErrorAction SilentlyContinue }
+    # Write config.json directly
+    if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Set-ActiveTheme] Writing config to: $configPath" -ErrorAction SilentlyContinue }
+    try {
+        $cfg | ConvertTo-Json -Depth 10 | Set-Content -Path $configPath -Encoding UTF8
+        if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Set-ActiveTheme] Config saved successfully" -ErrorAction SilentlyContinue }
+    } catch {
+        if ($debugLog) { Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Set-ActiveTheme] ERROR writing config: $_" -ErrorAction SilentlyContinue }
+        throw
+    }
 }
 
 

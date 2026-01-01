@@ -3,133 +3,62 @@
 
 using namespace System.Collections.Generic
 
-Set-StrictMode -Version Latest
+Set-StrictMode -Off
 
-<#
-.SYNOPSIS
-Unified theme manager bridging PMC's theme system with SpeedTUI
+$script:_PmcThemeManagerInstance = $null
 
-.DESCRIPTION
-PmcThemeManager provides a single interface for theme management:
-- Wraps PMC's existing theme system (single hex → full palette)
-- Integrates with SpeedTUI's theme manager (if available)
-- Provides unified color role API
-- Handles theme switching and synchronization
-- Singleton pattern for global access
-
-.EXAMPLE
-$theme = [PmcThemeManager]::GetInstance()
-$color = $theme.GetColor('Primary')
-$ansi = $theme.GetAnsiSequence('Primary', $false)
-#>
 class PmcThemeManager {
-    # === Singleton Instance ===
-    hidden static [PmcThemeManager]$_instance = $null
+    [hashtable] $_ansiCache
+    [hashtable] $_colorCache
+    [object] $PmcTheme
 
-    # === PMC Theme Data ===
-    [hashtable]$PmcTheme           # From Get-PmcState -Section 'Display' -Key 'Theme'
-    [hashtable]$StyleTokens        # From Get-PmcState -Section 'Display' -Key 'Styles'
-    [hashtable]$ColorPalette       # From Get-PmcColorPalette()
+    static [PmcThemeManager] GetInstance() {
+        if ($null -eq $script:_PmcThemeManagerInstance) {
+            $script:_PmcThemeManagerInstance = [PmcThemeManager]::new()
+        }
+        return $script:_PmcThemeManagerInstance
+    }
 
-    # === SpeedTUI Integration ===
-    [object]$SpeedTUITheme = $null # SpeedTUI ThemeManager (if available)
+    static [void] Reset() {
+        $script:_PmcThemeManagerInstance = $null
+    }
 
-    # === Cached Data ===
-    hidden [hashtable]$_colorCache = @{}
-    hidden [hashtable]$_ansiCache = @{}
-
-    # === Singleton Constructor ===
-    hidden PmcThemeManager() {
+    PmcThemeManager() {
+        $this._ansiCache = @{}
+        $this._colorCache = @{}
         $this._Initialize()
     }
 
-    <#
-    .SYNOPSIS
-    Get singleton instance of PmcThemeManager
-    #>
-    static [PmcThemeManager] GetInstance() {
-        if ($null -eq [PmcThemeManager]::_instance) {
-            [PmcThemeManager]::_instance = [PmcThemeManager]::new()
+    [void] _Initialize() {
+        # Load theme from PMC state
+        $this.PmcTheme = Get-PmcState -Section 'Display' -Key 'Theme'
+        
+        # FIX: Convert Properties to Hashtable if it's a PSCustomObject
+        # This prevents "Method invocation failed... does not contain a method named 'ContainsKey'"
+        if ($this.PmcTheme -and $this.PmcTheme.Properties -is [System.Management.Automation.PSCustomObject]) {
+            $propsHash = @{}
+            foreach ($prop in $this.PmcTheme.Properties.PSObject.Properties) {
+                $propsHash[$prop.Name] = $prop.Value
+            }
+            # Update PmcTheme to use the hashtable for Properties
+            $this.PmcTheme | Add-Member -MemberType NoteProperty -Name 'Properties' -Value $propsHash -Force
         }
-        return [PmcThemeManager]::_instance
-    }
 
-    # === Initialization ===
-
-    <#
-    .SYNOPSIS
-    Initialize theme system by loading PMC theme state
-    #>
-    hidden [void] _Initialize() {
+        # Configure Engine if available
         try {
-            if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
-                Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeManager] _Initialize started"
-            }
-
-            # Load PMC theme from state (for StyleTokens)
-            $displayState = Get-PmcState -Section 'Display'
-            if ($displayState) {
-                $this.PmcTheme = $displayState.Theme
-                $this.StyleTokens = $displayState.Styles
-            }
-
-            # Load color palette
-            $this.ColorPalette = Get-PmcColorPalette
-
-            # Initialize caches
-            $this._colorCache = @{}
-            $this._ansiCache = @{}
-
-            # ONE PATH: Load theme from file
-            $theme = Get-ActiveTheme
-            if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
-                Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeManager] Active theme name: '$($theme.Name)' Hex: '$($theme.Hex)' Props: $($theme.Properties.Count)"
-            }
-
-            if ($theme -and $theme.Properties) {
-                [PmcThemeEngine]::GetInstance().Configure($theme.Properties, $this.ColorPalette)
-            } else {
-                # No theme file found - this should not happen
-                if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
-                    Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeManager] ERROR: No theme loaded"
+            if ($this.PmcTheme -and $this.PmcTheme.Properties) {
+                $engine = [PmcThemeEngine]::GetInstance()
+                if ($engine) {
+                    $engine.Configure($this.PmcTheme.Properties)
                 }
             }
         } catch {
-            if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
-                Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeManager] _Initialize ERROR: $_"
-            }
+            # Engine might not be available
         }
     }
 
-
-    <#
-    .SYNOPSIS
-    Try to initialize SpeedTUI theme manager if available
-    #>
-    hidden [void] _InitializeSpeedTUITheme() {
-        # SpeedTUI integration would go here if needed
-        # For now, PMC theme is primary source of truth
-        $this.SpeedTUITheme = $null
-    }
-
-
-    # === Public API ===
-
-    <#
-    .SYNOPSIS
-    Get hex color string for a specific role
-
-    .PARAMETER role
-    Color role: Primary, Border, Text, Muted, Error, Warning, Success, Bright, Header, etc.
-
-    .OUTPUTS
-    Hex color string (e.g., "#33aaff") or empty string if not found
-
-    .EXAMPLE
-    $color = $theme.GetColor('Primary')  # Returns "#33aaff"
-    #>
     [string] GetColor([string]$role) {
-        # Check cache first
+        # Check cache
         if ($this._colorCache.ContainsKey($role)) {
             return $this._colorCache[$role]
         }
@@ -139,48 +68,53 @@ class PmcThemeManager {
         return $color
     }
 
-    <#
-    .SYNOPSIS
-    Resolve color from theme system
-    #>
     hidden [string] _ResolveColor([string]$role) {
-        # Try style tokens first (includes Fg property)
-        if ($this.StyleTokens -and $this.StyleTokens.ContainsKey($role)) {
-            $style = $this.StyleTokens[$role]
-            if ($style.Fg) {
-                return $style.Fg
-            }
+        if (-not $this.PmcTheme -or -not $this.PmcTheme.Properties) {
+            return '#ffffff'
         }
 
-        # Try color palette (RGB object → hex)
-        if ($this.ColorPalette -and $this.ColorPalette.ContainsKey($role)) {
-            $rgb = $this.ColorPalette[$role]
-            if ($rgb.R -ne $null -and $rgb.G -ne $null -and $rgb.B -ne $null) {
-                return ("#{0:X2}{1:X2}{2:X2}" -f $rgb.R, $rgb.G, $rgb.B)
-            }
+        $props = $this.PmcTheme.Properties
+
+        # Direct property match
+        if ($props.ContainsKey($role)) {
+            return $this._ExtractColor($props[$role])
         }
 
-        # STRICT THEME ENFORCEMENT: No fallbacks.
-        throw "Theme Property Missing: '$role'"
+        # Foreground prefix match
+        $fgRole = "Foreground.$role"
+        if ($props.ContainsKey($fgRole)) {
+            return $this._ExtractColor($props[$fgRole])
+        }
+        
+        # Semantic mapping
+        switch ($role) {
+            'Border' { if ($props.ContainsKey('Border.Widget')) { return $this._ExtractColor($props['Border.Widget']) } }
+            'Header' { if ($props.ContainsKey('Foreground.Header')) { return $this._ExtractColor($props['Foreground.Header']) } }
+            'Title'  { if ($props.ContainsKey('Foreground.Title')) { return $this._ExtractColor($props['Foreground.Title']) } }
+            'Text'   { if ($props.ContainsKey('Foreground.Text')) { return $this._ExtractColor($props['Foreground.Text']) } }
+            'Body'   { if ($props.ContainsKey('Foreground.Body')) { return $this._ExtractColor($props['Foreground.Body']) } }
+            'Muted'  { if ($props.ContainsKey('Foreground.Muted')) { return $this._ExtractColor($props['Foreground.Muted']) } }
+            'Label'  { if ($props.ContainsKey('Foreground.Label')) { return $this._ExtractColor($props['Foreground.Label']) } }
+            'Error'  { if ($props.ContainsKey('Foreground.Error')) { return $this._ExtractColor($props['Foreground.Error']) } }
+            'Success'{ if ($props.ContainsKey('Foreground.Success')) { return $this._ExtractColor($props['Foreground.Success']) } }
+            'Warning'{ if ($props.ContainsKey('Foreground.Warning')) { return $this._ExtractColor($props['Foreground.Warning']) } }
+            'Info'   { if ($props.ContainsKey('Foreground.Info')) { return $this._ExtractColor($props['Foreground.Info']) } }
+            'Highlight'{ if ($props.ContainsKey('Foreground.Highlight')) { return $this._ExtractColor($props['Foreground.Highlight']) } }
+            'Primary' { if ($props.ContainsKey('Foreground.Primary')) { return $this._ExtractColor($props['Foreground.Primary']) } }
+        }
+
+        return '#ffffff'
     }
 
-    <#
-    .SYNOPSIS
-    Get ANSI escape sequence for a color role
+    hidden [string] _ExtractColor($propValue) {
+        if ($propValue -is [string]) { return $propValue }
+        if ($propValue -is [hashtable] -or $propValue -is [pscustomobject]) {
+            if ($propValue.Color) { return $propValue.Color }
+            if ($propValue.Start) { return $propValue.Start } # Gradient fallback
+        }
+        return '#ffffff'
+    }
 
-    .PARAMETER role
-    Color role
-
-    .PARAMETER background
-    If true, returns background color sequence; otherwise foreground
-
-    .OUTPUTS
-    ANSI escape sequence (e.g., "`e[38;2;51;170;255m")
-
-    .EXAMPLE
-    $ansi = $theme.GetAnsiSequence('Primary', $false)  # Foreground
-    $ansiBg = $theme.GetAnsiSequence('Primary', $true)  # Background
-    #>
     [string] GetAnsiSequence([string]$role, [bool]$background = $false) {
         $cacheKey = "${role}_${background}"
 
@@ -201,10 +135,6 @@ class PmcThemeManager {
         return $ansi
     }
 
-    <#
-    .SYNOPSIS
-    Convert hex color to ANSI sequence
-    #>
     hidden [string] _HexToAnsi([string]$hex, [bool]$background) {
         # Parse hex
         $hex = $hex.TrimStart('#')
@@ -225,52 +155,13 @@ class PmcThemeManager {
         }
     }
 
-    <#
-    .SYNOPSIS
-    Get style object with foreground, background, and formatting
-
-    .PARAMETER role
-    Style role from StyleTokens (Title, Header, Body, Editing, Selected, etc.)
-
-    .OUTPUTS
-    Hashtable with Fg, Bg, Bold properties
-
-    .EXAMPLE
-    $style = $theme.GetStyle('Selected')
-    # Returns @{ Bg = '#33aaff'; Fg = 'White' }
-    #>
     [hashtable] GetStyle([string]$role) {
-        if ($this.StyleTokens -and $this.StyleTokens.ContainsKey($role)) {
-            return $this.StyleTokens[$role]
-        }
-
         # Fallback: construct basic style from color
         return @{
             Fg = $this.GetColor($role)
         }
     }
 
-    <#
-    .SYNOPSIS
-    Get complete theme hashtable with ANSI sequences for dialogs/widgets
-
-    .DESCRIPTION
-    Returns a standard hashtable with common theme elements as ANSI sequences.
-    Useful for passing to dialogs, widgets, and other components that need
-    multiple theme colors.
-
-    .OUTPUTS
-    Hashtable with ANSI sequences for common theme roles
-
-    .EXAMPLE
-    $theme = $themeManager.GetTheme()
-    # Returns @{
-    #   Primary = "`e[38;2;51;170;255m"
-    #   PrimaryBg = "`e[48;2;51;170;255m"
-    #   Text = "`e[38;2;204;204;204m"
-    #   ...
-    # }
-    #>
     [hashtable] GetTheme() {
         return @{
             # Primary colors
@@ -307,15 +198,6 @@ class PmcThemeManager {
         }
     }
 
-    # === Theme Management ===
-
-    <#
-    .SYNOPSIS
-    Reload theme from PMC state system
-
-    .DESCRIPTION
-    Call this after theme changes to refresh cached data
-    #>
     [void] Reload() {
         # Clear caches
         $this._colorCache.Clear()
@@ -325,16 +207,6 @@ class PmcThemeManager {
         $this._Initialize()
     }
 
-    <#
-    .SYNOPSIS
-    Set theme hex color and regenerate palette
-
-    .PARAMETER hex
-    New theme hex color (e.g., "#33aaff")
-
-    .DESCRIPTION
-    Updates PMC theme, saves config, and regenerates palette
-    #>
     [void] SetTheme([string]$hex) {
         if ([string]::IsNullOrWhiteSpace($hex)) {
             throw "Theme hex cannot be empty"
@@ -374,13 +246,6 @@ class PmcThemeManager {
         }
     }
 
-    <#
-    .SYNOPSIS
-    Get current theme hex color
-
-    .OUTPUTS
-    Hex color string (e.g., "#33aaff")
-    #>
     [string] GetCurrentThemeHex() {
         if ($this.PmcTheme -and $this.PmcTheme.Hex) {
             return $this.PmcTheme.Hex
@@ -388,18 +253,6 @@ class PmcThemeManager {
         return '#33aaff'
     }
 
-    # === Utility Methods ===
-
-    <#
-    .SYNOPSIS
-    Get RGB components from hex color
-
-    .PARAMETER hex
-    Hex color string (with or without #)
-
-    .OUTPUTS
-    Hashtable with R, G, B properties (0-255)
-    #>
     [hashtable] HexToRgb([string]$hex) {
         $hex = $hex.TrimStart('#')
         if ($hex.Length -ne 6) {

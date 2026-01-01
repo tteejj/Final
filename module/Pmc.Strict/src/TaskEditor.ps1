@@ -55,7 +55,7 @@ class PmcTaskEditor {
 
         # Calculate screen regions
         $this.StartRow = 3
-        $this.EndRow = [PmcTerminalService]::GetHeight() - 8
+        $this.EndRow = [Console]::WindowHeight - 8
     }
 
     [void] Show() {
@@ -72,199 +72,8 @@ class PmcTaskEditor {
 
         } catch {
             Write-PmcStyled -Style 'Error' -Text ("Editor error: {0}" -f $_)
-        } finally {
-            # Restore normal screen
-            [Console]::Clear()
+            Start-Sleep -Seconds 2
         }
-    }
-
-    [void] DrawHeader() {
-        $palette = Get-PmcColorPalette
-        $headerColor = Get-PmcColorSequence $palette.Header
-        $resetColor = [PmcVT]::Reset()
-
-        [Console]::SetCursorPosition(0, 0)
-        $title = "PMC Task Editor - Task #$($this.TaskId)"
-        $separator = "═" * [PmcTerminalService]::GetWidth()
-
-        Write-Host "$headerColor$title$resetColor"
-        Write-Host "$headerColor$separator$resetColor"
-        Write-Host ""
-    }
-
-    [void] DrawTaskContent() {
-        $startRowPos = $this.StartRow
-
-        # Mode indicator
-        $modeIndicator = switch ($this.Mode) {
-            'description' { "[F1] Description Editor" }
-            'metadata' { "[F2] Metadata Editor" }
-            'preview' { "[F3] Preview Mode" }
-        }
-
-        [Console]::SetCursorPosition(0, $startRowPos - 1)
-        Write-PmcStyled -Style 'Warning' -Text $modeIndicator
-
-        switch ($this.Mode) {
-            'description' { $this.DrawDescriptionEditor($startRowPos) }
-            'metadata' { $this.DrawMetadataEditor($startRowPos) }
-            'preview' { $this.DrawPreviewMode($startRowPos) }
-        }
-    }
-
-    [void] DrawDescriptionEditor([int]$startRow) {
-        $palette = Get-PmcColorPalette
-        $textColor = Get-PmcColorSequence $palette.Text
-        $resetColor = [PmcVT]::Reset()
-        $cursorColor = Get-PmcColorSequence $palette.Cursor
-
-        # Clear content area
-        for ($i = $startRow; $i -le $this.EndRow; $i++) {
-            [Console]::SetCursorPosition(0, $i)
-            Write-Host (' ' * [PmcTerminalService]::GetWidth()) -NoNewline
-        }
-
-        # Draw description lines
-        $maxLines = $this.EndRow - $startRow + 1
-        $visibleLines = [Math]::Min($this.DescriptionLines.Count, $maxLines)
-
-        for ($i = 0; $i -lt $visibleLines; $i++) {
-            [Console]::SetCursorPosition(0, $startRow + $i)
-
-            $line = $this.DescriptionLines[$i]
-            $lineNumber = ($i + 1).ToString().PadLeft(3)
-
-            if ($i -eq $this.CurrentLine) {
-                # Highlight current line
-                Write-Host "$cursorColor$lineNumber │ $line$resetColor" -NoNewline
-            } else {
-                Write-Host "$textColor$lineNumber │ $line$resetColor" -NoNewline
-            }
-        }
-
-        # Show cursor position
-        if ($this.CurrentLine -lt $visibleLines) {
-            $cursorRow = $startRow + $this.CurrentLine
-            $cursorCol = 6 + $this.CursorColumn  # Account for line number prefix
-            [Console]::SetCursorPosition($cursorCol, $cursorRow)
-        }
-    }
-
-    [void] DrawMetadataEditor([int]$startRow) {
-        $palette = Get-PmcColorPalette
-        $labelColor = Get-PmcColorSequence $palette.Label
-        $valueColor = Get-PmcColorSequence $palette.Text
-        $resetColor = [PmcVT]::Reset()
-
-        # Clear area
-        for ($i = $startRow; $i -le $this.EndRow; $i++) {
-            [Console]::SetCursorPosition(0, $i)
-            Write-Host (' ' * [PmcTerminalService]::GetWidth()) -NoNewline
-        }
-
-        $row = $startRow
-
-        # Project field
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$labelColor  Project:$resetColor $valueColor$($this.Project)$resetColor"
-
-        # Priority field
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$labelColor Priority:$resetColor $valueColor$($this.Priority)$resetColor"
-
-        # Due date field
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$labelColor Due Date:$resetColor $valueColor$($this.DueDate)$resetColor"
-
-        # Tags field
-        [Console]::SetCursorPosition(0, $row++)
-        $tagsStr = $(if ($this.Tags.Count -gt 0) { $this.Tags -join ", " } else { "(none)" })
-        Write-Host "$labelColor     Tags:$resetColor $valueColor$tagsStr$resetColor"
-
-        $row++
-
-        # Metadata editing instructions
-        [Console]::SetCursorPosition(0, $row)
-        Write-PmcStyled -Style 'Muted' -Text "Press Enter to edit a field, Tab/Shift+Tab to navigate"
-    }
-
-    [void] DrawPreviewMode([int]$startRow) {
-        $palette = Get-PmcColorPalette
-        $headerColor = Get-PmcColorSequence $palette.Header
-        $textColor = Get-PmcColorSequence $palette.Text
-        $metaColor = Get-PmcColorSequence $palette.Muted
-        $resetColor = [PmcVT]::Reset()
-
-        # Clear area
-        for ($i = $startRow; $i -le $this.EndRow; $i++) {
-            [Console]::SetCursorPosition(0, $i)
-            Write-Host (' ' * [PmcTerminalService]::GetWidth()) -NoNewline
-        }
-
-        $row = $startRow
-
-        # Task header
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$headerColor╭─ Task Preview ─────────────────────────$resetColor"
-
-        # Description
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$textColor│ Description:$resetColor"
-
-        foreach ($line in $this.DescriptionLines) {
-            [Console]::SetCursorPosition(0, $row++)
-            Write-Host "$textColor│   $line$resetColor"
-        }
-
-        # Metadata
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$textColor│$resetColor"
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$textColor│ Metadata:$resetColor"
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$metaColor│   Project: $($this.Project)$resetColor"
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$metaColor│   Priority: $($this.Priority)$resetColor"
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$metaColor│   Due: $($this.DueDate)$resetColor"
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$metaColor│   Tags: $($this.Tags -join ', ')$resetColor"
-
-        [Console]::SetCursorPosition(0, $row++)
-        Write-Host "$headerColor╰────────────────────────────────────────$resetColor"
-    }
-
-    [void] DrawFooter() {
-        $footerRow = [PmcTerminalService]::GetHeight() - 4
-        $palette = Get-PmcColorPalette
-        $footerColor = Get-PmcColorSequence $palette.Footer
-        $resetColor = [PmcVT]::Reset()
-
-        [Console]::SetCursorPosition(0, $footerRow)
-        Write-Host "$footerColor$('─' * [PmcTerminalService]::GetWidth())$resetColor"
-
-        [Console]::SetCursorPosition(0, $footerRow + 1)
-        Write-Host "$footerColor F1:Description  F2:Metadata  F3:Preview  Ctrl+S:Save  Esc:Cancel$resetColor"
-    }
-
-    [void] DrawStatusLine() {
-        $statusRow = [PmcTerminalService]::GetHeight() - 2
-        $palette = Get-PmcColorPalette
-        $statusColor = Get-PmcColorSequence $palette.Status
-        $resetColor = [PmcVT]::Reset()
-
-        [Console]::SetCursorPosition(0, $statusRow)
-
-        $status = switch ($this.Mode) {
-            'description' { "Line $($this.CurrentLine + 1), Column $($this.CursorColumn + 1)" }
-            'metadata' { "Metadata Editor - Use Enter to edit fields" }
-            'preview' { "Preview Mode - Read-only view" }
-        }
-
-        $hasChanges = $this.HasUnsavedChanges()
-        $changeIndicator = $(if ($hasChanges) { " [Modified]" } else { "" })
-
-        Write-Host "$statusColor$status$changeIndicator$resetColor" -NoNewline
     }
 
     [bool] HasUnsavedChanges() {
@@ -399,7 +208,7 @@ class PmcTaskEditor {
             return $true
         }
 
-        [Console]::SetCursorPosition(0, [PmcTerminalService]::GetHeight() - 1)
+        [Console]::SetCursorPosition(0, [Console]::WindowHeight - 1)
         Write-PmcStyled -Style 'Warning' -Text "Unsaved changes! Exit anyway? (y/N): " -NoNewline
 
         $response = [Console]::ReadKey($true)
@@ -422,15 +231,79 @@ class PmcTaskEditor {
 
             Invoke-PmcCommand $updateCmd
 
-            [Console]::SetCursorPosition(0, [PmcTerminalService]::GetHeight() - 1)
+            [Console]::SetCursorPosition(0, [Console]::WindowHeight - 1)
             Write-PmcStyled -Style 'Success' -Text "[OK] Task saved successfully!"
             Start-Sleep -Seconds 1
 
         } catch {
-            [Console]::SetCursorPosition(0, [PmcTerminalService]::GetHeight() - 1)
+            [Console]::SetCursorPosition(0, [Console]::WindowHeight - 1)
             Write-PmcStyled -Style 'Error' -Text ("[ERROR] Error saving task: {0}" -f $_)
             Start-Sleep -Seconds 2
         }
+    }
+
+    [void] DrawHeader() {
+        [Console]::SetCursorPosition(0, 0)
+        Show-PmcHeader -Title "TASK EDITOR: $($this.TaskId)" -Icon '📝'
+    }
+
+    [void] DrawTaskContent() {
+        # Clear content area
+        for ($i = $this.StartRow; $i -le $this.EndRow; $i++) {
+            [Console]::SetCursorPosition(0, $i)
+            [Console]::Write(" " * [Console]::WindowWidth)
+        }
+
+        # Draw description
+        for ($i = 0; $i -lt $this.DescriptionLines.Count; $i++) {
+            $row = $this.StartRow + $i
+            if ($row -gt $this.EndRow) { break }
+            
+            [Console]::SetCursorPosition(0, $row)
+            if ($i -eq $this.CurrentLine -and $this.Mode -eq 'description') {
+                # Highlight current line
+                Write-PmcStyled -Style 'Editing' -Text $this.DescriptionLines[$i] -NoNewline
+            } else {
+                Write-PmcStyled -Style 'Body' -Text $this.DescriptionLines[$i] -NoNewline
+            }
+        }
+        
+        # Draw cursor if in description mode
+        if ($this.Mode -eq 'description') {
+            $cursorRow = $this.StartRow + $this.CurrentLine
+            if ($cursorRow -le $this.EndRow) {
+                [Console]::SetCursorPosition($this.CursorColumn, $cursorRow)
+            }
+        }
+    }
+
+    [void] DrawFooter() {
+        $y = [Console]::WindowHeight - 3
+        [Console]::SetCursorPosition(0, $y)
+        Show-PmcSeparator
+        
+        [Console]::SetCursorPosition(0, $y + 1)
+        Write-PmcStyled -Style 'Muted' -Text "F1:Desc F2:Meta F3:Preview ^S:Save Esc:Exit" -NoNewline
+    }
+
+    [void] DrawStatusLine() {
+        $y = [Console]::WindowHeight - 1
+        # Clear status line area
+        [Console]::SetCursorPosition(0, $y)
+        [Console]::Write(" " * [Console]::WindowWidth)
+        
+        [Console]::SetCursorPosition(0, $y)
+        
+        $status = switch ($this.Mode) {
+            'description' { "Line $($this.CurrentLine + 1), Col $($this.CursorColumn + 1)" }
+            'metadata' { "Metadata Editor - Use Enter to edit fields" }
+            'preview' { "Preview Mode - Read-only view" }
+        }
+        
+        $hasChanges = $this.HasUnsavedChanges()
+        $changeIndicator = $(if ($hasChanges) { " [Modified]" } else { "" })
+        
+        Write-PmcStyled -Style 'Status' -Text "$status$changeIndicator" -NoNewline
     }
 }
 

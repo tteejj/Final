@@ -1,0 +1,467 @@
+[2025-12-31 11:11:50.668] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-31 11:11:50.685] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-31 11:11:50.688] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-31 11:11:50.689] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-31 11:11:50.691] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-31 11:11:50.693] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-31 11:11:50.695] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-31 11:11:50.697] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-31 11:11:50.698] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-31 11:11:50.701] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-31 11:11:50.703] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2025-12-31 11:11:50.704] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-31 11:11:50.706] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2025-12-31 11:11:50.708] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2025-12-31 11:11:50.709] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-31 11:11:50.731] ServiceContainer: Resolving 'Application'...
+[2025-12-31 11:11:50.735] ServiceContainer: Resolving 'Theme'...
+[2025-12-31 11:11:50.861] ServiceContainer: Resolved 'Theme' successfully
+[2025-12-31 11:11:50.975] ServiceContainer: Resolving 'ThemeManager'...
+[2025-12-31 11:11:50.978] ServiceContainer: Resolved 'ThemeManager' successfully
+[2025-12-31 11:11:50.997] ServiceContainer: Resolved 'Application' successfully
+[2025-12-31 11:11:50.999] ServiceContainer: Resolving 'MenuRegistry'...
+[2025-12-31 11:11:51.014] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2025-12-31 11:11:51.038] MenuRegistry: Loaded manifest with 16 entries
+[2025-12-31 11:11:51.069] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2025-12-31 11:11:51.071] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-31 11:11:51.093] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2025-12-31 11:11:51.096] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2025-12-31 11:11:51.097] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-31 11:11:51.099] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2025-12-31 11:11:51.101] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2025-12-31 11:11:51.102] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-31 11:11:51.104] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2025-12-31 11:11:51.106] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2025-12-31 11:11:51.108] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-31 11:11:51.109] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2025-12-31 11:11:51.111] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2025-12-31 11:11:51.112] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2025-12-31 11:11:51.123] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2025-12-31 11:11:51.125] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2025-12-31 11:11:51.126] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-31 11:11:51.128] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2025-12-31 11:11:51.129] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2025-12-31 11:11:51.130] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-31 11:11:51.132] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2025-12-31 11:11:51.134] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2025-12-31 11:11:51.135] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-31 11:11:51.137] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2025-12-31 11:11:51.139] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2025-12-31 11:11:51.140] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-31 11:11:51.142] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2025-12-31 11:11:51.144] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2025-12-31 11:11:51.145] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-31 11:11:51.147] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2025-12-31 11:11:51.149] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2025-12-31 11:11:51.150] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-31 11:11:51.151] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2025-12-31 11:11:51.153] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2025-12-31 11:11:51.154] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-31 11:11:51.156] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2025-12-31 11:11:51.158] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2025-12-31 11:11:51.159] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2025-12-31 11:11:51.161] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2025-12-31 11:11:51.163] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2025-12-31 11:11:51.164] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-31 11:11:51.166] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2025-12-31 11:11:51.167] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2025-12-31 11:11:51.168] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-31 11:11:51.170] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2025-12-31 11:11:51.172] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2025-12-31 11:11:51.173] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-31 11:11:51.175] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2025-12-31 11:11:51.177] ServiceContainer: Resolving 'TaskListScreen'...
+[2025-12-31 11:11:51.179] ServiceContainer: Resolving 'TaskStore'...
+[2025-12-31 11:11:51.703] ServiceContainer: Resolved 'TaskStore' successfully
+[2025-12-31 11:11:52.688] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2025-12-31 11:11:52.714] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2025-12-31 11:11:52.718] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2025-12-31 11:11:52.723] _PopulateMenusFromRegistry: Menu 'Tools' has 6 items from registry (array)
+[2025-12-31 11:11:52.728] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2025-12-31 11:11:52.731] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2025-12-31 11:11:52.734] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2025-12-31 11:11:53.914] [ERROR] Widget render error: Header render failed: Cannot convert argument "gradient", with value: "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}", for "_GetGradientIntArrayCached" to type "System.Collections.Hashtable": "Cannot convert value "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}" to type "System.Collections.Hashtable". Error: "Cannot convert the "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}" value of type "System.Management.Automation.PSCustomObject" to type "System.Collections.Hashtable".""
+[2025-12-31 11:11:53.916] [ERROR] Stack: at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 196
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcHeader.ps1: line 205
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 402
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:53.917] [ERROR] TargetObject: 
+[2025-12-31 11:11:53.921] [ERROR] InvocationInfo:             return $this._GetGradientIntArrayCached($propertyName, $prop, $width)
+
+[2025-12-31 11:11:54.106] [ERROR] Widget render error: RenderContent render failed: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:54.107] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1169
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1903
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 414
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:54.108] [ERROR] TargetObject: ContainsKey
+[2025-12-31 11:11:54.109] [ERROR] InvocationInfo:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:54.139] [ERROR] Widget render error: UniversalList render failed: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:54.140] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 433
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:54.142] [ERROR] TargetObject: ContainsKey
+[2025-12-31 11:11:54.143] [ERROR] InvocationInfo:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:54.332] [ERROR] Widget render error: Footer render failed: Cannot convert argument "gradient", with value: "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}", for "_GetGradientIntArrayCached" to type "System.Collections.Hashtable": "Cannot convert value "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}" to type "System.Collections.Hashtable". Error: "Cannot convert the "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}" value of type "System.Management.Automation.PSCustomObject" to type "System.Collections.Hashtable".""
+[2025-12-31 11:11:54.333] [ERROR] Stack: at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 196
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcFooter.ps1: line 172
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 445
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:54.334] [ERROR] TargetObject: 
+[2025-12-31 11:11:54.335] [ERROR] InvocationInfo:             return $this._GetGradientIntArrayCached($propertyName, $prop, $width)
+
+[2025-12-31 11:11:54.534] [ERROR] Render error: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:54.535] [ERROR] Location: /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:113
+[2025-12-31 11:11:54.536] [ERROR] Line:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:54.538] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 251
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:57.729] [ERROR] Widget render error: Header render failed: Cannot convert argument "gradient", with value: "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}", for "_GetGradientIntArrayCached" to type "System.Collections.Hashtable": "Cannot convert value "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}" to type "System.Collections.Hashtable". Error: "Cannot convert the "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}" value of type "System.Management.Automation.PSCustomObject" to type "System.Collections.Hashtable".""
+[2025-12-31 11:11:57.731] [ERROR] Stack: at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 196
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcHeader.ps1: line 205
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 402
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:57.732] [ERROR] TargetObject: 
+[2025-12-31 11:11:57.734] [ERROR] InvocationInfo:             return $this._GetGradientIntArrayCached($propertyName, $prop, $width)
+
+[2025-12-31 11:11:57.744] [ERROR] Widget render error: RenderContent render failed: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:57.746] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1169
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1903
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 414
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:57.747] [ERROR] TargetObject: ContainsKey
+[2025-12-31 11:11:57.748] [ERROR] InvocationInfo:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:57.758] [ERROR] Widget render error: UniversalList render failed: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:57.759] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 433
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:57.760] [ERROR] TargetObject: ContainsKey
+[2025-12-31 11:11:57.762] [ERROR] InvocationInfo:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:57.791] [ERROR] Widget render error: Footer render failed: Cannot convert argument "gradient", with value: "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}", for "_GetGradientIntArrayCached" to type "System.Collections.Hashtable": "Cannot convert value "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}" to type "System.Collections.Hashtable". Error: "Cannot convert the "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}" value of type "System.Management.Automation.PSCustomObject" to type "System.Collections.Hashtable".""
+[2025-12-31 11:11:57.793] [ERROR] Stack: at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 196
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcFooter.ps1: line 172
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 445
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:57.795] [ERROR] TargetObject: 
+[2025-12-31 11:11:57.797] [ERROR] InvocationInfo:             return $this._GetGradientIntArrayCached($propertyName, $prop, $width)
+
+[2025-12-31 11:11:57.829] [ERROR] Render error: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:57.832] [ERROR] Location: /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:113
+[2025-12-31 11:11:57.834] [ERROR] Line:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:57.837] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 251
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:57.870] [ERROR] Widget render error: Header render failed: Cannot convert argument "gradient", with value: "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}", for "_GetGradientIntArrayCached" to type "System.Collections.Hashtable": "Cannot convert value "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}" to type "System.Collections.Hashtable". Error: "Cannot convert the "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}" value of type "System.Management.Automation.PSCustomObject" to type "System.Collections.Hashtable".""
+[2025-12-31 11:11:57.871] [ERROR] Stack: at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 196
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcHeader.ps1: line 205
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 402
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:57.872] [ERROR] TargetObject: 
+[2025-12-31 11:11:57.873] [ERROR] InvocationInfo:             return $this._GetGradientIntArrayCached($propertyName, $prop, $width)
+
+[2025-12-31 11:11:57.882] [ERROR] Widget render error: RenderContent render failed: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:57.883] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1169
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1903
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 414
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:57.884] [ERROR] TargetObject: ContainsKey
+[2025-12-31 11:11:57.885] [ERROR] InvocationInfo:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:57.894] [ERROR] Widget render error: UniversalList render failed: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:57.895] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 433
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:57.896] [ERROR] TargetObject: ContainsKey
+[2025-12-31 11:11:57.897] [ERROR] InvocationInfo:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:57.912] [ERROR] Widget render error: Footer render failed: Cannot convert argument "gradient", with value: "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}", for "_GetGradientIntArrayCached" to type "System.Collections.Hashtable": "Cannot convert value "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}" to type "System.Collections.Hashtable". Error: "Cannot convert the "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}" value of type "System.Management.Automation.PSCustomObject" to type "System.Collections.Hashtable".""
+[2025-12-31 11:11:57.919] [ERROR] Stack: at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 196
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcFooter.ps1: line 172
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 445
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:57.920] [ERROR] TargetObject: 
+[2025-12-31 11:11:57.921] [ERROR] InvocationInfo:             return $this._GetGradientIntArrayCached($propertyName, $prop, $width)
+
+[2025-12-31 11:11:57.942] [ERROR] Render error: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:57.944] [ERROR] Location: /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:113
+[2025-12-31 11:11:57.946] [ERROR] Line:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:57.947] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 251
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:58.004] [ERROR] Widget render error: Header render failed: Cannot convert argument "gradient", with value: "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}", for "_GetGradientIntArrayCached" to type "System.Collections.Hashtable": "Cannot convert value "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}" to type "System.Collections.Hashtable". Error: "Cannot convert the "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}" value of type "System.Management.Automation.PSCustomObject" to type "System.Collections.Hashtable".""
+[2025-12-31 11:11:58.005] [ERROR] Stack: at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 196
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcHeader.ps1: line 205
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 402
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:58.006] [ERROR] TargetObject: 
+[2025-12-31 11:11:58.007] [ERROR] InvocationInfo:             return $this._GetGradientIntArrayCached($propertyName, $prop, $width)
+
+[2025-12-31 11:11:58.016] [ERROR] Widget render error: RenderContent render failed: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:58.017] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1169
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1903
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 414
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:58.018] [ERROR] TargetObject: ContainsKey
+[2025-12-31 11:11:58.019] [ERROR] InvocationInfo:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:58.027] [ERROR] Widget render error: UniversalList render failed: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:58.028] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 433
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:58.029] [ERROR] TargetObject: ContainsKey
+[2025-12-31 11:11:58.030] [ERROR] InvocationInfo:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:58.045] [ERROR] Widget render error: Footer render failed: Cannot convert argument "gradient", with value: "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}", for "_GetGradientIntArrayCached" to type "System.Collections.Hashtable": "Cannot convert value "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}" to type "System.Collections.Hashtable". Error: "Cannot convert the "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}" value of type "System.Management.Automation.PSCustomObject" to type "System.Collections.Hashtable".""
+[2025-12-31 11:11:58.047] [ERROR] Stack: at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 196
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcFooter.ps1: line 172
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 445
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:58.048] [ERROR] TargetObject: 
+[2025-12-31 11:11:58.050] [ERROR] InvocationInfo:             return $this._GetGradientIntArrayCached($propertyName, $prop, $width)
+
+[2025-12-31 11:11:58.064] [ERROR] Render error: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:58.066] [ERROR] Location: /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:113
+[2025-12-31 11:11:58.067] [ERROR] Line:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:58.067] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 251
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:58.087] [ERROR] Widget render error: Header render failed: Cannot convert argument "gradient", with value: "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}", for "_GetGradientIntArrayCached" to type "System.Collections.Hashtable": "Cannot convert value "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}" to type "System.Collections.Hashtable". Error: "Cannot convert the "@{Type=Gradient; Start=#ff00ff; End=#00f3ff}" value of type "System.Management.Automation.PSCustomObject" to type "System.Collections.Hashtable".""
+[2025-12-31 11:11:58.089] [ERROR] Stack: at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 196
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcHeader.ps1: line 205
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 402
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:58.090] [ERROR] TargetObject: 
+[2025-12-31 11:11:58.091] [ERROR] InvocationInfo:             return $this._GetGradientIntArrayCached($propertyName, $prop, $width)
+
+[2025-12-31 11:11:58.101] [ERROR] Widget render error: RenderContent render failed: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:58.102] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1169
+at RenderContentToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 1903
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 414
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:58.103] [ERROR] TargetObject: ContainsKey
+[2025-12-31 11:11:58.104] [ERROR] InvocationInfo:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:58.112] [ERROR] Widget render error: UniversalList render failed: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:58.113] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 433
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:58.114] [ERROR] TargetObject: ContainsKey
+[2025-12-31 11:11:58.115] [ERROR] InvocationInfo:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:58.133] [ERROR] Widget render error: Footer render failed: Cannot convert argument "gradient", with value: "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}", for "_GetGradientIntArrayCached" to type "System.Collections.Hashtable": "Cannot convert value "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}" to type "System.Collections.Hashtable". Error: "Cannot convert the "@{Type=Gradient; Start=#00f3ff; End=#bf00ff}" value of type "System.Management.Automation.PSCustomObject" to type "System.Collections.Hashtable".""
+[2025-12-31 11:11:58.135] [ERROR] Stack: at GetGradientIntArray, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 196
+at WriteThemedToRegion, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 373
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcFooter.ps1: line 172
+at RenderWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 868
+at _RenderWidgetWithCache, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 489
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 445
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 246
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 11:11:58.136] [ERROR] TargetObject: 
+[2025-12-31 11:11:58.137] [ERROR] InvocationInfo:             return $this._GetGradientIntArrayCached($propertyName, $prop, $width)
+
+[2025-12-31 11:11:58.153] [ERROR] Render error: Method invocation failed because [System.Management.Automation.PSCustomObject] does not contain a method named 'ContainsKey'.
+[2025-12-31 11:11:58.154] [ERROR] Location: /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:113
+[2025-12-31 11:11:58.156] [ERROR] Line:             if ($prop.ContainsKey('Start') -and $prop.Start) {
+
+[2025-12-31 11:11:58.157] [ERROR] Stack: at GetThemeColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 113
+at GetThemedColorInt, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcWidget.ps1: line 240
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 878
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 251
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2152
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 461
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37

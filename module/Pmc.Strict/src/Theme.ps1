@@ -19,79 +19,63 @@ function Initialize-PmcThemeSystem {
     try {
         # Normalize theme from config
         $cfg = Get-PmcConfig
-        $theme = @{ PaletteName='default'; Hex='#33aaff'; TrueColor=$true; HighContrast=$false; ColorBlindMode='none' }
+        $theme = @{ PaletteName='default'; Hex='#33aaff'; TrueColor=$true; HighContrast=$false; ColorBlindMode='none'; Properties=@{} }
         
-        try {
-                    if ($cfg.Display -and $cfg.Display.Theme) {
-                        if ($cfg.Display.Theme.Hex) { 
-                            $theme.Hex = ($cfg.Display.Theme.Hex.ToString()) 
-                        } elseif ($cfg.Display.Theme.Active) {
-                            if ((Test-Path variable:global:PmcDebug) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
-                                Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [Theme] Initialize-PmcThemeSystem: Hex missing, attempting recovery for '$($cfg.Display.Theme.Active)'"
-                            }
-                            # RECOVERY: Hex missing but Active theme set (e.g. from broken config)
-                            # Attempt to load hex from theme file directly
-                            try {
-                                $themeName = $cfg.Display.Theme.Active
-                                
-                                # Search for themes directory
-                                $searchPaths = @(
-                                    $global:PmcAppRoot,
-                                    $PSScriptRoot,
-                                    (Split-Path $PSScriptRoot -Parent),
-                                    (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent),
-                                    (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent)
-                                )
-                                
-                                $jsonPath = $null
-                                foreach ($path in $searchPaths) {
-                                    if ($path -and (Test-Path (Join-Path $path "themes/$($themeName).json"))) {
-                                        $jsonPath = Join-Path $path "themes/$($themeName).json"
-                                        break
-                                    }
-                                }
-            
-                                if ($jsonPath -and (Test-Path $jsonPath)) {
-                                    $json = Get-Content $jsonPath -Raw | ConvertFrom-Json
-                                    if ($json.Hex) { 
-                                        $theme.Hex = $json.Hex 
-                                        if ((Test-Path variable:global:PmcDebug) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
-                                            Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [Theme] Initialize-PmcThemeSystem: Recovered Hex '$($theme.Hex)' from $jsonPath"
-                                        }
-                                    }
-                                }
-                            } catch { }
-                        }
-                        if ($cfg.Display.Theme.Properties) { $theme.Properties = $cfg.Display.Theme.Properties }
-                        if ($cfg.Display.Theme.Enabled -ne $null) { } # reserved for future toggles
-                    }            if ($cfg.Display -and $cfg.Display.Icons -and $cfg.Display.Icons.Mode) {
-                Set-PmcState -Section 'Display' -Key 'Icons' -Value @{ Mode = ($cfg.Display.Icons.Mode.ToString()) }
+        # STRICT LOADING: Only load from JSON files
+        if ($cfg.Display -and $cfg.Display.Theme -and $cfg.Display.Theme.Active) {
+            try {
+                $themeName = $cfg.Display.Theme.Active
+                
+                # Search for themes directory
+                $searchPaths = @(
+                    $(if (Test-Path variable:global:PmcAppRoot) { $global:PmcAppRoot } else { $null }),
+                    $PSScriptRoot,
+                    (Split-Path $PSScriptRoot -Parent),
+                    (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent),
+                    (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent)
+                )
+                
+                $jsonPath = $null
+                foreach ($path in $searchPaths) {
+                    if (-not $path) { continue }
+                    $testPath = Join-Path $path "themes/$($themeName).json"
+                    if (Test-Path $testPath) {
+                        $jsonPath = $testPath
+                        break
+                    }
+                }
+
+                if ($jsonPath -and (Test-Path $jsonPath)) {
+                    $json = Get-Content $jsonPath -Raw | ConvertFrom-Json
+                    
+                    # Use Hex from file
+                    if ($json.Hex) { 
+                        $theme.Hex = $json.Hex 
+                    }
+                    
+                    # Load Properties from file
+                    if ($json.Properties) {
+                        $theme.Properties = $json.Properties
+                    }
+                    
+                    $theme.PaletteName = $themeName
+                } else {
+                    Write-Host "[Theme] ERROR: Theme file '$themeName.json' not found." -ForegroundColor Red
+                }
+            } catch { 
+                Write-PmcDebug -Level 1 -Category 'Theme' -Message "Failed to load theme file: $_"
             }
-        } catch { }
+        }
+
+        # 3. Apply Config Overrides (if any exist in future)
+        if ($cfg.Display -and $cfg.Display.Icons -and $cfg.Display.Icons.Mode) {
+            Set-PmcState -Section 'Display' -Key 'Icons' -Value @{ Mode = ($cfg.Display.Icons.Mode.ToString()) }
+        }
+
+        # 4. Save to State
         Set-PmcState -Section 'Display' -Key 'Theme' -Value $theme
 
-        # Compute style tokens from theme hex
-        $palette = Get-PmcColorPalette
-        $styles = @{
-            Title    = @{ Fg=$theme.Hex }
-            Header   = @{ Fg=$theme.Hex }
-            Body     = @{ Fg=(Format-Hex-RGB $palette.Text) }
-            Muted    = @{ Fg=(Format-Hex-RGB $palette.Muted) }
-            Success  = @{ Fg=(Format-Hex-RGB $palette.Success) }
-            Warning  = @{ Fg=(Format-Hex-RGB $palette.Warning) }
-            Error    = @{ Fg=(Format-Hex-RGB $palette.Error) }
-            Info     = @{ Fg=$theme.Hex }
-            Prompt   = @{ Fg=(Format-Hex-RGB $palette.Muted) }
-            Border   = @{ Fg=(Format-Hex-RGB $palette.Border) }
-            Highlight= @{ Fg=(Format-Hex-RGB $palette.Bright) }
-            Editing  = @{ Bg=$theme.Hex; Fg='White'; Bold=$true }
-            Selected = @{ Bg=$theme.Hex; Fg='White' }
-            Subheader= @{ Fg=(Format-Hex-RGB $palette.Muted) }
-        }
-        Set-PmcState -Section 'Display' -Key 'Styles' -Value $styles
-
-        # CRITICAL FIX: Ensure PmcThemeManager is initialized to configure PmcThemeEngine
-        # The engine has no properties until the manager calls Configure() on it.
+        # 5. Configure Engine
         try {
             if (([System.Management.Automation.PSTypeName]'PmcThemeManager').Type) {
                 [void][PmcThemeManager]::GetInstance()
@@ -105,17 +89,8 @@ function Initialize-PmcThemeSystem {
             }
         }
     } catch {
-        # Safety catch-all to prevent startup crashes
-        if ((Test-Path variable:global:PmcDebug) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
-            Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [Theme] Initialize-PmcThemeSystem FATAL ERROR: $_"
-        }
+        Write-Host "[ERROR] Theme Initialization Failed: $_" -ForegroundColor Red
     }
-}
-
-function Format-Hex-RGB {
-    param($rgb)
-    if (-not $rgb -or -not $rgb.R) { return '#FFFFFF' }
-    return "#{0:X2}{1:X2}{2:X2}" -f $rgb.R,$rgb.G,$rgb.B
 }
 
 function Set-PmcTheme {

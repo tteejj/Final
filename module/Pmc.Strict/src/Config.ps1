@@ -11,37 +11,23 @@ function Set-PmcConfigProvider {
 
 function Get-PmcConfig {
     $providers = Get-PmcConfigProviders
-    # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Get-PmcConfig] START"
     try {
         $cfg = & $providers.Get
-        # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Get-PmcConfig] Provider returned: $($cfg | ConvertTo-Json -Compress -Depth 3)"
         # If provider returns empty config, try reading from default file
         if (-not $cfg -or ($cfg.GetType().Name -eq 'Hashtable' -and $cfg.Count -eq 0)) {
-            # Default: read from pmc/config.json (three levels up from module dir, same as tasks.json)
-            # CRITICAL FIX: Use workspace root, not module root
             try {
                 $root = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
                 $path = Join-Path $root 'config.json'
-                # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Get-PmcConfig] Loading from file: $path"
                 if (Test-Path $path) {
                     $json = Get-Content -Path $path -Raw -Encoding UTF8
                     $cfg = $json | ConvertFrom-Json
-                    # Convert PSCustomObject to hashtable recursively
                     $cfg = ConvertPSObjectToHashtable $cfg
-                    # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Get-PmcConfig] Loaded config: $($cfg | ConvertTo-Json -Compress -Depth 3)"
                     return $cfg
-                } else {
-                    # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Get-PmcConfig] File does not exist: $path"
                 }
-            } catch {
-                # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Get-PmcConfig] ERROR reading file: $_"
-                # File read failed, return empty
-            }
+            } catch { }
         }
-        # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Get-PmcConfig] Returning: $($cfg | ConvertTo-Json -Compress -Depth 3)"
         return $cfg
     } catch {
-        # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Get-PmcConfig] ERROR: $_"
         return @{}
     }
 }
@@ -65,35 +51,44 @@ function ConvertPSObjectToHashtable {
 
 function Save-PmcConfig {
     param($cfg)
-    # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Save-PmcConfig] START with config: $($cfg | ConvertTo-Json -Compress -Depth 3)"
-    # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Save-PmcConfig] STACK TRACE: $((Get-PSCallStack | Select-Object -Skip 1 | Select-Object -First 5 | ForEach-Object { "$($_.Command):$($_.ScriptLineNumber)" }) -join ' <- ')"
+    
+    # Debug log path
+    # Use absolute path for log - try global root first, fallback to hardcoded path
+    $debugLog = $null
+    if ($global:PmcAppRoot) {
+        $debugLog = Join-Path $global:PmcAppRoot 'data/logs/config-debug.log'
+    } elseif ($PSScriptRoot) {
+        $debugLog = Join-Path (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent) 'data/logs/config-debug.log'
+    } else {
+        $debugLog = '/home/teej/ztest/data/logs/config-debug.log'
+    }
+    
     $providers = Get-PmcConfigProviders
+    Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Save-PmcConfig] providers.Set is $($null -ne $providers.Set)" -ErrorAction SilentlyContinue
+    
     if ($providers.Set) {
         try {
-            # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Save-PmcConfig] Calling provider Set"
+            Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Save-PmcConfig] Calling provider Set" -ErrorAction SilentlyContinue
             & $providers.Set $cfg
-            # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Save-PmcConfig] Provider Set succeeded"
+            Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Save-PmcConfig] Provider Set succeeded - RETURNING EARLY" -ErrorAction SilentlyContinue
             return
         } catch {
-            # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Save-PmcConfig] Provider Set failed: $_"
-            # Custom config provider failed - fall back to default
+            Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Save-PmcConfig] Provider Set FAILED: $_ - falling back to file" -ErrorAction SilentlyContinue
         }
     }
-    # Default: write to pmc/config.json (three levels up from module dir, same as tasks.json)
-    # CRITICAL FIX: Use workspace root, not module root
+    
+    # Default: write to config.json
     try {
         $root = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
         $path = Join-Path $root 'config.json'
-        # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Save-PmcConfig] Writing to file: $path"
+        Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Save-PmcConfig] Writing to file: $path" -ErrorAction SilentlyContinue
         $cfg | ConvertTo-Json -Depth 10 | Set-Content -Path $path -Encoding UTF8
-        # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Save-PmcConfig] File write succeeded"
+        Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Save-PmcConfig] File write SUCCESS" -ErrorAction SilentlyContinue
     } catch {
-        # Add-Content -Path "$($env:TEMP)\pmc-config-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [Save-PmcConfig] File write failed: $_"
-        # Default config file save failed - settings not persisted
+        Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Save-PmcConfig] File write FAILED: $_" -ErrorAction SilentlyContinue
     }
 }
 
-# Basic config schema validation and normalization
 function Get-PmcDefaultConfig {
     return @{
         Display = @{ Theme = @{ Enabled=$true; Hex='#33aaff' }; Icons=@{ Mode='emoji' } }
@@ -106,13 +101,9 @@ function Get-PmcDefaultConfig {
 function Test-PmcConfigSchema {
     $cfg = Get-PmcConfig
     $errors = @(); $warnings=@()
-    # Display.Theme.Hex
     try { $hex = [string]$cfg.Display.Theme.Hex; if (-not ($hex -match '^#?[0-9a-fA-F]{6}$')) { $warnings += 'Display.Theme.Hex invalid; using default' } } catch { $warnings += 'Display.Theme.Hex missing' }
-    # Icons mode
     try { $mode = [string]$cfg.Display.Icons.Mode; if ($mode -notin @('ascii','emoji')) { $warnings += 'Display.Icons.Mode must be ascii|emoji' } } catch { $warnings += 'Display.Icons.Mode missing' }
-    # Debug level
     try { $lvl = [int]$cfg.Debug.Level; if ($lvl -lt 0 -or $lvl -gt 3) { $warnings += 'Debug.Level out of range (0-3)' } } catch { $warnings += 'Debug.Level missing' }
-    # Security paths
     try { if (-not ($cfg.Security.AllowedWritePaths -is [System.Collections.IEnumerable])) { $warnings += 'Security.AllowedWritePaths must be an array' } } catch { $warnings += 'Security.AllowedWritePaths missing' }
     return [pscustomobject]@{ IsValid = ($errors.Count -eq 0); Errors=$errors; Warnings=$warnings }
 }
@@ -126,9 +117,7 @@ function Normalize-PmcConfig {
             if (-not $cfg[$k].ContainsKey($k2)) { $cfg[$k][$k2] = $def[$k][$k2] }
         }
     }
-    # Normalize hex
     try { if ($cfg.Display.Theme.Hex -and -not ($cfg.Display.Theme.Hex.ToString().StartsWith('#'))) { $cfg.Display.Theme.Hex = '#' + $cfg.Display.Theme.Hex } } catch {}
-    # Icons mode default
     try { if (-not $cfg.Display.Icons.Mode) { $cfg.Display.Icons.Mode = 'emoji' } } catch {}
     Save-PmcConfig $cfg
     return $cfg
@@ -147,7 +136,6 @@ function Validate-PmcConfig { param([PmcCommandContext]$Context)
 function Show-PmcConfig {
     param($Context)
     $cfg = Get-PmcConfig
-
     Write-PmcStyled -Style 'Header' -Text "`n⚙️ PMC CONFIGURATION`n"
     Write-PmcStyled -Style 'Subheader' -Text "Data Path:"
     Write-PmcStyled -Style 'Info' -Text "  $($cfg.Storage.DataPath)"
@@ -171,7 +159,6 @@ function Set-PmcConfigValue {
 
 function Reload-PmcConfig {
     param($Context)
-    # Force reload config
     $Script:PmcConfig = $null
     $cfg = Get-PmcConfig
     Write-PmcStyled -Style 'Success' -Text '[OK] Config reloaded'
@@ -179,22 +166,16 @@ function Reload-PmcConfig {
 
 function Set-PmcIconMode {
     param($Context)
-
     $mode = 'emoji'
     if ($Context.FreeText.Count -gt 0) {
         $mode = $Context.FreeText[0].ToLower()
     }
-
     if ($mode -notin @('ascii', 'emoji')) {
         Write-PmcStyled -Style 'Error' -Text 'Icon mode must be: ascii or emoji'
         return
     }
-
     $cfg = Get-PmcConfig
     $cfg.Display.Icons.Mode = $mode
     Save-PmcConfig $cfg
     Write-PmcStyled -Style 'Success' -Text "[OK] Icon mode set to: $mode"
 }
-
-# Export config functions - handled by main module (Pmc.Strict.psm1)
-# Export-ModuleMember -Function Get-PmcConfig, Save-PmcConfig, Validate-PmcConfig, Show-PmcConfig, Edit-PmcConfig, Set-PmcConfigValue, Reload-PmcConfig, Set-PmcIconMode

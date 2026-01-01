@@ -422,8 +422,8 @@ function Start-PmcTUI {
                 
                 # CRITICAL FIX: Reset singletons to ensure fresh theme data from config
                 # This fixes gradient themes not loading because singletons cached old data
-                [PmcThemeManager]::_instance = $null
-                [PmcThemeEngine]::_instance = $null
+                [PmcThemeManager]::Reset()
+                [PmcThemeEngine]::Reset()
                 
                 # Initialize Core Theme System with -Force to rebuild from config
                 Initialize-PmcThemeSystem -Force
@@ -617,6 +617,7 @@ function Start-PmcTUI {
 
         # Run event loop
         # Write-PmcTuiLog "Starting event loop..." "INFO"
+        Write-Host "Initialization complete. Starting Application Loop..." -ForegroundColor Cyan
         $global:PmcApp.Run()
         # Write-PmcTuiLog "Event loop exited normally" "INFO"
 

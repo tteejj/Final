@@ -47,8 +47,6 @@
         'Show-PmcSmartHelp',
         'Write-PmcStyled',
         'Get-PmcStyle',
-        'Get-PmcColorPalette',
-        'Get-PmcColorSequence',
         'ConvertFrom-PmcHex',
         'Test-PmcInputSafety',
         'Test-PmcPathSafety',

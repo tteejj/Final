@@ -15,15 +15,13 @@
 
 using namespace System.Collections.Generic
 
-Set-StrictMode -Version Latest
+Set-StrictMode -Off
+
+$script:_RenderCacheInstance = $null
 
 <#
 .SYNOPSIS
 Represents a cached widget's rendered output
-
-.DESCRIPTION
-Stores the cell snapshot from the backbuffer along with metadata
-needed to correctly replay the cached content.
 #>
 class CachedWidget {
     [int]$X
@@ -48,29 +46,8 @@ class CachedWidget {
 <#
 .SYNOPSIS
 Unified caching engine for widget rendering
-
-.DESCRIPTION
-RenderCache provides:
-- LRU eviction with configurable max entries
-- Widget-level caching with state hash validation
-- Automatic invalidation on screen transitions
-- Z-index aware cache replay
-
-.EXAMPLE
-$cache = [RenderCache]::GetInstance()
-$cached = $null
-if ($cache.TryGet($key, $hash, [ref]$cached)) {
-    $engine.WriteFromCache($cached)
-} else {
-    $widget.RenderToEngine($engine)
-    $snapshot = $engine.CaptureWidget($x, $y, $w, $h, $z)
-    $cache.Store($key, $hash, $snapshot)
-}
 #>
 class RenderCache {
-    # Singleton instance
-    static hidden [RenderCache]$_instance = $null
-    
     # Cache storage: Key → CachedWidget
     hidden [hashtable]$_cache = @{}
     
@@ -94,10 +71,10 @@ class RenderCache {
     Get singleton instance
     #>
     static [RenderCache] GetInstance() {
-        if ($null -eq [RenderCache]::_instance) {
-            [RenderCache]::_instance = [RenderCache]::new()
+        if ($null -eq $script:_RenderCacheInstance) {
+            $script:_RenderCacheInstance = [RenderCache]::new()
         }
-        return [RenderCache]::_instance
+        return $script:_RenderCacheInstance
     }
     
     <#
@@ -105,7 +82,7 @@ class RenderCache {
     Reset singleton (for testing or clean restart)
     #>
     static [void] Reset() {
-        [RenderCache]::_instance = $null
+        $script:_RenderCacheInstance = $null
     }
     
     <#

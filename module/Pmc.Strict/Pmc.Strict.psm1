@@ -206,25 +206,6 @@ try {
     throw
 }
 
-
-try {
-    # Loading Help.ps1...
-    . $PSScriptRoot/src/Help.ps1
-    # [OK] Help.ps1 loaded
-} catch {
-    Write-Host "  [ERROR] Help.ps1 failed: $_" -ForegroundColor Red
-    throw
-}
-
-try {
-    # Loading Interactive.ps1...
-    . $PSScriptRoot/src/Interactive.ps1
-    # [OK] Interactive.ps1 loaded
-} catch {
-    Write-Host "  [ERROR] Interactive.ps1 failed: $_" -ForegroundColor Red
-    throw
-}
-
 try {
     # Loading Dependencies.ps1...
     . $PSScriptRoot/src/Dependencies.ps1
@@ -289,25 +270,6 @@ try {
     # [OK] Theme.ps1 loaded
 } catch {
     Write-Host "  [ERROR] Theme.ps1 failed: $_" -ForegroundColor Red
-    throw
-}
-
-try {
-    # Loading Excel.ps1...
-    . $PSScriptRoot/src/Excel.ps1
-    # [OK] Excel.ps1 loaded
-} catch {
-    Write-Host "  [ERROR] Excel.ps1 failed: $_" -ForegroundColor Red
-    throw
-}
-
-# Excel Flow Lite (interactive path pickers for source/dest)
-try {
-    # Loading ExcelFlowLite.ps1...
-    . $PSScriptRoot/src/ExcelFlowLite.ps1
-    # [OK] ExcelFlowLite.ps1 loaded
-} catch {
-    Write-Host "  [ERROR] ExcelFlowLite.ps1 failed: $_" -ForegroundColor Red
     throw
 }
 
@@ -476,15 +438,6 @@ function Get-PmcHelpData {
     }
 
     return $helpCategories
-}
-
-try {
-    # Loading HelpUI.ps1...
-    . $PSScriptRoot/src/HelpUI.ps1
-    # [OK] HelpUI.ps1 loaded
-} catch {
-    Write-Host "  [ERROR] HelpUI.ps1 failed: $_" -ForegroundColor Red
-    throw
 }
 
 try {
@@ -695,87 +648,6 @@ function Get-PmcData {
 }
 
 # FakeTUI function loaded from src/FakeTUICommand.ps1
-
-Write-Host "[OK] PMC loaded" -ForegroundColor Green
-
-# Ensure required public functions are exported (override narrow exports in sub-files)
-Export-ModuleMember -Function `
-    Invoke-PmcCommand, `
-    Initialize-PmcEnhancedCommandProcessor, `
-    Get-PmcEnhancedCommandProcessor, `
-    Invoke-PmcEnhancedCommand, `
-    Get-PmcSchema, `
-    Get-PmcFieldSchema, Get-PmcFieldSchemasForDomain, `
-    Invoke-PmcQuery, `
-    Invoke-PmcEnhancedQuery, `
-    Get-PmcQueryPerformanceStats, `
-    Initialize-PmcEnhancedQueryEngine, `
-    Get-PmcHelp, `
-    Get-PmcHelpData, `
-    Set-PmcConfigProvider, `
-    Get-PmcConfig, `
-    Save-PmcConfig, `
-    Ensure-PmcUniversalDisplay, `
-    Write-PmcDebug, `
-    Get-PmcDebugStatus, `
-    Show-PmcDebugLog, `
-    Measure-PmcOperation, `
-    Initialize-PmcDebugSystem, `
-    Initialize-PmcSecuritySystem, `
-    Initialize-PmcThemeSystem, `
-    Write-PmcStyled, Show-PmcHeader, Show-PmcSeparator, Show-PmcTable, `
-    Get-PmcColorPalette, Get-PmcColorSequence, ConvertFrom-PmcHex, `
-    Test-PmcInputSafety, `
-    Test-PmcPathSafety, `
-    Invoke-PmcSecureFileOperation, `
-    Protect-PmcUserInput, `
-    Get-PmcSecurityStatus, `
-    Set-PmcSecurityLevel, `
-    Enable-PmcInteractiveMode, `
-    Disable-PmcInteractiveMode, `
-    Get-PmcInteractiveStatus, `
-    Read-PmcCommand, `
-    Show-PmcSmartHelp, `
-    Show-PmcHelpDomain, `
-    Show-PmcHelpCommand, `
-    Show-PmcHelpUI, `
-    Show-PmcCommandBrowser, `
-    Show-PmcHelpExamples, `
-    Show-PmcHelpGuide, `
-    Show-PmcHelpSearch, `
-    Invoke-PmcTaskEditor, `
-    Show-PmcAgenda, `
-    Show-PmcTodayTasks, `
-    Show-PmcOverdueTasks, `
-    Show-PmcUpcomingTasks, `
-    Show-PmcBlockedTasks, `
-    Show-PmcTasksWithoutDueDate, `
-    Show-PmcProjectsView, `
-    Get-PmcTaskList, `
-    Get-PmcProjectList, `
-    Show-PmcDataGrid, Show-PmcCustomGrid, `
-    Show-PmcData, `
-    Initialize-PmcScreen, `
-    Clear-PmcContentArea, `
-    Get-PmcContentBounds, `
-    Set-PmcHeader, `
-    Set-PmcInputPrompt, `
-    Hide-PmcCursor, `
-    Show-PmcCursor, `
-    Reset-PmcScreen, `
-    Write-PmcAtPosition, `
-    Get-PmcAllData, `
-    Get-PmcData, `
-    Get-PmcDataProvider, `
-    Get-PmcTasksData, `
-    Get-PmcProjectsData, `
-    Get-PmcTimeLogsData, `
-    Save-PmcData
-
-# FakeTUI function moved earlier in file for proper export
-
-# Export variables explicitly
-Export-ModuleMember -Variable PmcCommandMap, PmcShortcutMap, PmcCommandMeta
 
 # Export aliases
 Export-ModuleMember -Alias Save-StrictData

@@ -1,0 +1,31 @@
+[2025-12-31 10:45:36.327] ServiceContainer: Registered 'Theme' (singleton=True)
+[2025-12-31 10:45:36.333] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2025-12-31 10:45:36.335] ServiceContainer: Registered 'Config' (singleton=True)
+[2025-12-31 10:45:36.337] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2025-12-31 10:45:36.338] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2025-12-31 10:45:36.340] ServiceContainer: Registered 'Application' (singleton=True)
+[2025-12-31 10:45:36.341] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2025-12-31 10:45:36.343] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2025-12-31 10:45:36.345] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2025-12-31 10:45:36.346] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2025-12-31 10:45:36.348] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2025-12-31 10:45:36.349] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2025-12-31 10:45:36.351] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2025-12-31 10:45:36.353] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2025-12-31 10:45:36.354] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2025-12-31 10:45:36.377] ServiceContainer: Resolving 'Application'...
+[2025-12-31 10:45:36.382] ServiceContainer: Resolving 'Theme'...
+[2025-12-31 10:45:36.390] [ERROR] ServiceContainer: Failed to resolve 'Theme': The property '_instance' cannot be found on this object. Verify that the property exists and can be set.
+[2025-12-31 10:45:36.393] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 425
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 496
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2025-12-31 10:45:36.402] [ERROR] ServiceContainer: Failed to resolve 'Application': The property '_instance' cannot be found on this object. Verify that the property exists and can be set.
+[2025-12-31 10:45:36.403] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 425
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 496
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 572
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37

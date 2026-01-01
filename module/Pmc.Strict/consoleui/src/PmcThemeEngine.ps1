@@ -8,53 +8,50 @@
 
 using namespace System.Collections.Generic
 
-Set-StrictMode -Version Latest
+Set-StrictMode -Off
 
-<#
-.SYNOPSIS
-Theme engine singleton - handles all color/gradient computation and caching
+$script:_PmcThemeEngineInstance = $null
 
-.DESCRIPTION
-Properties format in config.json:
-  Solid:    { "Type": "Solid", "Color": "#ff8833" }
-  Gradient: { "Type": "Gradient", "Direction": "Horizontal",
-              "Stops": [{"Position": 0.0, "Color": "#ff8833"}, ...] }
-
-Property names: "Background.Field", "Foreground.FieldFocused", etc.
-#>
 class PmcThemeEngine {
-    hidden static [PmcThemeEngine]$_instance = $null
+    [hashtable] $_properties
+    [object] $_cache
 
-    # Loaded theme properties from config.json
-    hidden [hashtable]$_properties = @{}
-    hidden [hashtable]$_palette = @{}
-
-    # Unified Cache
-    hidden [PmcCache]$_cache
-
-    # Singleton access
     static [PmcThemeEngine] GetInstance() {
-        if ($null -eq [PmcThemeEngine]::_instance) {
-            [PmcThemeEngine]::_instance = [PmcThemeEngine]::new()
+        if ($null -eq $script:_PmcThemeEngineInstance) {
+            $script:_PmcThemeEngineInstance = [PmcThemeEngine]::new()
         }
-        return [PmcThemeEngine]::_instance
+        return $script:_PmcThemeEngineInstance
+    }
+
+    static [void] Reset() {
+        $script:_PmcThemeEngineInstance = $null
     }
 
     PmcThemeEngine() {
-        $this._cache = [PmcCache]::GetInstance()
+        $this._properties = @{}
+        # Fallback: simple hashtable
+        $this._cache = @{}
     }
 
-    # Configure engine with full state (called by PmcThemeManager)
-    [void] Configure([hashtable]$properties, [hashtable]$palette) {
-        $this._properties = $properties
-        $this._palette = $palette
-        $this.InvalidateCache()
-        
-        # Clear RenderCache to invalidate cached cells with stale colors
-        $cacheType = ([System.Management.Automation.PSTypeName]'RenderCache').Type
-        if ($cacheType) {
-            [RenderCache]::GetInstance().Clear()
+    [void] Configure([hashtable]$properties) {
+        # Deep convert any PSCustomObject values to Hashtable
+        # This is necessary because ConvertFrom-Json returns nested PSCustomObjects
+        $safeProps = @{}
+        foreach ($key in $properties.Keys) {
+            $val = $properties[$key]
+            if ($val -is [System.Management.Automation.PSCustomObject]) {
+                $hash = @{}
+                foreach ($p in $val.PSObject.Properties) {
+                    $hash[$p.Name] = $p.Value
+                }
+                $safeProps[$key] = $hash
+            } else {
+                $safeProps[$key] = $val
+            }
         }
+        
+        $this._properties = $safeProps
+        $this.InvalidateCache()
         
         # Targeted diagnostic: log when Configure is called (only if debug enabled)
         if ((Test-Path variable:global:PmcDebug) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
@@ -222,6 +219,13 @@ class PmcThemeEngine {
     hidden [string] _GetSolidAnsiCached([string]$color, [bool]$background) {
         $cacheKey = "solid_ansi:${color}_${background}"
         
+        if ($this._cache -is [hashtable]) {
+            if ($this._cache.ContainsKey($cacheKey)) { return $this._cache[$cacheKey] }
+            $ansi = $this._ColorToAnsi($color, $background)
+            $this._cache[$cacheKey] = $ansi
+            return $ansi
+        }
+
         $cached = $this._cache.Get("Theme", $cacheKey)
         if ($null -ne $cached) { return $cached }
 
@@ -233,6 +237,13 @@ class PmcThemeEngine {
     # Cached solid color Int
     hidden [int] _GetSolidIntCached([string]$color) {
         $cacheKey = "solid_int:${color}"
+
+        if ($this._cache -is [hashtable]) {
+            if ($this._cache.ContainsKey($cacheKey)) { return $this._cache[$cacheKey] }
+            $intColor = $this._ColorToInt($color)
+            $this._cache[$cacheKey] = $intColor
+            return $intColor
+        }
 
         $cached = $this._cache.Get("Theme", $cacheKey)
         if ($null -ne $cached) { return $cached }
@@ -246,6 +257,13 @@ class PmcThemeEngine {
     hidden [string[]] _GetGradientArrayCached([string]$propertyName, [hashtable]$gradient, [int]$width, [bool]$background) {
         $cacheKey = "grad_ansi:${propertyName}_${width}_${background}"
 
+        if ($this._cache -is [hashtable]) {
+            if ($this._cache.ContainsKey($cacheKey)) { return $this._cache[$cacheKey] }
+            $array = $this._ComputeGradient($gradient, $width, $background)
+            $this._cache[$cacheKey] = $array
+            return $array
+        }
+
         $cached = $this._cache.Get("Theme", $cacheKey)
         if ($null -ne $cached) { return $cached }
 
@@ -258,12 +276,28 @@ class PmcThemeEngine {
     hidden [int[]] _GetGradientIntArrayCached([string]$propertyName, [hashtable]$gradient, [int]$width) {
         $cacheKey = "grad_int:${propertyName}_${width}"
 
+        if ($this._cache -is [hashtable]) {
+            if ($this._cache.ContainsKey($cacheKey)) { return $this._cache[$cacheKey] }
+            $array = $this._ComputeGradientInt($gradient, $width)
+            $this._cache[$cacheKey] = $array
+            return $array
+        }
+
         $cached = $this._cache.Get("Theme", $cacheKey)
         if ($null -ne $cached) { return $cached }
 
         $array = $this._ComputeGradientInt($gradient, $width)
         $this._cache.Set("Theme", $cacheKey, $array)
         return $array
+    }
+
+    # Clear all caches (call on theme reload)
+    [void] InvalidateCache() {
+        if ($this._cache -is [hashtable]) {
+            $this._cache.Clear()
+        } else {
+            $this._cache.ClearRegion("Theme")
+        }
     }
 
     # Compute gradient as array of ANSI sequences
@@ -389,8 +423,6 @@ class PmcThemeEngine {
             }
         }
         catch {
-            # DEBUG
-            # Add-Content -Path "/tmp/pmc-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcThemeEngine] ANSI CONVERSION FAILED: '$hex' - $_"
             return ''
         }
     }
@@ -411,10 +443,5 @@ class PmcThemeEngine {
         catch {
             return -1
         }
-    }
-
-    # Clear all caches (call on theme reload)
-    [void] InvalidateCache() {
-        $this._cache.ClearRegion("Theme")
     }
 }

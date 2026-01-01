@@ -445,3 +445,162 @@
 [15:48:38.268] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
 [15:48:38.276] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
 [15:48:38.295] [Load-Theme] Returning theme with Hex='#00f3ff'
+[09:28:59.523] === THEME SELF-HEAL START ===
+[09:28:59.531] Config path: /home/teej/ztest/config.json
+[09:28:59.559] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[09:28:59.564] Hex already present, no repair needed
+[09:28:59.954] [Load-Theme] themeName='default' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:28:59.959] [Load-Theme] Looking for: /home/teej/ztest/themes/default.json (exists=True)
+[09:28:59.963] [Load-Theme] JSON loaded. Name='Default' Hex='#33aaff'
+[09:28:59.991] [Load-Theme] Returning theme with Hex='#33aaff'
+[09:29:45.612] [Set-ActiveTheme] Starting for themeName='Cyberpunk'
+[10:45:36.237] === THEME SELF-HEAL START ===
+[10:45:36.245] Config path: /home/teej/ztest/config.json
+[10:45:36.259] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[10:45:36.263] Hex already present, no repair needed
+[10:51:11.144] === THEME SELF-HEAL START ===
+[10:51:11.153] Config path: /home/teej/ztest/config.json
+[10:51:11.168] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[10:51:11.171] Hex already present, no repair needed
+[11:11:50.593] === THEME SELF-HEAL START ===
+[11:11:50.601] Config path: /home/teej/ztest/config.json
+[11:11:50.616] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[11:11:50.620] Hex already present, no repair needed
+[11:17:40.263] === THEME SELF-HEAL START ===
+[11:17:40.282] Config path: /home/teej/ztest/config.json
+[11:17:40.313] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[11:17:40.321] Hex already present, no repair needed
+[11:19:08.477] === THEME SELF-HEAL START ===
+[11:19:08.490] Config path: /home/teej/ztest/config.json
+[11:19:08.510] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[11:19:08.516] Hex already present, no repair needed
+[11:25:34.273] === THEME SELF-HEAL START ===
+[11:25:34.278] Config path: /home/teej/ztest/config.json
+[11:25:34.286] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[11:25:34.288] Hex already present, no repair needed
+[11:25:51.449] [Set-ActiveTheme] Starting for themeName='Forest'
+[11:30:54.437] === THEME SELF-HEAL START ===
+[11:30:54.443] Config path: /home/teej/ztest/config.json
+[11:30:54.453] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[11:30:54.456] Hex already present, no repair needed
+[11:46:26.713] === THEME SELF-HEAL START ===
+[11:46:26.717] Config path: /home/teej/ztest/config.json
+[11:46:26.728] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[11:46:26.731] Hex already present, no repair needed
+[11:46:34.190] [Set-ActiveTheme] Starting for themeName='Forest'
+[11:47:24.572] === THEME SELF-HEAL START ===
+[11:47:24.581] Config path: /home/teej/ztest/config.json
+[11:47:24.591] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[11:47:24.594] Hex already present, no repair needed
+[11:49:43.531] === THEME SELF-HEAL START ===
+[11:49:43.537] Config path: /home/teej/ztest/config.json
+[11:49:43.545] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[11:49:43.547] Hex already present, no repair needed
+[11:51:24.350] === THEME SELF-HEAL START ===
+[11:51:24.355] Config path: /home/teej/ztest/config.json
+[11:51:24.364] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[11:51:24.367] Hex already present, no repair needed
+[11:56:37.162] [Set-ActiveTheme] Starting for themeName='Forest'
+[11:56:37.173] [Set-ActiveTheme] Calling Get-PmcConfig...
+[11:56:37.245] [Set-ActiveTheme] Get-PmcConfig returned. cfg type=
+[11:56:37.294] [Set-ActiveTheme] cfg.Display.Theme type=
+[11:56:37.324] [Set-ActiveTheme] Set Active=''
+[11:56:37.354] [Load-Theme] themeName='Forest' PmcAppRoot='' themesDir=''
+[11:56:37.375] [Load-Theme] themesDir not found, searching fallbacks...
+[11:56:37.401] [Load-Theme] Looking for:  (exists=)
+[11:56:37.416] [Load-Theme] Theme file NOT FOUND, returning null
+[11:56:37.420] [Set-ActiveTheme] Load-Theme returned null!
+[11:58:37.257] [Set-ActiveTheme] Starting for themeName='Forest'
+[11:58:37.264] [Set-ActiveTheme] Calling Get-PmcConfig...
+[11:58:37.305] [Set-ActiveTheme] Get-PmcConfig returned. cfg type=
+[11:58:37.335] [Set-ActiveTheme] cfg.Display.Theme type=
+[11:58:37.354] [Set-ActiveTheme] Set Active=''
+[11:58:37.377] [Load-Theme] themeName='Forest' PmcAppRoot='' themesDir=''
+[11:58:37.382] [Load-Theme] themesDir not found, searching fallbacks...
+[11:58:37.403] [Load-Theme] Looking for:  (exists=)
+[11:58:37.421] [Load-Theme] Theme file NOT FOUND, returning null
+[11:58:37.423] [Set-ActiveTheme] Load-Theme returned null!
+[12:00:04.136] [Set-ActiveTheme] Starting for themeName='Forest'
+[12:00:04.158] [Set-ActiveTheme] Calling Get-PmcConfig...
+[12:00:04.249] [Set-ActiveTheme] Get-PmcConfig returned. cfg type=
+[12:00:04.341] [Set-ActiveTheme] cfg.Display.Theme type=
+[12:00:04.364] [Set-ActiveTheme] Set Active=''
+[12:00:04.429] [Load-Theme] themeName='Forest' PmcAppRoot='' themesDir=''
+[12:00:04.438] [Load-Theme] themesDir not found, searching fallbacks...
+[12:00:04.467] [Load-Theme] Found themes at fallback: /home/teej/ztest/themes
+[12:00:04.475] [Load-Theme] Looking for: /home/teej/ztest/themes/forest.json (exists=True)
+[12:00:04.490] [Load-Theme] JSON loaded. Name='Forest' Hex='#228844'
+[12:00:04.539] [Load-Theme] Returning theme with Hex='#228844'
+[12:00:04.561] [Set-ActiveTheme] Set Hex=''
+[12:00:04.572] [Set-ActiveTheme] Calling Save-PmcConfig...
+[12:00:04.633] [Set-ActiveTheme] Save-PmcConfig returned
+[12:00:31.525] === THEME SELF-HEAL START ===
+[12:00:31.535] Config path: /home/teej/ztest/config.json
+[12:00:31.553] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[12:00:31.558] Hex already present, no repair needed
+[12:05:52.307] === THEME SELF-HEAL START ===
+[12:05:52.315] Config path: /home/teej/ztest/config.json
+[12:05:52.330] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[12:05:52.334] Hex already present, no repair needed
+[12:09:23.892] === THEME SELF-HEAL START ===
+[12:09:23.911] Config path: /home/teej/ztest/config.json
+[12:09:23.937] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[12:09:23.942] Hex already present, no repair needed
+[12:09:57.644] === THEME SELF-HEAL START ===
+[12:09:57.653] Config path: /home/teej/ztest/config.json
+[12:09:57.668] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[12:09:57.672] Hex already present, no repair needed
+[12:15:34.336] === THEME SELF-HEAL START ===
+[12:15:34.341] Config path: /home/teej/ztest/config.json
+[12:15:34.351] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[12:15:34.354] Hex already present, no repair needed
+[12:15:44.194] [Set-ActiveTheme] Starting for themeName='Forest'
+[12:15:44.195] [Set-ActiveTheme] Calling Get-PmcConfig...
+[12:19:50.661] [Set-ActiveTheme] Starting for themeName='Forest'
+[12:19:50.686] [Set-ActiveTheme] Calling Get-PmcConfig...
+[12:19:50.817] [Set-ActiveTheme] Get-PmcConfig returned. cfg type=Hashtable
+[12:19:50.827] [Set-ActiveTheme] cfg.Display.Theme type=Hashtable
+[12:19:50.836] [Set-ActiveTheme] Set Active='forest'
+[12:19:50.912] [Load-Theme] themeName='Forest' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[12:19:50.919] [Load-Theme] Looking for: /home/teej/ztest/themes/forest.json (exists=True)
+[12:19:50.931] [Load-Theme] JSON loaded. Name='Forest' Hex='#228844'
+[12:19:50.976] [Load-Theme] Returning theme with Hex='#228844'
+[12:19:50.983] [Set-ActiveTheme] Set Hex='#228844'
+[12:19:50.989] [Set-ActiveTheme] Calling Save-PmcConfig...
+[12:19:51.055] [Set-ActiveTheme] Save-PmcConfig returned
+[12:20:14.591] === THEME SELF-HEAL START ===
+[12:20:14.601] Config path: /home/teej/ztest/config.json
+[12:20:14.616] Config loaded. Active=forest, Hex=#228844, hasHex=True
+[12:20:14.621] Hex already present, no repair needed
+[13:04:49.601] === THEME SELF-HEAL START ===
+[13:04:49.605] Config path: /home/teej/ztest/config.json
+[13:04:49.613] Config loaded. Active=forest, Hex=#228844, hasHex=True
+[13:04:49.615] Hex already present, no repair needed
+[13:04:58.360] [Set-ActiveTheme] Starting for themeName='Cyberpunk'
+[13:04:58.361] [Set-ActiveTheme] Calling Get-PmcConfig...
+[13:09:08.015] === THEME SELF-HEAL START ===
+[13:09:08.027] Config path: /home/teej/ztest/config.json
+[13:09:08.042] Config loaded. Active=forest, Hex=#228844, hasHex=True
+[13:09:08.047] Hex already present, no repair needed
+[20:47:03.951] === THEME SELF-HEAL START ===
+[20:47:03.959] Config path: /home/teej/ztest/config.json
+[20:47:03.972] Config loaded. Active=forest, Hex=#228844, hasHex=True
+[20:47:03.976] Hex already present, no repair needed
+[20:47:15.326] [Set-ActiveTheme] Starting for themeName='Cyberpunk'
+[20:47:15.327] [Set-ActiveTheme] Calling Get-PmcConfig...
+[20:47:15.356] [Set-ActiveTheme] ERROR in Get-PmcConfig: The term 'Get-PmcConfig' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+[20:56:50.812] === THEME SELF-HEAL START ===
+[20:56:50.829] Config path: /home/teej/ztest/config.json
+[20:56:50.843] Config loaded. Active=forest, Hex=#228844, hasHex=True
+[20:56:50.848] Hex already present, no repair needed
+[20:57:33.650] [Set-ActiveTheme] Starting for themeName='Cyberpunk'
+[20:57:33.651] [Set-ActiveTheme] Reading config from: /home/teej/ztest/config.json
+[20:57:33.664] [Set-ActiveTheme] Set Active='cyberpunk'
+[20:57:33.673] [Load-Theme] themeName='Cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[20:57:33.676] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[20:57:33.677] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[20:57:33.693] [Load-Theme] Returning theme with Hex='#00f3ff'
+[20:57:33.696] [Set-ActiveTheme] Set Hex='#00f3ff'
+[20:57:33.698] [Set-ActiveTheme] Writing config to: /home/teej/ztest/config.json
+[20:57:33.728] [Set-ActiveTheme] Config saved successfully

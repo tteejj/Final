@@ -254,7 +254,7 @@ class ThemeEditorScreen : PmcScreen {
             $reloadSuccess = Invoke-ThemeHotReload $theme.Name
             
             if ($reloadSuccess) {
-                try { $this.ShowSuccess("Theme applied! Changes visible immediately.") } catch { }
+                # Theme applied successfully - no message needed, visual change is confirmation
             }
             else {
                 Start-Sleep -Milliseconds 800

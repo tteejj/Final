@@ -281,11 +281,12 @@ class PmcApplication {
                 [Console]::Clear()
                 [Console]::CursorVisible = $true
                 [Console]::SetCursorPosition(0, 0)
-                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] TOO MANY RENDER ERRORS - EXITING"
-                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Error: $errorMsg"
-                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Location: $errorLocation"
-                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] The application experienced too many render errors."
-                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Please restart the application."
+                Write-Host "TOO MANY RENDER ERRORS - EXITING" -ForegroundColor Red
+                Write-Host "Error: $errorMsg" -ForegroundColor Yellow
+                Write-Host "Location: $errorLocation" -ForegroundColor Gray
+                Write-Host "The application experienced too many render errors."
+                Write-Host "Please restart the application."
+                Write-Host "Press any key to exit..."
 
                 [Console]::ReadKey($true) | Out-Null
                 $this.Stop()
@@ -297,8 +298,10 @@ class PmcApplication {
                 # Clear screen and show error message
                 [Console]::Clear()
                 [Console]::SetCursorPosition(0, 0)
-                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Render Error Occurred"
-                # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [PmcApplication] Error: $($_.Exception.Message)"
+                Write-Host "RENDER ERROR OCCURRED" -ForegroundColor Red
+                Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Yellow
+                Write-Host "Location: $($_.InvocationInfo.ScriptName):$($_.InvocationInfo.ScriptLineNumber)" -ForegroundColor Gray
+                Write-Host "Press any key to retry, or ESC to exit..." -ForegroundColor White
 
                 $key = [Console]::ReadKey($true)
                 if ($key.Key -eq 'Escape') {
