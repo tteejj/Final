@@ -97,7 +97,6 @@ class ChecklistService {
                 }
                 $this._cacheLoadTime = [datetime]::Now
             } catch {
-                # Write-PmcTuiLog "Failed to load checklist templates: $_" "ERROR"
                 $this._templatesCache = @{}
             }
         }
@@ -105,24 +104,23 @@ class ChecklistService {
 
     hidden [void] SaveTemplates() {
         try {
-            $templates = $this._templatesCache.Values | ForEach-Object {
+            $templates = @($this._templatesCache.Values | ForEach-Object {
                 @{
                     id = $_.id
                     name = $_.name
                     description = $_.description
                     category = $_.category
-                    items = $_.items
+                    items = @($_.items)
                     created = $_.created.ToString("o")
                     modified = $_.modified.ToString("o")
                 }
-            }
+            })
 
             $metadata = @{
                 schema_version = 1
                 templates = $templates
             }
 
-            # Atomic save
             $tempFile = "$($this._templatesFile).tmp"
             $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding utf8
 
@@ -133,7 +131,6 @@ class ChecklistService {
             Move-Item -Path $tempFile -Destination $this._templatesFile -Force
 
         } catch {
-            # Write-PmcTuiLog "Failed to save checklist templates: $_" "ERROR"
             throw
         }
     }
@@ -148,7 +145,7 @@ class ChecklistService {
                     foreach ($item in $instance.items) {
                         $items += @{
                             text = $item.text
-                            completed = $item.completed
+                            completed = [bool]$item.completed
                             completed_date = $(if ($item.completed_date) { [datetime]::Parse($item.completed_date) } else { $null })
                             order = $item.order
                         }
@@ -169,7 +166,6 @@ class ChecklistService {
                     }
                 }
             } catch {
-                # Write-PmcTuiLog "Failed to load checklist instances: $_" "ERROR"
                 $this._instancesCache = @{}
             }
         }
@@ -177,12 +173,13 @@ class ChecklistService {
 
     hidden [void] SaveInstances() {
         try {
-            $instances = $this._instancesCache.Values | ForEach-Object {
+            # CRITICAL: Use @() to force array type - prevents PowerShell from unwrapping single-item arrays
+            $instances = @($this._instancesCache.Values | ForEach-Object {
                 $items = @()
                 foreach ($item in $_.items) {
                     $items += @{
                         text = $item.text
-                        completed = $item.completed
+                        completed = [bool]$item.completed
                         completed_date = $(if ($item.completed_date) { $item.completed_date.ToString("o") } else { $null })
                         order = $item.order
                     }
@@ -194,21 +191,20 @@ class ChecklistService {
                     template_id = $_.template_id
                     owner_type = $_.owner_type
                     owner_id = $_.owner_id
-                    items = $items
+                    items = @($items)  # Force array
                     completed_count = $_.completed_count
                     total_count = $_.total_count
                     percent_complete = $_.percent_complete
                     created = $_.created.ToString("o")
                     modified = $_.modified.ToString("o")
                 }
-            }
+            })
 
             $metadata = @{
                 schema_version = 1
                 instances = $instances
             }
 
-            # Atomic save
             $tempFile = "$($this._instancesFile).tmp"
             $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding utf8
 
@@ -219,7 +215,6 @@ class ChecklistService {
             Move-Item -Path $tempFile -Destination $this._instancesFile -Force
 
         } catch {
-            # Write-PmcTuiLog "Failed to save checklist instances: $_" "ERROR"
             throw
         }
     }
@@ -340,7 +335,6 @@ class ChecklistService {
 
         $instanceId = [guid]::NewGuid().ToString()
 
-        # Copy items from template
         $items = @()
         foreach ($templateItem in $template.items) {
             $items += @{
@@ -463,7 +457,6 @@ class ChecklistService {
         if ($changes.ContainsKey('title')) { $instance.title = $changes.title }
         if ($changes.ContainsKey('items')) {
             $instance.items = $changes.items
-            # Recalculate stats
             $instance.total_count = $instance.items.Count
             $completed = @($instance.items | Where-Object { $_.completed }).Count
             $instance.completed_count = $completed

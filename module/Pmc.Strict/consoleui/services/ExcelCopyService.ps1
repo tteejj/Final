@@ -51,8 +51,13 @@ class ExcelCopyService {
 
     # === Constructor (Private - use GetInstance) ===
     ExcelCopyService() {
-        # Determine profiles file location
-        $this._profilesFile = "/home/teej/_tui/praxis-main/simpletaskpro/Data/excel-copy-profiles.json"
+        # Determine profiles file location relative to PMC root
+        $pmcRoot = Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $PSScriptRoot))
+        $dataDir = Join-Path $pmcRoot "Data"
+        if (-not (Test-Path $dataDir)) {
+            New-Item -ItemType Directory -Path $dataDir -Force | Out-Null
+        }
+        $this._profilesFile = Join-Path $dataDir "excel-copy-profiles.json"
 
         # Load profiles
         $this.LoadProfiles()

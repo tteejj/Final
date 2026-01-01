@@ -123,16 +123,9 @@ function Write-PmcTuiLog {
 
 # Write-PmcTuiLog "Loading PMC module..." "INFO"
 
-try {
-    # Import PMC module for data functions
-    Import-Module "$PSScriptRoot/../Pmc.Strict.psd1" -Force -ErrorAction Stop
-    # Write-PmcTuiLog "PMC module loaded" "INFO"
-}
-catch {
-    # Write-PmcTuiLog "Failed to load PMC module: $_" "ERROR"
-    # Write-PmcTuiLog $_.ScriptStackTrace "ERROR"
-    throw
-}
+# STANDALONE: No module import - consoleui is self-contained
+# All data access goes through DataService.ps1
+$global:PmcAppRoot = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
 
 # Write-PmcTuiLog "Loading dependencies (FieldSchemas, etc.)..." "INFO"
 
@@ -167,7 +160,10 @@ catch {
 
 # Write-PmcTuiLog "Loading core dependencies..." "INFO"
 try {
-    # Core infrastructure (no dependencies)
+    # CRITICAL: Load DataService FIRST - PmcThemeManager depends on it for standalone mode
+    . "$PSScriptRoot/services/DataService.ps1"
+    
+    # Core infrastructure (no dependencies except DataService)
     . "$PSScriptRoot/ZIndex.ps1"
     . "$PSScriptRoot/src/PmcThemeEngine.ps1"
     . "$PSScriptRoot/theme/PmcThemeManager.ps1"
@@ -195,6 +191,9 @@ catch {
 
 # Write-PmcTuiLog "Loading services..." "INFO"
 try {
+    # Load DataService FIRST (standalone file I/O - no module dependency)
+    . "$PSScriptRoot/services/DataService.ps1"
+    
     # Load services BEFORE widgets (ProjectPicker depends on TaskStore)
     . "$PSScriptRoot/services/ChecklistService.ps1"
     . "$PSScriptRoot/services/CommandService.ps1"
@@ -451,19 +450,13 @@ function Start-PmcTUI {
                 param($container)
                 # Write-PmcTuiLog "Resolving Config..." "INFO"
 
-                # Determine config path (same logic as Get-PmcConfig)
-                # CRITICAL FIX: Use workspace root (three levels up from module dir)
-                $root = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
-                $configPath = Join-Path $root 'config.json'
-
-                # Use cached config for performance (eliminates repeated file I/O)
+                # STANDALONE: Use DataService for config (no module dependency)
                 try {
-                    return [ConfigCache]::GetConfig($configPath)
+                    return [DataService]::LoadConfig()
                 }
                 catch {
-                    # Write-PmcTuiLog "Config load failed, falling back to Get-PmcConfig: $_" "ERROR"
-                    # Fallback to original method if cache fails
-                    return Get-PmcConfig
+                    # Return empty config on failure
+                    return @{}
                 }
             }, $true)
 

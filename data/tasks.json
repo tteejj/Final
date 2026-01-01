@@ -1,0 +1,13 @@
+{
+  "settings": {},
+  "timelogs": [],
+  "tasks": [],
+  "projects": [
+    {
+      "created": "2026-01-01 08:09:47",
+      "name": "inbox",
+      "description": "Default inbox",
+      "aliases": []
+    }
+  ]
+}

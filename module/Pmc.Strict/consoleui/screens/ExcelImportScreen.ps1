@@ -83,6 +83,7 @@ class ExcelImportScreen : PmcScreen {
         # Configure footer
         $this.Footer.ClearShortcuts()
         $this.Footer.AddShortcut("Enter", "Next")
+        $this.Footer.AddShortcut("Backspace", "Back")
         $this.Footer.AddShortcut("Esc", "Cancel")
     }
 
@@ -316,6 +317,15 @@ class ExcelImportScreen : PmcScreen {
         # Enter - Next Step / Action
         if ($keyInfo.Key -eq ([ConsoleKey]::Enter)) {
             $this._ProcessStep()
+            return $true
+        }
+
+        # Backspace - Go back one step
+        if ($keyInfo.Key -eq ([ConsoleKey]::Backspace)) {
+            if ($this._step -gt 1) {
+                $this._step--
+                $this._selectedOption = 0
+            }
             return $true
         }
 

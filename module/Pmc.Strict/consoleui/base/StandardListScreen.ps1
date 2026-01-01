@@ -543,27 +543,21 @@ class StandardListScreen : PmcScreen {
     Configure list actions (Add, Edit, Delete, + custom)
     #>
     hidden [void] _ConfigureListActions() {
-        # }
-
+        # Clear existing footer shortcuts and add fresh ones
+        if ($this.Footer) {
+            $this.Footer.ClearShortcuts()
+        }
 
         if ($this.AllowAdd) {
             # Use GetNewClosure() to capture current scope
             $addAction = {
                 # Find the screen that owns this List by walking up
                 $currentScreen = $global:PmcApp.CurrentScreen
-                # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] Action 'a' callback: currentScreen type=$($currentScreen.GetType().Name) key=$($currentScreen.ScreenKey)"
-                # }
                 $currentScreen.AddItem()
             }.GetNewClosure()
             $this.List.AddAction('a', 'Add', $addAction)
-        }
-
-        if ($this.AllowDelete) {
-            $deleteAction = {
-                $currentScreen = $global:PmcApp.CurrentScreen
-                $currentScreen.DeleteItem($currentScreen.List.GetSelectedItem())
-            }.GetNewClosure()
-            $this.List.AddAction('d', 'Delete', $deleteAction)
+            # Add footer shortcut
+            if ($this.Footer) { $this.Footer.AddShortcut('A', 'Add') }
         }
 
         if ($this.AllowEdit) {
@@ -575,24 +569,44 @@ class StandardListScreen : PmcScreen {
                 }
             }.GetNewClosure()
             $this.List.AddAction('e', 'Edit', $editAction)
+            # Add footer shortcut
+            if ($this.Footer) { $this.Footer.AddShortcut('E', 'Edit') }
         }
 
+        if ($this.AllowDelete) {
+            $deleteAction = {
+                $currentScreen = $global:PmcApp.CurrentScreen
+                $currentScreen.DeleteItem($currentScreen.List.GetSelectedItem())
+            }.GetNewClosure()
+            $this.List.AddAction('d', 'Delete', $deleteAction)
+            # Add footer shortcut
+            if ($this.Footer) { $this.Footer.AddShortcut('D', 'Delete') }
+        }
 
         # Add custom actions from subclass
         try {
             $customActions = $this.GetCustomActions()
-            $actionCount = $(if ($customActions -is [array]) { $customActions.Count } else { 1 })
             if ($null -ne $customActions) {
                 foreach ($action in $customActions) {
                     if ($null -ne $action -and $action -is [hashtable] -and $action.ContainsKey('Key') -and $action.ContainsKey('Label') -and $action.ContainsKey('Callback')) {
                         $this.List.AddAction($action.Key, $action.Label, $action.Callback)
+                        # Add footer shortcut for custom actions (skip space key - show as Spc)
+                        if ($this.Footer) {
+                            $keyLabel = if ($action.Key -eq ' ') { 'Spc' } else { $action.Key.ToString().ToUpper() }
+                            $this.Footer.AddShortcut($keyLabel, $action.Label)
+                        }
                     }
                 }
             }
         }
         catch {
-            # Write-PmcTuiLog "_ConfigureListActions: Error adding custom actions: $_" "ERROR"
-            # Write-PmcTuiLog "_ConfigureListActions: Error stack: $($_.ScriptStackTrace)" "ERROR"
+            # Silently handle custom action setup errors
+        }
+
+        # Always add standard navigation shortcuts at end
+        if ($this.Footer) {
+            $this.Footer.AddShortcut('Esc', 'Back')
+            $this.Footer.AddShortcut('F10', 'Menu')
         }
     }
 
@@ -609,6 +623,15 @@ class StandardListScreen : PmcScreen {
         # This fixes invisible MenuBar/Footer issues caused by 0x0 size
         $termSize = $this._GetTerminalSize()
         $this.Resize($termSize.Width, $termSize.Height)
+
+        # Sync List widget settings from screen settings
+        # This ensures subclass-modified settings (e.g., AllowMultiSelect=$false in ChecklistViewScreen)
+        # are properly applied to the List widget after subclass _InitializeScreen() has run
+        if ($this.List) {
+            $this.List.AllowMultiSelect = $this.AllowMultiSelect
+            $this.List.AllowInlineEdit = $this.AllowEdit
+            $this.List.AllowSearch = $this.AllowSearch
+        }
 
         # Configure list actions (ensures custom actions are registered even for singleton screens)
         $this._ConfigureListActions()

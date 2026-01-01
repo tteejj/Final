@@ -143,7 +143,7 @@ class ExcelProfileManagerScreen : StandardListScreen {
             return @(
                 @{ Name='name'; Type='text'; Label='Profile Name'; Required=$true; Value='' }
                 @{ Name='description'; Type='text'; Label='Description'; Value='' }
-                @{ Name='start_cell'; Type='text'; Label='Start Cell'; Value='A1' }
+                @{ Name='start_cell'; Type='text'; Label='Start Cell'; Value='A1'; Hint='First cell with data (e.g., A1, B2)' }
             )
         } else {
             # Existing profile - use hashtable accessor for consistency

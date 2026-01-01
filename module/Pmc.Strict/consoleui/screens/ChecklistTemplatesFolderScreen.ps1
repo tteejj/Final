@@ -9,6 +9,7 @@ Set-StrictMode -Version Latest
 . "$PSScriptRoot/../base/StandardListScreen.ps1"
 . "$PSScriptRoot/../services/ChecklistService.ps1"
 . "$PSScriptRoot/../widgets/ProjectPicker.ps1"
+. "$PSScriptRoot/../widgets/TextAreaEditor.ps1"
 
 class ChecklistTemplatesFolderScreen : StandardListScreen {
     hidden [ChecklistService]$_checklistService = $null
@@ -17,6 +18,12 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
     # Project Picker for Import
     hidden [ProjectPicker]$_projectPicker = $null
     hidden [bool]$_showProjectPicker = $false
+
+    # TUI Text Editor for inline editing
+    hidden [TextAreaEditor]$_textEditor = $null
+    hidden [bool]$_showTextEditor = $false
+    hidden [string]$_editingFilePath = ""
+    hidden [string]$_editingFileName = ""
 
     # Static: Register menu items
     static [void] RegisterMenuItems([object]$registry) {
@@ -116,7 +123,7 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
                 return
             }
 
-            $content = "# Checklist template: $name`n# Each line will become a checklist item`n# Delete these comment lines and add your items below`n`n"
+            $content = ""
             Set-Content -Path $filePath -Value $content -Encoding utf8
 
             $this.SetStatusMessage("Template '$name' created. Press Enter to edit.", "success")
@@ -176,10 +183,38 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
 
         try {
             if (Test-Path $filePath) {
-                if ($IsWindows -or $env:OS -match "Windows") {
+                if ($global:IsWindows -or $env:OS -match "Windows") {
                     Start-Process notepad.exe -ArgumentList $filePath
                 } else {
-                     $this.SetStatusMessage("Edit: $filePath (use external editor)", "info")
+                    # Linux: try xdg-open first, then common editors
+                    $opened = $false
+                    
+                    # Try xdg-open (opens with system default text editor)
+                    if (Get-Command xdg-open -ErrorAction SilentlyContinue) {
+                        Start-Process xdg-open -ArgumentList $filePath
+                        $opened = $true
+                    }
+                    # Fallback to common terminal editors
+                    elseif (Get-Command nano -ErrorAction SilentlyContinue) {
+                        # Note: This will suspend TUI - not ideal but functional
+                        $this.SetStatusMessage("Opening in nano... (exit with Ctrl+X)", "info")
+                        & nano $filePath
+                        $opened = $true
+                    }
+                    elseif (Get-Command vim -ErrorAction SilentlyContinue) {
+                        $this.SetStatusMessage("Opening in vim... (exit with :q)", "info")
+                        & vim $filePath
+                        $opened = $true
+                    }
+                    elseif (Get-Command vi -ErrorAction SilentlyContinue) {
+                        $this.SetStatusMessage("Opening in vi... (exit with :q)", "info")
+                        & vi $filePath
+                        $opened = $true
+                    }
+                    
+                    if (-not $opened) {
+                        $this.SetStatusMessage("No editor found. File: $filePath", "warning")
+                    }
                 }
             } else {
                 $this.SetStatusMessage("Template file not found", "error")
@@ -204,7 +239,7 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
             }
             @{
                 Key = 'O'
-                Label = 'Open/Edit'
+                Label = 'System Editor'
                 Callback = {
                     $selected = $self.List.GetSelectedItem()
                     if ($selected) {
@@ -212,7 +247,74 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
                     }
                 }.GetNewClosure()
             }
+            @{
+                Key = 'T'
+                Label = 'TUI Editor'
+                Callback = {
+                    $selected = $self.List.GetSelectedItem()
+                    if ($selected) {
+                        $self._OpenInTuiEditor($selected)
+                    }
+                }.GetNewClosure()
+            }
         )
+    }
+
+    # === TUI Text Editor ===
+
+    hidden [void] _OpenInTuiEditor($template) {
+        $filePath = $(if ($template -is [hashtable]) { $template['file_path'] } else { $template.file_path })
+        $fileName = $(if ($template -is [hashtable]) { $template['name'] } else { $template.name })
+
+        if (-not (Test-Path $filePath)) {
+            $this.SetStatusMessage("Template file not found", "error")
+            return
+        }
+
+        # Create editor if needed
+        if (-not $this._textEditor) {
+            $this._textEditor = [TextAreaEditor]::new()
+        }
+
+        # Load file content
+        try {
+            $content = Get-Content -Path $filePath -Raw -ErrorAction Stop
+            if ($null -eq $content) { $content = "" }
+            $this._textEditor.SetText($content)
+        } catch {
+            $this.SetStatusMessage("Error loading file: $($_.Exception.Message)", "error")
+            return
+        }
+
+        $this._editingFilePath = $filePath
+        $this._editingFileName = $fileName
+        $this._showTextEditor = $true
+        $this.NeedsClear = $true
+    }
+
+    hidden [void] _SaveAndCloseEditor() {
+        if (-not $this._showTextEditor) { return }
+
+        try {
+            $content = $this._textEditor.GetText()
+            Set-Content -Path $this._editingFilePath -Value $content -Encoding utf8 -NoNewline
+            $this.SetStatusMessage("Saved '$($this._editingFileName)'", "success")
+        } catch {
+            $this.SetStatusMessage("Error saving: $($_.Exception.Message)", "error")
+        }
+
+        $this._showTextEditor = $false
+        $this._editingFilePath = ""
+        $this._editingFileName = ""
+        $this.NeedsClear = $true
+        $this.LoadData()  # Refresh list to show updated item count
+    }
+
+    hidden [void] _CancelEditor() {
+        $this._showTextEditor = $false
+        $this._editingFilePath = ""
+        $this._editingFileName = ""
+        $this.NeedsClear = $true
     }
 
     # === Import Feature ===
@@ -280,9 +382,36 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
 
     # === Render Overrides ===
 
-    [void] RenderContentToEngine([object]$engine) {
-        # Render base list
-        ([StandardListScreen]$this).RenderContentToEngine($engine)
+    [void] RenderToEngine([object]$engine) {
+        # If text editor is showing, render ONLY the editor (skip list entirely)
+        if ($this._showTextEditor -and $this._textEditor) {
+            # Render base chrome (Menu, Header, Footer) but NOT the list
+            ([PmcScreen]$this).RenderToEngine($engine)
+
+            # Clear content area first
+            $editorY = 4  # Below menu/header
+            $editorHeight = $this.TermHeight - 7  # Leave room for footer/status
+            $contentBg = $this.GetThemedBgInt('Background.Row', 1, 0)
+            $engine.Fill(0, $editorY - 1, $this.TermWidth, $editorHeight + 2, ' ', 0, $contentBg)
+
+            # Position editor to fill content area
+            $this._textEditor.SetPosition(1, $editorY)
+            $this._textEditor.SetSize($this.TermWidth - 2, $editorHeight)
+            $this._textEditor.ShowCursor = $true
+
+            # Draw title bar
+            $titleText = " Editing: $($this._editingFileName) [Ctrl+S: Save & Exit | Esc: Cancel] "
+            $titleFg = $this.GetThemedInt('Foreground.Title')
+            $titleBg = $this.GetThemedBgInt('Background.Header', 1, 0)
+            $engine.Fill(0, $editorY - 1, $this.TermWidth, 1, ' ', $titleFg, $titleBg)
+            $engine.WriteAt(1, $editorY - 1, $titleText, $titleFg, $titleBg)
+
+            $this._textEditor.RenderToEngine($engine)
+            return
+        }
+
+        # Normal list rendering via base class
+        ([StandardListScreen]$this).RenderToEngine($engine)
         
         # Render Picker Overlay
         if ($this._showProjectPicker -and $this._projectPicker) {
@@ -299,6 +428,22 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
     }
 
     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
+        # TUI Text Editor handling
+        if ($this._showTextEditor -and $this._textEditor) {
+            # Ctrl+S: Save and exit
+            if ($keyInfo.Key -eq [ConsoleKey]::S -and ($keyInfo.Modifiers -band [ConsoleModifiers]::Control)) {
+                $this._SaveAndCloseEditor()
+                return $true
+            }
+            # Escape: Cancel without saving
+            if ($keyInfo.Key -eq [ConsoleKey]::Escape) {
+                $this._CancelEditor()
+                return $true
+            }
+            # Route all other keys to the editor
+            return $this._textEditor.HandleInput($keyInfo)
+        }
+
         if ($this._showProjectPicker -and $this._projectPicker) {
             return $this._projectPicker.HandleInput($keyInfo)
         }

@@ -123,16 +123,16 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
             return @(
                 @{ Name='name'; Type='text'; Label='Profile Name'; Required=$true; Value='' }
                 @{ Name='description'; Type='text'; Label='Description'; Value='' }
-                @{ Name='source_workbook_path'; Type='text'; Label='Source Workbook Path'; Required=$true; Value='' }
-                @{ Name='dest_workbook_path'; Type='text'; Label='Dest Workbook Path'; Required=$true; Value='' }
+                @{ Name='source_workbook_path'; Type='text'; Label='Source Workbook Path'; Required=$true; Value=''; Hint='Full path to source .xlsx file' }
+                @{ Name='dest_workbook_path'; Type='text'; Label='Dest Workbook Path'; Required=$true; Value=''; Hint='Full path to destination .xlsx file' }
             )
         } else {
             # Existing profile
             return @(
                 @{ Name='name'; Type='text'; Label='Profile Name'; Required=$true; Value=$item.name }
                 @{ Name='description'; Type='text'; Label='Description'; Value=$item.description }
-                @{ Name='source_workbook_path'; Type='text'; Label='Source Workbook Path'; Required=$true; Value=$item.source_workbook_path }
-                @{ Name='dest_workbook_path'; Type='text'; Label='Dest Workbook Path'; Required=$true; Value=$item.dest_workbook_path }
+                @{ Name='source_workbook_path'; Type='text'; Label='Source Workbook Path'; Required=$true; Value=$item.source_workbook_path; Hint='Full path to source .xlsx file' }
+                @{ Name='dest_workbook_path'; Type='text'; Label='Dest Workbook Path'; Required=$true; Value=$item.dest_workbook_path; Hint='Full path to destination .xlsx file' }
             )
         }
     }

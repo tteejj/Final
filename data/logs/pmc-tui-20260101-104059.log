@@ -1,0 +1,117 @@
+[2026-01-01 10:41:01.899] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-01 10:41:01.902] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-01 10:41:01.903] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-01 10:41:01.904] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-01 10:41:01.905] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-01 10:41:01.906] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-01 10:41:01.907] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-01 10:41:01.907] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-01 10:41:01.908] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-01 10:41:01.909] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-01 10:41:01.910] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-01 10:41:01.911] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-01 10:41:01.912] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-01 10:41:01.912] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-01 10:41:01.913] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-01 10:41:01.928] ServiceContainer: Resolving 'Application'...
+[2026-01-01 10:41:01.929] ServiceContainer: Resolving 'Theme'...
+[2026-01-01 10:41:02.093] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-01 10:41:02.166] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-01 10:41:02.167] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-01 10:41:02.178] ServiceContainer: Resolved 'Application' successfully
+[2026-01-01 10:41:02.179] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-01 10:41:02.188] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-01 10:41:02.203] MenuRegistry: Loaded manifest with 16 entries
+[2026-01-01 10:41:02.225] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-01 10:41:02.226] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-01 10:41:02.238] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-01 10:41:02.240] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-01 10:41:02.241] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-01 10:41:02.242] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-01 10:41:02.244] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-01 10:41:02.244] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-01 10:41:02.246] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-01 10:41:02.247] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-01 10:41:02.248] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-01 10:41:02.249] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-01 10:41:02.250] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-01 10:41:02.251] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-01 10:41:02.258] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-01 10:41:02.259] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-01 10:41:02.260] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-01 10:41:02.261] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-01 10:41:02.262] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-01 10:41:02.263] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-01 10:41:02.264] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-01 10:41:02.265] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-01 10:41:02.266] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-01 10:41:02.267] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-01 10:41:02.268] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-01 10:41:02.269] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-01 10:41:02.270] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-01 10:41:02.272] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-01 10:41:02.272] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-01 10:41:02.273] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-01 10:41:02.275] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-01 10:41:02.276] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-01 10:41:02.277] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-01 10:41:02.278] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-01 10:41:02.279] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-01 10:41:02.280] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-01 10:41:02.281] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-01 10:41:02.282] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-01 10:41:02.283] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-01 10:41:02.284] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-01 10:41:02.285] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-01 10:41:02.286] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-01 10:41:02.287] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-01 10:41:02.288] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-01 10:41:02.289] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-01 10:41:02.290] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-01 10:41:02.291] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-01 10:41:02.292] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-01 10:41:02.294] ServiceContainer: Resolving 'TaskListScreen'...
+[2026-01-01 10:41:02.295] ServiceContainer: Resolving 'TaskStore'...
+[2026-01-01 10:41:02.382] ServiceContainer: Resolved 'TaskStore' successfully
+[2026-01-01 10:41:03.052] _PopulateMenusFromRegistry: Menu 'Tools' has 6 items from registry (array)
+[2026-01-01 10:41:03.068] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2026-01-01 10:41:03.070] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2026-01-01 10:41:03.072] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2026-01-01 10:41:03.075] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2026-01-01 10:41:03.076] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2026-01-01 10:41:03.078] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2026-01-01 10:41:10.320] ServiceContainer: Resolving 'ChecklistTemplatesFolderScreen'...
+[2026-01-01 10:41:10.444] ServiceContainer: Resolved 'ChecklistTemplatesFolderScreen' successfully
+[2026-01-01 10:41:13.664] [ERROR] Render error: Theme Property Missing: 'Background.Content'
+[2026-01-01 10:41:13.664] [ERROR] Location: /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:186
+[2026-01-01 10:41:13.664] [ERROR] Line:             throw "Theme Property Missing: '$propertyName'"
+
+[2026-01-01 10:41:13.666] [ERROR] Stack: at GetBackgroundInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 186
+at GetThemedBgInt, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 709
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ChecklistTemplatesFolderScreen.ps1: line 394
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 464
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 614
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-01 10:44:11.672] [ERROR] Render error: Theme Property Missing: 'Background.Content'
+[2026-01-01 10:44:11.672] [ERROR] Location: /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:186
+[2026-01-01 10:44:11.673] [ERROR] Line:             throw "Theme Property Missing: '$propertyName'"
+
+[2026-01-01 10:44:11.673] [ERROR] Stack: at GetBackgroundInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 186
+at GetThemedBgInt, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 709
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ChecklistTemplatesFolderScreen.ps1: line 394
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 464
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 614
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-01 10:44:13.285] [ERROR] Render error: Theme Property Missing: 'Background.Content'
+[2026-01-01 10:44:13.285] [ERROR] Location: /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1:186
+[2026-01-01 10:44:13.287] [ERROR] Line:             throw "Theme Property Missing: '$propertyName'"
+
+[2026-01-01 10:44:13.288] [ERROR] Stack: at GetBackgroundInt, /home/teej/ztest/module/Pmc.Strict/consoleui/src/PmcThemeEngine.ps1: line 186
+at GetThemedBgInt, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 709
+at RenderToEngine, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ChecklistTemplatesFolderScreen.ps1: line 394
+at _RenderCurrentScreen, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 234
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 464
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 614
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37

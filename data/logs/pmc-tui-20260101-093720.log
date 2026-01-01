@@ -1,0 +1,112 @@
+[2026-01-01 09:37:23.204] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-01 09:37:23.209] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-01 09:37:23.210] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-01 09:37:23.212] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-01 09:37:23.213] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-01 09:37:23.214] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-01 09:37:23.216] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-01 09:37:23.218] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-01 09:37:23.219] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-01 09:37:23.220] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-01 09:37:23.222] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-01 09:37:23.224] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-01 09:37:23.225] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-01 09:37:23.226] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-01 09:37:23.227] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-01 09:37:23.250] ServiceContainer: Resolving 'Application'...
+[2026-01-01 09:37:23.253] ServiceContainer: Resolving 'Theme'...
+[2026-01-01 09:37:23.543] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-01 09:37:23.670] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-01 09:37:23.673] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-01 09:37:23.693] ServiceContainer: Resolved 'Application' successfully
+[2026-01-01 09:37:23.694] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-01 09:37:23.711] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-01 09:37:23.737] MenuRegistry: Loaded manifest with 16 entries
+[2026-01-01 09:37:23.775] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-01 09:37:23.776] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-01 09:37:23.798] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-01 09:37:23.801] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-01 09:37:23.802] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-01 09:37:23.805] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-01 09:37:23.807] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-01 09:37:23.808] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-01 09:37:23.810] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-01 09:37:23.813] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-01 09:37:23.814] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-01 09:37:23.826] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-01 09:37:23.829] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-01 09:37:23.830] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-01 09:37:23.832] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-01 09:37:23.834] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-01 09:37:23.836] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-01 09:37:23.838] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-01 09:37:23.840] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-01 09:37:23.841] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-01 09:37:23.843] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-01 09:37:23.845] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-01 09:37:23.846] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-01 09:37:23.848] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-01 09:37:23.850] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-01 09:37:23.852] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-01 09:37:23.854] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-01 09:37:23.857] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-01 09:37:23.858] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-01 09:37:23.860] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-01 09:37:23.862] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-01 09:37:23.864] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-01 09:37:23.866] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-01 09:37:23.868] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-01 09:37:23.869] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-01 09:37:23.871] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-01 09:37:23.874] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-01 09:37:23.875] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-01 09:37:23.876] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-01 09:37:23.878] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-01 09:37:23.879] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-01 09:37:23.881] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-01 09:37:23.883] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-01 09:37:23.884] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-01 09:37:23.885] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-01 09:37:23.887] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-01 09:37:23.888] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-01 09:37:23.890] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-01 09:37:23.892] ServiceContainer: Resolving 'TaskListScreen'...
+[2026-01-01 09:37:23.894] ServiceContainer: Resolving 'TaskStore'...
+[2026-01-01 09:37:24.051] ServiceContainer: Resolved 'TaskStore' successfully
+[2026-01-01 09:37:25.221] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2026-01-01 09:37:25.246] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2026-01-01 09:37:25.251] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2026-01-01 09:37:25.257] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2026-01-01 09:37:25.260] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2026-01-01 09:37:25.266] _PopulateMenusFromRegistry: Menu 'Tools' has 6 items from registry (array)
+[2026-01-01 09:37:25.269] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2026-01-01 09:37:37.279] ServiceContainer: Resolving 'ChecklistsLauncherScreen'...
+[2026-01-01 09:37:37.379] ServiceContainer: Resolved 'ChecklistsLauncherScreen' successfully
+[2026-01-01 09:37:57.457] ServiceContainer: Resolving 'ChecklistTemplatesFolderScreen'...
+[2026-01-01 09:37:57.477] [ERROR] ServiceContainer: Failed to resolve 'ChecklistTemplatesFolderScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ChecklistTemplatesFolderScreen.ps1:179 char:21
++                 if ($IsWindows -or $env:OS -match "Windows") {
++                     ~~~~~~~~~~
+Variable is not assigned in the method.
+[2026-01-01 09:37:57.479] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 2
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 504
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 979
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 614
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-01 09:37:57.483] [ERROR] MenuRegistry: Error launching 'ChecklistTemplatesFolderScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ChecklistTemplatesFolderScreen.ps1:179 char:21
++                 if ($IsWindows -or $env:OS -match "Windows") {
++                     ~~~~~~~~~~
+Variable is not assigned in the method.
+[2026-01-01 09:37:57.484] Stack trace: 
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 2
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 504
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 979
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 614
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37

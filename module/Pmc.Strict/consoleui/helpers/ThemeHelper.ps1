@@ -52,14 +52,34 @@ function Invoke-ThemeHotReload {
             Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeHotReload] PmcThemeManager.Reload completed"
         }
 
-        # 4. Force full screen refresh if app is running
+        # 4. Invalidate PmcThemeEngine cache so colors are re-resolved
+        try {
+            $engine = [PmcThemeEngine]::GetInstance()
+            if ($engine) {
+                $engine.InvalidateCache()
+            }
+        } catch { }
+
+        # 5. Force full screen refresh if app is running
         if ($global:PmcApp) {
             # Request clear to invalidate render buffer
             $global:PmcApp.RenderEngine.RequestClear()
 
             # Mark current screen dirty to force redraw
             if ($global:PmcApp.CurrentScreen) {
-                $global:PmcApp.CurrentScreen.NeedsClear = $true
+                $screen = $global:PmcApp.CurrentScreen
+                $screen.NeedsClear = $true
+                
+                # Force header and footer to re-theme themselves
+                if ($screen.Header) {
+                    $screen.Header._themeInitialized = $false
+                }
+                if ($screen.Footer) {
+                    $screen.Footer._themeInitialized = $false
+                }
+                if ($screen.StatusBar) {
+                    $screen.StatusBar._themeInitialized = $false
+                }
             }
 
             # Request render on next frame

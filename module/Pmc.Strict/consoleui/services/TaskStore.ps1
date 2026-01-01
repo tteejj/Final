@@ -260,11 +260,8 @@ class TaskStore {
         [Monitor]::Enter($this._dataLock)
         try {
             try {
-                # FIX: Call Get-PmcData via explicit module invocation
-                # Write-PmcTuiLog "TaskStore.LoadData: Calling Get-PmcData" "DEBUG"
-                $pmcModule = Get-Module -Name 'Pmc.Strict'
-                $pmcData = & $pmcModule { Get-PmcData }
-                # Write-PmcTuiLog "TaskStore.LoadData: Get-PmcData returned - tasks=$($pmcData.tasks.Count) projects=$($pmcData.projects.Count) timelogs=$($pmcData.timelogs.Count)" "DEBUG"
+                # STANDALONE: Load data directly via DataService (no module dependency)
+                $pmcData = [DataService]::LoadData()
 
                 if ($null -eq $pmcData) {
                     $this.LastError = "Get-PmcData returned null"
@@ -432,17 +429,8 @@ class TaskStore {
                     # Write-PmcTuiLog "TaskStore.SaveData: First project - name='$(Get-SafeProperty $firstProject 'name')' ID1='$(Get-SafeProperty $firstProject 'ID1')'" "DEBUG"
                 }
 
-                # PHASE 4: Call Save-PmcData via explicit module invocation
-                # Write-PmcTuiLog "TaskStore.SaveData: Calling Save-PmcData" "INFO"
-                $pmcModule = Get-Module -Name 'Pmc.Strict'
-                if ($null -eq $pmcModule) {
-                    $this.LastError = "Pmc.Strict module not loaded - cannot save"
-                    # Write-PmcTuiLog "TaskStore.SaveData: FATAL - Pmc.Strict module not found" "ERROR"
-                    return $false
-                }
-                
-                & $pmcModule { param($data) Save-PmcData -Data $data } $dataToSave
-                # Write-PmcTuiLog "TaskStore.SaveData: Save-PmcData completed successfully" "INFO"
+                # PHASE 4: STANDALONE - Save data directly via DataService (no module dependency)
+                [DataService]::SaveData($dataToSave)
 
                 # PHASE 5: Verify save success
                 # Write-PmcTuiLog "TaskStore.SaveData: Verifying save" "DEBUG"
@@ -536,16 +524,9 @@ class TaskStore {
     #>
     hidden [void] _CreatePersistentBackup() {
         try {
-            # Get tasks.json path
-            $pmcModule = Get-Module -Name 'Pmc.Strict'
-            if ($null -eq $pmcModule) {
-                # Write-PmcTuiLog "_CreatePersistentBackup: Pmc.Strict module not found, skipping backup" "WARNING"
-                return
-            }
-
-            $tasksFile = & $pmcModule { Get-PmcTaskFilePath }
+            # STANDALONE: Get tasks.json path directly from DataService
+            $tasksFile = [DataService]::GetDataFilePath()
             if (-not (Test-Path $tasksFile)) {
-                # Write-PmcTuiLog "_CreatePersistentBackup: tasks.json does not exist yet, skipping backup" "DEBUG"
                 return
             }
 
@@ -586,14 +567,8 @@ class TaskStore {
     #>
     hidden [void] _VerifySave([hashtable]$savedData) {
         try {
-            $pmcModule = Get-Module -Name 'Pmc.Strict'
-            if ($null -eq $pmcModule) {
-                # Write-PmcTuiLog "_VerifySave: Pmc.Strict module not found, cannot verify" "WARNING"
-                return
-            }
-
-            # Reload data from disk
-            $reloadedData = & $pmcModule { Get-PmcData }
+            # STANDALONE: Reload data directly via DataService (no module dependency)
+            $reloadedData = [DataService]::LoadData()
             
             if ($null -eq $reloadedData) {
                 # Write-PmcTuiLog "_VerifySave: Reloaded data is null!" "ERROR"

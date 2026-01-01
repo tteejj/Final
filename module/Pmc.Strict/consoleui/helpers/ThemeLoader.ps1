@@ -164,7 +164,8 @@ function Get-ActiveTheme {
     $themeName = 'default'  # Default if nothing configured
     
     try {
-        $cfg = Get-PmcConfig
+        # STANDALONE: Use DataService instead of module function
+        $cfg = [DataService]::LoadConfig()
         if ($cfg -and $cfg.Display -and $cfg.Display.Theme -and $cfg.Display.Theme.Active) {
             $themeName = $cfg.Display.Theme.Active
         }
@@ -290,6 +291,83 @@ function Set-ActiveTheme {
     }
 }
 
+<#
+.SYNOPSIS
+Initialize theme system without module dependency (standalone mode)
+
+.DESCRIPTION
+Replaces module's Initialize-PmcThemeSystem for standalone consoleui.
+Reads theme from config, loads theme file, configures PmcThemeEngine.
+
+.PARAMETER Force
+Force re-initialization even if already done
+#>
+function Initialize-PmcThemeSystemStandalone {
+    param([switch]$Force)
+    
+    # Get theme name from config
+    $themeName = 'default'
+    try {
+        $config = [DataService]::LoadConfig()
+        if ($config.Display -and $config.Display.Theme -and $config.Display.Theme.Active) {
+            $themeName = $config.Display.Theme.Active
+        }
+    } catch {
+        # Use default
+    }
+    
+    # Load theme file
+    $theme = Load-Theme -themeName $themeName
+    if (-not $theme) {
+        $theme = Load-Theme -themeName 'default'
+    }
+    
+    if (-not $theme) {
+        # Create minimal default theme
+        $theme = @{
+            Name = 'default'
+            Hex = '#33aaff'
+            Properties = @{}
+        }
+    }
+    
+    # Configure PmcThemeEngine if available
+    try {
+        if (([System.Management.Automation.PSTypeName]'PmcThemeEngine').Type) {
+            $engine = [PmcThemeEngine]::GetInstance()
+            if ($engine -and $theme.Properties) {
+                $engine.Configure($theme.Properties)
+            }
+        }
+    } catch {
+        # Engine may not be loaded yet
+    }
+    
+    # Configure PmcThemeManager if available  
+    try {
+        if (([System.Management.Automation.PSTypeName]'PmcThemeManager').Type) {
+            $manager = [PmcThemeManager]::GetInstance()
+            if ($manager) {
+                # Set the theme directly on the manager
+                $manager.PmcTheme = @{
+                    PaletteName = $theme.Name
+                    Hex = $theme.Hex
+                    Properties = $theme.Properties
+                    TrueColor = $true
+                    HighContrast = $false
+                    ColorBlindMode = 'none'
+                }
+            }
+        }
+    } catch {
+        # Manager may not be loaded yet
+    }
+}
+
+# Alias for compatibility - standalone version replaces module version
+function Initialize-PmcThemeSystem {
+    param([switch]$Force)
+    Initialize-PmcThemeSystemStandalone -Force:$Force
+}
 
 
-Export-ModuleMember -Function Get-AvailableThemes, Load-Theme, Get-ActiveTheme, Set-ActiveTheme

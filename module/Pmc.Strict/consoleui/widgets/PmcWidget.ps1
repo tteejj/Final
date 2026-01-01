@@ -143,44 +143,14 @@ class PmcWidget : Component {
         if ($this._themeInitialized) { return }
 
         try {
-            # Get PMC theme state
-            $displayState = Get-PmcState -Section 'Display'
-            if ($displayState) {
-                $this._pmcTheme = $displayState.Theme
-                $this._pmcStyleTokens = $displayState.Styles
-            }
-
-            # Fallback to defaults if state not available
-            # FAIL FAST
-            # if (-not $this._pmcTheme) {
-            #    $this._pmcTheme = @{
-            #        PaletteName = 'default'
-            #        Hex = '#33aaff'
-            #        TrueColor = $true
-            #    }
-            # }
-
-            # FAIL FAST
-            # if (-not $this._pmcStyleTokens) {
-            #    $this._pmcStyleTokens = @{
-            #        Title = @{ Fg = '#33aaff' }
-            #        Body = @{ Fg = '#CCCCCC' }
-            #        Border = @{ Fg = '#666666' }
-            #    }
-            # }
-
+            # STANDALONE: Theme is loaded by PmcThemeEngine singleton
+            # PmcWidget uses GetThemedColorInt/GetThemedFg/GetThemedBg which go to PmcThemeEngine
+            # No need to load theme state directly - engine handles it
             $this._themeInitialized = $true
         }
         catch {
-            # FAIL FAST
-            throw
-            
-            # Fallback - widget still functional with defaults
-            # if (Get-Command Write-PmcTuiLog -ErrorAction SilentlyContinue) {
-            #     Write-PmcTuiLog "Theme initialization failed: $($_.Exception.Message)" "ERROR"
-            #     Write-PmcTuiLog "Stack: $($_.ScriptStackTrace)"
-            # }
-            # $this._themeInitialized = $true
+            # Log and continue - widgets should be robust
+            $this._themeInitialized = $true
         }
     }
 

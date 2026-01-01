@@ -3,6 +3,7 @@ using namespace System.Text
 
 # ThemeEditorScreen - Theme selection and preview
 # Allows users to view available themes and apply them
+# STANDALONE: Uses DataService instead of module functions
 
 Set-StrictMode -Version Latest
 
@@ -63,17 +64,14 @@ class ThemeEditorScreen : PmcScreen {
     }
 
     # === GRADIENT RENDERING ===
-    # Renders text with per-character horizontal gradient (magenta to cyan)
     hidden [void] _RenderGradientText([object]$engine, [int]$x, [int]$y, [string]$text, [string]$startHex, [string]$endHex, [object]$bgColor) {
         if ([string]::IsNullOrEmpty($text)) { return }
 
-        # Parse start color
         $sHex = $startHex.TrimStart('#')
         $sR = [Convert]::ToInt32($sHex.Substring(0, 2), 16)
         $sG = [Convert]::ToInt32($sHex.Substring(2, 2), 16)
         $sB = [Convert]::ToInt32($sHex.Substring(4, 2), 16)
 
-        # Parse end color
         $eHex = $endHex.TrimStart('#')
         $eR = [Convert]::ToInt32($eHex.Substring(0, 2), 16)
         $eG = [Convert]::ToInt32($eHex.Substring(2, 2), 16)
@@ -82,20 +80,13 @@ class ThemeEditorScreen : PmcScreen {
         $len = $text.Length
         for ($i = 0; $i -lt $len; $i++) {
             $t = if ($len -eq 1) { 0 } else { $i / ($len - 1) }
-
-            # Linear interpolation
             $r = [int]($sR + ($eR - $sR) * $t)
             $g = [int]($sG + ($eG - $sG) * $t)
             $b = [int]($sB + ($eB - $sB) * $t)
-
-            # Clamp to 0-255
             $r = [Math]::Max(0, [Math]::Min(255, $r))
             $g = [Math]::Max(0, [Math]::Min(255, $g))
             $b = [Math]::Max(0, [Math]::Min(255, $b))
-
-            # Convert to int for WriteAt (packed RGB)
             $fg = ($r -shl 16) -bor ($g -shl 8) -bor $b
-
             $char = $text[$i]
             $engine.WriteAt($x + $i, $y, [string]$char, $fg, $bgColor)
         }
@@ -109,8 +100,9 @@ class ThemeEditorScreen : PmcScreen {
             $this.Themes = Get-AvailableThemes
             
             # Get current theme name from config
+            # STANDALONE: Use DataService instead of module function
             try {
-                $cfg = Get-PmcConfig
+                $cfg = [DataService]::LoadConfig()
                 if ($cfg -and $cfg.Display -and $cfg.Display.Theme -and $cfg.Display.Theme.Active) {
                     $activeTheme = $cfg.Display.Theme.Active
                     foreach ($theme in $this.Themes) {
@@ -165,7 +157,6 @@ class ThemeEditorScreen : PmcScreen {
 
             $x = $this.Header.X + 4
 
-            # GRADIENT: Render Synthwave theme with per-character magenta→cyan gradient
             if ($theme.Name -eq "Synthwave") {
                 $this._RenderGradientText($engine, $x, $rowY, $theme.Name.PadRight(15), "#ff00ff", "#00ffff", $rowBg)
                 $x += 15
@@ -192,12 +183,11 @@ class ThemeEditorScreen : PmcScreen {
             $previewY = $startY + [Math]::Min($this.Themes.Count, $maxLines) + 2
 
             if ($previewY -lt $this.Footer.Y - 2) {
-                $engine.WriteAt($this.Header.X + 4, $previewY, "━" * 50, $headerColor, $bg)
+                $engine.WriteAt($this.Header.X + 4, $previewY, [string]::new([char]0x2501, 50), $headerColor, $bg)
                 $previewY++
 
                 $engine.WriteAt($this.Header.X + 4, $previewY, "Selected: ", $textColor, $bg)
                 
-                # Gradient preview for Synthwave
                 if ($theme.Name -eq "Synthwave") {
                     $this._RenderGradientText($engine, $this.Header.X + 14, $previewY, $theme.Name, "#ff00ff", "#00ffff", $bg)
                 }
@@ -253,10 +243,7 @@ class ThemeEditorScreen : PmcScreen {
             $this.CurrentTheme = $theme.Name
             $reloadSuccess = Invoke-ThemeHotReload $theme.Name
             
-            if ($reloadSuccess) {
-                # Theme applied successfully - no message needed, visual change is confirmation
-            }
-            else {
+            if (-not $reloadSuccess) {
                 Start-Sleep -Milliseconds 800
                 if ($global:PmcApp) {
                     $global:PmcApp.RenderEngine.RequestClear()

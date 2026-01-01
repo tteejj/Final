@@ -1,5 +1,6 @@
 # PmcThemeManager - Unified theme system bridging PMC and SpeedTUI
 # Handles PMC's sophisticated palette derivation + SpeedTUI's theme manager
+# STANDALONE: No module dependency - uses DataService and Load-Theme directly
 
 using namespace System.Collections.Generic
 
@@ -30,18 +31,64 @@ class PmcThemeManager {
     }
 
     [void] _Initialize() {
-        # Load theme from PMC state
-        $this.PmcTheme = Get-PmcState -Section 'Display' -Key 'Theme'
+        # STANDALONE: Load theme directly from files (no module dependency)
+        try {
+            # Get theme name from config
+            $themeName = 'default'
+            try {
+                $config = [DataService]::LoadConfig()
+                if ($config.Display -and $config.Display.Theme -and $config.Display.Theme.Active) {
+                    $themeName = $config.Display.Theme.Active
+                }
+            } catch {
+                # Use default
+            }
+            
+            # Load theme file
+            $theme = Load-Theme -themeName $themeName
+            if (-not $theme) {
+                $theme = Load-Theme -themeName 'default'
+            }
+            
+            if ($theme) {
+                $this.PmcTheme = @{
+                    PaletteName = $theme.Name
+                    Hex = $theme.Hex
+                    Properties = $theme.Properties
+                    TrueColor = $true
+                    HighContrast = $false
+                    ColorBlindMode = 'none'
+                }
+            } else {
+                # Minimal fallback
+                $this.PmcTheme = @{
+                    PaletteName = 'default'
+                    Hex = '#33aaff'
+                    Properties = @{}
+                    TrueColor = $true
+                    HighContrast = $false
+                    ColorBlindMode = 'none'
+                }
+            }
+        } catch {
+            # Minimal fallback on any error
+            $this.PmcTheme = @{
+                PaletteName = 'default'
+                Hex = '#33aaff'
+                Properties = @{}
+                TrueColor = $true
+                HighContrast = $false
+                ColorBlindMode = 'none'
+            }
+        }
         
         # FIX: Convert Properties to Hashtable if it's a PSCustomObject
-        # This prevents "Method invocation failed... does not contain a method named 'ContainsKey'"
         if ($this.PmcTheme -and $this.PmcTheme.Properties -is [System.Management.Automation.PSCustomObject]) {
             $propsHash = @{}
             foreach ($prop in $this.PmcTheme.Properties.PSObject.Properties) {
                 $propsHash[$prop.Name] = $prop.Value
             }
-            # Update PmcTheme to use the hashtable for Properties
-            $this.PmcTheme | Add-Member -MemberType NoteProperty -Name 'Properties' -Value $propsHash -Force
+            $this.PmcTheme.Properties = $propsHash
         }
 
         # Configure Engine if available
@@ -168,7 +215,7 @@ class PmcThemeManager {
             Primary = $this.GetAnsiSequence('Primary', $false)
             PrimaryBg = $this.GetAnsiSequence('Primary', $true)
 
-            # Dialog colors (common pattern from TimeListScreen)
+            # Dialog colors
             DialogBg = $this.GetAnsiSequence('Surface', $true)
             DialogFg = $this.GetAnsiSequence('OnSurface', $false)
             DialogBorder = $this.GetAnsiSequence('Outline', $false)
@@ -203,7 +250,7 @@ class PmcThemeManager {
         $this._colorCache.Clear()
         $this._ansiCache.Clear()
 
-        # Reload from state
+        # Reload theme
         $this._Initialize()
     }
 
@@ -218,12 +265,22 @@ class PmcThemeManager {
         }
 
         try {
-            # Update config
-            $cfg = Get-PmcConfig
-            if (-not $cfg.Display) { $cfg.Display = @{} }
-            if (-not $cfg.Display.Theme) { $cfg.Display.Theme = @{} }
-            $cfg.Display.Theme.Hex = $hex
-            Save-PmcConfig $cfg
+            # STANDALONE: Update config via DataService
+            $cfg = [DataService]::LoadConfig()
+            if (-not $cfg.ContainsKey('Display')) { $cfg['Display'] = @{} }
+            if ($cfg.Display -isnot [hashtable]) {
+                $displayHash = @{}
+                foreach ($prop in $cfg.Display.PSObject.Properties) { $displayHash[$prop.Name] = $prop.Value }
+                $cfg['Display'] = $displayHash
+            }
+            if (-not $cfg.Display.ContainsKey('Theme')) { $cfg.Display['Theme'] = @{} }
+            if ($cfg.Display.Theme -isnot [hashtable]) {
+                $themeHash = @{}
+                foreach ($prop in $cfg.Display.Theme.PSObject.Properties) { $themeHash[$prop.Name] = $prop.Value }
+                $cfg.Display['Theme'] = $themeHash
+            }
+            $cfg.Display.Theme['Hex'] = $hex
+            [DataService]::SaveConfig($cfg)
 
             # Force theme re-initialization
             Initialize-PmcThemeSystem -Force
@@ -231,15 +288,14 @@ class PmcThemeManager {
             # Reload this manager
             $this.Reload()
 
-            # CRITICAL FIX: Notify PmcThemeEngine of theme change
-            # The engine caches theme properties and needs to reload
+            # Notify PmcThemeEngine of theme change
             try {
                 $engine = [PmcThemeEngine]::GetInstance()
                 if ($engine) {
                     $engine.InvalidateCache()
                 }
             } catch {
-                # PmcThemeEngine may not be available in all contexts
+                # PmcThemeEngine may not be available
             }
         } catch {
             throw "Failed to set theme: $_"
