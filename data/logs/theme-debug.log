@@ -862,3 +862,135 @@ Check the spelling of the name, or if a path was included, verify that the path 
 [19:01:55.965] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
 [19:01:55.969] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
 [19:01:55.974] [Load-Theme] Returning theme with Hex='#33aaff'
+[06:37:00.963] === THEME SELF-HEAL START ===
+[06:37:00.995] Config path: /home/teej/ztest/config.json
+[06:37:01.043] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[06:37:01.047] Hex already present, no repair needed
+[06:37:01.214] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[06:37:01.224] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[06:37:01.229] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[06:37:01.262] [Load-Theme] Returning theme with Hex='#33aaff'
+[06:37:01.353] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[06:37:01.356] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[06:37:01.360] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[06:37:01.368] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:01:33.219] === THEME SELF-HEAL START ===
+[07:01:33.254] Config path: /home/teej/ztest/config.json
+[07:01:33.309] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[07:01:33.313] Hex already present, no repair needed
+[07:01:33.498] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:01:33.509] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:01:33.519] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:01:33.551] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:01:33.635] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:01:33.637] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:01:33.642] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:01:33.650] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:02:05.919] === THEME SELF-HEAL START ===
+[07:02:05.946] Config path: /home/teej/ztest/config.json
+[07:02:05.998] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[07:02:06.003] Hex already present, no repair needed
+[07:02:06.197] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:02:06.207] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:02:06.212] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:02:06.249] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:02:06.344] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:02:06.347] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:02:06.352] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:02:06.361] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:11:40.221] === THEME SELF-HEAL START ===
+[07:11:40.247] Config path: /home/teej/ztest/config.json
+[07:11:40.298] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[07:11:40.302] Hex already present, no repair needed
+[07:11:40.493] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:11:40.504] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:11:40.509] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:11:40.544] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:11:40.638] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:11:40.641] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:11:40.646] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:11:40.656] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:16:24.033] === THEME SELF-HEAL START ===
+[07:16:24.059] Config path: /home/teej/ztest/config.json
+[07:16:24.111] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[07:16:24.116] Hex already present, no repair needed
+[07:16:24.311] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:16:24.322] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:16:24.328] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:16:24.361] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:16:24.452] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:16:24.455] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:16:24.460] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:16:24.468] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:35:42.413] === THEME SELF-HEAL START ===
+[07:35:42.439] Config path: /home/teej/ztest/config.json
+[07:35:42.492] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[07:35:42.497] Hex already present, no repair needed
+[07:35:42.690] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:35:42.701] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:35:42.706] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:35:42.753] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:35:42.872] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:35:42.876] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:35:42.881] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:35:42.889] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:38:28.350] === THEME SELF-HEAL START ===
+[07:38:28.399] Config path: /home/teej/ztest/config.json
+[07:38:28.489] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[07:38:28.495] Hex already present, no repair needed
+[07:38:28.717] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:38:28.729] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:38:28.734] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:38:28.771] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:38:28.871] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:38:28.875] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:38:28.880] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:38:28.889] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:48:30.823] === THEME SELF-HEAL START ===
+[07:48:30.860] Config path: /home/teej/ztest/config.json
+[07:48:30.917] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[07:48:30.921] Hex already present, no repair needed
+[07:48:31.117] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:48:31.129] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:48:31.134] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:48:31.170] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:48:31.266] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:48:31.269] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:48:31.274] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:48:31.282] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:51:18.791] === THEME SELF-HEAL START ===
+[07:51:18.818] Config path: /home/teej/ztest/config.json
+[07:51:18.874] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[07:51:18.879] Hex already present, no repair needed
+[07:51:19.082] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:51:19.095] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:51:19.100] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:51:19.136] [Load-Theme] Returning theme with Hex='#33aaff'
+[07:51:19.233] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:51:19.236] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[07:51:19.241] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[07:51:19.248] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:03:32.221] === THEME SELF-HEAL START ===
+[08:03:32.240] Config path: /home/teej/ztest/config.json
+[08:03:32.295] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[08:03:32.300] Hex already present, no repair needed
+[08:03:32.528] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:03:32.540] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[08:03:32.545] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[08:03:32.581] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:03:32.672] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:03:32.675] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[08:03:32.691] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[08:03:32.698] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:10:32.768] === THEME SELF-HEAL START ===
+[08:10:32.794] Config path: /home/teej/ztest/config.json
+[08:10:32.845] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[08:10:32.849] Hex already present, no repair needed
+[08:10:33.040] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:10:33.052] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[08:10:33.057] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[08:10:33.091] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:10:33.184] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:10:33.187] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[08:10:33.192] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[08:10:33.200] [Load-Theme] Returning theme with Hex='#33aaff'

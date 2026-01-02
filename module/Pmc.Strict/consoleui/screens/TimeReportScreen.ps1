@@ -91,7 +91,6 @@ class TimeReportScreen : PmcScreen {
                 $this.TotalHours = 0
                 # Enhanced feedback to guide user on what to do next
                 $this.ShowStatus("No time entries found. Press 'T' to add time entries in Time Tracking screen.")
-                # Write-PmcTuiLog "TimeReportScreen: No time entries found for report" "INFO"
                 return
             }
 
@@ -167,6 +166,40 @@ class TimeReportScreen : PmcScreen {
             $this._RenderReportToEngine($engine)
         }
     }
+
+    [string] RenderContent() { return "" }
+
+    hidden [void] _RenderEmptyStateToEngine([object]$engine) {
+        $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
+
+        # Colors
+        $textColor = $this.GetThemedInt('Foreground.Field')
+        $highlightColor = $this.GetThemedInt('Foreground.FieldFocused')
+        $bg = $this.GetThemedInt('Background.Primary')
+
+        # Title
+        $y = $contentRect.Y + 2
+        $engine.WriteAt($contentRect.X + 4, $y, "Time Report", $highlightColor, $bg)
+        $y += 2
+
+        # No entries message
+        $message = "No time entries found. Press 'T' to add time entries."
+        $engine.WriteAt($contentRect.X + 4, $y, $message, $textColor, $bg)
+    }
+
+    hidden [void] _RenderReportToEngine([object]$engine) {
+        $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
+
+        # Colors
+        $textColor = $this.GetThemedInt('Foreground.Field')
+        $highlightColor = $this.GetThemedInt('Foreground.FieldFocused')
+        $mutedColor = $this.GetThemedInt('Foreground.Muted')
+        $headerColor = $this.GetThemedInt('Foreground.Muted')
+        $successColor = $this.GetThemedInt('Foreground.Success')
+        $warningColor = $this.GetThemedInt('Foreground.Warning')
+        $bg = $this.GetThemedInt('Background.Primary')
+
+        $y = $contentRect.Y + 1
 
         # Column headers
         $headerY = $y

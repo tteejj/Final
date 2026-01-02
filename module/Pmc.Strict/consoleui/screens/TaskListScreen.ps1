@@ -2151,6 +2151,9 @@ class TaskListScreen : StandardListScreen {
         # 1. Base StandardListScreen rendering (Header, List, Footer, etc.)
         ([StandardListScreen]$this).RenderToEngine($engine)
 
+        # Reset to content layer for additional rendering
+        $engine.BeginLayer([ZIndex]::Content)
+
         # 2. Draw Stats in the gap between Header and List
         # Header ends at Y=something. List starts at Y=6.
         # Let's draw at Y=3 and Y=4.

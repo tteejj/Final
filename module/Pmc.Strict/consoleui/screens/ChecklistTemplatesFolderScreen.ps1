@@ -143,27 +143,20 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
     # === Custom Actions ===
 
     [void] _ConfigureListActions() {
-        "DEBUG: _ConfigureListActions called" | Out-File -Append "/home/teej/ztest/debug_input.log"
-        
         # Call base to setup standard actions
         ([StandardListScreen]$this)._ConfigureListActions()
 
         # OVERRIDE: Replace 'a' action to use custom OnAdd() instead of InlineEditor
         $addOverride = {
-            "DEBUG: Action 'a' triggered" | Out-File -Append "/home/teej/ztest/debug_input.log"
             $currentScreen = $global:PmcApp.CurrentScreen
             if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
-                "DEBUG: Calling OnAdd" | Out-File -Append "/home/teej/ztest/debug_input.log"
                 $currentScreen.OnAdd()
-            } else {
-                "DEBUG: CurrentScreen is not ChecklistTemplatesFolderScreen: $($currentScreen.GetType().Name)" | Out-File -Append "/home/teej/ztest/debug_input.log"
             }
         }.GetNewClosure()
         $this.List.AddAction('a', 'Add', $addOverride)
 
         # Add Import Action
         $importAction = {
-            "DEBUG: Action 'i' triggered" | Out-File -Append "/home/teej/ztest/debug_input.log"
             $currentScreen = $global:PmcApp.CurrentScreen
             if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
                 $item = $currentScreen.List.GetSelectedItem()
@@ -177,7 +170,6 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
         
         # Add TUI Editor Action (same as Edit but explicit key)
         $tuiEditAction = {
-            "DEBUG: Action 't' triggered" | Out-File -Append "/home/teej/ztest/debug_input.log"
             $currentScreen = $global:PmcApp.CurrentScreen
             if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
                 $currentScreen.OnEdit()
@@ -188,7 +180,6 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
 
         # Add Open in External Editor Action
         $openAction = {
-            "DEBUG: Action 'o' triggered" | Out-File -Append "/home/teej/ztest/debug_input.log"
             $currentScreen = $global:PmcApp.CurrentScreen
             if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
                 $item = $currentScreen.List.GetSelectedItem()
@@ -336,6 +327,9 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
             # Render base chrome (Header/Footer) but NOT the list
             ([PmcScreen]$this).RenderToEngine($engine)
             
+            # Reset to content layer to avoid overwriting menu dropdown
+            $engine.BeginLayer([ZIndex]::Content)
+            
             # Clear content area
             $bg = $this.Theme.GetColor('Background.Row') # Use Row bg as it's usually neutral
             $engine.Fill(0, 3, $this.TermWidth, $this.TermHeight - 4, ' ', $this.Theme.GetColor('Text.Primary'), $bg)
@@ -359,7 +353,6 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
     }
 
     [void] HandleKeyPress([ConsoleKeyInfo]$key) {
-        "DEBUG: HandleKeyPress $($key.KeyChar)" | Out-File -Append "/home/teej/ztest/debug_input.log"
         
         # Editor Input
         if ($this._showTextEditor) {

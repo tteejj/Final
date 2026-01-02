@@ -527,7 +527,9 @@ class UniversalList : PmcWidget {
     Scriptblock to invoke when action triggered
     #>
     [void] AddAction([string]$key, [string]$label, [scriptblock]$callback) {
-        $this._actions[$key] = @{
+        # Normalize key to lowercase for consistent lookup (HandleInput uses ToLower())
+        $normalizedKey = $key.ToLower()
+        $this._actions[$normalizedKey] = @{
             Label    = $label
             Callback = $callback
         }
@@ -541,7 +543,7 @@ class UniversalList : PmcWidget {
     Hotkey character
     #>
     [void] RemoveAction([string]$key) {
-        $this._actions.Remove($key)
+        $this._actions.Remove($key.ToLower())
     }
 
     <#
@@ -789,7 +791,20 @@ class UniversalList : PmcWidget {
             }
         }
 
-        # ?: Search mode (filter by text)
+        # PRIORITY: Check registered actions FIRST - screen-specific actions take precedence
+        # over built-in widget behaviors (F/C/?//). This allows screens to override any key.
+        $keyChar = $keyInfo.KeyChar.ToString().ToLower()
+        "DEBUG UniversalList.HandleInput: keyChar='$keyChar' KeyInfo.Key=$($keyInfo.Key) actions=$($this._actions.Keys -join ',')" | Out-File -Append "/home/teej/ztest/debug_input.log"
+        if ($this._actions.ContainsKey($keyChar)) {
+            "DEBUG UniversalList: FOUND and INVOKING action for '$keyChar'" | Out-File -Append "/home/teej/ztest/debug_input.log"
+            $action = $this._actions[$keyChar]
+            $this._InvokeCallback($action.Callback, $this)
+            return $true
+        } else {
+            "DEBUG UniversalList: NO action found for '$keyChar'" | Out-File -Append "/home/teej/ztest/debug_input.log"
+        }
+
+        # ?: Search mode (filter by text) - fallback if no action registered
         if ($keyInfo.KeyChar -eq '?' -and $this.AllowSearch) {
             $this.IsInSearchMode = $true
             $this._searchText = ""
@@ -847,20 +862,9 @@ class UniversalList : PmcWidget {
             }
         }
 
-        # C key - cycle selected column for width adjustment
+        # C key - cycle selected column for width adjustment (fallback if no action registered)
         if ($keyInfo.KeyChar -eq 'c' -or $keyInfo.KeyChar -eq 'C') {
             $this._selectedColumnIndex = ($this._selectedColumnIndex + 1) % $this._columns.Count
-            return $true
-        }
-
-        # Action handling
-        $keyChar = $keyInfo.KeyChar.ToString().ToLower()
-        "DEBUG: UniversalList.HandleInput keyChar='$keyChar' actions=$($this._actions.Keys -join ',')" | Out-File -Append "/home/teej/ztest/debug_input.log"
-
-        if ($this._actions.ContainsKey($keyChar)) {
-            "DEBUG: UniversalList.HandleInput found action for '$keyChar'" | Out-File -Append "/home/teej/ztest/debug_input.log"
-            $action = $this._actions[$keyChar]
-            $this._InvokeCallback($action.Callback, $this)
             return $true
         }
 

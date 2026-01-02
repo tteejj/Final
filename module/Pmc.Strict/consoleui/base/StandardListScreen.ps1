@@ -245,6 +245,11 @@ class StandardListScreen : PmcScreen {
         # 1. Render base chrome (Menu, Header, Footer, etc.)
         ([PmcScreen]$this).RenderToEngine($engine)
 
+        # CRITICAL: Reset to Content layer after parent call
+        # Parent ends on Dropdown layer (z=100), content must render on z=10
+        # so z-buffer correctly prevents content from overwriting menu dropdowns
+        $engine.BeginLayer([ZIndex]::Content)
+
         # 2. Render List (Main Content)
         if ($this.List) {
             # Ensure render mode is correct
@@ -792,7 +797,14 @@ class StandardListScreen : PmcScreen {
         # Show confirmation in status bar and wait for Y/N
         if ($this.StatusBar) {
             $this.StatusBar.SetLeftText("Delete '$itemDesc'? Press Y to confirm, any other key to cancel")
-            $this.Render() | Out-Host
+            
+            # Force immediate screen refresh using render engine
+            if ($this.RenderEngine) {
+                $this.RenderEngine.BeginFrame()
+                $this.RenderToEngine($this.RenderEngine)
+                $this.RenderEngine.EndFrame()
+            }
+            
             $confirmKey = [Console]::ReadKey($true)
 
             if ($confirmKey.KeyChar -ne 'y' -and $confirmKey.KeyChar -ne 'Y') {
