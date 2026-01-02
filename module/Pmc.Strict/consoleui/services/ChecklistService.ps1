@@ -21,7 +21,7 @@ class ChecklistService {
 
     # === Configuration ===
     hidden [string]$_checklistsDir
-    hidden [string]$_templatesFile
+    hidden [string]$_templatesDir
     hidden [string]$_instancesFile
 
     # === In-memory cache ===
@@ -58,80 +58,62 @@ class ChecklistService {
         # Determine checklists directory relative to PMC root
         $pmcRoot = Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $PSScriptRoot))
         $this._checklistsDir = Join-Path $pmcRoot "checklists"
-        $this._templatesFile = Join-Path $this._checklistsDir "templates.json"
+        $this._templatesDir = Join-Path $pmcRoot "checklist_templates"
         $this._instancesFile = Join-Path $this._checklistsDir "instances.json"
 
-        # Ensure checklists directory exists
+        # Ensure directories exist
         if (-not (Test-Path $this._checklistsDir)) {
             New-Item -ItemType Directory -Path $this._checklistsDir -Force | Out-Null
         }
+        if (-not (Test-Path $this._templatesDir)) {
+            New-Item -ItemType Directory -Path $this._templatesDir -Force | Out-Null
+        }
 
         # Load metadata
-        $this.LoadTemplates()
+        $this.ReloadTemplates()
         $this.LoadInstances()
     }
 
     # === Template Management ===
-    hidden [void] LoadTemplates() {
-        if (Test-Path $this._templatesFile) {
+    [void] ReloadTemplates() {
+        $this._templatesCache = @{}
+        
+        if (Test-Path $this._templatesDir) {
             try {
-                $json = Get-Content $this._templatesFile -Raw | ConvertFrom-Json -Depth 10
-                foreach ($template in $json.templates) {
+                $files = Get-ChildItem -Path $this._templatesDir -Filter "*.txt" -File
+                foreach ($file in $files) {
+                    # Parse content: each line is an item
+                    $content = Get-Content -Path $file.FullName
                     $items = @()
-                    foreach ($item in $template.items) {
-                        $items += @{
-                            text = $item.text
-                            order = $item.order
+                    $order = 1
+                    foreach ($line in $content) {
+                        if (-not [string]::IsNullOrWhiteSpace($line) -and -not $line.Trim().StartsWith("#")) {
+                            $items += @{
+                                text = $line
+                                order = $order++
+                            }
                         }
                     }
 
-                    $this._templatesCache[$template.id] = @{
-                        id = $template.id
-                        name = $template.name
-                        description = $template.description
-                        category = $template.category
+                    # Use filename as ID and Name
+                    $id = $file.BaseName
+                    
+                    $this._templatesCache[$id] = @{
+                        id = $id
+                        name = $id
+                        description = "Template from $id"
+                        category = "General"
                         items = $items
-                        created = [datetime]::Parse($template.created)
-                        modified = [datetime]::Parse($template.modified)
+                        file_path = $file.FullName
+                        created = $file.CreationTime
+                        modified = $file.LastWriteTime
                     }
                 }
                 $this._cacheLoadTime = [datetime]::Now
             } catch {
-                $this._templatesCache = @{}
+                # Log error but don't crash
+                # Write-Host "Error loading templates: $_"
             }
-        }
-    }
-
-    hidden [void] SaveTemplates() {
-        try {
-            $templates = @($this._templatesCache.Values | ForEach-Object {
-                @{
-                    id = $_.id
-                    name = $_.name
-                    description = $_.description
-                    category = $_.category
-                    items = @($_.items)
-                    created = $_.created.ToString("o")
-                    modified = $_.modified.ToString("o")
-                }
-            })
-
-            $metadata = @{
-                schema_version = 1
-                templates = $templates
-            }
-
-            $tempFile = "$($this._templatesFile).tmp"
-            $metadata | ConvertTo-Json -Depth 10 | Set-Content -Path $tempFile -Encoding utf8
-
-            if (Test-Path $this._templatesFile) {
-                Copy-Item $this._templatesFile "$($this._templatesFile).bak" -Force
-            }
-
-            Move-Item -Path $tempFile -Destination $this._templatesFile -Force
-
-        } catch {
-            throw
         }
     }
 
@@ -233,8 +215,18 @@ class ChecklistService {
     }
 
     [object] CreateTemplate([string]$name, [string]$description, [string]$category, [array]$itemTexts) {
-        $templateId = [guid]::NewGuid().ToString()
+        # Sanitize name for filename
+        $safeName = $name -replace '[\\/*?:"<>|]', '_'
+        $filePath = Join-Path $this._templatesDir "$safeName.txt"
+        
+        if (Test-Path $filePath) {
+            throw "Template '$name' already exists"
+        }
 
+        # Write content to file
+        $itemTexts | Set-Content -Path $filePath -Encoding utf8
+
+        # Create template object for cache
         $items = @()
         $order = 1
         foreach ($text in $itemTexts) {
@@ -245,18 +237,18 @@ class ChecklistService {
         }
 
         $template = @{
-            id = $templateId
+            id = $safeName
             name = $name
             description = $description
             category = $category
             items = $items
+            file_path = $filePath
             created = [datetime]::Now
             modified = [datetime]::Now
         }
 
-        $this._templatesCache[$templateId] = $template
-        $this.SaveTemplates()
-
+        $this._templatesCache[$safeName] = $template
+        
         if ($this.OnTemplateAdded) {
             & $this.OnTemplateAdded $template
         }
@@ -273,15 +265,38 @@ class ChecklistService {
         }
 
         $template = $this._templatesCache[$templateId]
+        
+        # If items changed, rewrite file
+        if ($changes.ContainsKey('items')) {
+            $template.items = $changes.items
+            $lines = $template.items | Sort-Object order | ForEach-Object { $_.text }
+            $lines | Set-Content -Path $template.file_path -Encoding utf8
+        }
 
-        if ($changes.ContainsKey('name')) { $template.name = $changes.name }
+        # If name changed, rename file
+        if ($changes.ContainsKey('name') -and $changes.name -ne $template.name) {
+            $oldPath = $template.file_path
+            $safeName = $changes.name -replace '[\\/*?:"<>|]', '_'
+            $newPath = Join-Path $this._templatesDir "$safeName.txt"
+            
+            if (Test-Path $newPath) {
+                throw "Template '$($changes.name)' already exists"
+            }
+            
+            Move-Item -Path $oldPath -Destination $newPath
+            
+            # Update cache key
+            $this._templatesCache.Remove($template.id)
+            $template.id = $safeName
+            $template.name = $changes.name
+            $template.file_path = $newPath
+            $this._templatesCache[$safeName] = $template
+        }
+
         if ($changes.ContainsKey('description')) { $template.description = $changes.description }
         if ($changes.ContainsKey('category')) { $template.category = $changes.category }
-        if ($changes.ContainsKey('items')) { $template.items = $changes.items }
 
         $template.modified = [datetime]::Now
-
-        $this.SaveTemplates()
 
         if ($this.OnTemplateUpdated) {
             & $this.OnTemplateUpdated $template
@@ -297,8 +312,13 @@ class ChecklistService {
         }
 
         $template = $this._templatesCache[$templateId]
+        
+        # Delete file
+        if (Test-Path $template.file_path) {
+            Remove-Item -Path $template.file_path -Force
+        }
+        
         $this._templatesCache.Remove($templateId)
-        $this.SaveTemplates()
 
         if ($this.OnTemplateDeleted) {
             & $this.OnTemplateDeleted $template

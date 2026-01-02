@@ -855,8 +855,10 @@ class UniversalList : PmcWidget {
 
         # Action handling
         $keyChar = $keyInfo.KeyChar.ToString().ToLower()
+        "DEBUG: UniversalList.HandleInput keyChar='$keyChar' actions=$($this._actions.Keys -join ',')" | Out-File -Append "/home/teej/ztest/debug_input.log"
 
         if ($this._actions.ContainsKey($keyChar)) {
+            "DEBUG: UniversalList.HandleInput found action for '$keyChar'" | Out-File -Append "/home/teej/ztest/debug_input.log"
             $action = $this._actions[$keyChar]
             $this._InvokeCallback($action.Callback, $this)
             return $true

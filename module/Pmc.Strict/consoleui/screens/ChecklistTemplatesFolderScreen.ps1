@@ -74,230 +74,174 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
     }
 
     [void] LoadData() {
+        # Refresh service cache to ensure we see latest files
+        $this._checklistService.ReloadTemplates()
+        
         $items = $this.LoadItems()
         $this.List.SetData($items)
     }
 
     [array] LoadItems() {
         $templates = @()
-        $files = Get-ChildItem -Path $this._templatesFolder -Filter "*.txt" -File -ErrorAction SilentlyContinue
+        
+        # Use service as source of truth
+        $serviceTemplates = $this._checklistService.GetAllTemplates()
 
-        foreach ($file in $files) {
-            $lineCount = 0
-            try {
-                $content = Get-Content -Path $file.FullName -ErrorAction Stop
-                $lineCount = @($content | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }).Count
-            } catch { $lineCount = 0 }
-
+        foreach ($tmpl in $serviceTemplates) {
             $templates += @{
-                name = $file.BaseName
-                file_path = $file.FullName
-                item_count = $lineCount
-                modified = $file.LastWriteTime.ToString("yyyy-MM-dd HH:mm")
+                name = $tmpl.name
+                file_path = $tmpl.file_path
+                item_count = $tmpl.items.Count
+                modified = $tmpl.modified.ToString("yyyy-MM-dd HH:mm")
             }
         }
         return $templates
     }
 
-    [array] GetEditFields([object]$item) {
-        if ($null -eq $item -or $item.Count -eq 0) {
-            return @(@{ Name='name'; Type='text'; Label='Template Name'; Required=$true; Value='' })
-        } else {
-            return @(@{ Name='name'; Type='text'; Label='Template Name'; Required=$true; Value=$item.name })
+    [void] OnAdd() {
+        # Create a new file via editor
+        $this._editingFileName = "New Template.txt"
+        $this._editingFilePath = Join-Path $this._templatesFolder $this._editingFileName
+        
+        # Ensure unique name
+        $counter = 1
+        while (Test-Path $this._editingFilePath) {
+            $this._editingFileName = "New Template $counter.txt"
+            $this._editingFilePath = Join-Path $this._templatesFolder $this._editingFileName
+            $counter++
+        }
+
+        # Create empty file
+        "" | Set-Content -Path $this._editingFilePath -Encoding utf8
+
+        $this._OpenEditor($this._editingFilePath)
+    }
+
+    [void] OnEdit() {
+        $item = $this.List.GetSelectedItem()
+        if ($item) {
+            $this._OpenEditor($item.file_path)
         }
     }
 
-    [void] OnItemCreated([hashtable]$values) {
-        try {
-            if (-not $values.ContainsKey('name') -or [string]::IsNullOrWhiteSpace($values.name)) {
-                $this.SetStatusMessage("Template name is required", "error")
-                return
-            }
-
-            $name = $values.name
-            $fileName = "$name.txt"
-            $filePath = Join-Path $this._templatesFolder $fileName
-
-            if (Test-Path $filePath) {
-                $this.SetStatusMessage("Template '$name' already exists", "error")
-                return
-            }
-
-            $content = ""
-            Set-Content -Path $filePath -Value $content -Encoding utf8
-
-            $this.SetStatusMessage("Template '$name' created. Press Enter to edit.", "success")
-            $this.LoadData()
-        } catch {
-            $this.SetStatusMessage("Error creating template: $($_.Exception.Message)", "error")
-        }
-    }
-
-    [void] OnItemUpdated([object]$item, [hashtable]$values) {
-        try {
-            $oldName = $(if ($item -is [hashtable]) { $item['name'] } else { $item.name })
-            $oldPath = $(if ($item -is [hashtable]) { $item['file_path'] } else { $item.file_path })
-
-            if (-not $values.ContainsKey('name') -or [string]::IsNullOrWhiteSpace($values.name)) {
-                $this.SetStatusMessage("Template name is required", "error")
-                return
-            }
-
-            $newName = $values.name
-            $newPath = Join-Path $this._templatesFolder "$newName.txt"
-
-            if ($oldPath -eq $newPath) { return }
-
-            if (Test-Path $newPath) {
-                $this.SetStatusMessage("Template '$newName' already exists", "error")
-                return
-            }
-
-            Move-Item -Path $oldPath -Destination $newPath -Force
-            $this.SetStatusMessage("Template renamed to '$newName'", "success")
-            $this.LoadData()
-        } catch {
-            $this.SetStatusMessage("Error renaming template: $($_.Exception.Message)", "error")
-        }
-    }
-
-    [void] OnItemDeleted([object]$item) {
-        try {
-            $name = $(if ($item -is [hashtable]) { $item['name'] } else { $item.name })
-            $filePath = $(if ($item -is [hashtable]) { $item['file_path'] } else { $item.file_path })
-
-            if (Test-Path $filePath) {
-                Remove-Item -Path $filePath -Force
-                $this.SetStatusMessage("Template '$name' deleted", "success")
-                $this.LoadData()
-            } else {
-                $this.SetStatusMessage("Template file not found", "error")
-            }
-        } catch {
-            $this.SetStatusMessage("Error deleting template: $($_.Exception.Message)", "error")
-        }
-    }
-
-    [void] OnItemActivated($item) {
-        $filePath = $(if ($item -is [hashtable]) { $item['file_path'] } else { $item.file_path })
-
-        try {
-            if (Test-Path $filePath) {
-                if ($global:IsWindows -or $env:OS -match "Windows") {
-                    Start-Process notepad.exe -ArgumentList $filePath
-                } else {
-                    # Linux: try xdg-open first, then common editors
-                    $opened = $false
-                    
-                    # Try xdg-open (opens with system default text editor)
-                    if (Get-Command xdg-open -ErrorAction SilentlyContinue) {
-                        Start-Process xdg-open -ArgumentList $filePath
-                        $opened = $true
-                    }
-                    # Fallback to common terminal editors
-                    elseif (Get-Command nano -ErrorAction SilentlyContinue) {
-                        # Note: This will suspend TUI - not ideal but functional
-                        $this.SetStatusMessage("Opening in nano... (exit with Ctrl+X)", "info")
-                        & nano $filePath
-                        $opened = $true
-                    }
-                    elseif (Get-Command vim -ErrorAction SilentlyContinue) {
-                        $this.SetStatusMessage("Opening in vim... (exit with :q)", "info")
-                        & vim $filePath
-                        $opened = $true
-                    }
-                    elseif (Get-Command vi -ErrorAction SilentlyContinue) {
-                        $this.SetStatusMessage("Opening in vi... (exit with :q)", "info")
-                        & vi $filePath
-                        $opened = $true
-                    }
-                    
-                    if (-not $opened) {
-                        $this.SetStatusMessage("No editor found. File: $filePath", "warning")
-                    }
+    [void] OnDelete() {
+        $item = $this.List.GetSelectedItem()
+        if ($item) {
+            $this.ShowConfirmation("Delete Template", "Are you sure you want to delete '$($item.name)'?", {
+                try {
+                    # Use service to delete
+                    $this._checklistService.DeleteTemplate($item.name)
+                    $this.SetStatusMessage("Deleted template '$($item.name)'", "success")
+                    $this.LoadData()
+                } catch {
+                    $this.SetStatusMessage("Failed to delete: $_", "error")
                 }
+            })
+        }
+    }
+
+    # === Custom Actions ===
+
+    [void] _ConfigureListActions() {
+        "DEBUG: _ConfigureListActions called" | Out-File -Append "/home/teej/ztest/debug_input.log"
+        
+        # Call base to setup standard actions
+        ([StandardListScreen]$this)._ConfigureListActions()
+
+        # OVERRIDE: Replace 'a' action to use custom OnAdd() instead of InlineEditor
+        $addOverride = {
+            "DEBUG: Action 'a' triggered" | Out-File -Append "/home/teej/ztest/debug_input.log"
+            $currentScreen = $global:PmcApp.CurrentScreen
+            if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
+                "DEBUG: Calling OnAdd" | Out-File -Append "/home/teej/ztest/debug_input.log"
+                $currentScreen.OnAdd()
             } else {
-                $this.SetStatusMessage("Template file not found", "error")
+                "DEBUG: CurrentScreen is not ChecklistTemplatesFolderScreen: $($currentScreen.GetType().Name)" | Out-File -Append "/home/teej/ztest/debug_input.log"
             }
-        } catch {
-            $this.SetStatusMessage("Error opening template: $($_.Exception.Message)", "error")
-        }
+        }.GetNewClosure()
+        $this.List.AddAction('a', 'Add', $addOverride)
+
+        # Add Import Action
+        $importAction = {
+            "DEBUG: Action 'i' triggered" | Out-File -Append "/home/teej/ztest/debug_input.log"
+            $currentScreen = $global:PmcApp.CurrentScreen
+            if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
+                $item = $currentScreen.List.GetSelectedItem()
+                if ($item) {
+                    $currentScreen._ImportToProject($item)
+                }
+            }
+        }.GetNewClosure()
+
+        $this.List.AddAction('i', 'Import to Project', $importAction)
+        
+        # Add TUI Editor Action (same as Edit but explicit key)
+        $tuiEditAction = {
+            "DEBUG: Action 't' triggered" | Out-File -Append "/home/teej/ztest/debug_input.log"
+            $currentScreen = $global:PmcApp.CurrentScreen
+            if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
+                $currentScreen.OnEdit()
+            }
+        }.GetNewClosure()
+
+        $this.List.AddAction('t', 'Edit Template', $tuiEditAction)
+
+        # Add Open in External Editor Action
+        $openAction = {
+            "DEBUG: Action 'o' triggered" | Out-File -Append "/home/teej/ztest/debug_input.log"
+            $currentScreen = $global:PmcApp.CurrentScreen
+            if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
+                $item = $currentScreen.List.GetSelectedItem()
+                if ($item) {
+                    $currentScreen._OpenInExternalEditor($item.file_path)
+                }
+            }
+        }.GetNewClosure()
+
+        $this.List.AddAction('o', 'Open External', $openAction)
+        
+        # Update Footer
+        $this.Footer.ClearShortcuts()
+        $this.Footer.AddShortcut('A', 'Add')
+        $this.Footer.AddShortcut('E/T', 'Edit')
+        $this.Footer.AddShortcut('D', 'Delete')
+        $this.Footer.AddShortcut('I', 'Import')
+        $this.Footer.AddShortcut('O', 'Open External')
+        $this.Footer.AddShortcut('Esc', 'Back')
     }
 
-    [array] GetCustomActions() {
-        $self = $this
-        return @(
-            @{
-                Key = 'I'
-                Label = 'Import to Project'
-                Callback = {
-                    $selected = $self.List.GetSelectedItem()
-                    if ($selected) {
-                        $self._ImportToProject($selected)
-                    }
-                }.GetNewClosure()
-            }
-            @{
-                Key = 'O'
-                Label = 'System Editor'
-                Callback = {
-                    $selected = $self.List.GetSelectedItem()
-                    if ($selected) {
-                        $self.OnItemActivated($selected)
-                    }
-                }.GetNewClosure()
-            }
-            @{
-                Key = 'T'
-                Label = 'TUI Editor'
-                Callback = {
-                    $selected = $self.List.GetSelectedItem()
-                    if ($selected) {
-                        $self._OpenInTuiEditor($selected)
-                    }
-                }.GetNewClosure()
-            }
-        )
-    }
+    # === TUI Editor Logic ===
 
-    # === TUI Text Editor ===
-
-    hidden [void] _OpenInTuiEditor($template) {
-        $filePath = $(if ($template -is [hashtable]) { $template['file_path'] } else { $template.file_path })
-        $fileName = $(if ($template -is [hashtable]) { $template['name'] } else { $template.name })
-
-        if (-not (Test-Path $filePath)) {
-            $this.SetStatusMessage("Template file not found", "error")
-            return
+    hidden [void] _OpenEditor($filePath) {
+        $this._editingFilePath = $filePath
+        $this._editingFileName = Split-Path $filePath -Leaf
+        
+        $content = ""
+        if (Test-Path $filePath) {
+            $content = Get-Content -Path $filePath -Raw -Encoding utf8
         }
 
-        # Create editor if needed
         if (-not $this._textEditor) {
             $this._textEditor = [TextAreaEditor]::new()
         }
 
-        # Load file content
-        try {
-            $content = Get-Content -Path $filePath -Raw -ErrorAction Stop
-            if ($null -eq $content) { $content = "" }
-            $this._textEditor.SetText($content)
-        } catch {
-            $this.SetStatusMessage("Error loading file: $($_.Exception.Message)", "error")
-            return
-        }
-
-        $this._editingFilePath = $filePath
-        $this._editingFileName = $fileName
+        $this._textEditor.SetText($content)
+        $this._textEditor.SetTitle("Editing: $($this._editingFileName)")
+        $this._textEditor.SetSize($this.TermWidth, $this.TermHeight - 4) # Leave room for header/footer
+        $this._textEditor.SetPosition(0, 3) # Below header
+        
         $this._showTextEditor = $true
         $this.NeedsClear = $true
     }
 
     hidden [void] _SaveAndCloseEditor() {
-        if (-not $this._showTextEditor) { return }
-
         try {
             $content = $this._textEditor.GetText()
             Set-Content -Path $this._editingFilePath -Value $content -Encoding utf8 -NoNewline
+            
+            # Refresh service
+            $this._checklistService.ReloadTemplates()
+            
             $this.SetStatusMessage("Saved '$($this._editingFileName)'", "success")
         } catch {
             $this.SetStatusMessage("Error saving: $($_.Exception.Message)", "error")
@@ -307,7 +251,7 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
         $this._editingFilePath = ""
         $this._editingFileName = ""
         $this.NeedsClear = $true
-        $this.LoadData()  # Refresh list to show updated item count
+        $this.LoadData()
     }
 
     hidden [void] _CancelEditor() {
@@ -353,101 +297,94 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
     }
     
     hidden [void] _DoImport($template, $projectName) {
-        $filePath = if ($template -is [hashtable]) { $template.file_path } else { $template.file_path }
-        if (-not (Test-Path $filePath)) { 
-             $this.SetStatusMessage("Template file missing", "error")
-             return 
-        }
-        
         try {
-            $lines = Get-Content $filePath | Where-Object { 
-                -not [string]::IsNullOrWhiteSpace($_) -and -not $_.Trim().StartsWith("#") 
-            }
-            
-            if ($lines.Count -eq 0) {
-                 $this.SetStatusMessage("Template is empty", "error")
-                 return
-            }
-            
-            $title = if ($template -is [hashtable]) { $template.name } else { $template.name }
-            
-            # Create instance
-            $this._checklistService.CreateBlankInstance($title, "project", $projectName, $lines)
-            $this.SetStatusMessage("Imported '$title' to project '$projectName'", "success")
+            # Use service to create instance from template ID (which is the name)
+            $this._checklistService.CreateInstanceFromTemplate($template.name, "project", $projectName)
+            $this.SetStatusMessage("Imported '$($template.name)' to project '$projectName'", "success")
         }
         catch {
             $this.SetStatusMessage("Import failed: $($_.Exception.Message)", "error")
         }
     }
 
-    # === Render Overrides ===
+    # === External Editor ===
+    
+    hidden [void] _OpenInExternalEditor($filePath) {
+        if ($global:IsWindows) {
+            Start-Process "notepad.exe" -ArgumentList $filePath
+        } else {
+            if (Get-Command "xdg-open" -ErrorAction SilentlyContinue) {
+                Start-Process "xdg-open" -ArgumentList $filePath
+            } elseif (Get-Command "nano" -ErrorAction SilentlyContinue) {
+                # This blocks the UI, which is tricky. For now, just try to open
+                Start-Process "nano" -ArgumentList $filePath -Wait
+            } else {
+                $this.SetStatusMessage("No external editor found", "error")
+            }
+        }
+        
+        # Reload after external edit
+        $this._checklistService.ReloadTemplates()
+        $this.LoadData()
+    }
+
+    # === Rendering & Input ===
 
     [void] RenderToEngine([object]$engine) {
-        # If text editor is showing, render ONLY the editor (skip list entirely)
-        if ($this._showTextEditor -and $this._textEditor) {
-            # Render base chrome (Menu, Header, Footer) but NOT the list
+        # If editor is showing, ONLY render chrome + editor
+        if ($this._showTextEditor) {
+            # Render base chrome (Header/Footer) but NOT the list
             ([PmcScreen]$this).RenderToEngine($engine)
-
-            # Clear content area first
-            $editorY = 4  # Below menu/header
-            $editorHeight = $this.TermHeight - 7  # Leave room for footer/status
-            $contentBg = $this.GetThemedBgInt('Background.Row', 1, 0)
-            $engine.Fill(0, $editorY - 1, $this.TermWidth, $editorHeight + 2, ' ', 0, $contentBg)
-
-            # Position editor to fill content area
-            $this._textEditor.SetPosition(1, $editorY)
-            $this._textEditor.SetSize($this.TermWidth - 2, $editorHeight)
-            $this._textEditor.ShowCursor = $true
-
-            # Draw title bar
-            $titleText = " Editing: $($this._editingFileName) [Ctrl+S: Save & Exit | Esc: Cancel] "
-            $titleFg = $this.GetThemedInt('Foreground.Title')
-            $titleBg = $this.GetThemedBgInt('Background.Header', 1, 0)
-            $engine.Fill(0, $editorY - 1, $this.TermWidth, 1, ' ', $titleFg, $titleBg)
-            $engine.WriteAt(1, $editorY - 1, $titleText, $titleFg, $titleBg)
-
+            
+            # Clear content area
+            $bg = $this.Theme.GetColor('Background.Row') # Use Row bg as it's usually neutral
+            $engine.Fill(0, 3, $this.TermWidth, $this.TermHeight - 4, ' ', $this.Theme.GetColor('Text.Primary'), $bg)
+            
+            # Render Editor
             $this._textEditor.RenderToEngine($engine)
             return
         }
-
-        # Normal list rendering via base class
-        ([StandardListScreen]$this).RenderToEngine($engine)
         
-        # Render Picker Overlay
-        if ($this._showProjectPicker -and $this._projectPicker) {
-             # Re-center if terminal resized
-            $pW = 60
-            $pH = 20
-            $this._projectPicker.SetPosition(
-                [Math]::Max(0, [Math]::Floor(($this.TermWidth - $pW) / 2)),
-                [Math]::Max(0, [Math]::Floor(($this.TermHeight - $pH) / 2))
-            )
-            
+        # If project picker is showing
+        if ($this._showProjectPicker) {
+            # Render underlying list first
+            ([StandardListScreen]$this).RenderToEngine($engine)
+            # Then picker
             $this._projectPicker.RenderToEngine($engine)
+            return
         }
+
+        # Normal render
+        ([StandardListScreen]$this).RenderToEngine($engine)
     }
 
-    [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
-        # TUI Text Editor handling
-        if ($this._showTextEditor -and $this._textEditor) {
-            # Ctrl+S: Save and exit
-            if ($keyInfo.Key -eq [ConsoleKey]::S -and ($keyInfo.Modifiers -band [ConsoleModifiers]::Control)) {
+    [void] HandleKeyPress([ConsoleKeyInfo]$key) {
+        "DEBUG: HandleKeyPress $($key.KeyChar)" | Out-File -Append "/home/teej/ztest/debug_input.log"
+        
+        # Editor Input
+        if ($this._showTextEditor) {
+            # Check for Ctrl+S (Save)
+            if ($key.Key -eq 'S' -and ($key.Modifiers -band [ConsoleModifiers]::Control)) {
                 $this._SaveAndCloseEditor()
-                return $true
+                return
             }
-            # Escape: Cancel without saving
-            if ($keyInfo.Key -eq [ConsoleKey]::Escape) {
+            # Check for Esc (Cancel)
+            if ($key.Key -eq 'Escape') {
                 $this._CancelEditor()
-                return $true
+                return
             }
-            # Route all other keys to the editor
-            return $this._textEditor.HandleInput($keyInfo)
-        }
-
-        if ($this._showProjectPicker -and $this._projectPicker) {
-            return $this._projectPicker.HandleInput($keyInfo)
+            
+            $this._textEditor.HandleInput($key)
+            return
         }
         
-        return ([StandardListScreen]$this).HandleKeyPress($keyInfo)
+        # Project Picker Input
+        if ($this._showProjectPicker) {
+            $this._projectPicker.HandleInput($key)
+            return
+        }
+
+        # Normal Input
+        ([StandardListScreen]$this).HandleKeyPress($key)
     }
 }

@@ -1,25 +1,25 @@
 {
+  "schema_version": 1,
   "instances": [
     {
-      "completed_count": 1,
-      "title": "1",
-      "owner_type": "project",
+      "completed_count": 0,
+      "total_count": 1,
+      "percent_complete": 0.0,
+      "owner_id": "inbox",
       "items": [
         {
+          "text": "1",
           "order": 1,
-          "completed_date": "2026-01-01T11:42:30.6278736-07:00",
-          "completed": true,
-          "text": "1"
+          "completed": false,
+          "completed_date": null
         }
       ],
-      "created": "2026-01-01T11:42:09.2386320-07:00",
-      "total_count": 1,
-      "percent_complete": 100.0,
+      "owner_type": "project",
+      "modified": "2026-01-01T14:13:16.3509094-07:00",
+      "title": "1",
+      "created": "2026-01-01T11:42:09.0000000",
       "id": "0c4520f4-931e-46ce-8287-b0d97d3a3143",
-      "owner_id": "inbox",
-      "modified": "2026-01-01T11:42:30.6291899-07:00",
       "template_id": null
     }
-  ],
-  "schema_version": 1
+  ]
 }
