@@ -255,14 +255,38 @@ class CommandLibraryScreen : StandardListScreen {
         try {
             $itemId = $(if ($item -is [hashtable]) { $item['id'] } else { $item.id })
             $itemName = $(if ($item -is [hashtable]) { $item['name'] } else { $item.name })
+            
+            Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: Starting delete for id='$itemId' name='$itemName'" "DEBUG"
 
             if ($itemId) {
+                Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: Calling DeleteCommand..." "DEBUG"
                 $this._commandService.DeleteCommand($itemId)
+                Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: DeleteCommand completed" "DEBUG"
+                
+                # Force refresh list data from cache
+                Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: Calling LoadData..." "DEBUG"
+                $this.LoadData()
+                Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: LoadData completed, list now has $($this.List.Items.Count) items" "DEBUG"
+                
+                # Force immediate screen re-render
+                if ($this.RenderEngine) {
+                    Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: Starting render cycle..." "DEBUG"
+                    $this.RenderEngine.BeginFrame()
+                    $this.RenderToEngine($this.RenderEngine)
+                    $this.RenderEngine.EndFrame()
+                    Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: Render cycle completed" "DEBUG"
+                } else {
+                    Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: No RenderEngine available!" "WARNING"
+                }
+                
                 $this.SetStatusMessage("Command '$itemName' deleted", "success")
+                Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: Delete complete" "DEBUG"
             } else {
+                Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: No itemId found!" "ERROR"
                 $this.SetStatusMessage("Cannot delete command without ID", "error")
             }
         } catch {
+            Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: EXCEPTION - $($_.Exception.Message)" "ERROR"
             $this.SetStatusMessage("Error deleting command: $($_.Exception.Message)", "error")
         }
     }

@@ -368,7 +368,7 @@ class TextInput : PmcWidget {
             else {
                 # Focused but empty - show cursor at 0
                 if ($this._showCursor) {
-                    $engine.WriteAt($inputX, $inputY, " ", $bg, $fg) # Inverse space
+                    $engine.WriteAt($inputX, $inputY, "█", $fg, $bg) # Block cursor
                 }
                 if ($this.Placeholder) {
                     # Show placeholder starting at 1? Or overwrite cursor?
@@ -398,9 +398,7 @@ class TextInput : PmcWidget {
             
             # Overwrite cursor char if focused and visible
             if ($this.HasFocus -and $this._showCursor -and $cursorOffset -ge 0 -and $cursorOffset -le $visibleText.Length) {
-                
-                $char = if ($cursorOffset -lt $visibleText.Length) { $visibleText[$cursorOffset] } else { ' ' }
-                $engine.WriteAt($inputX + $cursorOffset, $inputY, "$char", $bg, $fg) # Inverse
+                $engine.WriteAt($inputX + $cursorOffset, $inputY, "█", $fg, $bg) # Block cursor
             }
         }
         

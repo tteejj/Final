@@ -1,41 +1,4 @@
 {
   "schema_version": 1,
-  "commands": [
-    {
-      "last_used": "2025-12-21T08:07:37.0000000",
-      "created": "2025-12-21T08:04:56.0000000",
-      "tags": null,
-      "category": "General",
-      "name": "c2",
-      "modified": "2025-12-21T08:04:56.0000000",
-      "usage_count": 4,
-      "description": "",
-      "id": "d2f4ec11-28aa-416c-9bfc-42dc2d37830c",
-      "command_text": "bbb"
-    },
-    {
-      "last_used": "2025-12-21T08:06:15.0000000",
-      "created": "2025-12-16T15:43:47.0000000",
-      "tags": null,
-      "category": "General",
-      "name": "c1",
-      "modified": "2025-12-16T15:43:47.0000000",
-      "usage_count": 7,
-      "description": "xxx",
-      "id": "13b59cd5-0ff0-4821-ac2d-e3685ef96475",
-      "command_text": "xxxx"
-    },
-    {
-      "last_used": "2025-12-21T21:45:45.9212637-07:00",
-      "created": "2025-12-21T21:29:42.0000000",
-      "tags": null,
-      "category": "General",
-      "name": "c1",
-      "modified": "2025-12-21T21:29:42.0000000",
-      "usage_count": 4,
-      "description": "",
-      "id": "af114dd0-6f24-4468-b81e-457c85bbe3e5",
-      "command_text": "test"
-    }
-  ]
+  "commands": null
 }

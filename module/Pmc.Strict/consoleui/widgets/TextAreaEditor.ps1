@@ -315,19 +315,13 @@ class TextAreaEditor : PmcWidget {
             }
         }
 
-        # Draw cursor (inverted character at cursor position) - ONLY if ShowCursor is true
+        # Draw cursor (block character at cursor position) - ONLY if ShowCursor is true
         if ($this.ShowCursor) {
             $cursorScreenY = $this.CursorY - $this.ScrollOffsetY
             $cursorScreenX = $this.CursorX - $this.ScrollOffsetX
             if ($cursorScreenY -ge 0 -and $cursorScreenY -lt $this.Height -and $cursorScreenX -ge 0 -and $cursorScreenX -lt $this.Width) {
-                $cursorLine = $this.GetLine($this.CursorY)
-                $cursorChar = " "  # Default to space for end-of-line cursor
-                if ($this.CursorX -ge 0 -and $this.CursorX -lt $cursorLine.Length) {
-                    # Get character at cursor position as string
-                    $cursorChar = [string]$cursorLine.Substring($this.CursorX, 1)
-                }
-                # Draw cursor with high contrast (use selection foreground which is usually white/bright)
-                $engine.WriteAt($this.X + $cursorScreenX, $this.Y + $cursorScreenY, $cursorChar, $selFg, $cursorBg)
+                # Draw block cursor
+                $engine.WriteAt($this.X + $cursorScreenX, $this.Y + $cursorScreenY, "█", $selFg, $textBg)
             }
         }
     }

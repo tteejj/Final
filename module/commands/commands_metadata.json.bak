@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "commands": {
+    "tags": [],
+    "last_used": null,
+    "category": "Test",
+    "name": "TestCmd",
+    "id": "80b8479e-9b3c-48e0-aad2-0681ba8a843c",
+    "created": "2026-01-02T14:42:12.6541669-07:00",
+    "command_text": "echo test",
+    "usage_count": 0,
+    "modified": "2026-01-02T14:42:12.6541757-07:00",
+    "description": ""
+  }
+}
