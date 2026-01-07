@@ -79,6 +79,14 @@ class TextExportMappingEditorScreen : StandardListScreen {
             $this._exportService.AddMapping($this._profileId, $values)
             $this.SetStatusMessage("Mapping added", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $_", "error")
         }
@@ -95,6 +103,14 @@ class TextExportMappingEditorScreen : StandardListScreen {
             $this._exportService.UpdateMapping($this._profileId, $item.id, $values)
             $this.SetStatusMessage("Mapping updated", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $_", "error")
         }
@@ -105,6 +121,14 @@ class TextExportMappingEditorScreen : StandardListScreen {
             $this._exportService.DeleteMapping($this._profileId, $item.id)
             $this.SetStatusMessage("Mapping deleted", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $_", "error")
         }

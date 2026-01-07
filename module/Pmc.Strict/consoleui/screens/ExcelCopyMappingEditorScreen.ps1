@@ -116,6 +116,14 @@ class ExcelCopyMappingEditorScreen : StandardListScreen {
             $this._copyService.AddMapping($this._profileId, $values)
             $this.SetStatusMessage("Mapping created", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $_", "error")
         }
@@ -137,6 +145,14 @@ class ExcelCopyMappingEditorScreen : StandardListScreen {
             $this._copyService.UpdateMapping($this._profileId, $item.id, $values)
             $this.SetStatusMessage("Mapping updated", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $_", "error")
         }
@@ -147,6 +163,14 @@ class ExcelCopyMappingEditorScreen : StandardListScreen {
             $this._copyService.DeleteMapping($this._profileId, $item.id)
             $this.SetStatusMessage("Mapping deleted", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $_", "error")
         }

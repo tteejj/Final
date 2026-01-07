@@ -133,6 +133,14 @@ class ChecklistViewScreen : StandardListScreen {
             $this.SetStatusMessage("Item added", "success")
             $this.LoadData()
             $this.NeedsClear = $true
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $($_.Exception.Message)", "error")
         }
@@ -156,6 +164,14 @@ class ChecklistViewScreen : StandardListScreen {
             $this.SetStatusMessage("Item updated", "success")
             $this.LoadData()
             $this.NeedsClear = $true
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $($_.Exception.Message)", "error")
         }
@@ -186,6 +202,14 @@ class ChecklistViewScreen : StandardListScreen {
             $this.SetStatusMessage("Item deleted", "success")
             $this.LoadData()
             $this.NeedsClear = $true
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
 
             # Ensure valid selection after delete
             if ($this.List._filteredData.Count -gt 0) {
@@ -210,6 +234,14 @@ class ChecklistViewScreen : StandardListScreen {
             # Refresh
             $this.LoadData()
             $this.NeedsClear = $true
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
 
             $completed = $this._instance.items[$index].completed
             $status = $(if ($completed) { "completed" } else { "uncompleted" })

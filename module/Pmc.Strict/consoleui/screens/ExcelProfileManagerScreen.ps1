@@ -174,6 +174,14 @@ class ExcelProfileManagerScreen : StandardListScreen {
             $this._mappingService.CreateProfile($name, $description, $startCell)
 
             $this.SetStatusMessage("Profile '$name' created", "success")
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error creating profile: $($_.Exception.Message)", "error")
         }
@@ -198,6 +206,14 @@ class ExcelProfileManagerScreen : StandardListScreen {
 
             $this._mappingService.UpdateProfile($itemId, $changes)
             $this.SetStatusMessage("Profile '$($changes.name)' updated", "success")
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error updating profile: $($_.Exception.Message)", "error")
         }
@@ -211,6 +227,14 @@ class ExcelProfileManagerScreen : StandardListScreen {
             if ($itemId) {
                 $this._mappingService.DeleteProfile($itemId)
                 $this.SetStatusMessage("Profile '$itemName' deleted", "success")
+                
+                # Invalidate cache and request render
+                if ($this.List) {
+                    $this.List.InvalidateCache()
+                }
+                if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                    $global:PmcApp.RequestRender()
+                }
             } else {
                 $this.SetStatusMessage("Cannot delete profile without ID", "error")
             }
@@ -250,6 +274,14 @@ class ExcelProfileManagerScreen : StandardListScreen {
             $this._mappingService.SetActiveProfile($itemId)
             $this.SetStatusMessage("Active profile set to '$itemName'", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             # Write-PmcTuiLog "SetActiveProfile: Error setting active profile '$itemName' - $_" "ERROR"
             $this.SetStatusMessage("Error setting active profile: $($_.Exception.Message)", "error")

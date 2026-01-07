@@ -103,6 +103,14 @@ class ChecklistsMenuScreen : StandardListScreen {
             $this._checklistService.CreateBlankInstance($values.title, $this._ownerType, $this._ownerId, @())
             $this.SetStatusMessage("Checklist '$($values.title)' created", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $($_.Exception.Message)", "error")
         }
@@ -116,6 +124,14 @@ class ChecklistsMenuScreen : StandardListScreen {
             $this._checklistService.DeleteInstance($id)
             $this.SetStatusMessage("Checklist '$title' deleted", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $($_.Exception.Message)", "error")
         }

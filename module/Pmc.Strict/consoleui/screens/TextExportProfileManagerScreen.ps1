@@ -120,6 +120,14 @@ class TextExportProfileManagerScreen : StandardListScreen {
             )
             $this.SetStatusMessage("Profile created", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $_", "error")
         }
@@ -130,6 +138,14 @@ class TextExportProfileManagerScreen : StandardListScreen {
             $this._exportService.UpdateProfile($item.id, $values)
             $this.SetStatusMessage("Profile updated", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $_", "error")
         }
@@ -140,6 +156,14 @@ class TextExportProfileManagerScreen : StandardListScreen {
             $this._exportService.DeleteProfile($item.id)
             $this.SetStatusMessage("Profile deleted", "success")
             $this.LoadData()
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Error: $_", "error")
         }
