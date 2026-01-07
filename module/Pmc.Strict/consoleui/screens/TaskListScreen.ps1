@@ -1226,7 +1226,14 @@ class TaskListScreen : StandardListScreen {
         if ($success) {
             $statusText = $(if ($newStatus) { "completed" } else { "reopened" })
             $this.SetStatusMessage("Task ${statusText}: $taskText", "success")
-            # TaskStore event will invalidate cache and trigger refresh
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         }
         else {
             $this.SetStatusMessage("Failed to update task: $($this.Store.LastError)", "error")
@@ -1259,7 +1266,14 @@ class TaskListScreen : StandardListScreen {
 
         if ($success) {
             $this.SetStatusMessage("Task completed: $taskText", "success")
-            # TaskStore event will invalidate cache and trigger refresh
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         }
         else {
             $this.SetStatusMessage("Failed to complete task: $($this.Store.LastError)", "error")
@@ -1301,7 +1315,14 @@ class TaskListScreen : StandardListScreen {
         $success = $this.Store.AddTask($clonedTask)
         if ($success) {
             $this.SetStatusMessage("Task cloned: $($clonedTask.text)", "success")
-            # TaskStore event will invalidate cache and trigger refresh
+            
+            # Invalidate cache and request render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         }
         else {
             $this.SetStatusMessage("Failed to clone task: $($this.Store.LastError)", "error")
@@ -1383,9 +1404,19 @@ class TaskListScreen : StandardListScreen {
             # Ensure parent_id is preserved
             $values.parent_id = $parentId
             $self.Store.AddTask($values)
+            
+            # Cleanup: hide editor and clear modal
             $self.ShowInlineEditor = $false
             $self._activeModal = $null
-            $self.RefreshList()
+            
+            # Invalidate cache and request render
+            if ($self.List) {
+                $self.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
+            
             $self.SetStatusMessage("Subtask added", "success")
         }.GetNewClosure()
 
@@ -1433,12 +1464,12 @@ class TaskListScreen : StandardListScreen {
         }
         $this.List.ClearSelection()
 
-        # BUG-12 FIX: Reload data after bulk operations to show updated state
-        try {
-            $this.LoadData()
+        # Invalidate cache and request render
+        if ($this.List) {
+            $this.List.InvalidateCache()
         }
-        catch {
-            # Write-PmcTuiLog "BulkCompleteSelected: LoadData failed: $_" "WARNING"
+        if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+            $global:PmcApp.RequestRender()
         }
     }
 
@@ -1482,6 +1513,14 @@ class TaskListScreen : StandardListScreen {
             $this.SetStatusMessage("Deleted $successCount tasks, failed $failCount", "warning")
         }
         $this.List.ClearSelection()
+        
+        # Invalidate cache and request render
+        if ($this.List) {
+            $this.List.InvalidateCache()
+        }
+        if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+            $global:PmcApp.RequestRender()
+        }
     }
 
     # Change view mode

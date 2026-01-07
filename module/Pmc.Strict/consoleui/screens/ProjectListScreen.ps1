@@ -645,6 +645,14 @@ class ProjectListScreen : StandardListScreen {
 
         $action = $(if ($newStatus -eq $script:ARCHIVED_STATUS) { "archived" } else { "activated" })
         $this.SetStatusMessage("Project ${action}: $projectName", "success")
+        
+        # Invalidate cache and request render
+        if ($this.List) {
+            $this.List.InvalidateCache()
+        }
+        if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+            $global:PmcApp.RequestRender()
+        }
     }
 
     # Open project folder

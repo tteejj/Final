@@ -156,18 +156,6 @@
       "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
       "created": "2026-01-06T17:26:23.746147-07:00",
       "priority": 3
-    },
-    {
-      "due": null,
-      "created": "2026-01-07T08:12:24.2971891-07:00",
-      "text": "subtask1",
-      "tags": [],
-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
-      "project": "",
-      "modified": "2026-01-07T08:12:24.2971891-07:00",
-      "completed": false,
-      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394",
-      "status": "pending"
     }
   ],
   "settings": {},
