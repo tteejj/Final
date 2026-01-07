@@ -1,4 +1,4 @@
-﻿# ProjectInfoScreenV4.ps1 - Tabbed interface for project details
+# ProjectInfoScreenV4.ps1 - Tabbed interface for project details
 #
 # Clean implementation using TabbedScreen base class
 # Organizes 57 fields into 6 logical tabs:
@@ -443,6 +443,7 @@ class ProjectInfoScreenV4 : TabbedScreen {
         $this.FilePicker = [PmcFilePicker]::new($startPath, $directoriesOnly)
         $this.ShowFilePicker = $true
         $this.FilePickerFieldName = $fieldName
+        $this._activeModal = $this.FilePicker # Phase B: Set active modal
         Write-PmcTuiLog "ProjectInfoScreenV4._BrowseForFile: FilePicker created, ShowFilePicker=$($this.ShowFilePicker)" "INFO"
     }
 
@@ -646,8 +647,9 @@ class ProjectInfoScreenV4 : TabbedScreen {
                 $self._ExecuteImportWithProfile($selectedProfile, $svc)
             }.GetNewClosure()
             
-            # Show dialog as overlay
-            $this._ShowProfilePicker($picker)
+            # Show dialog as active modal
+            $this._activeModal = $picker
+            $this.NeedsClear = $true
         }
     }
 
@@ -707,8 +709,9 @@ class ProjectInfoScreenV4 : TabbedScreen {
                 $self._ExecuteExportWithProfile($selectedProfile, $svc)
             }.GetNewClosure()
             
-            # Show dialog as overlay
-            $this._ShowProfilePicker($picker)
+            # Show dialog as active modal
+            $this._activeModal = $picker
+            $this.NeedsClear = $true
         }
     }
 
@@ -738,145 +741,49 @@ class ProjectInfoScreenV4 : TabbedScreen {
         }
     }
 
-    hidden [void] _ShowProfilePicker([object]$picker) {
-        # Simple synchronous dialog handling
-        # Note: For full async dialog support, this would need to integrate with the screen's
-        # overlay system similar to FilePicker. For now, we use blocking input loop.
-        $rawUI = $global:Host.UI.RawUI
-        if ($rawUI) {
-            $rawUI.FlushInputBuffer()
-        }
-        
-        while (-not $picker.IsComplete) {
-            # Render background + dialog
-            if ($global:PmcApp -and $global:PmcApp.RenderEngine) {
-                $engine = $global:PmcApp.RenderEngine
-                $engine.Clear()
-                $this.RenderContentToEngine($engine)
+    # === Input Handling ===
+
+    [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
+        # Phase B: Active modal gets priority
+        if ($this.HandleModalInput($keyInfo)) {
+            # Check for FilePicker completion
+            if ($this._activeModal -eq $this.FilePicker -and $this.FilePicker.IsComplete) {
+                if ($this.FilePicker.Result) {
+                    $path = $this.FilePicker.SelectedPath
+                    $fieldName = $this.FilePickerFieldName
+                    
+                    # Update field value
+                    $this.TabPanel.SetFieldValue($fieldName, $path)
+                    
+                    # Auto-save
+                    $this.SaveChanges()
+                }
                 
-                # Center the picker
-                $picker.X = [Math]::Max(2, [Math]::Floor(($engine.Width - $picker.Width) / 2))
-                $picker.Y = [Math]::Max(2, [Math]::Floor(($engine.Height - $picker.Height) / 2))
-                $picker.RenderToEngine($engine)
-                
-                $engine.Flush()
+                # Cleanup
+                $this.ShowFilePicker = $false
+                $this.FilePicker = $null
+                $this._activeModal = $null
+                $this.NeedsClear = $true
+            }
+            # Check for ProfilePickerDialog completion
+            elseif ($this._activeModal -is [ProfilePickerDialog] -and $this._activeModal.IsComplete) {
+                $this._activeModal = $null
+                $this.NeedsClear = $true
             }
             
-            # Wait for input
-            $key = [Console]::ReadKey($true)
-            $picker.HandleInput($key)
+            return $true
         }
-        
-        $this.NeedsClear = $true
+
+        # Call parent (TabbedScreen)
+        return ([TabbedScreen]$this).HandleKeyPress($keyInfo)
     }
 
     # === Rendering Override ===
     [void] RenderContentToEngine([object]$engine) {
         # Always render base tabbed screen
         ([TabbedScreen]$this).RenderContentToEngine($engine)
-
-        # File picker as overlay widget on top
-        if ($this.ShowFilePicker -and $null -ne $this.FilePicker) {
-            # Position as centered dialog widget
-            $this.FilePicker.X = [Math]::Max(1, [Math]::Floor(($engine.Width - 70) / 2))
-            $this.FilePicker.Y = [Math]::Max(1, [Math]::Floor(($engine.Height - 22) / 2))
-            $this.FilePicker.Width = 70
-            $this.FilePicker.Height = 22
-
-            # Render on top layer
-            if ($engine.PSObject.Methods['BeginLayer']) {
-                $engine.BeginLayer(20)
-            }
-
-            # Render the file picker widget
-            if ($this.FilePicker.PSObject.Methods['RenderToEngine']) {
-                $this.FilePicker.RenderToEngine($engine)
-            }
-
-            if ($engine.PSObject.Methods['EndLayer']) {
-                $engine.EndLayer()
-            }
-        }
-    }
-
-    # === Input Override ===
-    [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
-        # CRITICAL: Handle file picker BEFORE calling parent to prevent Enter key from being intercepted
-        if ($this.ShowFilePicker -and $null -ne $this.FilePicker) {
-            if ($global:PmcTuiLogFile) {
-                # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4: File picker active, routing key=$($keyInfo.Key) to picker"
-            }
-
-            # Route input to file picker
-            $handled = $this.FilePicker.HandleInput($keyInfo)
-
-            if ($global:PmcTuiLogFile) {
-                # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4: After HandleInput - handled=$handled IsComplete=$($this.FilePicker.IsComplete)"
-            }
-
-            # Check if file picker completed
-            if ($this.FilePicker.IsComplete) {
-                if ($global:PmcTuiLogFile) {
-                    # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4: File picker completed - Result=$($this.FilePicker.Result) SelectedPath='$($this.FilePicker.SelectedPath)' FieldName='$($this.FilePickerFieldName)'"
-                }
-
-                if ($this.FilePicker.Result) {
-                    # User selected something
-                    $selectedPath = $this.FilePicker.SelectedPath
-
-                    if ($global:PmcTuiLogFile) {
-                        # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4: Updating field '$($this.FilePickerFieldName)' with value '$selectedPath'"
-                    }
-
-                    $this.TabPanel.UpdateFieldValue($this.FilePickerFieldName, $selectedPath)
-
-                    if ($global:PmcTuiLogFile) {
-                        # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4: Field updated successfully, saving changes..."
-                    }
-
-                    # Save the changes to disk
-                    try {
-                        $this.SaveChanges()
-                        if ($this.StatusBar) {
-                            $this.StatusBar.SetRightText("Selected and saved: $selectedPath")
-                        }
-                    }
-                    catch {
-                        if ($this.StatusBar) {
-                            $this.StatusBar.SetRightText("Selected but save failed: $_")
-                        }
-                        if ($global:PmcTuiLogFile) {
-                            # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4: SaveChanges failed - $_"
-                        }
-                    }
-                }
-                else {
-                    if ($global:PmcTuiLogFile) {
-                        # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4: File picker cancelled"
-                    }
-                    if ($this.StatusBar) {
-                        $this.StatusBar.SetRightText("Cancelled")
-                    }
-                }
-                # Close file picker
-                $this.ShowFilePicker = $false
-                $this.FilePicker = $null
-                $this.FilePickerFieldName = ""
-
-                # Force full screen re-render to clear file picker overlay
-                $this.NeedsClear = $true
-                if ($global:PmcApp) {
-                    $global:PmcApp.IsDirty = $true
-                }
-            }
-
-            # IMPORTANT: Return true to prevent parent from handling the key
-            # This ensures Enter goes to the file picker, not TabbedScreen.EditCurrentField()
-            return $true
-        }
-
-        # Otherwise, call parent handler
-        return ([TabbedScreen]$this).HandleKeyPress($keyInfo)
+        
+        # Note: Active modals (FilePicker, ProfilePicker) are rendered by PmcScreen.RenderToEngine
     }
 }
 

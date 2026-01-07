@@ -237,7 +237,12 @@ class ChecklistViewScreen : StandardListScreen {
 
     # Override key handling for Space toggle
     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
-        if ($keyInfo.Key -eq [ConsoleKey]::Spacebar) {
+        # Phase B: Active modal gets priority
+        if ($this.HandleModalInput($keyInfo)) {
+            return $true
+        }
+
+        if ($keyInfo.Key -eq [ConsoleKey]::Spacebar -and -not $this.ShowInlineEditor) {
             $selected = $this.List.GetSelectedItem()
             if ($selected) {
                 $this._ToggleItem($selected)

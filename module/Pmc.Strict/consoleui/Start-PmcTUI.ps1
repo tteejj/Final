@@ -1,9 +1,10 @@
-﻿# Start-PmcTUI - Entry point for new PMC TUI architecture
+# Start-PmcTUI - Entry point for new PMC TUI architecture
 # Replaces old ConsoleUI.Core.ps1 monolithic approach
 
 param(
-    [switch]$DebugLog,      # Enable debug logging to file
-    [int]$LogLevel = 0      # 0=off, 1=errors only, 2=info, 3=verbose
+    [switch]$debug1,        # Enable error logging only
+    [switch]$debug2,        # Enable info + error logging
+    [switch]$debug3         # Enable verbose + info + error logging
 )
 
 Set-StrictMode -Version Latest
@@ -36,10 +37,14 @@ function Write-PmcDebugLog {
 # Setup logging (DISABLED BY DEFAULT for performance)
 # M-CFG-1: Configurable Log Path - uses environment variable or local directory for portability
 # PORTABILITY: Default to .pmc-data/logs directory relative to module root (self-contained)
-# IMPORTANT: Check PMC_TUI_LOG_LEVEL environment variable (set by external config)
-$effectiveLogLevel = if ($LogLevel -gt 0) { $LogLevel } else { [int]($env:PMC_TUI_LOG_LEVEL -as [int]) }
+# Determine log level from switches: -debug1 = 1, -debug2 = 2, -debug3 = 3
+$effectiveLogLevel = 0
+if ($debug3) { $effectiveLogLevel = 3 }
+elseif ($debug2) { $effectiveLogLevel = 2 }
+elseif ($debug1) { $effectiveLogLevel = 1 }
+elseif ($env:PMC_TUI_LOG_LEVEL) { $effectiveLogLevel = [int]($env:PMC_TUI_LOG_LEVEL -as [int]) }
 
-if ($DebugLog -or $effectiveLogLevel -gt 0) {
+if ($effectiveLogLevel -gt 0) {
     try {
         $logPath = $null
 
@@ -244,6 +249,7 @@ try {
     . "$PSScriptRoot/widgets/FilterPanel.ps1"
     . "$PSScriptRoot/widgets/InlineEditor.ps1"
     . "$PSScriptRoot/widgets/PmcFilePicker.ps1"
+    . "$PSScriptRoot/widgets/ProfilePickerDialog.ps1"
     . "$PSScriptRoot/widgets/PmcFooter.ps1"
     . "$PSScriptRoot/widgets/PmcHeader.ps1"
     . "$PSScriptRoot/widgets/PmcMenuBar.ps1"

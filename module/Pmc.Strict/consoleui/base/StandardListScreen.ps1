@@ -122,6 +122,7 @@ class StandardListScreen : PmcScreen {
     [string]$EditorMode = ""  # 'add' or 'edit'
     [object]$CurrentEditItem = $null
     hidden [bool]$_isHandlingInput = $false  # Re-entry guard for HandleKeyPress
+    hidden [int]$_restoreSelectedIndex = -1  # Index to restore on cancel
 
     # === Configuration ===
     [bool]$AllowAdd = $true
@@ -262,6 +263,7 @@ class StandardListScreen : PmcScreen {
         }
 
         if ($this.ShowInlineEditor -and $this.InlineEditor) {
+            Write-PmcTuiLog "StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=$($this.InlineEditor.Y)" "INFO"
             # CRITICAL FIX: Position editor over the current row
             if ($this.List) {
                 $selIndex = $this.List.GetSelectedIndex()
@@ -484,8 +486,8 @@ class StandardListScreen : PmcScreen {
         # Capture $this explicitly to avoid wrong screen receiving callback
         $thisScreen = $this
         $this.InlineEditor.OnConfirmed = {
-            param($text)
-            $thisScreen.OnInlineEditConfirmed($text)
+            param($values)
+            $thisScreen.OnInlineEditConfirmed($values)
         }.GetNewClosure()
 
         $this.InlineEditor.OnCancelled = {
@@ -548,44 +550,58 @@ class StandardListScreen : PmcScreen {
     Configure list actions (Add, Edit, Delete, + custom)
     #>
     hidden [void] _ConfigureListActions() {
+        if ($global:PmcTuiLogLevel -ge 2) {
+            Write-PmcTuiLog "StandardListScreen._ConfigureListActions: Configuring actions for $($this.ScreenTitle)" "INFO"
+        }
+        
         # Clear existing footer shortcuts and add fresh ones
         if ($this.Footer) {
             $this.Footer.ClearShortcuts()
         }
 
         if ($this.AllowAdd) {
-            # Use GetNewClosure() to capture current scope
-            $addAction = {
-                # Find the screen that owns this List by walking up
-                $currentScreen = $global:PmcApp.CurrentScreen
-                $currentScreen.AddItem()
-            }.GetNewClosure()
+            # Capture $this to prevent closure resolving to wrong screen
+            $self = $this
+            $addAction = { $self.AddItem() }.GetNewClosure()
             $this.List.AddAction('a', 'Add', $addAction)
             # Add footer shortcut
-            if ($this.Footer) { $this.Footer.AddShortcut('A', 'Add') }
+            if ($this.Footer) { 
+                $this.Footer.AddShortcut('A', 'Add')
+                if ($global:PmcTuiLogLevel -ge 3) {
+                    Write-PmcTuiLog "StandardListScreen: Added footer shortcut A -> Add" "DEBUG"
+                }
+            }
         }
 
         if ($this.AllowEdit) {
+            $self = $this
             $editAction = {
-                $currentScreen = $global:PmcApp.CurrentScreen
-                $selectedItem = $currentScreen.List.GetSelectedItem()
+                $selectedItem = $self.List.GetSelectedItem()
                 if ($null -ne $selectedItem) {
-                    $currentScreen.EditItem($selectedItem)
+                    $self.EditItem($selectedItem)
                 }
             }.GetNewClosure()
             $this.List.AddAction('e', 'Edit', $editAction)
             # Add footer shortcut
-            if ($this.Footer) { $this.Footer.AddShortcut('E', 'Edit') }
+            if ($this.Footer) { 
+                $this.Footer.AddShortcut('E', 'Edit')
+                if ($global:PmcTuiLogLevel -ge 3) {
+                    Write-PmcTuiLog "StandardListScreen: Added footer shortcut E -> Edit" "DEBUG"
+                }
+            }
         }
 
         if ($this.AllowDelete) {
-            $deleteAction = {
-                $currentScreen = $global:PmcApp.CurrentScreen
-                $currentScreen.DeleteItem($currentScreen.List.GetSelectedItem())
-            }.GetNewClosure()
+            $self = $this
+            $deleteAction = { $self.DeleteItem($self.List.GetSelectedItem()) }.GetNewClosure()
             $this.List.AddAction('d', 'Delete', $deleteAction)
             # Add footer shortcut
-            if ($this.Footer) { $this.Footer.AddShortcut('D', 'Delete') }
+            if ($this.Footer) { 
+                $this.Footer.AddShortcut('D', 'Delete')
+                if ($global:PmcTuiLogLevel -ge 2) {
+                    Write-PmcTuiLog "StandardListScreen: Added footer shortcut D -> Delete" "INFO"
+                }
+            }
         }
 
         # Add custom actions from subclass
@@ -599,6 +615,9 @@ class StandardListScreen : PmcScreen {
                         if ($this.Footer) {
                             $keyLabel = if ($action.Key -eq ' ') { 'Spc' } else { $action.Key.ToString().ToUpper() }
                             $this.Footer.AddShortcut($keyLabel, $action.Label)
+                            if ($global:PmcTuiLogLevel -ge 3) {
+                                Write-PmcTuiLog "StandardListScreen: Added custom footer shortcut $keyLabel -> $($action.Label)" "DEBUG"
+                            }
                         }
                     }
                 }
@@ -612,6 +631,11 @@ class StandardListScreen : PmcScreen {
         if ($this.Footer) {
             $this.Footer.AddShortcut('Esc', 'Back')
             $this.Footer.AddShortcut('F10', 'Menu')
+        }
+        
+        if ($global:PmcTuiLogLevel -ge 2) {
+            $shortcutCount = if ($this.Footer) { $this.Footer.Shortcuts.Count } else { 0 }
+            Write-PmcTuiLog "StandardListScreen._ConfigureListActions: Configured $shortcutCount footer shortcuts" "INFO"
         }
     }
 
@@ -701,10 +725,16 @@ class StandardListScreen : PmcScreen {
     #>
     [void] AddItem() {
         # DEBUG logging - ENABLED to trace add operation bugs
-        # Write-PmcTuiLog "*** STANDARDLISTSCREEN.ADDITEM CALLED on type=$($this.GetType().Name) key=$($this.ScreenKey) ***" "INFO"
+        Write-PmcTuiLog "*** STANDARDLISTSCREEN.ADDITEM CALLED on type=$($this.GetType().Name) key=$($this.ScreenKey) ***" "INFO"
 
         $this.EditorMode = 'add'
         $this.CurrentEditItem = @{}
+        
+        # Save current selection to restore on cancel
+        if ($this.List) {
+            $this._restoreSelectedIndex = $this.List.GetSelectedIndex()
+        }
+        
         $fields = $this.GetEditFields($this.CurrentEditItem)
 
         # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] Got $($fields.Count) edit fields"
@@ -727,6 +757,8 @@ class StandardListScreen : PmcScreen {
         # }
 
         $this.ShowInlineEditor = $true
+        $this._activeModal = $this.InlineEditor  # Phase B: Set active modal
+        Write-PmcTuiLog "StandardListScreen.AddItem: ActiveModal set to InlineEditor. ShowInlineEditor=$($this.ShowInlineEditor)" "INFO"
 
         # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] AddItem: ShowInlineEditor set to: $($this.ShowInlineEditor)"
         # }
@@ -750,6 +782,11 @@ class StandardListScreen : PmcScreen {
 
         $this.EditorMode = 'edit'
         $this.CurrentEditItem = $item
+        
+        # Save current selection to restore on cancel
+        if ($this.List) {
+            $this._restoreSelectedIndex = $this.List.GetSelectedIndex()
+        }
 
         $fields = $this.GetEditFields($item)
         foreach ($field in $fields) {
@@ -761,6 +798,7 @@ class StandardListScreen : PmcScreen {
 
         $this.InlineEditor.Title = "Edit"
         $this.ShowInlineEditor = $true
+        $this._activeModal = $this.InlineEditor  # Phase B: Set active modal
     }
 
     <#
@@ -771,12 +809,13 @@ class StandardListScreen : PmcScreen {
     Item to delete
     #>
     [void] DeleteItem($item) {
+        Write-PmcTuiLog "*** STANDARDLISTSCREEN.DELETEITEM CALLED ***" "INFO"
         if ($null -eq $item) {
+            Write-PmcTuiLog "DeleteItem: item is null" "WARN"
             return
         }
 
-        # MEDIUM FIX #13: Add simple inline confirmation before delete
-        # Get item name/description for confirmation message
+        # Get item name/description for status message
         $itemDesc = ""
         if ($item.text) {
             $itemDesc = $item.text
@@ -794,25 +833,7 @@ class StandardListScreen : PmcScreen {
             $itemDesc = "this item"
         }
 
-        # Show confirmation in status bar and wait for Y/N
-        if ($this.StatusBar) {
-            $this.StatusBar.SetLeftText("Delete '$itemDesc'? Press Y to confirm, any other key to cancel")
-            
-            # Force immediate screen refresh using render engine
-            if ($this.RenderEngine) {
-                $this.RenderEngine.BeginFrame()
-                $this.RenderToEngine($this.RenderEngine)
-                $this.RenderEngine.EndFrame()
-            }
-            
-            $confirmKey = [Console]::ReadKey($true)
-
-            if ($confirmKey.KeyChar -ne 'y' -and $confirmKey.KeyChar -ne 'Y') {
-                $this.StatusBar.SetLeftText("Delete cancelled")
-                return
-            }
-        }
-
+        # Delete immediately (no confirmation - it was causing rendering issues)
         # Try to call subclass-specific delete handler first
         try {
             $this.OnItemDeleted($item)
@@ -859,6 +880,17 @@ class StandardListScreen : PmcScreen {
             if ($this.StatusBar) {
                 $this.StatusBar.SetLeftText("Item deleted: $itemDesc")
             }
+            
+            # CRITICAL FIX: Invalidate cache and request render after delete
+            # Same issue as OnInlineEditConfirmed - TaskStore event fires but doesn't trigger render
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            
+            # Request render from Application to update display
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         }
         else {
             if ($this.StatusBar) {
@@ -880,6 +912,18 @@ class StandardListScreen : PmcScreen {
         }
 
         try {
+            # CRITICAL FIX: Disable editor flags FIRST (before calling save methods)
+            # When we call OnItemCreated/OnItemUpdated, TaskStore fires OnTasksChanged event
+            # which triggers RefreshList() -> LoadData() -> rendering
+            # If _showInlineEditor is still true during that render, the row gets SKIPPED
+            # causing visual corruption!
+            $this.ShowInlineEditor = $false
+            $this._activeModal = $null
+            if ($this.List) {
+                $this.List._showInlineEditor = $false
+            }
+
+            # NOW dispatch to save methods (this triggers TaskStore events and re-rendering)
             if ($this.EditorMode -eq 'add') {
                 # Call subclass callback for item creation
                 $this.OnItemCreated($values)
@@ -894,10 +938,39 @@ class StandardListScreen : PmcScreen {
                 return
             }
 
-            # Only close editor on success
-            $this.ShowInlineEditor = $false
+            # Additional cleanup after save
+            # Invalidate the row cache so it re-renders with proper theme
+            if ($this.List) {
+                $this.List.InvalidateCache()
+                if ($global:PmcTuiLogLevel -ge 3) {
+                    Write-PmcTuiLog "StandardListScreen._SaveEditedItem: Invalidated List cache after editor close" "DEBUG"
+                }
+            }
+            
+            # Invalidate render engine region where editor was displayed
+            if ($this.RenderEngine -and $this.InlineEditor) {
+                $editorY = $this.InlineEditor.Y
+                $editorHeight = $(if ($this.InlineEditor.Height -gt 0) { $this.InlineEditor.Height } else { 1 })
+                $this.RenderEngine.InvalidateCachedRegion($editorY, $editorY + $editorHeight)
+                if ($global:PmcTuiLogLevel -ge 3) {
+                    Write-PmcTuiLog "StandardListScreen._SaveEditedItem: Invalidated render region Y=$editorY-$($editorY + $editorHeight)" "DEBUG"
+                }
+            }
+            
+            # Clear editor state
             $this.EditorMode = ""
             $this.CurrentEditItem = $null
+            
+            # Force full re-render
+            $this.NeedsClear = $true
+            
+            # CRITICAL FIX: Request render from Application to set IsDirty flag
+            # The event loop (PmcApplication.Run) only renders when IsDirty = true
+            # _SaveEditedItem is called from a callback, not from the event loop
+            # so we need to explicitly request a render via the Application
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
 
         }
         catch {
@@ -922,7 +995,38 @@ class StandardListScreen : PmcScreen {
         # Write-PmcTuiLog "StandardListScreen.OnInlineEditConfirmed called - EditorMode=$($this.EditorMode)" "DEBUG"
 
         # Call save which will dispatch to OnItemCreated or OnItemUpdated
+        Write-PmcTuiLog "StandardListScreen.OnInlineEditConfirmed: Dispatching to _SaveEditedItem" "INFO"
         $this._SaveEditedItem($values)
+    }
+
+    <#
+    .SYNOPSIS
+    Virtual method called when inline editor is cancelled
+    #>
+    [void] OnInlineEditCancelled() {
+        $this.ShowInlineEditor = $false
+        $this._activeModal = $null  # Phase B: Clear active modal
+        $this.EditorMode = ""
+        $this.CurrentEditItem = $null
+        
+        # Restore previous selection
+        if ($this._restoreSelectedIndex -ge 0 -and $this.List) {
+            $this.List.SelectIndex($this._restoreSelectedIndex)
+            $this._restoreSelectedIndex = -1
+        }
+        
+        # CRITICAL: Also update the list's editor state to stay in sync
+        if ($this.List) {
+            $this.List._showInlineEditor = $false
+        }
+
+        # Invalidate region
+        if ($this.RenderEngine -and $this.InlineEditor) {
+            $editorY = $this.InlineEditor.Y
+            $this.RenderEngine.InvalidateCachedRegion($editorY, $editorY + 1)
+        }
+        
+        $this.NeedsClear = $true
     }
 
     # === Filtering ===
@@ -941,6 +1045,11 @@ class StandardListScreen : PmcScreen {
     #>
     [void] ToggleFilterPanel() {
         $this.ShowFilterPanel = -not $this.ShowFilterPanel
+        if ($this.ShowFilterPanel) {
+            $this._activeModal = $this.FilterPanel  # Phase B: Set active modal
+        } else {
+            $this._activeModal = $null  # Phase B: Clear active modal
+        }
     }
 
     # === Status Messages ===
@@ -957,7 +1066,6 @@ class StandardListScreen : PmcScreen {
     #>
     [void] SetStatusMessage([string]$message, [string]$level = "info") {
         # Log the message
-        # }
 
         # If we have a status bar, update it
         if ($this.StatusBar) {
@@ -1002,174 +1110,67 @@ class StandardListScreen : PmcScreen {
         }
         $this._isHandlingInput = $true
         try {
-            # Check Alt+key for menu bar first (before editor/filter)
+            # PHASE B: Active modal gets priority
+            if ($this.HandleModalInput($keyInfo)) {
+                # Write-PmcTuiLog "StandardListScreen.HandleKeyPress: Handled by Modal ($($this._activeModal.GetType().Name))" "DEBUG"
+                return $true
+            }
+
+            # Check Alt+key for menu bar first
             if ($keyInfo.Modifiers -band [ConsoleModifiers]::Alt) {
                 if ($null -ne $this.MenuBar -and $this.MenuBar.HandleKeyPress($keyInfo)) {
                     return $true
                 }
             }
 
-            # If menu is active, route all keys to it FIRST (including Esc to close)
+            # If menu is active, route all keys to it FIRST
             if ($null -ne $this.MenuBar -and $this.MenuBar.IsActive) {
                 if ($this.MenuBar.HandleKeyPress($keyInfo)) {
                     return $true
                 }
             }
 
-            # CRITICAL FIX: Route to inline editor BEFORE other menu handling
-            # This allows inline editor to handle Esc/Enter instead of menu stealing them
-            if ($this.ShowInlineEditor) {
-                # DEBUG: Trace input to find why typing doesn't work (COMMENTED OUT FOR PERFORMANCE)
-                # Add-Content -Path "/tmp/pmc-input-debug.log" -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] StandardListScreen.HandleKeyPress: ShowInlineEditor=$($this.ShowInlineEditor) Key=$($keyInfo.Key) Char='$($keyInfo.KeyChar)' InlineEditor=$($null -ne $this.InlineEditor) _fields=$($this.InlineEditor._fields.Count) _currentFieldIndex=$($this.InlineEditor._currentFieldIndex)"
-                # Write-PmcTuiLog "StandardListScreen: Routing to InlineEditor (Key=$($keyInfo.Key))" "DEBUG"
-                $handled = $this.InlineEditor.HandleInput($keyInfo)
-                # Write-PmcTuiLog "StandardListScreen: After HandleInput - IsConfirmed=$($this.InlineEditor.IsConfirmed) IsCancelled=$($this.InlineEditor.IsCancelled) ShowInlineEditor=$($this.ShowInlineEditor)" "DEBUG"
-
-                # Check if editor needs clear (field widget was closed)
-                if ($this.InlineEditor.NeedsClear) {
-                    # Write-PmcTuiLog "StandardListScreen: Editor field widget closed - PROPAGATING CLEAR TO SCREEN" "DEBUG"
-                    # CRITICAL FIX: Propagate NeedsClear to screen to remove overlay widget rendering
-                    $this.NeedsClear = $true
-                    $this.InlineEditor.NeedsClear = $false  # Reset flag
-                    return $true
-                }
-
-                # Check if editor closed
-                if ($this.InlineEditor.IsConfirmed -or $this.InlineEditor.IsCancelled) {
-                    # Write-PmcTuiLog "StandardListScreen: Editor confirmed/cancelled - closing editor NO CLEAR" "DEBUG"
-
-                    # BUG FIX: Save EditorMode BEFORE it gets cleared by OnCancelled callback
-                    $wasAddMode = ($this.EditorMode -eq 'add')
-
-                    $this.ShowInlineEditor = $false
-                    # CRITICAL: Also update the list's editor state to stay in sync
-                    $this.List._showInlineEditor = $false
-
-                    # FIX: Invalidate the editor row region so differential renderer redraws it
-                    # Without this, the dark grey background from the inline editor remains stale
-                    if ($this.RenderEngine -and $this.InlineEditor) {
-                        $editorY = $this.InlineEditor.Y
-                        $this.RenderEngine.InvalidateCachedRegion($editorY, $editorY + 1)
-                        # Write-PmcTuiLog "StandardListScreen: Invalidated editor row Y=$editorY after close" "DEBUG"
-                    }
-
-                    # BUG FIX: Restore selectedIndex after exiting add mode
-                    # When in add mode, selectedIndex is set to itemCount (one past the last item)
-                    # When cancelled, we need to restore it to a valid row index so the user can navigate
-                    if ($wasAddMode) {
-                        $itemCount = $(if ($this.List._filteredData) { $this.List._filteredData.Count } else { 0 })
-                        if ($itemCount -gt 0) {
-                            # Restore to last item (or first item if we just added one on confirm)
-                            if ($this.InlineEditor.IsCancelled) {
-                                # Cancelled - go back to last existing item
-                                $this.List._selectedIndex = $itemCount - 1
-                            }
-                            else {
-                                # Confirmed - select the newly added item (if it was added)
-                                # Keep current selectedIndex if within bounds, otherwise select last
-                                if ($this.List._selectedIndex -ge $itemCount) {
-                                    $this.List._selectedIndex = $itemCount - 1
-                                }
-                            }
-                        }
-                        else {
-                            # No items - select none (will be 0 when items are added)
-                            $this.List._selectedIndex = 0
-                        }
-                        # Write-PmcTuiLog "StandardListScreen: Restored selectedIndex to $($this.List._selectedIndex) after add mode exit (itemCount=$itemCount)" "DEBUG"
-                    }
-
-                    # Clear EditorMode AFTER checking if it was add mode
-                    $this.EditorMode = ""
-
-                    $this.NeedsClear = $true  # FIX: Set NeedsClear to clear stale editor row
-                    # MUST return true to trigger re-render
-                    return $true
-                }
-
-                # Write-PmcTuiLog "StandardListScreen: After close check - ShowInlineEditor=$($this.ShowInlineEditor)" "DEBUG"
-
-                # If editor handled the key, we're done
-                if ($handled) {
-                    return $true
-                }
-                # FIX: If editor is showing but didn't handle key, consume it anyway
-                # This prevents keys from falling through to List.HandleInput when editor is active
-                # Only allow global shortcuts (F10, Esc, ?) to pass through
-                if ($keyInfo.Key -ne [ConsoleKey]::F10 -and $keyInfo.Key -ne [ConsoleKey]::Escape -and $keyInfo.KeyChar -ne '?') {
-                    return $true
-                }
-            }
-
-            # Route to filter panel if shown
-            if ($this.ShowFilterPanel) {
-                $handled = $this.FilterPanel.HandleInput($keyInfo)
-
-                # Esc closes filter panel
-                if ($keyInfo.Key -eq 'Escape') {
-                    $this.ShowFilterPanel = $false
-                    return $true
-                }
-
-                # If filter panel handled the key, we're done
-                if ($handled) {
-                    return $true
-                }
-                # Otherwise, fall through to global shortcuts
-            }
-
-            # F10 OR ESC activates menu (only if not already active and no editor/filter showing)
+            # F10 OR ESC activates menu (only if not already active)
             if ($keyInfo.Key -eq [ConsoleKey]::F10 -or $keyInfo.Key -eq [ConsoleKey]::Escape) {
-                if ($null -ne $this.MenuBar -and -not $this.MenuBar.IsActive -and -not $this.ShowInlineEditor -and -not $this.ShowFilterPanel) {
+                if ($null -ne $this.MenuBar -and -not $this.MenuBar.IsActive) {
                     $this.MenuBar.Activate()
                     return $true
                 }
             }
 
-            # Global shortcuts (ONLY when editor/filter NOT showing - otherwise they block typing!)
-            if (-not $this.ShowInlineEditor -and -not $this.ShowFilterPanel) {
-                # ? = Help
-                if ($keyInfo.KeyChar -eq '?') {
-                    . "$PSScriptRoot/../screens/HelpViewScreen.ps1"
-                    $screen = [HelpViewScreen]::new()
-                    $this.App.PushScreen($screen)
-                    return $true
-                }
-
-                if (($keyInfo.KeyChar -eq 'f' -or $keyInfo.KeyChar -eq 'F') -and $this.AllowFilter) {
-                    $this.ToggleFilterPanel()
-                    return $true
-                }
-
-                if ($keyInfo.KeyChar -eq 'r' -or $keyInfo.KeyChar -eq 'R') {
-                    # Refresh
-                    $this.RefreshList()
-                    return $true
-                }
-
-                # Delete key: Delete selected item
-                if ($keyInfo.Key -eq [ConsoleKey]::Delete -and $this.AllowDelete) {
-                    $selectedItem = $this.List.GetSelectedItem()
-                    if ($null -ne $selectedItem) {
-                        $this.DeleteItem($selectedItem)
-                    }
-                    return $true
-                }
+            # Global shortcuts
+            # ? = Help
+            if ($keyInfo.KeyChar -eq '?') {
+                . "$PSScriptRoot/../screens/HelpViewScreen.ps1"
+                $screen = [HelpViewScreen]::new()
+                $this.App.PushScreen($screen)
+                return $true
             }
 
-            # Route to list ONLY if editor and filter are NOT showing
-            # CRITICAL FIX: When editor is open, don't let list actions (a/e/d) trigger
-            # This prevents accidentally opening a new editor or deleting items while editing
-            if ($keyInfo.Key -eq 'Enter') {
-            }
-            if (-not $this.ShowInlineEditor -and -not $this.ShowFilterPanel) {
-                return $this.List.HandleInput($keyInfo)
+            if (($keyInfo.KeyChar -eq 'f' -or $keyInfo.KeyChar -eq 'F') -and $this.AllowFilter) {
+                $this.ToggleFilterPanel()
+                return $true
             }
 
-            # Editor/filter is showing but didn't handle key - ignore it
-            if ($keyInfo.Key -eq 'Enter') {
+            if ($keyInfo.KeyChar -eq 'r' -or $keyInfo.KeyChar -eq 'R') {
+                # Refresh
+                $this.RefreshList()
+                return $true
             }
-            return $false
+
+            # Delete key: Delete selected item
+            if ($keyInfo.Key -eq [ConsoleKey]::Delete -and $this.AllowDelete) {
+                $selectedItem = $this.List.GetSelectedItem()
+                if ($null -ne $selectedItem) {
+                    $this.DeleteItem($selectedItem)
+                }
+                return $true
+            }
+
+            # Route to list
+            return $this.List.HandleInput($keyInfo)
+
+
         }
         finally {
             $this._isHandlingInput = $false

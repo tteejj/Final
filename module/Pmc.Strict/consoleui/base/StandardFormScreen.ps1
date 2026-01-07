@@ -1,4 +1,4 @@
-﻿# StandardFormScreen.ps1 - Base class for form-based screens
+# StandardFormScreen.ps1 - Base class for form-based screens
 #
 # This is the base class for screens that present a single form for data entry:
 # - Add Task Screen
@@ -224,137 +224,10 @@ class StandardFormScreen : PmcScreen {
 
         $this.Editor.OnValidationFailed = {
             param($errors)
-            $this.ValidationErrors = $errors
-            $this.OnValidationFailed($errors)
+            $this._HandleValidationFailed($errors)
         }
     }
 
-    # === Lifecycle Methods ===
-
-    <#
-    .SYNOPSIS
-    Called when screen enters view
-    #>
-    [void] OnEnter() {
-        $this.IsActive = $true
-
-        # Set form fields
-        $fields = $this.GetFields()
-        $this.Editor.SetFields($fields)
-
-        # Update header breadcrumb
-        if ($this.Header) {
-            $this.Header.SetBreadcrumb(@("Home", $this.ScreenTitle))
-        }
-
-        # Update status bar
-        if ($this.StatusBar) {
-            $submitLabelText = $this.GetSubmitLabel()
-            $this.StatusBar.SetLeftText("Fill out the form and press Enter to $submitLabelText")
-        }
-
-        # Reset state
-        $this.IsSubmitting = $false
-        $this.ValidationErrors = @()
-    }
-
-    <#
-    .SYNOPSIS
-    Called when screen exits view
-    #>
-    [void] OnDoExit() {
-        $this.IsActive = $false
-    }
-
-    # === Form Submission ===
-
-    <#
-    .SYNOPSIS
-    Handle form submission
-
-    .PARAMETER values
-    Field values from InlineEditor
-    #>
-    hidden [void] _HandleSubmit($values) {
-        if ($this.IsSubmitting) {
-            # Prevent double-submit
-            return
-        }
-
-        $this.IsSubmitting = $true
-
-        try {
-            # Clear previous errors
-            $this.ValidationErrors = @()
-
-            # Show submitting status
-            if ($this.StatusBar) {
-                $this.StatusBar.SetLeftText("Submitting...")
-            }
-
-            # Call subclass implementation
-            $this.OnSubmit($values)
-        }
-        finally {
-            $this.IsSubmitting = $false
-        }
-    }
-
-    <#
-    .SYNOPSIS
-    Handle form cancellation
-    #>
-    hidden [void] _HandleCancel() {
-        if (-not $this.AllowCancel) {
-            # Cancel not allowed
-            if ($this.StatusBar) {
-                $this.StatusBar.SetLeftText("Cannot cancel this form")
-            }
-            return
-        }
-
-        # Call subclass implementation
-        $this.OnCancel()
-    }
-
-    # === Navigation ===
-
-    <#
-    .SYNOPSIS
-    Navigate back to previous screen
-    #>
-    [void] NavigateBack() {
-        # This will be implemented by NavigationManager integration
-        # For now, set a flag that the application can check
-        $this.IsActive = $false
-    }
-
-    # === Input Handling ===
-
-    <#
-    .SYNOPSIS
-    Handle keyboard input
-
-    .PARAMETER keyInfo
-    ConsoleKeyInfo from [Console]::ReadKey($true)
-
-    .OUTPUTS
-    True if input was handled, False otherwise
-    #>
-    [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
-        # Route all input to editor
-        return $this.Editor.HandleInput($keyInfo)
-    }
-
-    # === Rendering ===
-
-    <#
-    .SYNOPSIS
-    Render the screen content area
-
-    .OUTPUTS
-    ANSI string ready for display
-    #>
     <#
     .SYNOPSIS
     Render content area directly to engine
@@ -473,5 +346,23 @@ class StandardFormScreen : PmcScreen {
             $field.Value = $value
             $this.Editor.SetFields($fields)
         }
+    }
+    hidden [void] _HandleSubmit($values) {
+        $this.IsSubmitting = $true
+        try {
+            $this.OnSubmit($values)
+        }
+        finally {
+            $this.IsSubmitting = $false
+        }
+    }
+
+    hidden [void] _HandleCancel() {
+        $this.OnCancel()
+    }
+
+    hidden [void] _HandleValidationFailed($errors) {
+        $this.ValidationErrors = $errors
+        $this.OnValidationFailed($errors)
     }
 }

@@ -143,20 +143,6 @@ class TabbedScreen : PmcScreen {
         $this.InlineEditor.Width = [Math]::Min(60, $termSize.Width - 2)
         $this.InlineEditor.Height = [Math]::Min(12, $termSize.Height - 4)
 
-        # Wire up InlineEditor events
-        $this.InlineEditor.OnConfirmed = {
-            param($values)
-            $self._SaveEditedField($values)
-        }.GetNewClosure()
-
-        $this.InlineEditor.OnCancelled = {
-            $self.ShowEditor = $false
-            $self.CurrentEditField = $null
-        }.GetNewClosure()
-
-        # Configure footer shortcuts
-        $this.Footer.ClearShortcuts()
-        $this.Footer.AddShortcut("Tab", "Next Tab")
         $this.Footer.AddShortcut("↑↓", "Navigate")
         $this.Footer.AddShortcut("Enter", "Edit")
         $this.Footer.AddShortcut("S", "Save")
@@ -379,34 +365,6 @@ class TabbedScreen : PmcScreen {
 
         # If menu is active, route all keys to it FIRST (including Esc to close)
         if ($null -ne $this.MenuBar -and $this.MenuBar.IsActive) {
-            if ($this.MenuBar.HandleKeyPress($keyInfo)) {
-                return $true
-            }
-        }
-
-        # If editor is showing, route to it next
-        if ($this.ShowEditor) {
-            $handled = $this.InlineEditor.HandleInput($keyInfo)
-
-            # Check if editor closed
-            if ($this.InlineEditor.IsConfirmed -or $this.InlineEditor.IsCancelled) {
-                $this.ShowEditor = $false
-                $this.CurrentEditField = $null
-                return $true
-            }
-
-            if ($handled) {
-                return $true
-            }
-            # FIX: If editor didn't handle key, still consume it to prevent fall-through
-            # This prevents Enter from triggering EditCurrentField while editor is open
-            return $true
-        }
-
-        # Enter key - edit current field (ONLY when editor is NOT showing)
-        if ($keyInfo.Key -eq 'Enter') {
-            $this.EditCurrentField()
-            return $true
         }
 
         # S key - save all changes

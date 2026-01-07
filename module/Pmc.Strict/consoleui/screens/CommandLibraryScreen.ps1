@@ -352,6 +352,11 @@ class CommandLibraryScreen : StandardListScreen {
     # === Input Handling ===
 
     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
+        # Phase B: Active modal gets priority
+        if ($this.HandleModalInput($keyInfo)) {
+            return $true
+        }
+
         # CRITICAL FIX: Only handle custom keys when NOT in edit mode
         # This allows typing 'c' in command name field and using Enter to save
         if (-not $this.ShowInlineEditor -and -not $this.ShowFilterPanel) {

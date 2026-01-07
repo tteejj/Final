@@ -146,49 +146,29 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
         # Call base to setup standard actions
         ([StandardListScreen]$this)._ConfigureListActions()
 
+        # Capture $this for closures
+        $self = $this
+
         # OVERRIDE: Replace 'a' action to use custom OnAdd() instead of InlineEditor
-        $addOverride = {
-            $currentScreen = $global:PmcApp.CurrentScreen
-            if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
-                $currentScreen.OnAdd()
-            }
-        }.GetNewClosure()
+        $addOverride = { $self.OnAdd() }.GetNewClosure()
         $this.List.AddAction('a', 'Add', $addOverride)
 
         # Add Import Action
         $importAction = {
-            $currentScreen = $global:PmcApp.CurrentScreen
-            if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
-                $item = $currentScreen.List.GetSelectedItem()
-                if ($item) {
-                    $currentScreen._ImportToProject($item)
-                }
-            }
+            $item = $self.List.GetSelectedItem()
+            if ($item) { $self._ImportToProject($item) }
         }.GetNewClosure()
-
         $this.List.AddAction('i', 'Import to Project', $importAction)
         
         # Add TUI Editor Action (same as Edit but explicit key)
-        $tuiEditAction = {
-            $currentScreen = $global:PmcApp.CurrentScreen
-            if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
-                $currentScreen.OnEdit()
-            }
-        }.GetNewClosure()
-
+        $tuiEditAction = { $self.OnEdit() }.GetNewClosure()
         $this.List.AddAction('t', 'Edit Template', $tuiEditAction)
 
         # Add Open in External Editor Action
         $openAction = {
-            $currentScreen = $global:PmcApp.CurrentScreen
-            if ($currentScreen -is [ChecklistTemplatesFolderScreen]) {
-                $item = $currentScreen.List.GetSelectedItem()
-                if ($item) {
-                    $currentScreen._OpenInExternalEditor($item.file_path)
-                }
-            }
+            $item = $self.List.GetSelectedItem()
+            if ($item) { $self._OpenInExternalEditor($item.file_path) }
         }.GetNewClosure()
-
         $this.List.AddAction('o', 'Open External', $openAction)
         
         # Update Footer
@@ -222,6 +202,7 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
         $this._textEditor.SetPosition(0, 3) # Below header
         
         $this._showTextEditor = $true
+        $this._activeModal = $this._textEditor  # Phase B: Set active modal
         $this.NeedsClear = $true
     }
 
@@ -239,6 +220,7 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
         }
 
         $this._showTextEditor = $false
+        $this._activeModal = $null  # Phase B: Clear active modal
         $this._editingFilePath = ""
         $this._editingFileName = ""
         $this.NeedsClear = $true
@@ -247,6 +229,7 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
 
     hidden [void] _CancelEditor() {
         $this._showTextEditor = $false
+        $this._activeModal = $null  # Phase B: Clear active modal
         $this._editingFilePath = ""
         $this._editingFileName = ""
         $this.NeedsClear = $true
@@ -273,17 +256,20 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
                 $self._DoImport($template, $projectName)
             }
             $self._showProjectPicker = $false
+            $self._activeModal = $null  # Phase B: Clear active modal
             $self._projectPicker = $null
             $self.NeedsClear = $true
         }.GetNewClosure()
 
         $this._projectPicker.OnCancelled = {
             $self._showProjectPicker = $false
+            $self._activeModal = $null  # Phase B: Clear active modal
             $self._projectPicker = $null
             $self.NeedsClear = $true
         }.GetNewClosure()
         
         $this._showProjectPicker = $true
+        $this._activeModal = $this._projectPicker  # Phase B: Set active modal
         $this.NeedsClear = $true
     }
     
@@ -353,31 +339,29 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
     }
 
     [void] HandleKeyPress([ConsoleKeyInfo]$key) {
+        # Phase B: Use HandleModalInput for all modals
+        if ($this.HandleModalInput($key)) {
+            return
+        }
         
-        # Editor Input
-        if ($this._showTextEditor) {
+        # Special handling for Editor shortcuts that the widget didn't handle
+        if ($this._activeModal -eq $this._textEditor) {
             # Check for Ctrl+S (Save)
             if ($key.Key -eq 'S' -and ($key.Modifiers -band [ConsoleModifiers]::Control)) {
                 $this._SaveAndCloseEditor()
                 return
             }
-            # Check for Esc (Cancel)
+            # Check for Esc (Cancel) - if widget didn't handle it (e.g. no selection)
             if ($key.Key -eq 'Escape') {
                 $this._CancelEditor()
                 return
             }
             
-            $this._textEditor.HandleInput($key)
+            # CRITICAL: Consume all other input while editor is active to prevent list navigation
             return
         }
         
-        # Project Picker Input
-        if ($this._showProjectPicker) {
-            $this._projectPicker.HandleInput($key)
-            return
-        }
-
-        # Normal Input
+        # If no modal is active, let base class handle standard list input
         ([StandardListScreen]$this).HandleKeyPress($key)
     }
 }

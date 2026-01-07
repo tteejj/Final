@@ -472,6 +472,9 @@ class UniversalList : PmcWidget {
     Call this when external state that affects row rendering changes.
     #>
     [void] InvalidateCache() {
+        if ($global:PmcTuiLogLevel -ge 3) {
+            Write-PmcTuiLog "UniversalList.InvalidateCache: Clearing cache (generation $($this._cacheGeneration) -> $($this._cacheGeneration + 1))" "DEBUG"
+        }
         $this._cacheGeneration++
         $this._rowCache.Clear()
         $this._cacheAccessOrder.Clear()
@@ -696,6 +699,15 @@ class UniversalList : PmcWidget {
             return $true
         }
 
+        # PRIORITY: Check registered actions FIRST - screen-specific actions take precedence
+        # over built-in widget behaviors (F/C/?//) AND navigation. This allows screens to override any key.
+        $keyChar = $keyInfo.KeyChar.ToString().ToLower()
+        if ($this._actions.ContainsKey($keyChar)) {
+            $action = $this._actions[$keyChar]
+            $this._InvokeCallback($action.Callback, $this)
+            return $true
+        }
+
         # Navigation
         if ($keyInfo.Key -eq 'UpArrow') {
             $this._MoveSelectionUp(1)
@@ -791,18 +803,7 @@ class UniversalList : PmcWidget {
             }
         }
 
-        # PRIORITY: Check registered actions FIRST - screen-specific actions take precedence
-        # over built-in widget behaviors (F/C/?//). This allows screens to override any key.
-        $keyChar = $keyInfo.KeyChar.ToString().ToLower()
-        "DEBUG UniversalList.HandleInput: keyChar='$keyChar' KeyInfo.Key=$($keyInfo.Key) actions=$($this._actions.Keys -join ',')" | Out-File -Append "/home/teej/ztest/debug_input.log"
-        if ($this._actions.ContainsKey($keyChar)) {
-            "DEBUG UniversalList: FOUND and INVOKING action for '$keyChar'" | Out-File -Append "/home/teej/ztest/debug_input.log"
-            $action = $this._actions[$keyChar]
-            $this._InvokeCallback($action.Callback, $this)
-            return $true
-        } else {
-            "DEBUG UniversalList: NO action found for '$keyChar'" | Out-File -Append "/home/teej/ztest/debug_input.log"
-        }
+
 
         # ?: Search mode (filter by text) - fallback if no action registered
         if ($keyInfo.KeyChar -eq '?' -and $this.AllowSearch) {
@@ -904,20 +905,10 @@ class UniversalList : PmcWidget {
         }
 
 
-        # Get Theme Ints directly
-        $borderColor = $this.GetThemedInt('Border.Widget')
-        $textColor = $this.GetThemedInt('Foreground.Row')
-        $primaryColor = $this.GetThemedInt('Foreground.Title')
-        $mutedColor = $this.GetThemedInt('Foreground.Muted')
-        $defaultBg = -1 # Transparent/Default
-
-        $highlightBg = $this.GetThemedBgInt('Background.RowSelected', 1, 0)
-        $highlightFg = $this.GetThemedInt('Foreground.RowSelected')
-
-        # Fallbacks removed for strict theme enforcement
-        # if ($highlightBg -eq -1) { $highlightBg = [HybridRenderEngine]::_PackRGB(64, 94, 117) } # Blue
-        # if ($highlightFg -eq -1) { $highlightFg = [HybridRenderEngine]::_PackRGB(255, 255, 255) } # White
-
+        # Header uses transparent background to show list background through
+        $defaultBg = -1
+        $highlightBg = $selBg
+        $highlightFg = $selFg
 
         $currentRow = 1
 
@@ -976,6 +967,7 @@ class UniversalList : PmcWidget {
 
             # Skip rendering selected row if inline editor is active
             if ($isSelected -and $this._showInlineEditor) {
+                Write-PmcTuiLog "UniversalList.RenderToEngine: SKIPPING row $dataIndex (editor active, filling with blank)" "INFO"
                 $engine.Fill($this.X + 2, $rowY, $this.Width - 4, 1, ' ', $textColor, $rowBg)
                 continue
             }
@@ -1000,11 +992,17 @@ class UniversalList : PmcWidget {
 
             if ($null -ne $cached) {
                 # HIT: Write cached row
+                if ($global:PmcTuiLogLevel -ge 3) {
+                    Write-PmcTuiLog "UniversalList: Row $dataIndex CACHE HIT (key: $cacheKey)" "DEBUG"
+                }
                 $engine.WriteRow($this.X + 2, $rowY, $cached.Text, $cached.Foregrounds, $cached.Backgrounds, $cached.Attributes)
                 continue
             }
 
             # MISS: Build Row
+            if ($global:PmcTuiLogLevel -ge 3) {
+                Write-PmcTuiLog "UniversalList: Row $dataIndex CACHE MISS - rebuilding (key: $cacheKey)" "DEBUG"
+            }
             $rowWidth = $this.Width - 4 # Inside borders
             $rowText = [System.Text.StringBuilder]::new($rowWidth)
             $rowFgs = [int[]]::new($rowWidth)
@@ -1116,6 +1114,9 @@ class UniversalList : PmcWidget {
             }
             
             # Write
+            if ($global:PmcTuiLogLevel -ge 3) {
+                Write-PmcTuiLog "UniversalList: Row $dataIndex rendered, text='$($newCache.Text.Substring(0, [Math]::Min(40, $newCache.Text.Length)))...'" "DEBUG"
+            }
             $engine.WriteRow($this.X + 2, $rowY, $newCache.Text, $newCache.Foregrounds, $newCache.Backgrounds, $newCache.Attributes)
         }
         
@@ -1419,11 +1420,8 @@ class UniversalList : PmcWidget {
             }
             catch {
                 # Log callback errors but DON'T rethrow - callbacks must never crash the app
-                if (Get-Command Write-PmcTuiLog -ErrorAction SilentlyContinue) {
-                    # Write-PmcTuiLog "UniversalList callback error: $($_.Exception.Message)" "ERROR"
-                    # Write-PmcTuiLog "Callback code: $($callback.ToString())" "ERROR"
-                    # Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
-                }
+                Write-PmcTuiLog "UniversalList callback error: $($_.Exception.Message)" "ERROR"
+                Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
                 # DON'T rethrow - UI callbacks must not crash
             }
         }

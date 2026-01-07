@@ -189,9 +189,13 @@ class TaskListScreen : StandardListScreen {
             #     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [DEBUG] TaskListScreen: Re-registering Edit action"
             $self = $this
             $editAction = {
+                Write-PmcTuiLog "TaskListScreen 'e' action callback invoked" "INFO"
                 $selectedItem = $self.List.GetSelectedItem()
                 if ($null -ne $selectedItem) {
+                    Write-PmcTuiLog "TaskListScreen 'e' action: calling EditItem for item.id=$($selectedItem.id)" "INFO"
                     $self.EditItem($selectedItem)
+                } else {
+                    Write-PmcTuiLog "TaskListScreen 'e' action: No selected item!" "WARN"
                 }
             }.GetNewClosure()
             # Remove old action and add new one
@@ -755,9 +759,12 @@ class TaskListScreen : StandardListScreen {
 
     # Override: Handle item creation
     [void] OnItemCreated([hashtable]$values) {
+        if ($global:PmcTuiLogLevel -ge 2) {
+            Write-PmcTuiLog "TaskListScreen.OnItemCreated: Called with values: $($values.Keys -join ', ')" "INFO"
+        }
         # MEDIUM FIX TLS-M3: Add null check on $values parameter
         if ($null -eq $values) {
-            # Write-PmcTuiLog "OnItemCreated called with null values" "ERROR"
+            Write-PmcTuiLog "OnItemCreated called with null values" "ERROR"
             $this.SetStatusMessage("Cannot create task: no data provided", "error")
             return
         }
@@ -799,28 +806,28 @@ class TaskListScreen : StandardListScreen {
                     , @()
                 })
 
+            # Parse due date (optional)
+            $dueValue = $null
+            if ($values.ContainsKey('due') -and -not [string]::IsNullOrWhiteSpace($values.due)) {
+                try {
+                    $dueValue = [DateTime]::Parse($values.due)
+                }
+                catch {
+                    $this.SetStatusMessage("Invalid due date format", "error")
+                    return
+                }
+            }
+
+            # Get details if present
             $detailsValue = $(if ($values.ContainsKey('details')) { $values.details } else { '' })
 
             $taskData = @{
                 text      = $taskText
                 details   = $detailsValue
-                priority  = 3  # Default priority when creating new tasks
-                status    = 'todo'  # Default status for new tasks
                 project   = $projectValue
-                tags      = $tagsValue  # Comma prevents PowerShell from unwrapping single-element arrays
+                tags      = $tagsValue
+                due       = $dueValue
                 completed = $false
-                created   = [DateTime]::Now
-            }
-
-            # Add due date if provided - NO VALIDATION, just set it
-            if ($values.ContainsKey('due') -and $values.due) {
-                try {
-                    $dueDate = [DateTime]$values.due
-                    $taskData.due = $dueDate
-                }
-                catch {
-                    # Write-PmcTuiLog "Failed to convert due date '$($values.due)', omitting" "WARNING"
-                }
             }
 
             # H-VAL-3: Preserve parent_id from CurrentEditItem if it exists (for subtasks)
@@ -861,10 +868,10 @@ class TaskListScreen : StandardListScreen {
 
     # Override: Handle item update
     [void] OnItemUpdated([object]$item, [hashtable]$values) {
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [OnItemUpdated] START item=$($item.id)"
-        # Add-Content -Path "$($env:TEMP)/pmc-flow-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [OnItemUpdated] Values received: $($values | ConvertTo-Json -Compress)"
-        # Write-PmcTuiLog "OnItemUpdated CALLED - item=$($item.id) values=$($values.Keys -join ',')" "INFO"
-        # Write-PmcTuiLog "OnItemUpdated values: $($values | ConvertTo-Json -Compress)" "INFO"
+        if ($global:PmcTuiLogLevel -ge 2) {
+            $itemId = if ($item) { $item.id } else { 'NULL' }
+            Write-PmcTuiLog "TaskListScreen.OnItemUpdated: item=$itemId values=$($values.Keys -join ', ')" "INFO"
+        }
 
         # CRITICAL FIX: Check if this is ADD mode (item is null)
         $isAddMode = ($null -eq $item)
@@ -1087,6 +1094,9 @@ class TaskListScreen : StandardListScreen {
         }
 
         try {
+            if ($global:PmcTuiLogLevel -ge 2) {
+                Write-PmcTuiLog "TaskListScreen.OnItemDeleted: Deleting task with ID '$taskId'" "INFO"
+            }
             $success = $this.Store.DeleteTask($taskId)
             if ($success) {
                 $this.SetStatusMessage("Task deleted: $($item.text)", "success")
@@ -1108,31 +1118,81 @@ class TaskListScreen : StandardListScreen {
     [void] OnInlineEditConfirmed([hashtable]$values) {
         # This method is called by StandardListScreen when inline editing is confirmed
         # It handles BOTH add and edit modes, since EditItem only overrides the callback for edit mode
-        # Write-PmcTuiLog "OnInlineEditConfirmed called - EditorMode=$($this.EditorMode) values=$($values.Keys -join ',')" "DEBUG"
+        Write-PmcTuiLog "TaskListScreen.OnInlineEditConfirmed called - EditorMode=$($this.EditorMode)" "INFO"
 
         if ($null -eq $values) {
-            # Write-PmcTuiLog "OnInlineEditConfirmed called with null values" "WARNING"
+            Write-PmcTuiLog "OnInlineEditConfirmed called with null values" "WARNING"
             return
+        }
+
+        # CRITICAL FIX: Disable editor flags FIRST (before calling save methods)
+        # When we call OnItemCreated/OnItemUpdated, TaskStore fires OnTasksChanged event
+        # which triggers RefreshList() -> LoadData() -> rendering
+        # If _showInlineEditor is still true during that render, the row gets SKIPPED (line 969 in UniversalList)
+        # causing visual corruption!
+        Write-PmcTuiLog "TaskListScreen.OnInlineEditConfirmed: STEP 1 - Disabling editor flags" "INFO"
+        $this.ShowInlineEditor = $false
+        $this._activeModal = $null
+        if ($this.List) {
+            $this.List._showInlineEditor = $false
+            Write-PmcTuiLog "TaskListScreen.OnInlineEditConfirmed: Set List._showInlineEditor = false" "INFO"
         }
 
         # Determine if we're adding a new task or editing existing one
         $isAddMode = ($this.EditorMode -eq 'add')
 
+        # NOW save the data (this triggers TaskStore events and re-rendering)
+        Write-PmcTuiLog "TaskListScreen.OnInlineEditConfirmed: STEP 2 - Calling save (isAddMode=$isAddMode)" "INFO"
         if ($isAddMode) {
             # ADDING NEW TASK
-            # Write-PmcTuiLog "OnInlineEditConfirmed: Processing ADD operation" "INFO"
             $this.OnItemUpdated($null, $values)
         }
         else {
             # EDITING EXISTING TASK
-            # Write-PmcTuiLog "OnInlineEditConfirmed: Processing EDIT operation for item=$($this.CurrentEditItem.id)" "INFO"
             if ($this.CurrentEditItem) {
                 $this.OnItemUpdated($this.CurrentEditItem, $values)
             }
             else {
-                # Write-PmcTuiLog "OnInlineEditConfirmed: EDIT mode but no CurrentEditItem!" "ERROR"
+                Write-PmcTuiLog "OnInlineEditConfirmed: EDIT mode but no CurrentEditItem!" "ERROR"
             }
         }
+        Write-PmcTuiLog "TaskListScreen.OnInlineEditConfirmed: STEP 3 - Save completed, now cleanup" "INFO"
+        
+        # Additional cleanup after save
+        # Invalidate the row cache so it re-renders with proper theme
+        if ($this.List) {
+            $this.List.InvalidateCache()
+            Write-PmcTuiLog "TaskListScreen.OnInlineEditConfirmed: STEP 4 - Invalidated List cache" "INFO"
+        }
+        
+        # Invalidate render engine region where editor was displayed
+        if ($this.RenderEngine -and $this.InlineEditor) {
+            $editorY = $this.InlineEditor.Y
+            $editorHeight = $(if ($this.InlineEditor.Height -gt 0) { $this.InlineEditor.Height } else { 1 })
+            $this.RenderEngine.InvalidateCachedRegion($editorY, $editorY + $editorHeight)
+            Write-PmcTuiLog "TaskListScreen.OnInlineEditConfirmed: STEP 5 - Invalidated render region Y=$editorY" "INFO"
+        }
+        
+        # Clear editor state
+        $this.EditorMode = ""
+        $this.CurrentEditItem = $null
+        
+        # Force full re-render
+        $this.NeedsClear = $true
+        
+        # CRITICAL FIX: Request render from Application to set IsDirty flag
+        # The event loop (PmcApplication.Run) only renders when IsDirty = true
+        # OnInlineEditConfirmed is called from a callback, not from the event loop
+        # so we need to explicitly request a render via the Application
+        if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+            Write-PmcTuiLog "TaskListScreen.OnInlineEditConfirmed: STEP 6a - Requesting render from Application" "INFO"
+            $global:PmcApp.RequestRender()
+        }
+        else {
+            Write-PmcTuiLog "TaskListScreen.OnInlineEditConfirmed: WARNING - PmcApp or RequestRender() not available!" "WARNING"
+        }
+        
+        Write-PmcTuiLog "TaskListScreen.OnInlineEditConfirmed: STEP 6 - Editor cleanup complete" "INFO"
     }
 
     # Virtual method called when inline editor is cancelled
@@ -1324,12 +1384,14 @@ class TaskListScreen : StandardListScreen {
             $values.parent_id = $parentId
             $self.Store.AddTask($values)
             $self.ShowInlineEditor = $false
+            $self._activeModal = $null
             $self.RefreshList()
             $self.SetStatusMessage("Subtask added", "success")
         }.GetNewClosure()
 
         $this.InlineEditor.OnCancelled = {
             $self.ShowInlineEditor = $false
+            $self._activeModal = $null
             $self.SetStatusMessage("Subtask cancelled", "info")
         }.GetNewClosure()
 
@@ -1807,7 +1869,7 @@ class TaskListScreen : StandardListScreen {
 
     # Override EditItem to use InlineEditor horizontally at row position
     [void] EditItem($item) {
-        # Write-PmcTuiLog "TaskListScreen.EditItem called - item.id=$(if ($item) { $item.id } else { 'NULL' })" "INFO"
+        Write-PmcTuiLog "TaskListScreen.EditItem called - item.id=$(if ($item) { $item.id } else { 'NULL' })" "INFO"
         if ($null -eq $item) { return }
 
         # Get row position
@@ -1874,15 +1936,20 @@ class TaskListScreen : StandardListScreen {
                 # Write-PmcTuiLog "InlineEditor.OnConfirmed - task $taskId not found!" "ERROR"
             }
             $self.ShowInlineEditor = $false
+            $self._activeModal = $null
             $self.EditorMode = ""
             $self.CurrentEditItem = $null
+            $self.NeedsClear = $true
+            if ($self.List) { $self.List.InvalidateCache() }
         }.GetNewClosure()
 
         $this.InlineEditor.OnCancelled = {
             # Force refresh to clear the inline editor display
             $self.ShowInlineEditor = $false
+            $self._activeModal = $null
             $self.EditorMode = ""
             $self.CurrentEditItem = $null
+            $self.NeedsClear = $true
             $self.List.InvalidateCache()
             $self.SetStatusMessage("Edit cancelled", "info")
         }.GetNewClosure()
@@ -1891,7 +1958,8 @@ class TaskListScreen : StandardListScreen {
         # BUG FIX: Set EditorMode and CurrentEditItem so SkipRowHighlight works correctly
         $this.EditorMode = 'edit'
         $this.CurrentEditItem = $item
-        # $this.ShowInlineEditor = $true  <-- REMOVED: We use DetailPane, so don't hide the list row!
+        $this.ShowInlineEditor = $true
+        $this._activeModal = $this.InlineEditor  # CRITICAL: Set active modal for input routing
         # NOTE: NeedsClear NOT set - inline editing should not clear the screen
         $this.SetStatusMessage("Editing inline - Tab=next field, Enter=save, Esc=cancel", "success")
     }
@@ -1938,7 +2006,18 @@ class TaskListScreen : StandardListScreen {
 
     # Override: Additional keyboard shortcuts
     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
-        # PRIORITY: If in detail edit mode, route input to TextAreaEditor
+        # Phase B: Active modal gets priority
+        if ($this.HandleModalInput($keyInfo)) {
+            # Special case: If detail editor is active but didn't handle Escape (no selection),
+            # we need to handle it here to save and exit
+            if ($this._activeModal -eq $this._detailEditor -and $keyInfo.Key -eq [ConsoleKey]::Escape) {
+                # Fall through to manual Escape handling below
+            } else {
+                return $true
+            }
+        }
+
+        # PRIORITY: If in detail edit mode, handle Escape to save/exit
         if ($this._detailEditMode -and $this._detailEditor) {
             # Escape exits edit mode (same as pressing d again)
             if ($keyInfo.Key -eq [ConsoleKey]::Escape) {
@@ -1961,6 +2040,12 @@ class TaskListScreen : StandardListScreen {
                 $this._detailEditor.ShowCursor = $false
                 $this.DetailPane.SetBorderStyle('single') # Reset border style
                 
+                # Clear active modal
+                $this._activeModal = $null
+                
+                # CRITICAL FIX: Force full screen clear to remove double-border artifacts
+                $this.NeedsClear = $true
+                
                 # Explicitly hide hardware cursor to prevent "stuck cursor" artifact
                 if ($this.RenderEngine) {
                     $this.RenderEngine.HideCursor()
@@ -1980,13 +2065,12 @@ class TaskListScreen : StandardListScreen {
                 $this.SetStatusMessage("Description saved", "success")
                 return $true
             }
-            # Route all other keys to editor
-            return $this._detailEditor.HandleInput($keyInfo)
+            # Note: Other keys are handled by HandleModalInput above
         }
 
-        # D: Toggle edit mode - BEFORE parent call so it takes priority
-        # FIX: Changed to Shift+D only to avoid conflict with 'd' (Delete)
-        if ($keyInfo.KeyChar -eq 'D') {
+        # I: Toggle edit mode for detail/description editing
+        # FIX: Changed from Shift+D to 'i' since modifier+key combinations don't work in this terminal
+        if ($keyInfo.KeyChar -eq 'i' -or $keyInfo.KeyChar -eq 'I') {
             $selected = $this.List.GetSelectedItem()
             if (-not $selected) {
                 $this.SetStatusMessage("Select a task first", "warning")
@@ -2002,9 +2086,16 @@ class TaskListScreen : StandardListScreen {
             # Visual indicator for active edit mode
             if ($this._detailEditMode) {
                 $this.DetailPane.SetBorderStyle('double')
-                $this.SetStatusMessage("Editing description. Esc to save.", "info")
+                $this.SetStatusMessage("Editing description. Esc to save. Press 'i' again to toggle off.", "info")
+                # Set as active modal
+                $this._activeModal = $this._detailEditor
             } else {
                 $this.DetailPane.SetBorderStyle('single')
+                # Clear active modal
+                $this._activeModal = $null
+                
+                # CRITICAL FIX: Force full screen clear to remove double-border artifacts
+                $this.NeedsClear = $true
                 
                 # Explicitly hide cursor when toggling off via 'd'
                 if ($this.RenderEngine) {
@@ -2192,7 +2283,7 @@ class TaskListScreen : StandardListScreen {
         }
 
         # Keyboard shortcuts help (one line below status)
-        $help = "F:Filter A:Add E:Edit Del:Delete Shift+D:EditDetails O:Details Space:Toggle C:Complete X:Clone 1-6:Views H:Hide Q:Quit"
+        $help = "F:Filter A:Add E:Edit D:Delete I:EditDesc O:Details Space:Toggle C:Complete X:Clone 1-6:Views H:Hide Q:Quit"
         $engine.WriteAt(2, $y + 1, $help, $mutedColor, $bg)
     }
 

@@ -98,6 +98,7 @@ class TabPanel : PmcWidget {
         }
         $this.Tabs.Add($tab)
     }
+
     [void] ClearTabs() { $this.Tabs.Clear(); $this.CurrentTabIndex = 0; $this.SelectedFieldIndex = 0 }
 
     <#
@@ -325,7 +326,8 @@ class TabPanel : PmcWidget {
 
         if ($this.Tabs.Count -eq 0) {
             # Render empty state
-            $fgSec = $this.GetThemedInt("Foreground.Secondary"); $engine.WriteAt($this.X, $this.Y, "No tabs defined", $fgSec, -1)
+            $fgSec = $this.GetThemedInt("Foreground.Secondary")
+            $engine.WriteAt($this.X, $this.Y, "No tabs defined", $fgSec, -1)
             if ($engine.PSObject.Methods['EndLayer']) {
                 $engine.EndLayer()
             }
@@ -347,9 +349,9 @@ class TabPanel : PmcWidget {
             $label = " $label "
             
             if ($isCurrent) {
-                # Active Tab
+                # Active Tab - use semantic Accent colors
                 $bg = $this.GetThemedInt("Background.Accent")
-                $fg = $this.GetThemedInt("Foreground.Primary")
+                $fg = $this.GetThemedInt("Foreground.Accent")
                 $engine.WriteAt($currentX, $this.Y, $label, $fg, $bg)
             } else {
                 # Inactive Tab
@@ -363,7 +365,8 @@ class TabPanel : PmcWidget {
 
         # 2. Render Separator
         $sepColor = $this.GetThemedInt("Foreground.Border")
-        $line = [string]::new([char]0x2500, $this.Width); $engine.WriteAt($this.X, $this.Y + 1, $line, $sepColor, -1)
+        $line = [string]::new([char]0x2500, $this.Width)
+        $engine.WriteAt($this.X, $this.Y + 1, $line, $sepColor, -1)
 
         # 3. Render Content (Fields)
         $tab = $this.GetCurrentTab()
@@ -384,11 +387,13 @@ class TabPanel : PmcWidget {
                 $isSelected = ($fieldIndex -eq $this.SelectedFieldIndex)
                 $rowY = $startY + $i
                 
-                # Render Label
+                # Render Label - use semantic Selection colors
                 if ($isSelected) {
-                    $labelBg = $this.GetThemedInt("Background.Selection"); $labelFg = $this.GetThemedInt("Foreground.Selection")
+                    $labelBg = $this.GetThemedInt("Background.Selection")
+                    $labelFg = $this.GetThemedInt("Foreground.Selection")
                 } else {
-                    $labelBg = $this.GetThemedInt("Background.Primary"); $labelFg = $this.GetThemedInt("Foreground.Secondary")
+                    $labelBg = $this.GetThemedInt("Background.Primary")
+                    $labelFg = $this.GetThemedInt("Foreground.Secondary")
                 }
                 $engine.WriteAt($this.X + 2, $rowY, $field.Label.PadRight($this.LabelWidth), $labelFg, $labelBg)
                 
@@ -413,10 +418,12 @@ class TabPanel : PmcWidget {
             
             # Scroll indicators if needed
             if ($tab.ScrollOffset -gt 0) {
-                $fgAcc = $this.GetThemedInt("Foreground.Accent"); $engine.WriteAt($this.X + $this.Width - 1, $startY, "^", $fgAcc, -1)
+                $fgAcc = $this.GetThemedInt("Foreground.Accent")
+                $engine.WriteAt($this.X + $this.Width - 1, $startY, "^", $fgAcc, -1)
             }
             if (($tab.ScrollOffset + $visibleRows) -lt $fields.Count) {
-                $fgAcc2 = $this.GetThemedInt("Foreground.Accent"); $engine.WriteAt($this.X + $this.Width - 1, $startY + $visibleRows - 1, "v", $fgAcc2, -1)
+                $fgAcc2 = $this.GetThemedInt("Foreground.Accent")
+                $engine.WriteAt($this.X + $this.Width - 1, $startY + $visibleRows - 1, "v", $fgAcc2, -1)
             }
         }
 

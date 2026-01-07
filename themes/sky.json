@@ -106,6 +106,30 @@
         "Border.Widget": {
             "Type": "Solid",
             "Color": "#4499cc"
+        },
+        "Foreground.Secondary": {
+            "Type": "Solid",
+            "Color": "#5599bb"
+        },
+        "Foreground.Accent": {
+            "Type": "Solid",
+            "Color": "#ffffff"
+        },
+        "Background.Accent": {
+            "Type": "Solid",
+            "Color": "#1a3050"
+        },
+        "Foreground.Border": {
+            "Type": "Solid",
+            "Color": "#4499cc"
+        },
+        "Foreground.Selection": {
+            "Type": "Solid",
+            "Color": "#ffffff"
+        },
+        "Background.Selection": {
+            "Type": "Solid",
+            "Color": "#1a3050"
         }
     }
 }

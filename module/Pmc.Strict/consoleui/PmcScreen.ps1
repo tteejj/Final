@@ -69,6 +69,7 @@ class PmcScreen {
     [bool]$IsActive = $false
     [object]$RenderEngine = $null
     [bool]$NeedsClear = $false  # Request full screen clear before next render
+    hidden [object]$_activeModal = $null  # Currently active modal (editor, picker, dialog) - captures all input
 
     # === Layout Methods ===
 
@@ -559,7 +560,29 @@ class PmcScreen {
     .OUTPUTS
     Boolean indicating if input was handled
     #>
+    [bool] HandleModalInput([ConsoleKeyInfo]$keyInfo) {
+        if ($null -ne $this._activeModal) {
+            if ($this._activeModal.PSObject.Methods['HandleInput']) {
+                $handled = $this._activeModal.HandleInput($keyInfo)
+                
+                # Propagate NeedsClear if modal requested it
+                if ($this._activeModal.PSObject.Properties['NeedsClear'] -and $this._activeModal.NeedsClear) {
+                     $this.NeedsClear = $true
+                     $this._activeModal.NeedsClear = $false
+                }
+                
+                if ($handled) { return $true }
+            }
+        }
+        return $false
+    }
+
     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
+        # PHASE B: Active modal gets priority
+        if ($this.HandleModalInput($keyInfo)) {
+            return $true
+        }
+
         # MenuBar gets priority (if active)
         if ($this.MenuBar -and $this.MenuBar.IsActive) {
             if ($this.MenuBar.HandleKeyPress($keyInfo)) {

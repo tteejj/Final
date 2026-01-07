@@ -275,17 +275,17 @@ class ExcelImportScreen : PmcScreen {
     # === Input Handling ===
 
     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
-        # 1. Handle File Picker (Exclusive)
-        if ($this._showFilePicker -and $this._filePicker) {
-            $handled = $this._filePicker.HandleInput($keyInfo)
-            
-            if ($this._filePicker.IsComplete) {
+        # Phase B: Active modal gets priority
+        if ($this.HandleModalInput($keyInfo)) {
+            # Check if file picker completed
+            if ($this._activeModal -eq $this._filePicker -and $this._filePicker.IsComplete) {
                 if ($this._filePicker.Result) {
                     $this._OpenFile($this._filePicker.SelectedPath)
                 }
                 # Close picker
                 $this._showFilePicker = $false
                 $this._filePicker = $null
+                $this._activeModal = $null # Clear active modal
                 $this.NeedsClear = $true
             }
             return $true
@@ -397,6 +397,7 @@ class ExcelImportScreen : PmcScreen {
         $startPath = [Environment]::GetFolderPath('UserProfile')
         $this._filePicker = [PmcFilePicker]::new($startPath, $false)
         $this._showFilePicker = $true
+        $this._activeModal = $this._filePicker # Phase B: Set active modal
         $this.NeedsClear = $true
     }
 
