@@ -1,4 +1,4 @@
-﻿# NoteEditorScreen.ps1 - Screen wrapper for TextAreaEditor
+# NoteEditorScreen.ps1 - Screen wrapper for TextAreaEditor
 #
 # Provides a full-screen note editing experience with:
 # - TextAreaEditor widget for content editing
@@ -162,6 +162,13 @@ class NoteEditorScreen : PmcScreen {
     }
 
     [void] RenderToEngine([object]$engine) {
+        # BACKGROUND FILL: Render themed background first (Layer 0)
+        $engine.BeginLayer([ZIndex]::Background)
+        $bgColor = $this.GetThemedInt('Background.Primary')
+        for ($y = 0; $y -lt $this.TermHeight; $y++) {
+            $engine.WriteAt(0, $y, (' ' * $this.TermWidth), $bgColor, $bgColor)
+        }
+        
         # Render Header (Layer 50)
         $engine.BeginLayer([ZIndex]::Header)
         if ($this.Header) {

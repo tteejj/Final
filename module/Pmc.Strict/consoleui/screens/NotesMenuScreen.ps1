@@ -1,4 +1,4 @@
-﻿# NotesMenuScreen.ps1 - List all notes with add/edit/delete capabilities
+# NotesMenuScreen.ps1 - List all notes with add/edit/delete capabilities
 #
 # Displays a list of all notes using StandardListScreen base class
 # Allows creating new notes, editing existing notes, and deleting notes
@@ -57,6 +57,12 @@ class NotesMenuScreen : StandardListScreen {
         $this._noteService.OnNotesChanged = {
             if ($null -ne $self -and $self.IsActive) {
                 $self.LoadData()
+                if ($self.List) {
+                    $self.List.InvalidateCache()
+                }
+                if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                    $global:PmcApp.RequestRender()
+                }
             }
         }.GetNewClosure()
 
@@ -337,11 +343,18 @@ class NotesMenuScreen : StandardListScreen {
                 tags = $tags
             }
 
-            $this._noteService.UpdateNoteMetadata($item.id, $changes)
+            $this._noteService.UpdateNoteMetadata($itemId, $changes)
 
             # Write-PmcTuiLog "NotesMenuScreen.OnEditItem: Updated note $($item.id)" "INFO"
 
-            # Refresh list (will happen automatically via event callback)
+            # Refresh list explicitly
+            $this.LoadData()
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
 
         } catch {
             # Write-PmcTuiLog "NotesMenuScreen.OnEditItem: Error - $_" "ERROR"
@@ -397,7 +410,7 @@ class NotesMenuScreen : StandardListScreen {
                 }.GetNewClosure()
             },
             @{
-                Key = 'P'
+                Key = 'p'
                 Label = 'Assign Project'
                 Callback = {
                     $selected = $self.List.GetSelectedItem()
@@ -414,41 +427,19 @@ class NotesMenuScreen : StandardListScreen {
         $noteId = $(if ($note -is [hashtable]) { $note['id'] } else { $note.id })
         $noteTitle = $(if ($note -is [hashtable]) { $note['title'] } else { $note.title })
 
-        # Get all projects
-        $store = [TaskStore]::GetInstance()
-        $projects = @($store.GetAllProjects())
+        # Use ProjectPicker widget
+        . "$PSScriptRoot/../widgets/ProjectPicker.ps1"
+        $picker = [ProjectPicker]::new()
 
-        if ($projects.Count -eq 0) {
-            $this.SetStatusMessage("No projects available", "error")
-            return
-        }
-
-        # Simple inline selection - show project list in status bar
-        # For now, just prompt for project name
-        # TODO: Use proper project picker widget when available
-        $this.SetStatusMessage("Assign '$noteTitle' to project (type name): ", "info")
-        $this.Render() | Out-Host
-
-        # Read project name from user
-        [Console]::CursorVisible = $true
-        $projectName = [Console]::ReadLine()
-        [Console]::CursorVisible = $false
-
-        if ([string]::IsNullOrWhiteSpace($projectName)) {
+        $selectedProject = $picker.Show()
+        
+        if ($null -eq $selectedProject) {
             $this.SetStatusMessage("Assignment cancelled", "info")
             return
         }
 
-        # Verify project exists
-        $projectExists = $projects | Where-Object {
-            ($_ -is [string] -and $_ -eq $projectName) -or
-            ((Get-SafeProperty $_ 'name') -eq $projectName)
-        } | Select-Object -First 1
-
-        if (-not $projectExists) {
-            $this.SetStatusMessage("Project '$projectName' not found", "error")
-            return
-        }
+        # Get project name from selected project
+        $projectName = $(if ($selectedProject -is [hashtable]) { $selectedProject['name'] } else { $selectedProject.name })
 
         # Reassign note
         try {
@@ -461,6 +452,12 @@ class NotesMenuScreen : StandardListScreen {
 
             # Refresh list
             $this.LoadData()
+            if ($this.List) {
+                $this.List.InvalidateCache()
+            }
+            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
+                $global:PmcApp.RequestRender()
+            }
         } catch {
             $this.SetStatusMessage("Failed to assign note: $($_.Exception.Message)", "error")
         }

@@ -1,0 +1,184 @@
+[2026-01-07 10:24:26.376] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-07 10:24:26.380] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-07 10:24:26.381] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-07 10:24:26.382] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-07 10:24:26.383] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-07 10:24:26.384] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-07 10:24:26.385] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-07 10:24:26.386] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-07 10:24:26.386] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-07 10:24:26.387] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-07 10:24:26.388] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-07 10:24:26.389] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-07 10:24:26.390] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-07 10:24:26.390] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-07 10:24:26.391] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-07 10:24:26.405] ServiceContainer: Resolving 'Application'...
+[2026-01-07 10:24:26.407] ServiceContainer: Resolving 'Theme'...
+[2026-01-07 10:24:26.598] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-07 10:24:26.684] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-07 10:24:26.686] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-07 10:24:26.698] ServiceContainer: Resolved 'Application' successfully
+[2026-01-07 10:24:26.699] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-07 10:24:26.711] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-07 10:24:26.729] MenuRegistry: Loaded manifest with 16 entries
+[2026-01-07 10:24:26.756] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-07 10:24:26.757] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-07 10:24:26.772] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-07 10:24:26.774] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-07 10:24:26.775] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-07 10:24:26.777] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-07 10:24:26.779] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-07 10:24:26.779] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-07 10:24:26.781] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-07 10:24:26.782] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-07 10:24:26.783] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-07 10:24:26.792] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-07 10:24:26.794] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-07 10:24:26.795] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-07 10:24:26.796] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-07 10:24:26.798] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-07 10:24:26.799] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-07 10:24:26.800] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-07 10:24:26.802] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-07 10:24:26.803] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-07 10:24:26.804] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-07 10:24:26.806] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-07 10:24:26.807] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-07 10:24:26.809] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-07 10:24:26.810] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-07 10:24:26.811] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-07 10:24:26.812] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-07 10:24:26.814] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-07 10:24:26.815] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-07 10:24:26.816] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-07 10:24:26.817] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-07 10:24:26.818] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-07 10:24:26.819] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-07 10:24:26.821] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-07 10:24:26.822] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-07 10:24:26.823] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-07 10:24:26.824] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-07 10:24:26.825] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-07 10:24:26.827] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-07 10:24:26.828] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-07 10:24:26.829] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-07 10:24:26.830] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-07 10:24:26.831] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-07 10:24:26.832] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-07 10:24:26.833] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-07 10:24:26.834] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-07 10:24:26.835] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-07 10:24:26.837] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-07 10:24:26.838] ServiceContainer: Resolving 'TaskListScreen'...
+[2026-01-07 10:24:26.840] ServiceContainer: Resolving 'TaskStore'...
+[2026-01-07 10:24:26.976] ServiceContainer: Resolved 'TaskStore' successfully
+[2026-01-07 10:24:27.601] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-07 10:24:27.631] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-07 10:24:27.652] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[2026-01-07 10:24:27.818] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2026-01-07 10:24:27.836] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2026-01-07 10:24:27.839] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2026-01-07 10:24:27.843] _PopulateMenusFromRegistry: Menu 'Tools' has 6 items from registry (array)
+[2026-01-07 10:24:27.873] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2026-01-07 10:24:27.876] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2026-01-07 10:24:27.878] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2026-01-07 10:24:28.190] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-07 10:24:28.192] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-07 10:24:28.197] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[2026-01-07 10:24:33.063] ServiceContainer: Resolving 'NotesMenuScreen'...
+[2026-01-07 10:24:33.133] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Notes
+[2026-01-07 10:24:33.138] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-07 10:24:33.142] [INFO] StandardListScreen._ConfigureListActions: Configured 7 footer shortcuts
+[2026-01-07 10:24:33.173] ServiceContainer: Resolved 'NotesMenuScreen' successfully
+[2026-01-07 10:24:33.221] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Notes
+[2026-01-07 10:24:33.223] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-07 10:24:33.225] [INFO] StandardListScreen._ConfigureListActions: Configured 7 footer shortcuts
+[2026-01-07 10:24:36.721] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:36.827] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:36.833] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[2026-01-07 10:24:38.816] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:38.858] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:38.862] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[2026-01-07 10:24:39.128] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:39.162] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:39.165] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[2026-01-07 10:24:39.344] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:39.393] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:39.396] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[2026-01-07 10:24:39.564] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:39.601] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:39.607] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[2026-01-07 10:24:40.489] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:40.535] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:24:40.538] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[2026-01-07 10:24:41.573] [INFO] StandardListScreen.OnInlineEditConfirmed: Dispatching to _SaveEditedItem
+[2026-01-07 10:24:41.656] RequestRender called from:  at line 972
+[2026-01-07 10:25:22.317] [ERROR] UniversalList callback error: Method invocation failed because [ProjectPicker] does not contain a method named 'Show'.
+[2026-01-07 10:25:22.318] [ERROR] Stack trace: at _AssignToProject, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 434
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 418
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-07 10:25:24.089] [ERROR] UniversalList callback error: Method invocation failed because [ProjectPicker] does not contain a method named 'Show'.
+[2026-01-07 10:25:24.093] [ERROR] Stack trace: at _AssignToProject, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 434
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 418
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-07 10:25:25.374] [ERROR] UniversalList callback error: Method invocation failed because [ProjectPicker] does not contain a method named 'Show'.
+[2026-01-07 10:25:25.375] [ERROR] Stack trace: at _AssignToProject, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 434
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 418
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-07 10:25:25.539] [ERROR] UniversalList callback error: Method invocation failed because [ProjectPicker] does not contain a method named 'Show'.
+[2026-01-07 10:25:25.540] [ERROR] Stack trace: at _AssignToProject, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 434
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 418
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-07 10:34:14.349] [INFO] *** STANDARDLISTSCREEN.ADDITEM CALLED on type=NotesMenuScreen key=NotesList ***
+[2026-01-07 10:34:14.356] [INFO] StandardListScreen.AddItem: ActiveModal set to InlineEditor. ShowInlineEditor=True
+[2026-01-07 10:34:14.421] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=10
+[2026-01-07 10:34:16.781] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=10
+[2026-01-07 10:34:16.971] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=10
+[2026-01-07 10:34:17.044] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=10
+[2026-01-07 10:34:17.575] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=10
+[2026-01-07 10:34:17.680] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=10
+[2026-01-07 10:34:17.782] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=10
+[2026-01-07 10:34:18.006] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=10
+[2026-01-07 10:34:18.665] [INFO] StandardListScreen.OnInlineEditConfirmed: Dispatching to _SaveEditedItem
+[2026-01-07 10:34:18.723] RequestRender called from: <ScriptBlock> at line 64
+[2026-01-07 10:34:18.753] [INFO] NoteEditorScreen: Constructor called for noteId=newnote
+[2026-01-07 10:34:18.762] [INFO] NoteEditorScreen: Constructor complete
+[2026-01-07 10:34:18.769] [INFO] NoteEditorScreen.Initialize: Called with renderEngine and container
+[2026-01-07 10:34:18.861] PreferencesService: Preferences path: /home/teej/ztest/module/Pmc.Strict/.pmc-data/preferences.json
+[2026-01-07 10:34:18.871] PreferencesService: No preferences file found, using defaults
+[2026-01-07 10:34:18.879] [INFO] NoteEditorScreen.Initialize: Complete
+[2026-01-07 10:34:18.901] [ERROR] NoteEditorScreen.LoadData: Error - The property 'Length' cannot be found on this object. Verify that the property exists.
+[2026-01-07 10:34:18.903] RequestRender called from:  at line 972
+[2026-01-07 10:34:20.961] [INFO] NoteEditorScreen: ESCAPE DETECTED - Auto-saving and exiting
+[2026-01-07 10:34:20.978] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Notes
+[2026-01-07 10:34:20.982] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-07 10:34:20.984] [INFO] StandardListScreen._ConfigureListActions: Configured 7 footer shortcuts
+[2026-01-07 10:34:22.932] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:34:22.982] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:34:22.985] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[2026-01-07 10:34:24.469] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:34:24.517] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-07 10:34:24.519] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[2026-01-07 10:34:25.530] [INFO] StandardListScreen.OnInlineEditConfirmed: Dispatching to _SaveEditedItem
+[2026-01-07 10:34:25.549] RequestRender called from:  at line 972
