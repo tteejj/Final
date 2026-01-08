@@ -1570,3 +1570,267 @@ Check the spelling of the name, or if a path was included, verify that the path 
 [10:24:26.564] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
 [10:24:26.568] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
 [10:24:26.577] [Load-Theme] Returning theme with Hex='#33aaff'
+[16:31:52.465] === THEME SELF-HEAL START ===
+[16:31:52.488] Config path: /home/teej/ztest/config.json
+[16:31:52.542] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[16:31:52.545] Hex already present, no repair needed
+[16:31:52.713] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:31:52.722] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[16:31:52.732] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[16:31:52.796] [Load-Theme] Returning theme with Hex='#33aaff'
+[16:31:52.866] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:31:52.867] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[16:31:52.871] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[16:31:52.877] [Load-Theme] Returning theme with Hex='#33aaff'
+[16:33:41.663] === THEME SELF-HEAL START ===
+[16:33:41.689] Config path: /home/teej/ztest/config.json
+[16:33:41.739] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[16:33:41.743] Hex already present, no repair needed
+[16:33:41.949] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:33:41.960] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[16:33:41.966] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[16:33:42.014] [Load-Theme] Returning theme with Hex='#33aaff'
+[16:33:42.121] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:33:42.123] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[16:33:42.128] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[16:33:42.137] [Load-Theme] Returning theme with Hex='#33aaff'
+[16:35:37.180] === THEME SELF-HEAL START ===
+[16:35:37.208] Config path: /home/teej/ztest/config.json
+[16:35:37.271] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[16:35:37.277] Hex already present, no repair needed
+[16:35:37.512] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:35:37.524] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[16:35:37.530] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[16:35:37.570] [Load-Theme] Returning theme with Hex='#33aaff'
+[16:35:37.670] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:35:37.673] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[16:35:37.678] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[16:35:37.688] [Load-Theme] Returning theme with Hex='#33aaff'
+[16:46:42.999] === THEME SELF-HEAL START ===
+[16:46:43.027] Config path: /home/teej/ztest/config.json
+[16:46:43.116] Config loaded. Active=ocean, Hex=#33aaff, hasHex=True
+[16:46:43.123] Hex already present, no repair needed
+[16:46:43.347] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:46:43.357] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[16:46:43.362] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[16:46:43.396] [Load-Theme] Returning theme with Hex='#33aaff'
+[16:46:43.486] [Load-Theme] themeName='ocean' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:46:43.489] [Load-Theme] Looking for: /home/teej/ztest/themes/ocean.json (exists=True)
+[16:46:43.495] [Load-Theme] JSON loaded. Name='Ocean' Hex='#33aaff'
+[16:46:43.505] [Load-Theme] Returning theme with Hex='#33aaff'
+[16:48:48.093] [Set-ActiveTheme] Starting for themeName='Notepad'
+[16:48:48.094] [Set-ActiveTheme] Reading config from: /home/teej/ztest/config.json
+[16:48:48.108] [Set-ActiveTheme] Set Active='notepad'
+[16:48:48.112] [Load-Theme] themeName='Notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:48:48.113] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[16:48:48.116] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[16:48:48.119] [Load-Theme] Returning theme with Hex='#ffffff'
+[16:48:48.119] [Set-ActiveTheme] Set Hex='#ffffff'
+[16:48:48.122] [Set-ActiveTheme] Writing config to: /home/teej/ztest/config.json
+[16:48:48.157] [Set-ActiveTheme] Config saved successfully
+[16:48:48.161] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:48:48.162] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[16:48:48.164] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[16:48:48.167] [Load-Theme] Returning theme with Hex='#ffffff'
+[16:48:48.182] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:48:48.185] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[16:48:48.197] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[16:48:48.200] [Load-Theme] Returning theme with Hex='#ffffff'
+[16:55:24.084] === THEME SELF-HEAL START ===
+[16:55:24.120] Config path: /home/teej/ztest/config.json
+[16:55:24.177] Config loaded. Active=notepad, Hex=#ffffff, hasHex=True
+[16:55:24.181] Hex already present, no repair needed
+[16:55:24.384] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:55:24.396] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[16:55:24.401] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[16:55:24.445] [Load-Theme] Returning theme with Hex='#ffffff'
+[16:55:24.536] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:55:24.540] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[16:55:24.547] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[16:55:24.559] [Load-Theme] Returning theme with Hex='#ffffff'
+[16:59:48.571] [Set-ActiveTheme] Starting for themeName='Cyberpunk'
+[16:59:48.572] [Set-ActiveTheme] Reading config from: /home/teej/ztest/config.json
+[16:59:48.580] [Set-ActiveTheme] Set Active='cyberpunk'
+[16:59:48.583] [Load-Theme] themeName='Cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:59:48.584] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[16:59:48.586] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[16:59:48.593] [Load-Theme] Returning theme with Hex='#00f3ff'
+[16:59:48.593] [Set-ActiveTheme] Set Hex='#00f3ff'
+[16:59:48.595] [Set-ActiveTheme] Writing config to: /home/teej/ztest/config.json
+[16:59:48.624] [Set-ActiveTheme] Config saved successfully
+[16:59:48.628] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:59:48.628] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[16:59:48.630] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[16:59:48.633] [Load-Theme] Returning theme with Hex='#00f3ff'
+[16:59:48.641] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[16:59:48.642] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[16:59:48.650] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[16:59:48.653] [Load-Theme] Returning theme with Hex='#00f3ff'
+[18:36:23.391] === THEME SELF-HEAL START ===
+[18:36:23.421] Config path: /home/teej/ztest/config.json
+[18:36:23.470] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[18:36:23.474] Hex already present, no repair needed
+[18:36:23.663] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[18:36:23.672] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[18:36:23.678] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[18:36:23.719] [Load-Theme] Returning theme with Hex='#00f3ff'
+[18:36:23.813] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[18:36:23.816] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[18:36:23.820] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[18:36:23.833] [Load-Theme] Returning theme with Hex='#00f3ff'
+[18:44:10.833] === THEME SELF-HEAL START ===
+[18:44:10.857] Config path: /home/teej/ztest/config.json
+[18:44:10.903] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[18:44:10.906] Hex already present, no repair needed
+[18:44:11.087] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[18:44:11.098] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[18:44:11.104] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[18:44:11.144] [Load-Theme] Returning theme with Hex='#00f3ff'
+[18:44:11.231] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[18:44:11.233] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[18:44:11.238] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[18:44:11.247] [Load-Theme] Returning theme with Hex='#00f3ff'
+[06:48:07.436] === THEME SELF-HEAL START ===
+[06:48:07.460] Config path: /home/teej/ztest/config.json
+[06:48:07.521] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[06:48:07.525] Hex already present, no repair needed
+[06:48:07.707] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[06:48:07.718] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[06:48:07.722] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[06:48:07.761] [Load-Theme] Returning theme with Hex='#00f3ff'
+[06:48:07.842] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[06:48:07.844] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[06:48:07.849] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[06:48:07.857] [Load-Theme] Returning theme with Hex='#00f3ff'
+[06:55:59.242] === THEME SELF-HEAL START ===
+[06:55:59.254] Config path: /home/teej/ztest/config.json
+[06:55:59.318] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[06:55:59.322] Hex already present, no repair needed
+[06:55:59.526] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[06:55:59.537] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[06:55:59.541] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[06:55:59.575] [Load-Theme] Returning theme with Hex='#00f3ff'
+[06:55:59.657] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[06:55:59.659] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[06:55:59.664] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[06:55:59.673] [Load-Theme] Returning theme with Hex='#00f3ff'
+[07:02:51.016] === THEME SELF-HEAL START ===
+[07:02:51.041] Config path: /home/teej/ztest/config.json
+[07:02:51.096] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[07:02:51.101] Hex already present, no repair needed
+[07:02:51.274] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:02:51.284] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[07:02:51.288] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[07:02:51.330] [Load-Theme] Returning theme with Hex='#00f3ff'
+[07:02:51.424] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:02:51.426] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[07:02:51.431] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[07:02:51.440] [Load-Theme] Returning theme with Hex='#00f3ff'
+[07:03:23.412] === THEME SELF-HEAL START ===
+[07:03:23.440] Config path: /home/teej/ztest/config.json
+[07:03:23.494] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[07:03:23.499] Hex already present, no repair needed
+[07:03:23.684] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:03:23.695] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[07:03:23.700] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[07:03:23.741] [Load-Theme] Returning theme with Hex='#00f3ff'
+[07:03:23.833] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[07:03:23.835] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[07:03:23.840] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[07:03:23.852] [Load-Theme] Returning theme with Hex='#00f3ff'
+[08:23:03.570] === THEME SELF-HEAL START ===
+[08:23:03.597] Config path: /home/teej/ztest/config.json
+[08:23:03.656] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[08:23:03.661] Hex already present, no repair needed
+[08:23:03.858] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:23:03.868] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[08:23:03.873] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[08:23:03.909] [Load-Theme] Returning theme with Hex='#00f3ff'
+[08:23:03.989] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:23:03.992] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[08:23:03.996] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[08:23:04.005] [Load-Theme] Returning theme with Hex='#00f3ff'
+[08:38:28.694] === THEME SELF-HEAL START ===
+[08:38:28.720] Config path: /home/teej/ztest/config.json
+[08:38:28.770] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[08:38:28.775] Hex already present, no repair needed
+[08:38:28.959] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:38:28.969] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[08:38:28.975] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[08:38:29.015] [Load-Theme] Returning theme with Hex='#00f3ff'
+[08:38:29.106] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:38:29.108] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[08:38:29.113] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[08:38:29.122] [Load-Theme] Returning theme with Hex='#00f3ff'
+[08:53:05.146] === THEME SELF-HEAL START ===
+[08:53:05.171] Config path: /home/teej/ztest/config.json
+[08:53:05.228] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[08:53:05.233] Hex already present, no repair needed
+[08:53:05.502] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:53:05.517] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[08:53:05.526] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[08:53:05.593] [Load-Theme] Returning theme with Hex='#00f3ff'
+[08:53:05.761] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:53:05.767] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[08:53:05.776] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[08:53:05.787] [Load-Theme] Returning theme with Hex='#00f3ff'
+[08:58:15.244] === THEME SELF-HEAL START ===
+[08:58:15.275] Config path: /home/teej/ztest/config.json
+[08:58:15.333] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[08:58:15.338] Hex already present, no repair needed
+[08:58:15.539] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:58:15.550] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[08:58:15.555] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[08:58:15.593] [Load-Theme] Returning theme with Hex='#00f3ff'
+[08:58:15.693] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:58:15.696] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[08:58:15.702] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[08:58:15.712] [Load-Theme] Returning theme with Hex='#00f3ff'
+[09:36:02.099] === THEME SELF-HEAL START ===
+[09:36:02.114] Config path: /home/teej/ztest/config.json
+[09:36:02.142] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[09:36:02.144] Hex already present, no repair needed
+[09:36:02.246] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:36:02.252] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[09:36:02.256] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[09:36:02.277] [Load-Theme] Returning theme with Hex='#00f3ff'
+[09:36:02.325] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:36:02.327] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[09:36:02.330] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[09:36:02.336] [Load-Theme] Returning theme with Hex='#00f3ff'
+[09:44:42.003] === THEME SELF-HEAL START ===
+[09:44:42.017] Config path: /home/teej/ztest/config.json
+[09:44:42.044] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[09:44:42.046] Hex already present, no repair needed
+[09:44:42.148] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:44:42.153] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[09:44:42.156] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[09:44:42.176] [Load-Theme] Returning theme with Hex='#00f3ff'
+[09:44:42.224] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:44:42.226] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[09:44:42.229] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[09:44:42.236] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:01:29.934] === THEME SELF-HEAL START ===
+[10:01:29.942] Config path: /home/teej/ztest/config.json
+[10:01:29.973] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[10:01:29.976] Hex already present, no repair needed
+[10:01:30.085] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:01:30.091] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:01:30.094] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:01:30.116] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:01:30.174] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:01:30.176] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:01:30.180] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:01:30.186] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:04:27.752] === THEME SELF-HEAL START ===
+[10:04:27.760] Config path: /home/teej/ztest/config.json
+[10:04:27.795] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[10:04:27.797] Hex already present, no repair needed
+[10:04:27.904] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:04:27.911] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:04:27.914] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:04:27.938] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:04:27.989] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:04:27.991] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:04:27.995] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:04:28.001] [Load-Theme] Returning theme with Hex='#00f3ff'

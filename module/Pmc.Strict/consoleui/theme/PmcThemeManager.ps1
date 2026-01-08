@@ -116,10 +116,6 @@ class PmcThemeManager {
     }
 
     hidden [string] _ResolveColor([string]$role) {
-        if (-not $this.PmcTheme -or -not $this.PmcTheme.Properties) {
-            return '#ffffff'
-        }
-
         $props = $this.PmcTheme.Properties
 
         # Direct property match
@@ -127,39 +123,12 @@ class PmcThemeManager {
             return $this._ExtractColor($props[$role])
         }
 
-        # Foreground prefix match
-        $fgRole = "Foreground.$role"
-        if ($props.ContainsKey($fgRole)) {
-            return $this._ExtractColor($props[$fgRole])
-        }
-        
-        # Semantic mapping
-        switch ($role) {
-            'Border' { if ($props.ContainsKey('Border.Widget')) { return $this._ExtractColor($props['Border.Widget']) } }
-            'Header' { if ($props.ContainsKey('Foreground.Header')) { return $this._ExtractColor($props['Foreground.Header']) } }
-            'Title'  { if ($props.ContainsKey('Foreground.Title')) { return $this._ExtractColor($props['Foreground.Title']) } }
-            'Text'   { if ($props.ContainsKey('Foreground.Text')) { return $this._ExtractColor($props['Foreground.Text']) } }
-            'Body'   { if ($props.ContainsKey('Foreground.Body')) { return $this._ExtractColor($props['Foreground.Body']) } }
-            'Muted'  { if ($props.ContainsKey('Foreground.Muted')) { return $this._ExtractColor($props['Foreground.Muted']) } }
-            'Label'  { if ($props.ContainsKey('Foreground.Label')) { return $this._ExtractColor($props['Foreground.Label']) } }
-            'Error'  { if ($props.ContainsKey('Foreground.Error')) { return $this._ExtractColor($props['Foreground.Error']) } }
-            'Success'{ if ($props.ContainsKey('Foreground.Success')) { return $this._ExtractColor($props['Foreground.Success']) } }
-            'Warning'{ if ($props.ContainsKey('Foreground.Warning')) { return $this._ExtractColor($props['Foreground.Warning']) } }
-            'Info'   { if ($props.ContainsKey('Foreground.Info')) { return $this._ExtractColor($props['Foreground.Info']) } }
-            'Highlight'{ if ($props.ContainsKey('Foreground.Highlight')) { return $this._ExtractColor($props['Foreground.Highlight']) } }
-            'Primary' { if ($props.ContainsKey('Foreground.Primary')) { return $this._ExtractColor($props['Foreground.Primary']) } }
-        }
-
-        return '#ffffff'
+        throw "Theme Property Missing: '$role'"
     }
 
     hidden [string] _ExtractColor($propValue) {
-        if ($propValue -is [string]) { return $propValue }
-        if ($propValue -is [hashtable] -or $propValue -is [pscustomobject]) {
-            if ($propValue.Color) { return $propValue.Color }
-            if ($propValue.Start) { return $propValue.Start } # Gradient fallback
-        }
-        return '#ffffff'
+        if ($propValue.Color) { return $propValue.Color }
+        throw "Invalid theme property value"
     }
 
     [string] GetAnsiSequence([string]$role, [bool]$background = $false) {

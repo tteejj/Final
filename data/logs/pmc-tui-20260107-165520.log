@@ -1,0 +1,107 @@
+[2026-01-07 16:55:24.229] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-07 16:55:24.233] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-07 16:55:24.235] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-07 16:55:24.236] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-07 16:55:24.237] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-07 16:55:24.237] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-07 16:55:24.239] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-07 16:55:24.240] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-07 16:55:24.242] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-07 16:55:24.244] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-07 16:55:24.245] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-07 16:55:24.247] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-07 16:55:24.248] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-07 16:55:24.249] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-07 16:55:24.250] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-07 16:55:24.274] ServiceContainer: Resolving 'Application'...
+[2026-01-07 16:55:24.277] ServiceContainer: Resolving 'Theme'...
+[2026-01-07 16:55:24.599] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-07 16:55:24.725] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-07 16:55:24.730] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-07 16:55:24.750] ServiceContainer: Resolved 'Application' successfully
+[2026-01-07 16:55:24.752] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-07 16:55:24.773] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-07 16:55:24.799] MenuRegistry: Loaded manifest with 16 entries
+[2026-01-07 16:55:24.838] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-07 16:55:24.839] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-07 16:55:24.863] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-07 16:55:24.866] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-07 16:55:24.867] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-07 16:55:24.869] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-07 16:55:24.871] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-07 16:55:24.872] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-07 16:55:24.874] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-07 16:55:24.877] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-07 16:55:24.890] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-07 16:55:24.893] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-07 16:55:24.895] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-07 16:55:24.896] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-07 16:55:24.897] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-07 16:55:24.899] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-07 16:55:24.900] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-07 16:55:24.902] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-07 16:55:24.904] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-07 16:55:24.905] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-07 16:55:24.907] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-07 16:55:24.908] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-07 16:55:24.909] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-07 16:55:24.911] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-07 16:55:24.912] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-07 16:55:24.913] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-07 16:55:24.915] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-07 16:55:24.916] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-07 16:55:24.918] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-07 16:55:24.920] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-07 16:55:24.922] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-07 16:55:24.922] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-07 16:55:24.924] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-07 16:55:24.926] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-07 16:55:24.927] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-07 16:55:24.928] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-07 16:55:24.930] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-07 16:55:24.932] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-07 16:55:24.935] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-07 16:55:24.937] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-07 16:55:24.938] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-07 16:55:24.940] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-07 16:55:24.942] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-07 16:55:24.943] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-07 16:55:24.944] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-07 16:55:24.947] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-07 16:55:24.948] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-07 16:55:24.949] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-07 16:55:24.951] ServiceContainer: Resolving 'TaskListScreen'...
+[2026-01-07 16:55:24.953] ServiceContainer: Resolving 'TaskStore'...
+[2026-01-07 16:55:25.157] ServiceContainer: Resolved 'TaskStore' successfully
+[2026-01-07 16:55:26.223] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-07 16:55:26.251] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-07 16:55:26.278] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[2026-01-07 16:55:26.530] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2026-01-07 16:55:26.556] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2026-01-07 16:55:26.559] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2026-01-07 16:55:26.564] _PopulateMenusFromRegistry: Menu 'Tools' has 6 items from registry (array)
+[2026-01-07 16:55:26.567] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2026-01-07 16:55:26.572] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2026-01-07 16:55:26.576] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2026-01-07 16:55:27.001] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-07 16:55:27.005] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-07 16:55:27.024] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[2026-01-07 16:59:23.045] ServiceContainer: Resolving 'NotesMenuScreen'...
+[2026-01-07 16:59:23.149] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Notes
+[2026-01-07 16:59:23.155] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-07 16:59:23.160] [INFO] StandardListScreen._ConfigureListActions: Configured 7 footer shortcuts
+[2026-01-07 16:59:23.196] ServiceContainer: Resolved 'NotesMenuScreen' successfully
+[2026-01-07 16:59:23.239] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Notes
+[2026-01-07 16:59:23.241] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-07 16:59:23.242] [INFO] StandardListScreen._ConfigureListActions: Configured 7 footer shortcuts
+[2026-01-07 16:59:33.310] [INFO] UniversalList.RenderToEngine: SKIPPING row 1 (editor active, filling with blank)
+[2026-01-07 16:59:33.434] [INFO] UniversalList.RenderToEngine: SKIPPING row 1 (editor active, filling with blank)
+[2026-01-07 16:59:33.438] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=10
+[2026-01-07 16:59:35.985] [INFO] UniversalList.RenderToEngine: SKIPPING row 1 (editor active, filling with blank)
+[2026-01-07 16:59:36.016] [INFO] UniversalList.RenderToEngine: SKIPPING row 1 (editor active, filling with blank)
+[2026-01-07 16:59:36.022] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=10
+[2026-01-07 16:59:36.963] [INFO] StandardListScreen.OnInlineEditConfirmed: Dispatching to _SaveEditedItem
+[2026-01-07 16:59:37.095] RequestRender called from:  at line 972
+[2026-01-07 16:59:46.677] ServiceContainer: Resolving 'ThemeEditorScreen'...
+[2026-01-07 16:59:46.728] ServiceContainer: Resolved 'ThemeEditorScreen' successfully
+[2026-01-07 16:59:48.669] RequestRender called from: Invoke-ThemeHotReload at line 86

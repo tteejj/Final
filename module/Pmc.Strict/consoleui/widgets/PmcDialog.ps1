@@ -19,9 +19,20 @@ class PmcDialog {
     [string]$Message
     [int]$Width
     [int]$Height
+    [int]$X = 0
+    [int]$Y = 0
     [bool]$IsComplete = $false
     [bool]$Result = $false
     [string]$TextResult = ''
+
+    [int] GetThemedColorInt([string]$key) {
+        # Use PmcThemeEngine directly for integer colors
+        $engine = [PmcThemeEngine]::GetInstance()
+        if ($engine) {
+            return $engine.GetThemeColorInt($key)
+        }
+        return -1
+    }
 
     PmcDialog([string]$title, [string]$message) {
         $this.Title = $title

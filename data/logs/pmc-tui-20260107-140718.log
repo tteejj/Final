@@ -1,0 +1,214 @@
+[2026-01-07 14:07:20.595] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-07 14:07:20.598] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-07 14:07:20.599] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-07 14:07:20.600] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-07 14:07:20.601] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-07 14:07:20.602] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-07 14:07:20.603] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-07 14:07:20.604] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-07 14:07:20.605] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-07 14:07:20.606] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-07 14:07:20.607] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-07 14:07:20.607] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-07 14:07:20.608] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-07 14:07:20.610] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-07 14:07:20.611] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-07 14:07:20.626] ServiceContainer: Resolving 'Application'...
+[2026-01-07 14:07:20.628] ServiceContainer: Resolving 'Theme'...
+[2026-01-07 14:07:20.817] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-07 14:07:20.907] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-07 14:07:20.909] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-07 14:07:20.922] ServiceContainer: Resolved 'Application' successfully
+[2026-01-07 14:07:20.923] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-07 14:07:20.934] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-07 14:07:20.952] MenuRegistry: Loaded manifest with 16 entries
+[2026-01-07 14:07:20.975] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-07 14:07:20.976] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-07 14:07:20.990] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-07 14:07:20.992] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-07 14:07:20.993] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-07 14:07:20.995] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-07 14:07:20.996] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-07 14:07:20.997] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-07 14:07:20.999] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-07 14:07:21.000] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-07 14:07:21.007] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-07 14:07:21.009] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-07 14:07:21.010] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-07 14:07:21.011] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-07 14:07:21.012] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-07 14:07:21.014] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-07 14:07:21.015] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-07 14:07:21.016] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-07 14:07:21.018] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-07 14:07:21.019] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-07 14:07:21.020] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-07 14:07:21.022] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-07 14:07:21.023] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-07 14:07:21.024] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-07 14:07:21.025] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-07 14:07:21.026] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-07 14:07:21.028] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-07 14:07:21.029] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-07 14:07:21.030] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-07 14:07:21.032] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-07 14:07:21.033] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-07 14:07:21.034] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-07 14:07:21.035] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-07 14:07:21.037] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-07 14:07:21.038] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-07 14:07:21.039] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-07 14:07:21.040] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-07 14:07:21.041] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-07 14:07:21.043] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-07 14:07:21.044] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-07 14:07:21.045] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-07 14:07:21.046] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-07 14:07:21.048] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-07 14:07:21.049] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-07 14:07:21.050] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-07 14:07:21.052] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-07 14:07:21.053] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-07 14:07:21.054] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-07 14:07:21.056] ServiceContainer: Resolving 'TaskListScreen'...
+[2026-01-07 14:07:21.057] ServiceContainer: Resolving 'TaskStore'...
+[2026-01-07 14:07:21.193] ServiceContainer: Resolved 'TaskStore' successfully
+[2026-01-07 14:07:21.792] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-07 14:07:21.820] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-07 14:07:21.837] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[2026-01-07 14:07:22.000] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2026-01-07 14:07:22.018] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2026-01-07 14:07:22.020] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2026-01-07 14:07:22.024] _PopulateMenusFromRegistry: Menu 'Tools' has 6 items from registry (array)
+[2026-01-07 14:07:22.035] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2026-01-07 14:07:22.038] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2026-01-07 14:07:22.040] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2026-01-07 14:07:22.341] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-07 14:07:22.344] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-07 14:07:22.350] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[2026-01-07 14:07:26.664] ServiceContainer: Resolving 'NotesMenuScreen'...
+[2026-01-07 14:07:26.685] [ERROR] ServiceContainer: Failed to resolve 'NotesMenuScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:357 char:53
++ … ta.ContainsKey('tags') -and $not [string]::IsNullOrWhiteSpace($data.t …
++                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Unexpected token '[string]::IsNullOrWhiteSpace' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:357 char:53
++ … ta.ContainsKey('tags') -and $not [string]::IsNullOrWhiteSpace($data.t …
++                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Missing closing ')' after expression in 'if' statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:348 char:13
++         try {
++             ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:357 char:93
++ … ainsKey('tags') -and $not [string]::IsNullOrWhiteSpace($data.tags)) {
++                                                                     ~
+The Try statement is missing its Catch or Finally block.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:341 char:48
++     [void] OnEditItem($item, [hashtable]$data) {
++                                                ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:18 char:45
++ class NotesMenuScreen : StandardListScreen {
++                                             ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:357 char:93
++ … ainsKey('tags') -and $not [string]::IsNullOrWhiteSpace($data.tags)) {
++                                                                     ~
+Unexpected token ')' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:381 char:9
++         } catch {
++         ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:386 char:5
++     }
++     ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:392 char:12
++     [void] OnItemDeleted($item) {
++            ~~~~~~~~~~~~~
+Unexpected token 'OnItemDeleted' in expression or statement.
+
+Not all parse errors were reported.  Correct the reported errors and try again.
+[2026-01-07 14:07:26.688] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 2
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at _HandleItemHotkey, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 581
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 516
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1103
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2178
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-07 14:07:26.693] [ERROR] MenuRegistry: Error launching 'NotesMenuScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:357 char:53
++ … ta.ContainsKey('tags') -and $not [string]::IsNullOrWhiteSpace($data.t …
++                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Unexpected token '[string]::IsNullOrWhiteSpace' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:357 char:53
++ … ta.ContainsKey('tags') -and $not [string]::IsNullOrWhiteSpace($data.t …
++                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Missing closing ')' after expression in 'if' statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:348 char:13
++         try {
++             ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:357 char:93
++ … ainsKey('tags') -and $not [string]::IsNullOrWhiteSpace($data.tags)) {
++                                                                     ~
+The Try statement is missing its Catch or Finally block.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:341 char:48
++     [void] OnEditItem($item, [hashtable]$data) {
++                                                ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:18 char:45
++ class NotesMenuScreen : StandardListScreen {
++                                             ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:357 char:93
++ … ainsKey('tags') -and $not [string]::IsNullOrWhiteSpace($data.tags)) {
++                                                                     ~
+Unexpected token ')' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:381 char:9
++         } catch {
++         ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:386 char:5
++     }
++     ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1:392 char:12
++     [void] OnItemDeleted($item) {
++            ~~~~~~~~~~~~~
+Unexpected token 'OnItemDeleted' in expression or statement.
+
+Not all parse errors were reported.  Correct the reported errors and try again.
+[2026-01-07 14:07:26.695] Stack trace: 
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 2
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at _HandleItemHotkey, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 581
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 516
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1103
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2178
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 620
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37

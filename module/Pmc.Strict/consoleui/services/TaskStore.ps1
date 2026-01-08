@@ -1049,6 +1049,11 @@ class TaskStore {
             # Create backup BEFORE any modifications
             $this._CreateBackup()
 
+            # Generate ID if not present (same pattern as AddTask)
+            if (-not $project.ContainsKey('id') -or [string]::IsNullOrEmpty($project.id)) {
+                $project.id = [Guid]::NewGuid().ToString()
+            }
+
             # Add timestamps
             $now = Get-Date
             if (-not $project.ContainsKey('created')) {

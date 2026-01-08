@@ -380,6 +380,11 @@ class PmcMenuBar : PmcWidget {
         $menu = $this.Menus[$this.SelectedMenuIndex]
         if ($menu.Items.Count -eq 0) { return }
 
+        # CRITICAL: Use BeginLayer to ensure dropdown renders ABOVE content
+        if ($engine.PSObject.Methods['BeginLayer']) {
+            $engine.BeginLayer(200)  # High z-order, above everything else
+        }
+
         # Calculate width
         $maxWidth = 10
         foreach ($item in $menu.Items) {
@@ -395,9 +400,10 @@ class PmcMenuBar : PmcWidget {
         $x = $this.X + $this._menuXPositions[$this.SelectedMenuIndex]
         $y = $this.Y + 1
         
+
         # Define Popup Region
         $regionId = "$($this.RegionID)_Dropdown"
-        $engine.DefineRegion($regionId, $x, $y, $width, $height, 100) # Z=100
+        $engine.DefineRegion($regionId, $x, $y, $width, $height, 200) # Z=200
         
         # Colors
         $bg = $this.GetThemedBgInt('Background.MenuBar', 1, 0)

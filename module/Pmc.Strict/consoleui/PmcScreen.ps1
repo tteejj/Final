@@ -69,6 +69,7 @@ class PmcScreen {
     [bool]$IsActive = $false
     [object]$RenderEngine = $null
     [bool]$NeedsClear = $false  # Request full screen clear before next render
+    [bool]$ShowHeader = $false  # Whether to show screen header (title/breadcrumb) - disabled by default
     hidden [object]$_activeModal = $null  # Currently active modal (editor, picker, dialog) - captures all input
 
     # === Layout Methods ===
@@ -396,14 +397,16 @@ class PmcScreen {
             # Fallback if theme fails (shouldn't happen with strict mode, but safe for base class)
         }
 
-        # Layer 50: Header
-        $engine.BeginLayer([ZIndex]::Header)
-        if ($this.Header) {
-            try {
-                $this._RenderWidgetWithCache($engine, $this.Header, [ZIndex]::Header)
-            }
-            catch {
-                $this._HandleWidgetRenderError("Header", $_, $engine, 1)
+        # Layer 50: Header (if enabled)
+        if ($this.ShowHeader) {
+            $engine.BeginLayer([ZIndex]::Header)
+            if ($this.Header) {
+                try {
+                    $this._RenderWidgetWithCache($engine, $this.Header, [ZIndex]::Header)
+                }
+                catch {
+                    $this._HandleWidgetRenderError("Header", $_, $engine, 1)
+                }
             }
         }
 

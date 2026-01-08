@@ -398,6 +398,11 @@ class HybridRenderEngine {
                         
                         # Update Dirty Rectangle (Grow to include this point)
                         $this._UpdateDirtyBounds($currentX, $finalY)
+                    } else {
+                        # Z-BUFFER DEBUG: Log when a write is REJECTED in dropdown area
+                        if ($finalY -ge 1 -and $finalY -le 15 -and (Test-Path variable:global:PmcTuiLogFile)) {
+                            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Z-BUFFER] REJECTED at ($currentX,$finalY): currentZ=$($this._currentZ) < zBuffer=$($this._zBuffer[$finalY][$currentX]) char='$($content[$i])'"
+                        }
                     }
                 }
             }
@@ -484,6 +489,11 @@ class HybridRenderEngine {
                         $this._backBuffer.SetCell($currentX, $finalY, $content[$i], $fg, $bg, 0)
                         $this._zBuffer[$finalY][$currentX] = $this._currentZ
                         $this._UpdateDirtyBounds($currentX, $finalY)
+                    } else {
+                        # Z-BUFFER DEBUG: Log when a write is REJECTED in dropdown area
+                        if ($finalY -ge 1 -and $finalY -le 15 -and (Test-Path variable:global:PmcTuiLogFile)) {
+                            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Z-BUFFER] REJECTED at ($currentX,$finalY): currentZ=$($this._currentZ) < zBuffer=$($this._zBuffer[$finalY][$currentX]) char='$($content[$i])'"
+                        }
                     }
                 }
             }
@@ -569,9 +579,9 @@ class HybridRenderEngine {
 
         # Native Path
         if ($this._backBuffer.GetType().Name -eq 'NativeCellBuffer') {
-            $this._backBuffer.WriteRow($finalX, $finalY, $text, $fgs, $bgs, $attrs, $minX, $maxX)
+            # CRITICAL FIX: Check Z-Buffer before bulk write
+            # NativeCellBuffer.WriteRow blindly overwrites. We must ensure we are on top.
             
-            # Update Z-Buffer & Dirty Bounds
             $len = $text.Length
             $startX = [Math]::Max($finalX, $minX)
             $endX = [Math]::Min($finalX + $len, $maxX)
@@ -579,15 +589,32 @@ class HybridRenderEngine {
             if ($startX -lt $endX) {
                 $zRow = $this._zBuffer[$finalY]
                 $z = $this._currentZ
-                # Bulk update Z-buffer if possible, otherwise loop
+                $isOccluded = $false
+                
+                # Check for occlusion
                 for ($cx = $startX; $cx -lt $endX; $cx++) {
-                    $zRow[$cx] = $z
+                    if ($z -lt $zRow[$cx]) {
+                        $isOccluded = $true
+                        break
+                    }
                 }
-                $this._UpdateDirtyBounds($startX, $finalY)
-                $this._UpdateDirtyBounds($endX - 1, $finalY)
+                
+                if (-not $isOccluded) {
+                    # Safe to bulk write
+                    $this._backBuffer.WriteRow($finalX, $finalY, $text, $fgs, $bgs, $attrs, $minX, $maxX)
+                    
+                    # Bulk update Z-buffer
+                    for ($cx = $startX; $cx -lt $endX; $cx++) {
+                        $zRow[$cx] = $z
+                    }
+                    $this._UpdateDirtyBounds($startX, $finalY)
+                    $this._UpdateDirtyBounds($endX - 1, $finalY)
+                    return
+                }
             }
-        } else {
-            # Fallback Path (Loop)
+        }
+        
+        # Fallback Path (Loop) - Used if occluded or not using NativeBuffer
             $len = $text.Length
             $currentX = $finalX
             
@@ -605,7 +632,6 @@ class HybridRenderEngine {
                 }
                 $currentX++
             }
-        }
     }
 
     # Linear interpolation between two packed RGB colors

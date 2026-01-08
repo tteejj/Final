@@ -68,7 +68,7 @@ class PmcLayoutManager {
         # Main content area (fills available space)
         'Content' = @{
             X = '2%'
-            Y = 8
+            Y = 3
             Width = '96%'
             Height = 'FILL'  # Calculated: termHeight - Y - FooterHeight - StatusBarHeight
         }

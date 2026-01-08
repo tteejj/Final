@@ -2,24 +2,100 @@
   "schema_version": 1,
   "instances": [
     {
-      "completed_count": 1,
-      "total_count": 1,
-      "percent_complete": 100.0,
+      "created": "2026-01-01T11:42:09.0000000",
       "owner_id": "inbox",
+      "owner_type": "project",
+      "title": "1",
       "items": [
         {
-          "text": "1",
           "order": 1,
-          "completed": true,
-          "completed_date": "2026-01-01T14:13:15.1242944-07:00"
+          "completed_date": null,
+          "completed": false,
+          "text": "1"
         }
       ],
+      "percent_complete": 0.0,
+      "template_id": null,
+      "modified": "2026-01-01T14:13:16.0000000",
+      "total_count": 1,
+      "completed_count": 0,
+      "id": "0c4520f4-931e-46ce-8287-b0d97d3a3143"
+    },
+    {
+      "created": "2026-01-07T16:36:28.2428208-07:00",
+      "owner_id": "proj1",
       "owner_type": "project",
-      "modified": "2026-01-01T14:13:15.1390979-07:00",
-      "title": "1",
-      "created": "2026-01-01T11:42:09.0000000",
-      "id": "0c4520f4-931e-46ce-8287-b0d97d3a3143",
-      "template_id": null
+      "title": "check1",
+      "items": [
+        {
+          "order": 1,
+          "completed_date": null,
+          "completed": false,
+          "text": "1"
+        },
+        {
+          "order": 2,
+          "completed_date": "2026-01-07T16:37:05.6345092-07:00",
+          "completed": true,
+          "text": "2"
+        },
+        {
+          "order": 3,
+          "completed_date": null,
+          "completed": false,
+          "text": "3"
+        },
+        {
+          "order": 4,
+          "completed_date": null,
+          "completed": false,
+          "text": "4"
+        }
+      ],
+      "percent_complete": 25.0,
+      "template_id": null,
+      "modified": "2026-01-07T16:38:28.6375364-07:00",
+      "total_count": 4,
+      "completed_count": 1,
+      "id": "52f60f14-e150-4502-b703-d4a6b7c86a0d"
+    },
+    {
+      "created": "2026-01-07T16:36:05.3201152-07:00",
+      "owner_id": "newnote22",
+      "owner_type": "note",
+      "title": "newnote22 (Checklist)",
+      "items": [
+        {
+          "order": 1,
+          "completed_date": null,
+          "completed": false,
+          "text": "1"
+        },
+        {
+          "order": 2,
+          "completed_date": null,
+          "completed": false,
+          "text": "2"
+        },
+        {
+          "order": 3,
+          "completed_date": null,
+          "completed": false,
+          "text": "3"
+        },
+        {
+          "order": 4,
+          "completed_date": null,
+          "completed": false,
+          "text": "4"
+        }
+      ],
+      "percent_complete": 0,
+      "template_id": null,
+      "modified": "2026-01-07T16:36:05.3201205-07:00",
+      "total_count": 4,
+      "completed_count": 0,
+      "id": "3c7b0819-0800-4753-80dc-a51e5825e053"
     }
   ]
 }

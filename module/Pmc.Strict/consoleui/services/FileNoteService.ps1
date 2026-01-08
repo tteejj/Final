@@ -237,6 +237,7 @@ class FileNoteService {
         if ($changes.ContainsKey('owner_id')) { $meta.owner_id = $changes.owner_id }
         
         # Save metadata (only if we have anything to store)
+        # Use dot notation - missing keys return $null which is falsy
         if ($meta.tags -or ($meta.owner_type -and $meta.owner_type -ne "global") -or $meta.owner_id) {
             $this._SaveMetadata($noteId, $meta)
         }
@@ -363,8 +364,13 @@ class FileNoteService {
                 Write-Warning "Failed to load metadata for $noteId $_"
             }
         }
-        
-        return @{}
+        # Always return a properly structured hashtable with defaults
+        # This ensures UpdateNoteMetadata can safely access all properties
+        return @{
+            tags = @()
+            owner_type = "global"
+            owner_id = ""
+        }
     }
 
     <#

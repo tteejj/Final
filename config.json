@@ -1,11 +1,11 @@
 {
   "Display": {
+    "Theme": {
+      "Hex": "#00f3ff",
+      "Active": "cyberpunk"
+    },
     "Icons": {
       "Mode": "emoji"
-    },
-    "Theme": {
-      "Active": "ocean",
-      "Hex": "#33aaff"
     }
   }
 }
