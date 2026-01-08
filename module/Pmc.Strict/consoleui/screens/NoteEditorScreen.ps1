@@ -15,6 +15,11 @@ using namespace System.Collections.Generic
 
 Set-StrictMode -Version Latest
 
+# Ensure TextAreaEditor is loaded
+if (-not ([System.Management.Automation.PSTypeName]'TextAreaEditor').Type) {
+    . "$PSScriptRoot/../widgets/TextAreaEditor.ps1"
+}
+
 class NoteEditorScreen : PmcScreen {
     # === Configuration ===
     hidden [string]$_noteId = ""

@@ -1,0 +1,94 @@
+[2026-01-08 10:31:20.461] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-08 10:31:20.467] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-08 10:31:20.469] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-08 10:31:20.471] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-08 10:31:20.474] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-08 10:31:20.476] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-08 10:31:20.477] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-08 10:31:20.479] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-08 10:31:20.481] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-08 10:31:20.483] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-08 10:31:20.485] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-08 10:31:20.487] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-08 10:31:20.489] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-08 10:31:20.491] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-08 10:31:20.493] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-08 10:31:20.524] ServiceContainer: Resolving 'Application'...
+[2026-01-08 10:31:20.527] ServiceContainer: Resolving 'Theme'...
+[2026-01-08 10:31:20.823] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-08 10:31:20.918] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-08 10:31:20.920] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-08 10:31:20.934] ServiceContainer: Resolved 'Application' successfully
+[2026-01-08 10:31:20.936] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-08 10:31:20.949] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-08 10:31:20.971] MenuRegistry: Loaded manifest with 16 entries
+[2026-01-08 10:31:21.002] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-08 10:31:21.004] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-08 10:31:21.024] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-08 10:31:21.028] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-08 10:31:21.029] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-08 10:31:21.032] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-08 10:31:21.035] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-08 10:31:21.037] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-08 10:31:21.040] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-08 10:31:21.044] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-08 10:31:21.046] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-08 10:31:21.048] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-08 10:31:21.051] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-08 10:31:21.053] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-08 10:31:21.056] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-08 10:31:21.069] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-08 10:31:21.071] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-08 10:31:21.074] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-08 10:31:21.077] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-08 10:31:21.079] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-08 10:31:21.081] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-08 10:31:21.085] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-08 10:31:21.087] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-08 10:31:21.090] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-08 10:31:21.092] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-08 10:31:21.095] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-08 10:31:21.098] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-08 10:31:21.101] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-08 10:31:21.103] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-08 10:31:21.106] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-08 10:31:21.110] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-08 10:31:21.112] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-08 10:31:21.115] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-08 10:31:21.119] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-08 10:31:21.121] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-08 10:31:21.124] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-08 10:31:21.128] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-08 10:31:21.130] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-08 10:31:21.134] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-08 10:31:21.139] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-08 10:31:21.142] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-08 10:31:21.146] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-08 10:31:21.151] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-08 10:31:21.153] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-08 10:31:21.157] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-08 10:31:21.162] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-08 10:31:21.165] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-08 10:31:21.169] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-08 10:31:21.173] ServiceContainer: Resolving 'TaskListScreen'...
+[2026-01-08 10:31:21.178] ServiceContainer: Resolving 'TaskStore'...
+[2026-01-08 10:31:21.364] ServiceContainer: Resolved 'TaskStore' successfully
+[2026-01-08 10:31:22.124] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-08 10:31:22.141] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 10:31:22.169] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[2026-01-08 10:31:22.432] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2026-01-08 10:31:22.464] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2026-01-08 10:31:22.472] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2026-01-08 10:31:22.479] _PopulateMenusFromRegistry: Menu 'Tools' has 6 items from registry (array)
+[2026-01-08 10:31:22.483] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2026-01-08 10:31:22.487] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2026-01-08 10:31:22.490] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2026-01-08 10:31:23.081] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-08 10:31:23.094] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 10:31:23.115] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[10:31:24.644] [Z-BUFFER] REJECTED at (8,9): currentZ=0 < zBuffer=65 char=' '
+[10:31:24.647] [Z-BUFFER] REJECTED at (9,9): currentZ=0 < zBuffer=65 char=' '
+[10:31:24.702] [Z-BUFFER] REJECTED at (2,4): currentZ=10 < zBuffer=20 char='T'
+[10:31:24.703] [Z-BUFFER] REJECTED at (3,4): currentZ=10 < zBuffer=20 char='a'
+[10:31:24.705] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='s'
+[10:31:24.707] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='k'

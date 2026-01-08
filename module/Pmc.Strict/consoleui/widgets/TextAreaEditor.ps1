@@ -4,6 +4,11 @@
 
 Set-StrictMode -Version Latest
 
+# Ensure GapBuffer is loaded
+if (-not ([System.Management.Automation.PSTypeName]'GapBuffer').Type) {
+    . "$PSScriptRoot/../helpers/GapBuffer.ps1"
+}
+
 # Selection mode enum
 enum SelectionMode {
     None

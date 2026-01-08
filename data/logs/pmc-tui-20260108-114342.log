@@ -1,0 +1,429 @@
+[2026-01-08 11:43:45.148] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-08 11:43:45.151] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-08 11:43:45.152] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-08 11:43:45.153] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-08 11:43:45.154] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-08 11:43:45.155] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-08 11:43:45.155] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-08 11:43:45.156] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-08 11:43:45.157] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-08 11:43:45.158] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-08 11:43:45.158] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-08 11:43:45.159] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-08 11:43:45.160] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-08 11:43:45.161] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-08 11:43:45.162] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-08 11:43:45.177] ServiceContainer: Resolving 'Application'...
+[2026-01-08 11:43:45.178] ServiceContainer: Resolving 'Theme'...
+[2026-01-08 11:43:45.366] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-08 11:43:45.437] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-08 11:43:45.439] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-08 11:43:45.451] ServiceContainer: Resolved 'Application' successfully
+[2026-01-08 11:43:45.452] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-08 11:43:45.463] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-08 11:43:45.479] MenuRegistry: Loaded manifest with 16 entries
+[2026-01-08 11:43:45.503] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-08 11:43:45.503] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-08 11:43:45.517] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-08 11:43:45.526] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-08 11:43:45.527] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-08 11:43:45.529] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-08 11:43:45.530] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-08 11:43:45.531] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-08 11:43:45.532] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-08 11:43:45.533] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-08 11:43:45.534] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-08 11:43:45.535] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-08 11:43:45.536] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-08 11:43:45.537] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-08 11:43:45.538] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-08 11:43:45.539] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-08 11:43:45.540] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-08 11:43:45.541] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-08 11:43:45.543] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-08 11:43:45.543] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-08 11:43:45.545] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-08 11:43:45.546] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-08 11:43:45.546] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-08 11:43:45.548] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-08 11:43:45.549] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-08 11:43:45.549] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-08 11:43:45.551] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-08 11:43:45.552] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-08 11:43:45.553] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-08 11:43:45.554] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-08 11:43:45.555] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-08 11:43:45.556] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-08 11:43:45.557] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-08 11:43:45.558] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-08 11:43:45.559] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-08 11:43:45.560] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-08 11:43:45.561] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-08 11:43:45.562] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-08 11:43:45.563] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-08 11:43:45.565] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-08 11:43:45.565] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-08 11:43:45.566] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-08 11:43:45.568] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-08 11:43:45.569] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-08 11:43:45.588] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-08 11:43:45.590] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-08 11:43:45.590] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-08 11:43:45.591] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-08 11:43:45.593] ServiceContainer: Resolving 'TaskListScreen'...
+[2026-01-08 11:43:45.594] ServiceContainer: Resolving 'TaskStore'...
+[2026-01-08 11:43:45.689] ServiceContainer: Resolved 'TaskStore' successfully
+[2026-01-08 11:43:46.323] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-08 11:43:46.342] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 11:43:46.369] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[2026-01-08 11:43:46.534] _PopulateMenusFromRegistry: Menu 'Tools' has 6 items from registry (array)
+[2026-01-08 11:43:46.553] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2026-01-08 11:43:46.555] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2026-01-08 11:43:46.557] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2026-01-08 11:43:46.559] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2026-01-08 11:43:46.562] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2026-01-08 11:43:46.564] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2026-01-08 11:43:46.872] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-08 11:43:46.874] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 11:43:46.879] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[11:43:48.312] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[11:43:48.314] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[11:43:48.315] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[11:43:48.316] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[11:43:48.318] [Z-BUFFER] REJECTED at (27,4): currentZ=10 < zBuffer=20 char='D'
+[11:43:48.319] [Z-BUFFER] REJECTED at (28,4): currentZ=10 < zBuffer=20 char='u'
+[11:43:48.320] [Z-BUFFER] REJECTED at (29,4): currentZ=10 < zBuffer=20 char='e'
+[11:43:48.322] [Z-BUFFER] REJECTED at (49,4): currentZ=10 < zBuffer=20 char='T'
+[11:43:48.324] [Z-BUFFER] REJECTED at (50,4): currentZ=10 < zBuffer=20 char='a'
+[11:43:48.325] [Z-BUFFER] REJECTED at (51,4): currentZ=10 < zBuffer=20 char='g'
+[11:43:48.326] [Z-BUFFER] REJECTED at (52,4): currentZ=10 < zBuffer=20 char='s'
+[11:43:50.621] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[11:43:50.622] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[11:43:50.623] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[11:43:50.624] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[11:43:50.625] [Z-BUFFER] REJECTED at (27,4): currentZ=10 < zBuffer=20 char='D'
+[11:43:50.626] [Z-BUFFER] REJECTED at (28,4): currentZ=10 < zBuffer=20 char='u'
+[11:43:50.627] [Z-BUFFER] REJECTED at (29,4): currentZ=10 < zBuffer=20 char='e'
+[11:43:50.628] [Z-BUFFER] REJECTED at (49,4): currentZ=10 < zBuffer=200 char='T'
+[11:43:50.629] [Z-BUFFER] REJECTED at (50,4): currentZ=10 < zBuffer=200 char='a'
+[11:43:50.629] [Z-BUFFER] REJECTED at (51,4): currentZ=10 < zBuffer=200 char='g'
+[11:43:50.630] [Z-BUFFER] REJECTED at (52,4): currentZ=10 < zBuffer=200 char='s'
+[2026-01-08 11:43:52.210] ServiceContainer: Resolving 'NotesMenuScreen'...
+[2026-01-08 11:43:52.284] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Notes
+[2026-01-08 11:43:52.289] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 11:43:52.293] [INFO] StandardListScreen._ConfigureListActions: Configured 7 footer shortcuts
+[2026-01-08 11:43:52.320] ServiceContainer: Resolved 'NotesMenuScreen' successfully
+[2026-01-08 11:43:52.357] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Notes
+[2026-01-08 11:43:52.358] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 11:43:52.360] [INFO] StandardListScreen._ConfigureListActions: Configured 7 footer shortcuts
+[11:43:52.457] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:43:52.458] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:43:52.459] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:43:52.460] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:43:52.460] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:43:52.461] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:43:52.462] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:43:52.463] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:43:52.463] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:43:52.464] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:43:52.465] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:43:52.466] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:43:52.467] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:43:52.468] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:43:52.468] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:43:52.469] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:43:52.470] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:43:52.471] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:43:52.472] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 11:43:56.506] [ERROR] UniversalList callback error: Method invocation failed because [NotesMenuScreen] does not contain a method named '_AssignToProject'.
+[2026-01-08 11:43:56.507] [ERROR] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 615
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 626
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[11:43:56.526] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:43:56.527] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:43:56.527] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:43:56.527] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:43:56.528] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:43:56.528] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:43:56.528] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:43:56.529] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:43:56.530] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:43:56.531] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:43:56.531] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:43:56.531] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:43:56.532] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:43:56.532] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:43:56.532] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:43:56.533] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:43:56.533] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:43:56.533] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:43:56.533] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 11:43:59.808] [ERROR] UniversalList callback error: Method invocation failed because [NotesMenuScreen] does not contain a method named '_AssignToProject'.
+[2026-01-08 11:43:59.810] [ERROR] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 615
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 626
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[11:43:59.848] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:43:59.849] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:43:59.852] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:43:59.853] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:43:59.854] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:43:59.854] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:43:59.855] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:43:59.856] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:43:59.856] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:43:59.857] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:43:59.858] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:43:59.858] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:43:59.858] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:43:59.859] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:43:59.859] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:43:59.860] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:43:59.861] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:43:59.861] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:43:59.862] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 11:44:00.167] [ERROR] UniversalList callback error: Method invocation failed because [NotesMenuScreen] does not contain a method named '_AssignToProject'.
+[2026-01-08 11:44:00.167] [ERROR] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 615
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 626
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[11:44:00.201] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:00.202] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:00.202] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:44:00.202] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:44:00.205] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:00.206] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:44:00.206] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:00.207] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:44:00.208] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:00.208] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:00.209] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:44:00.209] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:44:00.210] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:44:00.211] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:44:00.211] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:00.212] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:00.213] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:44:00.213] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:44:00.216] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 11:44:00.524] [ERROR] UniversalList callback error: Method invocation failed because [NotesMenuScreen] does not contain a method named '_AssignToProject'.
+[2026-01-08 11:44:00.525] [ERROR] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 615
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 626
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[11:44:00.566] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:00.566] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:00.567] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:44:00.568] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:44:00.568] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:00.571] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:44:00.572] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:00.573] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:44:00.573] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:00.574] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:00.574] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:44:00.574] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:44:00.575] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:44:00.575] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:44:00.575] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:00.576] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:00.576] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:44:00.576] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:44:00.576] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 11:44:00.732] [ERROR] UniversalList callback error: Method invocation failed because [NotesMenuScreen] does not contain a method named '_AssignToProject'.
+[2026-01-08 11:44:00.733] [ERROR] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 615
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 626
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[11:44:00.762] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:00.763] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:00.764] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:44:00.765] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:44:00.768] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:00.769] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:44:00.770] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:00.771] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:44:00.771] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:00.772] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:00.773] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:44:00.773] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:44:00.774] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:44:00.775] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:44:00.775] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:00.776] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:00.777] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:44:00.777] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:44:00.778] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 11:44:00.936] [ERROR] UniversalList callback error: Method invocation failed because [NotesMenuScreen] does not contain a method named '_AssignToProject'.
+[2026-01-08 11:44:00.938] [ERROR] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 615
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 626
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[11:44:00.962] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:00.962] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:00.963] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:44:00.963] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:44:00.963] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:00.964] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:44:00.965] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:00.965] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:44:00.966] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:00.967] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:00.967] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:44:00.968] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:44:00.971] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:44:00.972] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:44:00.972] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:00.973] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:00.974] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:44:00.974] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:44:00.975] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 11:44:01.131] [ERROR] UniversalList callback error: Method invocation failed because [NotesMenuScreen] does not contain a method named '_AssignToProject'.
+[2026-01-08 11:44:01.132] [ERROR] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 615
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 626
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[11:44:01.175] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:01.175] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:01.176] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:44:01.177] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:44:01.177] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:01.178] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:44:01.179] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:01.179] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:44:01.179] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:01.180] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:01.180] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:44:01.181] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:44:01.181] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:44:01.181] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:44:01.181] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:01.182] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:01.183] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:44:01.184] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:44:01.184] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 11:44:01.339] [ERROR] UniversalList callback error: Method invocation failed because [NotesMenuScreen] does not contain a method named '_AssignToProject'.
+[2026-01-08 11:44:01.340] [ERROR] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/NotesMenuScreen.ps1: line 615
+at _InvokeCallback, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 1415
+at HandleInput, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/UniversalList.ps1: line 707
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1171
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 626
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[11:44:01.374] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:01.375] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:01.376] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:44:01.376] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:44:01.379] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:01.380] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:44:01.381] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:01.381] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:44:01.382] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:01.383] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:01.383] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:44:01.384] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:44:01.385] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:44:01.385] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:44:01.386] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:01.386] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:01.387] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:44:01.388] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:44:01.389] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:03.246] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:03.246] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:03.247] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:44:03.248] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:44:03.248] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:03.249] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:44:03.250] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:03.250] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:44:03.251] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:03.251] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:03.252] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:44:03.252] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:44:03.252] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:44:03.253] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:44:03.253] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:03.254] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:03.254] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:44:03.254] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:44:03.255] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:03.737] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:03.738] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:03.739] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:44:03.740] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:44:03.740] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:03.741] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:44:03.742] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:03.742] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:44:03.743] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:03.743] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:03.744] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:44:03.745] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:44:03.746] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:44:03.746] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:44:03.747] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:03.748] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:03.748] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:44:03.749] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:44:03.750] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:04.133] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:04.134] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:04.134] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:44:04.134] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:44:04.135] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:04.135] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:44:04.136] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:04.136] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:44:04.136] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:04.137] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:04.137] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:44:04.137] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:44:04.138] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:44:04.138] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:44:04.138] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:04.139] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:04.139] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:44:04.139] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:44:04.140] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:04.262] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:04.263] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:04.263] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[11:44:04.263] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[11:44:04.264] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:04.264] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[11:44:04.265] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[11:44:04.265] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[11:44:04.266] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[11:44:04.266] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:04.267] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[11:44:04.267] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[11:44:04.268] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[11:44:04.268] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[11:44:04.269] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[11:44:04.269] [Z-BUFFER] REJECTED at (78,7): currentZ=10 < zBuffer=20 char='T'
+[11:44:04.269] [Z-BUFFER] REJECTED at (79,7): currentZ=10 < zBuffer=20 char='a'
+[11:44:04.270] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='g'
+[11:44:04.270] [Z-BUFFER] REJECTED at (81,7): currentZ=10 < zBuffer=20 char='s'

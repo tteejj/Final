@@ -268,6 +268,11 @@ catch {
     throw
 }
 
+# Load Helpers (GapBuffer needed for TextAreaEditor)
+try {
+    . "$PSScriptRoot/helpers/GapBuffer.ps1"
+} catch { throw }
+
 # Write-PmcTuiLog "Loading screen base class..." "INFO"
 try {
     # PmcScreen base (uses PmcHeader, PmcFooter, PmcMenuBar - MUST be after widgets)
@@ -321,6 +326,7 @@ try {
     . "$PSScriptRoot/screens/TaskListScreen.ps1"
     . "$PSScriptRoot/screens/ProjectListScreen.ps1"
     . "$PSScriptRoot/screens/ProjectInfoScreenV4.ps1"
+    . "$PSScriptRoot/screens/NoteEditorScreen.ps1"
     # Write-PmcTuiLog "Remaining screens loaded" "INFO"
 }
 catch {

@@ -14,6 +14,11 @@ Set-StrictMode -Version Latest
 
 . "$PSScriptRoot/../base/StandardListScreen.ps1"
 
+# Ensure NoteEditorScreen is loaded
+if (-not ([System.Management.Automation.PSTypeName]'NoteEditorScreen').Type) {
+    . "$PSScriptRoot/NoteEditorScreen.ps1"
+}
+
 class NotesMenuScreen : StandardListScreen {
     # === Configuration ===
     hidden [FileNoteService]$_noteService = $null
@@ -82,40 +87,7 @@ class NotesMenuScreen : StandardListScreen {
 
     # === Abstract Methods Implementation ===
 
-    <#
-    .SYNOPSIS
-    Load notes data into the list
-    #>
-    [void] LoadData() {
-        # Write-PmcTuiLog "NotesMenuScreen.LoadData: Loading notes for owner=$($this._ownerType):$($this._ownerId)" "INFO"
 
-        try {
-            # Get notes from service (filtered by owner if specified)
-            if ($this._ownerType -eq "global" -or $null -eq $this._ownerId) {
-                # Write-PmcTuiLog "NotesMenuScreen.LoadData: Getting all notes (global)" "INFO"
-                $notes = $this._noteService.GetAllNotes()
-            } else {
-                # Write-PmcTuiLog "NotesMenuScreen.LoadData: Getting notes by owner type=$($this._ownerType) id=$($this._ownerId)" "INFO"
-                $notes = $this._noteService.GetNotesByOwner($this._ownerType, $this._ownerId)
-            }
-
-            # Ensure we have an array
-            if ($null -eq $notes) {
-                $notes = @()
-            } elseif ($notes -isnot [array]) {
-                $notes = @($notes)
-            }
-
-            # Write-PmcTuiLog "NotesMenuScreen.LoadData: Loaded $($notes.Count) notes" "INFO"
-
-            # Set data in list
-            $this.List.SetData($notes)
-
-        } catch {
-            # Write-PmcTuiLog "NotesMenuScreen.LoadData: Error - $_" "ERROR"
-            $this.List.SetData(@())
-        }
-    }
 
     <#
     .SYNOPSIS
@@ -207,6 +179,13 @@ class NotesMenuScreen : StandardListScreen {
                 Required = $false
                 MaxLength = 200
             }
+            @{
+                Name = 'project'
+                Type = 'project'
+                Label = 'Project'
+                Value = $(if ($item -and $item.project) { $item.project } else { "" })
+                Required = $false
+            }
         )
     }
 
@@ -284,8 +263,16 @@ class NotesMenuScreen : StandardListScreen {
             }
 
             # Create note with owner info
-            # Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Calling CreateNote with title='$title' tags=$($tags.Count) owner=$($this._ownerType):$($this._ownerId)" "DEBUG"
+            Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Calling CreateNote with title='$title' tags=$($tags.Count) owner=$($this._ownerType):$($this._ownerId)" "DEBUG"
             $note = $this._noteService.CreateNote($title, $tags, $this._ownerType, $this._ownerId)
+
+            # Handle Project Assignment
+            if ($data.ContainsKey('project') -and -not [string]::IsNullOrWhiteSpace($data.project)) {
+                $project = $data.project
+                Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Assigning new note to project '$project'" "INFO"
+                $noteId = $(if ($note -is [hashtable]) { $note['id'] } else { $note.id })
+                $this._noteService.UpdateNoteMetadata($noteId, @{ project = $project })
+            }
 
             if ($null -eq $note) {
                 # Write-PmcTuiLog "NotesMenuScreen.OnAddItem: CreateNote returned null!" "ERROR"
@@ -365,6 +352,13 @@ class NotesMenuScreen : StandardListScreen {
             $changes = @{
                 title = $title
                 tags = $tags
+            }
+
+            # Handle Project
+            if ($data.ContainsKey('project')) {
+                $project = $data.project
+                Write-PmcTuiLog "OnEditItem: Setting project to '$project'" "INFO"
+                $changes['project'] = $project
             }
 
             # Update note metadata (may rename file if title changed)
@@ -467,6 +461,169 @@ class NotesMenuScreen : StandardListScreen {
         }
     }
 
+
+
+    # === Abstract Methods Implementation ===
+
+    <#
+    .SYNOPSIS
+    Load notes data into the list
+    #>
+    [void] LoadData() {
+        # Write-PmcTuiLog "NotesMenuScreen.LoadData: Loading notes for owner=$($this._ownerType):$($this._ownerId)" "INFO"
+
+        try {
+            # Get notes from service (filtered by owner if specified)
+            if ($this._ownerType -eq "global" -or $null -eq $this._ownerId) {
+                # Write-PmcTuiLog "NotesMenuScreen.LoadData: Getting all notes (global)" "INFO"
+                $notes = $this._noteService.GetAllNotes()
+            } else {
+                # Write-PmcTuiLog "NotesMenuScreen.LoadData: Getting notes by owner type=$($this._ownerType) id=$($this._ownerId)" "INFO"
+                $notes = $this._noteService.GetNotesByOwner($this._ownerType, $this._ownerId)
+            }
+
+            # Write-PmcTuiLog "NotesMenuScreen.LoadData: Got $($notes.Count) notes" "INFO"
+
+            # Set data to list
+            if ($null -ne $this.List) {
+                # Write-PmcTuiLog "NotesMenuScreen.LoadData: Setting list data" "INFO"
+                $this.List.SetData($notes)
+            } else {
+                Write-PmcTuiLog "NotesMenuScreen.LoadData: List is null!" "ERROR"
+            }
+        }
+        catch {
+            Write-PmcTuiLog "NotesMenuScreen.LoadData: Error loading notes: $_" "ERROR"
+            $global:PmcApp.SetStatusMessage("Error loading notes: $_", "error")
+        }
+    }
+
+    [void] OnShow() {
+        # Write-PmcTuiLog "NotesMenuScreen.OnShow" "INFO"
+        $this.LoadData()
+    }
+
+
+
+    [void] OnHide() {
+        # Write-PmcTuiLog "NotesMenuScreen.OnHide" "INFO"
+    }
+
+    [void] OnFocus() {
+        # Write-PmcTuiLog "NotesMenuScreen.OnFocus" "INFO"
+    }
+
+    [void] OnBlur() {
+        # Write-PmcTuiLog "NotesMenuScreen.OnBlur" "INFO"
+    }
+
+    # === Action Handlers ===
+
+    [void] OnAddItem() {
+        # Create a new note
+        $newNote = $this._noteService.CreateNote("New Note", "")
+        if ($newNote) {
+            $this.LoadData()
+            
+            # Find the new note in the list and select it
+            # Then start editing
+            # For now, just reload and let user find it (it should be at top or bottom depending on sort)
+            # TODO: Select new item
+            
+            $this.SetStatusMessage("Note created", "success")
+        }
+    }
+
+    [void] OnEditItem([object]$item) {
+        if ($null -eq $item) { return }
+        
+        # Open note editor
+        $editor = [NoteEditorScreen]::new($item.id)
+        $global:PmcApp.PushScreen($editor)
+    }
+
+    [void] OnDeleteItem([object]$item) {
+        if ($null -eq $item) { return }
+        
+        # Confirm delete
+        # For now, just delete (StandardListScreen handles confirmation if we implemented it there, 
+        # but here we just do it)
+        
+        $this._noteService.DeleteNote($item.id)
+        $this.LoadData()
+        $this.SetStatusMessage("Note deleted", "success")
+    }
+
+    # === Project Picker Logic ===
+
+    [void] _AssignToProject() {
+        $selected = $this.List.GetSelectedItem()
+        if ($null -eq $selected) {
+            $global:PmcApp.SetStatusMessage("No note selected", "error")
+            return
+        }
+
+        # Get ID
+        $noteId = $(if ($selected -is [hashtable]) { $selected['id'] } else { $selected.id })
+        $this._pickingNoteId = $noteId
+        
+        # Show picker
+        $this._isPickingProject = $true
+        
+        # Center picker
+        $pickerW = 50
+        $pickerH = 15
+        $pickerX = [Math]::Max(0, [int](($this.TermWidth - $pickerW) / 2))
+        $pickerY = [Math]::Max(0, [int](($this.TermHeight - $pickerH) / 2))
+        
+        if ($this._projectPicker) {
+            $this._projectPicker.SetBounds($pickerX, $pickerY, $pickerW, $pickerH)
+            $this._projectPicker.RefreshProjects()
+            $this._projectPicker.SetSearchText("")
+        }
+        
+        $global:PmcApp.RequestRender()
+    }
+
+    [void] RenderContentToEngine([object]$engine) {
+        # Render base list first
+        ([StandardListScreen]$this).RenderContentToEngine($engine)
+        
+        # Render project picker overlay if active
+        if ($this._isPickingProject -and $this._projectPicker) {
+            # Draw a dimming layer or just render the picker on top
+            # Using a high Z-index for the picker
+            
+            # We can't easily dim the background without a full overlay, 
+            # so we just rely on the picker's own background
+            
+            # Render picker
+            $this._projectPicker.RenderToEngine($engine)
+        }
+    }
+
+    [bool] HandleKeyPress([ConsoleKeyInfo]$key) {
+        # If picking project, route to picker
+        if ($this._isPickingProject -and $this._projectPicker) {
+            # Handle Escape to cancel
+            if ($key.Key -eq [ConsoleKey]::Escape) {
+                $this._isPickingProject = $false
+                $global:PmcApp.RequestRender()
+                return $true
+            }
+            
+            # Route to picker
+            $handled = $this._projectPicker.HandleInput($key)
+            if ($handled) {
+                $global:PmcApp.RequestRender()
+            }
+            return $true
+        }
+        
+        # Otherwise, base handling
+        return ([StandardListScreen]$this).HandleKeyPress($key)
+    }
+
     # === Custom Actions ===
 
     <#
@@ -485,117 +642,8 @@ class NotesMenuScreen : StandardListScreen {
                         $self.OnItemActivated($selected)
                     }
                 }.GetNewClosure()
-            },
-            @{
-                Key = 'p'
-                Label = 'Assign Project'
-                Callback = {
-                    $selected = $self.List.GetSelectedItem()
-                    if ($selected) {
-                        $self._AssignToProject($selected)
-                    }
-                }.GetNewClosure()
             }
         )
-    }
-
-    hidden [void] _AssignToProject($note) {
-        Write-PmcTuiLog "========== _AssignToProject START ==========" "INFO"
-        
-        # Show project picker and reassign note
-        $noteId = $(if ($note -is [hashtable]) { $note['id'] } else { $note.id })
-        $noteTitle = $(if ($note -is [hashtable]) { $note['title'] } else { $note.title })
-        Write-PmcTuiLog "_AssignToProject: noteId=$noteId, noteTitle=$noteTitle" "INFO"
-
-        # Use ProjectPickerDialog widget (has Show method)
-        # CRITICAL: Must dot-source and use New-Object to avoid parse-time type resolution
-        Write-PmcTuiLog "_AssignToProject: Loading ProjectPickerDialog..." "DEBUG"
-        . "$PSScriptRoot/../widgets/ProjectPickerDialog.ps1"
-        
-        # Get all projects
-        . "$PSScriptRoot/../services/TaskStore.ps1"
-        $store = [TaskStore]::GetInstance()
-        $allProjects = $store.GetAllProjects()
-        
-        Write-PmcTuiLog "_AssignToProject: Creating dialog with $($allProjects.Count) projects..." "DEBUG"
-        $dialog = New-Object -TypeName ProjectPickerDialog -ArgumentList @($allProjects), "Select Project"
-
-        Write-PmcTuiLog "_AssignToProject: Showing dialog..." "DEBUG"
-        $selectedProject = $dialog.Show()
-        
-        if ($null -eq $selectedProject) {
-            Write-PmcTuiLog "_AssignToProject: User cancelled" "INFO"
-            $this.SetStatusMessage("Assignment cancelled", "info")
-            return
-        }
-
-        # Get project name from selected project
-        $projectName = $(if ($selectedProject -is [hashtable]) { $selectedProject['name'] } else { $selectedProject.name })
-        Write-PmcTuiLog "_AssignToProject: Selected project = $projectName" "INFO"
-
-        # Reassign note
-        try {
-            $changes = @{
-                owner_type = "project"
-                owner_id = $projectName
-            }
-            Write-PmcTuiLog "_AssignToProject: Calling UpdateNoteMetadata..." "DEBUG"
-            $this._noteService.UpdateNoteMetadata($noteId, $changes)
-            Write-PmcTuiLog "_AssignToProject: UpdateNoteMetadata DONE" "DEBUG"
-            
-            $this.SetStatusMessage("Note assigned to '$projectName'", "success")
-
-            # Refresh list with fresh data
-            Write-PmcTuiLog "_AssignToProject: Loading fresh data..." "DEBUG"
-            $notes = $null
-            if ($this._ownerType -eq "global" -or $null -eq $this._ownerId) {
-                $notes = $this._noteService.GetAllNotes()
-            } else {
-                $notes = $this._noteService.GetNotesByOwner($this._ownerType, $this._ownerId)
-            }
-            
-            Write-PmcTuiLog "_AssignToProject: Loaded $($notes.Count) notes" "INFO"
-            
-            if ($null -eq $notes) { $notes = @() }
-            elseif ($notes -isnot [array]) { $notes = @($notes) }
-            
-            if ($this.List) {
-                Write-PmcTuiLog "_AssignToProject: Calling SetData..." "DEBUG"
-                $this.List.SetData($notes)
-                Write-PmcTuiLog "_AssignToProject: Calling InvalidateCache..." "DEBUG"
-                $this.List.InvalidateCache()
-                Write-PmcTuiLog "_AssignToProject: List updated" "DEBUG"
-            } else {
-                Write-PmcTuiLog "_AssignToProject: ERROR - this.List is NULL!" "ERROR"
-            }
-            
-            if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
-                Write-PmcTuiLog "_AssignToProject: Calling RequestRender..." "DEBUG"
-                $global:PmcApp.RequestRender()
-                Write-PmcTuiLog "_AssignToProject: RequestRender DONE" "DEBUG"
-            }
-            
-            Write-PmcTuiLog "========== _AssignToProject END ==========" "INFO"
-        } catch {
-            Write-PmcTuiLog "_AssignToProject: EXCEPTION - $_" "ERROR"
-            Write-PmcTuiLog "_AssignToProject: Stack trace - $($_.ScriptStackTrace)" "ERROR"
-            $this.SetStatusMessage("Failed to assign note: $($_.Exception.Message)", "error")
-        }
-    }
-
-    # === Menu Registration ===
-
-    # H-MEM-2: Cleanup event subscriptions when screen exits
-    <#
-    .SYNOPSIS
-    Called when the screen is about to be exited
-    #>
-    [void] OnDoExit() {
-        # Unsubscribe from note service events to prevent memory leaks
-        if ($this._noteService) {
-            $this._noteService.OnNotesChanged = $null
-        }
-        # Write-PmcTuiLog "NotesMenuScreen.OnExit: Cleaned up event subscriptions" "DEBUG"
     }
 
     <#
