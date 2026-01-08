@@ -130,6 +130,12 @@ class NotesMenuScreen : StandardListScreen {
                 Align = 'right'
             }
             @{
+                Name = 'project'
+                Label = 'Project'
+                Width = 20
+                Sortable = $true
+            }
+            @{
                 Name = 'tags'
                 Label = 'Tags'
                 Width = 20

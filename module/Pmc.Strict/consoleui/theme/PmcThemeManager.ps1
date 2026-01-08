@@ -93,11 +93,9 @@ class PmcThemeManager {
 
         # Configure Engine if available
         try {
-            if ($this.PmcTheme -and $this.PmcTheme.Properties) {
-                $engine = [PmcThemeEngine]::GetInstance()
-                if ($engine) {
-                    $engine.Configure($this.PmcTheme.Properties)
-                }
+            $engine = [PmcThemeEngine]::GetInstance()
+            if ($engine -and $this.PmcTheme -and $this.PmcTheme.Properties) {
+                $engine.Configure($this.PmcTheme.Properties)
             }
         } catch {
             # Engine might not be available
@@ -221,6 +219,17 @@ class PmcThemeManager {
 
         # Reload theme
         $this._Initialize()
+
+        # Force PmcThemeEngine to use our properties
+        try {
+            $engine = [PmcThemeEngine]::GetInstance()
+            if ($engine -and $this.PmcTheme -and $this.PmcTheme.Properties) {
+                $engine.Configure($this.PmcTheme.Properties)
+                $engine.InvalidateCache()
+            }
+        } catch {
+            # Engine might not be available
+        }
     }
 
     [void] SetTheme([string]$hex) {

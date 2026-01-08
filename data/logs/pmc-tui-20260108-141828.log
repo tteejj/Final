@@ -1,0 +1,355 @@
+[2026-01-08 14:18:30.484] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-08 14:18:30.487] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-08 14:18:30.487] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-08 14:18:30.488] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-08 14:18:30.489] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-08 14:18:30.490] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-08 14:18:30.490] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-08 14:18:30.491] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-08 14:18:30.492] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-08 14:18:30.493] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-08 14:18:30.493] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-08 14:18:30.494] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-08 14:18:30.495] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-08 14:18:30.495] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-08 14:18:30.496] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-08 14:18:30.509] ServiceContainer: Resolving 'Application'...
+[2026-01-08 14:18:30.511] ServiceContainer: Resolving 'Theme'...
+[2026-01-08 14:18:30.686] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-08 14:18:30.748] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-08 14:18:30.749] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-08 14:18:30.760] ServiceContainer: Resolved 'Application' successfully
+[2026-01-08 14:18:30.761] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-08 14:18:30.771] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-08 14:18:30.786] MenuRegistry: Loaded manifest with 16 entries
+[2026-01-08 14:18:30.814] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-08 14:18:30.814] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-08 14:18:30.827] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-08 14:18:30.828] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-08 14:18:30.829] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-08 14:18:30.830] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-08 14:18:30.832] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-08 14:18:30.832] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-08 14:18:30.833] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-08 14:18:30.835] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-08 14:18:30.835] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-08 14:18:30.836] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-08 14:18:30.838] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-08 14:18:30.838] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-08 14:18:30.839] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-08 14:18:30.840] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-08 14:18:30.841] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-08 14:18:30.842] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-08 14:18:30.843] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-08 14:18:30.844] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-08 14:18:30.845] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-08 14:18:30.846] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-08 14:18:30.847] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-08 14:18:30.848] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-08 14:18:30.849] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-08 14:18:30.850] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-08 14:18:30.851] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-08 14:18:30.852] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-08 14:18:30.852] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-08 14:18:30.854] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-08 14:18:30.855] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-08 14:18:30.855] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-08 14:18:30.856] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-08 14:18:30.858] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-08 14:18:30.858] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-08 14:18:30.859] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-08 14:18:30.860] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-08 14:18:30.861] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-08 14:18:30.862] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-08 14:18:30.880] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-08 14:18:30.881] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-08 14:18:30.882] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-08 14:18:30.883] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-08 14:18:30.884] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-08 14:18:30.885] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-08 14:18:30.886] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-08 14:18:30.886] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-08 14:18:30.887] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-08 14:18:30.889] ServiceContainer: Resolving 'TaskListScreen'...
+[2026-01-08 14:18:30.890] ServiceContainer: Resolving 'TaskStore'...
+[2026-01-08 14:18:30.974] ServiceContainer: Resolved 'TaskStore' successfully
+[2026-01-08 14:18:31.466] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-08 14:18:31.482] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 14:18:31.498] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[2026-01-08 14:18:31.641] _PopulateMenusFromRegistry: Menu 'Tools' has 6 items from registry (array)
+[2026-01-08 14:18:31.656] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2026-01-08 14:18:31.658] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2026-01-08 14:18:31.660] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2026-01-08 14:18:31.662] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2026-01-08 14:18:31.664] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2026-01-08 14:18:31.666] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2026-01-08 14:18:31.941] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-08 14:18:31.943] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 14:18:31.952] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[14:18:33.004] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[14:18:33.012] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[14:18:33.013] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[14:18:33.014] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[14:18:33.015] [Z-BUFFER] REJECTED at (27,4): currentZ=10 < zBuffer=20 char='D'
+[14:18:33.016] [Z-BUFFER] REJECTED at (28,4): currentZ=10 < zBuffer=20 char='u'
+[14:18:33.017] [Z-BUFFER] REJECTED at (29,4): currentZ=10 < zBuffer=20 char='e'
+[14:18:33.018] [Z-BUFFER] REJECTED at (49,4): currentZ=10 < zBuffer=20 char='T'
+[14:18:33.019] [Z-BUFFER] REJECTED at (50,4): currentZ=10 < zBuffer=20 char='a'
+[14:18:33.020] [Z-BUFFER] REJECTED at (51,4): currentZ=10 < zBuffer=20 char='g'
+[14:18:33.021] [Z-BUFFER] REJECTED at (52,4): currentZ=10 < zBuffer=20 char='s'
+[14:22:57.127] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[14:22:57.128] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[14:22:57.129] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[14:22:57.130] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[14:22:57.130] [Z-BUFFER] REJECTED at (27,4): currentZ=10 < zBuffer=20 char='D'
+[14:22:57.131] [Z-BUFFER] REJECTED at (28,4): currentZ=10 < zBuffer=20 char='u'
+[14:22:57.131] [Z-BUFFER] REJECTED at (29,4): currentZ=10 < zBuffer=20 char='e'
+[14:22:57.132] [Z-BUFFER] REJECTED at (49,4): currentZ=10 < zBuffer=200 char='T'
+[14:22:57.133] [Z-BUFFER] REJECTED at (50,4): currentZ=10 < zBuffer=200 char='a'
+[14:22:57.134] [Z-BUFFER] REJECTED at (51,4): currentZ=10 < zBuffer=200 char='g'
+[14:22:57.134] [Z-BUFFER] REJECTED at (52,4): currentZ=10 < zBuffer=200 char='s'
+[2026-01-08 14:22:57.422] ServiceContainer: Resolving 'NotesMenuScreen'...
+[2026-01-08 14:22:57.499] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Notes
+[2026-01-08 14:22:57.503] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 14:22:57.507] [INFO] StandardListScreen._ConfigureListActions: Configured 6 footer shortcuts
+[2026-01-08 14:22:57.532] ServiceContainer: Resolved 'NotesMenuScreen' successfully
+[2026-01-08 14:22:57.571] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Notes
+[2026-01-08 14:22:57.572] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 14:22:57.573] [INFO] StandardListScreen._ConfigureListActions: Configured 6 footer shortcuts
+[14:22:57.651] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[14:22:57.656] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[14:22:57.657] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[14:22:57.657] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[14:22:57.658] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[14:22:57.659] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[14:22:57.659] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[14:22:57.660] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[14:22:57.660] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[14:22:57.661] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[14:22:57.661] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[14:22:57.662] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[14:22:57.662] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[14:22:57.663] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[14:22:57.663] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[14:22:57.664] [Z-BUFFER] REJECTED at (98,7): currentZ=10 < zBuffer=20 char='T'
+[14:22:57.664] [Z-BUFFER] REJECTED at (99,7): currentZ=10 < zBuffer=20 char='a'
+[14:22:57.665] [Z-BUFFER] REJECTED at (100,7): currentZ=10 < zBuffer=20 char='g'
+[14:22:57.665] [Z-BUFFER] REJECTED at (101,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:24.492] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:24.493] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:24.493] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[14:37:24.494] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[14:37:24.494] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:24.494] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[14:37:24.498] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:24.498] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[14:37:24.499] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:24.499] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:24.499] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[14:37:24.500] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[14:37:24.500] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[14:37:24.500] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[14:37:24.500] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:24.501] [Z-BUFFER] REJECTED at (98,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:24.501] [Z-BUFFER] REJECTED at (99,7): currentZ=10 < zBuffer=20 char='a'
+[14:37:24.501] [Z-BUFFER] REJECTED at (100,7): currentZ=10 < zBuffer=20 char='g'
+[14:37:24.502] [Z-BUFFER] REJECTED at (101,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:24.940] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:24.941] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:24.942] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[14:37:24.943] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[14:37:24.943] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:24.944] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[14:37:24.945] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:24.946] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[14:37:24.947] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:24.947] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:24.948] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[14:37:24.949] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[14:37:24.950] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[14:37:24.951] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[14:37:24.952] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:24.953] [Z-BUFFER] REJECTED at (98,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:24.953] [Z-BUFFER] REJECTED at (99,7): currentZ=10 < zBuffer=20 char='a'
+[14:37:24.954] [Z-BUFFER] REJECTED at (100,7): currentZ=10 < zBuffer=20 char='g'
+[14:37:24.955] [Z-BUFFER] REJECTED at (101,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:25.346] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:25.349] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:25.350] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[14:37:25.350] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[14:37:25.351] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:25.352] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[14:37:25.352] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:25.353] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[14:37:25.354] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:25.354] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:25.355] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[14:37:25.356] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[14:37:25.356] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[14:37:25.357] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[14:37:25.357] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:25.360] [Z-BUFFER] REJECTED at (98,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:25.361] [Z-BUFFER] REJECTED at (99,7): currentZ=10 < zBuffer=20 char='a'
+[14:37:25.361] [Z-BUFFER] REJECTED at (100,7): currentZ=10 < zBuffer=20 char='g'
+[14:37:25.362] [Z-BUFFER] REJECTED at (101,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 14:37:27.325] [INFO] UniversalList.RenderToEngine: SKIPPING row 2 (editor active, filling with blank)
+[14:37:27.375] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:27.376] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:27.376] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[14:37:27.376] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[14:37:27.377] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:27.377] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[14:37:27.385] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:27.385] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[14:37:27.385] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:27.385] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:27.386] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[14:37:27.386] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[14:37:27.386] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[14:37:27.387] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[14:37:27.387] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:27.387] [Z-BUFFER] REJECTED at (98,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:27.387] [Z-BUFFER] REJECTED at (99,7): currentZ=10 < zBuffer=20 char='a'
+[14:37:27.388] [Z-BUFFER] REJECTED at (100,7): currentZ=10 < zBuffer=20 char='g'
+[14:37:27.388] [Z-BUFFER] REJECTED at (101,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 14:37:27.388] [INFO] UniversalList.RenderToEngine: SKIPPING row 2 (editor active, filling with blank)
+[2026-01-08 14:37:27.392] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=11
+[2026-01-08 14:37:29.492] [INFO] UniversalList.RenderToEngine: SKIPPING row 2 (editor active, filling with blank)
+[14:37:29.519] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:29.519] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:29.522] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[14:37:29.522] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[14:37:29.523] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:29.523] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[14:37:29.523] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:29.524] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[14:37:29.524] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:29.524] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:29.525] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[14:37:29.525] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[14:37:29.525] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[14:37:29.525] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[14:37:29.526] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:29.526] [Z-BUFFER] REJECTED at (98,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:29.527] [Z-BUFFER] REJECTED at (99,7): currentZ=10 < zBuffer=20 char='a'
+[14:37:29.528] [Z-BUFFER] REJECTED at (100,7): currentZ=10 < zBuffer=20 char='g'
+[14:37:29.528] [Z-BUFFER] REJECTED at (101,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 14:37:29.528] [INFO] UniversalList.RenderToEngine: SKIPPING row 2 (editor active, filling with blank)
+[2026-01-08 14:37:29.530] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=11
+[2026-01-08 14:37:30.873] [INFO] StandardListScreen.OnInlineEditConfirmed: Dispatching to _SaveEditedItem
+[2026-01-08 14:37:30.892] [INFO] ========== OnEditItem START ==========
+[2026-01-08 14:37:30.892] [INFO] OnEditItem: noteId = newnote12
+[2026-01-08 14:37:30.895] [INFO] OnEditItem: New title = 'newnote12'
+[2026-01-08 14:37:30.898] [INFO] OnEditItem: Setting project to ''
+[2026-01-08 14:37:30.916] RequestRender called from: <ScriptBlock> at line 68
+[2026-01-08 14:37:30.927] [INFO] OnEditItem: Loaded 3 notes
+[2026-01-08 14:37:30.930] [INFO] ========== OnEditItem END ==========
+[2026-01-08 14:37:30.964] RequestRender called from:  at line 972
+[14:37:30.988] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:30.988] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:30.988] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[14:37:30.989] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[14:37:30.989] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:30.989] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[14:37:30.989] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:30.990] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[14:37:30.990] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:30.990] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:30.991] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[14:37:30.991] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[14:37:30.991] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[14:37:30.991] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[14:37:30.992] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:30.992] [Z-BUFFER] REJECTED at (98,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:30.992] [Z-BUFFER] REJECTED at (99,7): currentZ=10 < zBuffer=20 char='a'
+[14:37:30.992] [Z-BUFFER] REJECTED at (100,7): currentZ=10 < zBuffer=20 char='g'
+[14:37:30.993] [Z-BUFFER] REJECTED at (101,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:35.017] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:35.017] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:35.018] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[14:37:35.018] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[14:37:35.018] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:35.019] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[14:37:35.019] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[14:37:35.019] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[14:37:35.021] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[14:37:35.021] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:35.022] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[14:37:35.022] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[14:37:35.022] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[14:37:35.022] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[14:37:35.023] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[14:37:35.023] [Z-BUFFER] REJECTED at (98,7): currentZ=10 < zBuffer=20 char='T'
+[14:37:35.023] [Z-BUFFER] REJECTED at (99,7): currentZ=10 < zBuffer=20 char='a'
+[14:37:35.024] [Z-BUFFER] REJECTED at (100,7): currentZ=10 < zBuffer=20 char='g'
+[14:37:35.024] [Z-BUFFER] REJECTED at (101,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 14:37:35.732] ServiceContainer: Resolving 'ThemeEditorScreen'...
+[2026-01-08 14:37:35.779] ServiceContainer: Resolved 'ThemeEditorScreen' successfully
+[2026-01-08 14:37:37.995] RequestRender called from: Invoke-ThemeHotReload at line 86
+[2026-01-08 14:39:57.526] ServiceContainer: Resolving 'ProjectListScreen'...
+[2026-01-08 14:39:57.571] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Projects
+[2026-01-08 14:39:57.575] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 14:39:57.578] [INFO] StandardListScreen._ConfigureListActions: Configured 12 footer shortcuts
+[2026-01-08 14:39:57.586] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Projects
+[2026-01-08 14:39:57.587] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 14:39:57.591] [INFO] StandardListScreen._ConfigureListActions: Configured 12 footer shortcuts
+[2026-01-08 14:39:57.595] ServiceContainer: Resolved 'ProjectListScreen' successfully
+[2026-01-08 14:39:57.616] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Projects
+[2026-01-08 14:39:57.618] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 14:39:57.619] [INFO] StandardListScreen._ConfigureListActions: Configured 12 footer shortcuts
+[14:39:57.701] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='T'
+[14:39:57.701] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='a'
+[14:39:57.702] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='s'
+[14:39:57.702] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='k'
+[14:39:57.702] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[14:39:59.470] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='T'
+[14:39:59.472] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='a'
+[14:39:59.472] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='s'
+[14:39:59.473] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='k'
+[14:39:59.473] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-08 14:39:59.978] ServiceContainer: Resolving 'NotesMenuScreen'...
+[2026-01-08 14:39:59.987] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Notes
+[2026-01-08 14:39:59.987] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 14:39:59.988] [INFO] StandardListScreen._ConfigureListActions: Configured 6 footer shortcuts
+[2026-01-08 14:39:59.989] ServiceContainer: Resolved 'NotesMenuScreen' successfully
+[2026-01-08 14:39:59.995] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Notes
+[2026-01-08 14:39:59.995] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-08 14:39:59.996] [INFO] StandardListScreen._ConfigureListActions: Configured 6 footer shortcuts
+[14:40:00.032] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[14:40:00.032] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[14:40:00.033] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[14:40:00.033] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[14:40:00.033] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[14:40:00.034] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[14:40:00.034] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[14:40:00.035] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[14:40:00.035] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[14:40:00.035] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[14:40:00.036] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[14:40:00.036] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[14:40:00.036] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[14:40:00.036] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[14:40:00.037] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[14:40:00.037] [Z-BUFFER] REJECTED at (98,7): currentZ=10 < zBuffer=20 char='T'
+[14:40:00.037] [Z-BUFFER] REJECTED at (99,7): currentZ=10 < zBuffer=20 char='a'
+[14:40:00.038] [Z-BUFFER] REJECTED at (100,7): currentZ=10 < zBuffer=20 char='g'
+[14:40:00.038] [Z-BUFFER] REJECTED at (101,7): currentZ=10 < zBuffer=20 char='s'
+[14:40:04.237] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='T'
+[14:40:04.237] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='i'
+[14:40:04.238] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[14:40:04.238] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='l'
+[14:40:04.240] [Z-BUFFER] REJECTED at (6,7): currentZ=10 < zBuffer=20 char='e'
+[14:40:04.241] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='L'
+[14:40:04.241] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='i'
+[14:40:04.242] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='n'
+[14:40:04.242] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='e'
+[14:40:04.242] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[14:40:04.243] [Z-BUFFER] REJECTED at (70,7): currentZ=10 < zBuffer=20 char='W'
+[14:40:04.243] [Z-BUFFER] REJECTED at (71,7): currentZ=10 < zBuffer=20 char='o'
+[14:40:04.244] [Z-BUFFER] REJECTED at (72,7): currentZ=10 < zBuffer=20 char='r'
+[14:40:04.245] [Z-BUFFER] REJECTED at (73,7): currentZ=10 < zBuffer=20 char='d'
+[14:40:04.245] [Z-BUFFER] REJECTED at (74,7): currentZ=10 < zBuffer=20 char='s'
+[14:40:04.246] [Z-BUFFER] REJECTED at (98,7): currentZ=10 < zBuffer=20 char='T'
+[14:40:04.246] [Z-BUFFER] REJECTED at (99,7): currentZ=10 < zBuffer=20 char='a'
+[14:40:04.247] [Z-BUFFER] REJECTED at (100,7): currentZ=10 < zBuffer=20 char='g'
+[14:40:04.247] [Z-BUFFER] REJECTED at (101,7): currentZ=10 < zBuffer=20 char='s'
