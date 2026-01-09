@@ -257,6 +257,89 @@ class SettingsScreen : PmcScreen {
         return $sb.ToString()
     }
 
+    # New engine-based rendering method
+    [void] RenderContentToEngine([object]$engine) {
+        if (-not $this.LayoutManager) { return }
+
+        # Get content area
+        $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
+
+        # Colors (using Int versions for engine)
+        $textColor = $this.Header.GetThemedColorInt('Foreground.Field')
+        $highlightColor = $this.Header.GetThemedColorInt('Foreground.FieldFocused')
+        $mutedColor = $this.Header.GetThemedColorInt('Foreground.Muted')
+        $selectedBg = $this.Header.GetThemedColorInt('Background.FieldFocused')
+        $selectedFg = $this.Header.GetThemedColorInt('Foreground.Field')
+        $cursorColor = $this.Header.GetThemedColorInt('Foreground.Accent')
+        $headerColor = $this.Header.GetThemedColorInt('Foreground.Muted')
+        $bg = $this.Header.GetThemedColorInt('Background.Primary')
+
+        # Column widths
+        $nameWidth = $script:SETTING_NAME_WIDTH
+        $valueWidth = $script:SETTING_VALUE_WIDTH
+        $descWidth = $contentRect.Width - $nameWidth - $valueWidth - 10
+
+        # Render column headers
+        $headerY = $contentRect.Y + 1
+        $engine.WriteAt($contentRect.X + 4, $headerY, "SETTING".PadRight($nameWidth), $headerColor, $bg)
+        $engine.WriteAt($contentRect.X + 4 + $nameWidth, $headerY, "VALUE".PadRight($valueWidth), $headerColor, $bg)
+        $engine.WriteAt($contentRect.X + 4 + $nameWidth + $valueWidth, $headerY, "DESCRIPTION", $headerColor, $bg)
+
+        # Render settings rows
+        $startY = $headerY + 2
+        $maxLines = $contentRect.Height - 4
+
+        for ($i = 0; $i -lt [Math]::Min($this.SettingsList.Count, $maxLines); $i++) {
+            $setting = $this.SettingsList[$i]
+            $y = $startY + $i
+            $isSelected = ($i -eq $this.SelectedIndex)
+            $isEditing = ($i -eq $this.EditingIndex) -and ($this.InputMode -eq 'edit')
+
+            $rowBg = $(if ($isSelected) { $selectedBg } else { $bg })
+            $rowFg = $(if ($isSelected) { $selectedFg } else { $textColor })
+
+            # Cursor
+            if ($isSelected) {
+                $cursorChar = $(if ($isEditing) { "E" } else { ">" })
+                $engine.WriteAt($contentRect.X + 2, $y, $cursorChar, $cursorColor, $bg)
+            } else {
+                $engine.WriteAt($contentRect.X + 2, $y, " ", $bg, $bg)
+            }
+
+            # Setting name column
+            $x = $contentRect.X + 4
+            $displayName = $setting.name
+            if ($displayName.Length -gt $nameWidth) {
+                $displayName = $displayName.Substring(0, $nameWidth - 3) + "..."
+            }
+            $engine.WriteAt($x, $y, $displayName.PadRight($nameWidth), $rowFg, $rowBg)
+            $x += $nameWidth
+
+            # Value column
+            if ($isEditing) {
+                $editValue = ($this.InputBuffer + "_").PadRight($valueWidth)
+                if ($editValue.Length -gt $valueWidth) {
+                    $editValue = $editValue.Substring(0, $valueWidth)
+                }
+                $engine.WriteAt($x, $y, $editValue, $cursorColor, $bg)
+            } else {
+                $displayValue = $setting.value
+                if ($displayValue.Length -gt $valueWidth) {
+                    $displayValue = $displayValue.Substring(0, $valueWidth - 3) + "..."
+                }
+                $engine.WriteAt($x, $y, $displayValue.PadRight($valueWidth), $highlightColor, $rowBg)
+            }
+            $x += $valueWidth
+
+            # Description column
+            $displayDesc = $setting.description
+            if ($displayDesc.Length -gt $descWidth) {
+                $displayDesc = $displayDesc.Substring(0, $descWidth - 3) + "..."
+            }
+            $engine.WriteAt($x, $y, $displayDesc, $mutedColor, $bg)
+        }
+    }
+
     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
         # Handle input mode
         if ($this.InputMode -eq 'edit') {
