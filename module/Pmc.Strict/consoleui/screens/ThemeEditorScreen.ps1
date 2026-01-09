@@ -11,6 +11,7 @@ class ThemeEditorScreen : PmcScreen {
     [array]$Themes = @()
     [int]$SelectedIndex = 0
     [string]$CurrentTheme = "Default"
+    hidden [int]$_scrollOffset = 0
     hidden [int]$_contentY = 8
     hidden [int]$_contentHeight = 13
 
@@ -142,10 +143,13 @@ class ThemeEditorScreen : PmcScreen {
         $startY = $y + 1
         $maxLines = $this._contentHeight - 8
         
-        for ($i = 0; $i -lt [Math]::Min($this.Themes.Count, $maxLines); $i++) {
-            $theme = $this.Themes[$i]
+        # Apply scroll offset for scrolling support
+        $visibleCount = [Math]::Min($this.Themes.Count - $this._scrollOffset, $maxLines)
+        for ($i = 0; $i -lt $visibleCount; $i++) {
+            $themeIndex = $i + $this._scrollOffset
+            $theme = $this.Themes[$themeIndex]
             $rowY = $startY + $i
-            $isSelected = ($i -eq $this.SelectedIndex)
+            $isSelected = ($themeIndex -eq $this.SelectedIndex)
             $isCurrent = ($theme.Name -eq $this.CurrentTheme)
             
             $rowBg = $(if ($isSelected) { $selectedBg } else { $bg })
@@ -222,8 +226,28 @@ class ThemeEditorScreen : PmcScreen {
 
         $keyChar = [char]::ToLower($keyInfo.KeyChar)
         switch ($keyInfo.Key) {
-            'UpArrow' { if ($this.SelectedIndex -gt 0) { $this.SelectedIndex--; return $true } }
-            'DownArrow' { if ($this.SelectedIndex -lt ($this.Themes.Count - 1)) { $this.SelectedIndex++; return $true } }
+            'UpArrow' {
+                if ($this.SelectedIndex -gt 0) {
+                    $this.SelectedIndex--
+                    # Scroll up if needed
+                    $maxLines = $this._contentHeight - 8
+                    if ($this.SelectedIndex -lt $this._scrollOffset) {
+                        $this._scrollOffset = $this.SelectedIndex
+                    }
+                    return $true
+                }
+            }
+            'DownArrow' {
+                if ($this.SelectedIndex -lt ($this.Themes.Count - 1)) {
+                    $this.SelectedIndex++
+                    # Scroll down if needed
+                    $maxLines = $this._contentHeight - 8
+                    if ($this.SelectedIndex -ge ($this._scrollOffset + $maxLines)) {
+                        $this._scrollOffset = $this.SelectedIndex - $maxLines + 1
+                    }
+                    return $true
+                }
+            }
             'Enter' { $this._ApplyTheme(); return $true }
             'Escape' { if ($global:PmcApp) { $global:PmcApp.PopScreen() }; return $true }
         }
