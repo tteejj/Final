@@ -39,26 +39,14 @@ function Invoke-ThemeHotReload {
             }
         }
 
-        # 2. Reinitialize PMC theme system to update state
-        Initialize-PmcThemeSystem -Force
-        if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
-            Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeHotReload] Initialize-PmcThemeSystem -Force completed"
-        }
-
-        # 3. Reload PmcThemeManager (which loads from theme file)
+        # 2. Reload PmcThemeManager (Single Source of Truth)
+        # This reloads the theme file and invalidates PmcThemeEngine cache
         $themeManager = [PmcThemeManager]::GetInstance()
         $themeManager.Reload()
+        
         if ($null -ne (Get-Variable -Name PmcDebug -Scope Global -ErrorAction SilentlyContinue) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
             Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [ThemeHotReload] PmcThemeManager.Reload completed"
         }
-
-        # 4. Invalidate PmcThemeEngine cache so colors are re-resolved
-        try {
-            $engine = [PmcThemeEngine]::GetInstance()
-            if ($engine) {
-                $engine.InvalidateCache()
-            }
-        } catch { }
 
         # 5. Force full screen refresh if app is running
         if ($global:PmcApp) {

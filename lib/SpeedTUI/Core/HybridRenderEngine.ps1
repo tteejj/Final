@@ -1132,6 +1132,13 @@ class HybridRenderEngine {
         $this._currentZ = $oldZ
     }
 
+    # Fill a defined region with a character and colors
+    [void] FillRegion([string]$regionId, [string]$char, [int]$fg, [int]$bg) {
+        $bounds = $this.GetRegionBounds($regionId)
+        if ($null -eq $bounds) { return }
+        $this.Fill($bounds.X, $bounds.Y, $bounds.Width, $bounds.Height, $char, $fg, $bg)
+    }
+
     # Define a grid of columns within a parent region
     # columns: array of hashtables @{ Name='...'; Width=... } or just widths
     # Returns: array of generated region IDs

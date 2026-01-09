@@ -151,28 +151,46 @@ class PmcFooter : PmcWidget {
 
         $this.RegisterLayout($engine)
 
-        # Build the footer text as a single string with inline formatting
-        # This allows gradient themes to work properly across the entire footer
-        $parts = @()
+        # Colors
+        $keyColor = $this.GetThemedColorInt('Foreground.Title')
+        $descColor = $this.GetThemedColorInt('Foreground.Muted')
+        $sepColor = $this.GetThemedColorInt('Border.Widget')
+        $bg = $this.GetThemedColorInt('Background.Footer')
+
+        # Clear background
+        $engine.FillRegion($this.RegionID, " ", $descColor, $bg)
+
+        $x = $this.X
+        $y = $this.Y
+        
         for ($i = 0; $i -lt $this.Shortcuts.Count; $i++) {
             $shortcut = $this.Shortcuts[$i]
             $key = $shortcut.Key
             $desc = $shortcut.Description
 
-            # Format: "Key: Description"
-            $part = "${key}: ${desc}"
-            $parts += $part
+            # Render Key
+            $engine.WriteAt($x, $y, $key, $keyColor, $bg)
+            $x += $key.Length
+
+            # Render Separator ": "
+            $engine.WriteAt($x, $y, ": ", $descColor, $bg)
+            $x += 2
+
+            # Render Description
+            $engine.WriteAt($x, $y, $desc, $descColor, $bg)
+            $x += $desc.Length
+
+            # Render Divider " | " if not last
+            if ($i -lt $this.Shortcuts.Count - 1) {
+                $engine.WriteAt($x, $y, " ", $bg, $bg)
+                $x++
+                $engine.WriteAt($x, $y, "|", $sepColor, $bg)
+                $x++
+                $engine.WriteAt($x, $y, " ", $bg, $bg)
+                $x++
+            }
         }
-
-        # Join with separator
-        $footerText = $parts -join " | "
-
-        # Use WriteThemedToRegion for automatic gradient support
-        # Use Foreground.Primary which supports gradient rendering from theme config
-        $this.WriteThemedToRegion($engine, "$($this.RegionID)_Main", $footerText, 'Foreground.Primary', 'Background.Footer')
     }
-
-    # === Helper Methods ===
 
     <#
     .SYNOPSIS

@@ -1,0 +1,269 @@
+[2026-01-09 08:33:46.083] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-09 08:33:46.088] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-09 08:33:46.089] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-09 08:33:46.091] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-09 08:33:46.092] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-09 08:33:46.093] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-09 08:33:46.094] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-09 08:33:46.096] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-09 08:33:46.097] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-09 08:33:46.099] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-09 08:33:46.100] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-09 08:33:46.102] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-09 08:33:46.103] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-09 08:33:46.104] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-09 08:33:46.105] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-09 08:33:46.127] ServiceContainer: Resolving 'Application'...
+[2026-01-09 08:33:46.130] ServiceContainer: Resolving 'Theme'...
+[2026-01-09 08:33:46.430] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-09 08:33:46.544] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-09 08:33:46.547] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-09 08:33:46.567] ServiceContainer: Resolved 'Application' successfully
+[2026-01-09 08:33:46.569] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-09 08:33:46.586] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-09 08:33:46.611] MenuRegistry: Loaded manifest with 16 entries
+[2026-01-09 08:33:46.647] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-09 08:33:46.649] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-09 08:33:46.671] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-09 08:33:46.674] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-09 08:33:46.675] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-09 08:33:46.677] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-09 08:33:46.680] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-09 08:33:46.681] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-09 08:33:46.694] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-09 08:33:46.696] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-09 08:33:46.697] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-09 08:33:46.699] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-09 08:33:46.702] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-09 08:33:46.703] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-09 08:33:46.705] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-09 08:33:46.707] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-09 08:33:46.708] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-09 08:33:46.709] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-09 08:33:46.711] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-09 08:33:46.713] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-09 08:33:46.715] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-09 08:33:46.717] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-09 08:33:46.718] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-09 08:33:46.720] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-09 08:33:46.722] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-09 08:33:46.723] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-09 08:33:46.725] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-09 08:33:46.727] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-09 08:33:46.728] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-09 08:33:46.730] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-09 08:33:46.732] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-09 08:33:46.733] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-09 08:33:46.735] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-09 08:33:46.737] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-09 08:33:46.739] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-09 08:33:46.740] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-09 08:33:46.742] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-09 08:33:46.743] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-09 08:33:46.745] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-09 08:33:46.748] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-09 08:33:46.749] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-09 08:33:46.751] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-09 08:33:46.753] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-09 08:33:46.754] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-09 08:33:46.756] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-09 08:33:46.758] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-09 08:33:46.759] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-09 08:33:46.761] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-09 08:33:46.799] ServiceContainer: Resolving 'TaskListScreen'...
+[2026-01-09 08:33:46.802] ServiceContainer: Resolving 'TaskStore'...
+[2026-01-09 08:33:46.964] ServiceContainer: Resolved 'TaskStore' successfully
+[2026-01-09 08:33:48.062] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-09 08:33:48.090] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-09 08:33:48.125] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[2026-01-09 08:33:48.352] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2026-01-09 08:33:48.378] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2026-01-09 08:33:48.395] _PopulateMenusFromRegistry: Menu 'Tasks' has 1 items from registry (array)
+[2026-01-09 08:33:48.400] _PopulateMenusFromRegistry: Menu 'Time' has 3 items from registry (array)
+[2026-01-09 08:33:48.405] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2026-01-09 08:33:48.410] _PopulateMenusFromRegistry: Menu 'Tools' has 6 items from registry (array)
+[2026-01-09 08:33:48.413] ServiceContainer: Resolved 'TaskListScreen' successfully
+[2026-01-09 08:33:48.852] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-09 08:33:48.855] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-09 08:33:48.863] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[08:33:50.620] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[08:33:50.622] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[08:33:50.624] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[08:33:50.650] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[08:33:50.652] [Z-BUFFER] REJECTED at (27,4): currentZ=10 < zBuffer=20 char='D'
+[08:33:50.653] [Z-BUFFER] REJECTED at (28,4): currentZ=10 < zBuffer=20 char='u'
+[08:33:50.654] [Z-BUFFER] REJECTED at (29,4): currentZ=10 < zBuffer=20 char='e'
+[08:33:50.656] [Z-BUFFER] REJECTED at (49,4): currentZ=10 < zBuffer=20 char='T'
+[08:33:50.657] [Z-BUFFER] REJECTED at (50,4): currentZ=10 < zBuffer=20 char='a'
+[08:33:50.658] [Z-BUFFER] REJECTED at (51,4): currentZ=10 < zBuffer=20 char='g'
+[08:33:50.659] [Z-BUFFER] REJECTED at (52,4): currentZ=10 < zBuffer=20 char='s'
+[08:33:53.225] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[08:33:53.227] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[08:33:53.229] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[08:33:53.230] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[08:33:53.232] [Z-BUFFER] REJECTED at (27,4): currentZ=10 < zBuffer=20 char='D'
+[08:33:53.233] [Z-BUFFER] REJECTED at (28,4): currentZ=10 < zBuffer=20 char='u'
+[08:33:53.235] [Z-BUFFER] REJECTED at (29,4): currentZ=10 < zBuffer=20 char='e'
+[08:33:53.254] [Z-BUFFER] REJECTED at (49,4): currentZ=10 < zBuffer=200 char='T'
+[08:33:53.255] [Z-BUFFER] REJECTED at (50,4): currentZ=10 < zBuffer=200 char='a'
+[08:33:53.256] [Z-BUFFER] REJECTED at (51,4): currentZ=10 < zBuffer=200 char='g'
+[08:33:53.257] [Z-BUFFER] REJECTED at (52,4): currentZ=10 < zBuffer=200 char='s'
+[2026-01-09 08:33:54.576] ServiceContainer: Resolving 'ThemeEditorScreen'...
+[2026-01-09 08:33:54.597] [ERROR] ServiceContainer: Failed to resolve 'ThemeEditorScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:127 char:21
++                 else {
++                     ~
+Missing '(' in class method parameter list.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:130 char:26
++                 $previewY++
++                          ~
+Missing ';' or end-of-line in property definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:10 char:38
++ class ThemeEditorScreen : PmcScreen {
++                                      ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:146 char:13
++             }
++             ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:147 char:9
++         }
++         ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:148 char:5
++     }
++     ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:150 char:14
++     [string] RenderContent() { return "" }
++              ~~~~~~~~~~~~~
+Unexpected token 'RenderContent' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:150 char:28
++     [string] RenderContent() { return "" }
++                            ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:152 char:12
++     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
++            ~~~~~~~~~~~~~~
+Unexpected token 'HandleKeyPress' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:171 char:31
++     hidden [void] _ApplyTheme() {
++                               ~
+An expression was expected after '('.
+
+Not all parse errors were reported.  Correct the reported errors and try again.
+[2026-01-09 08:33:54.599] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 2
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 510
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1128
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2178
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 626
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-09 08:33:54.604] [ERROR] MenuRegistry: Error launching 'ThemeEditorScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:127 char:21
++                 else {
++                     ~
+Missing '(' in class method parameter list.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:130 char:26
++                 $previewY++
++                          ~
+Missing ';' or end-of-line in property definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:10 char:38
++ class ThemeEditorScreen : PmcScreen {
++                                      ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:146 char:13
++             }
++             ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:147 char:9
++         }
++         ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:148 char:5
++     }
++     ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:150 char:14
++     [string] RenderContent() { return "" }
++              ~~~~~~~~~~~~~
+Unexpected token 'RenderContent' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:150 char:28
++     [string] RenderContent() { return "" }
++                            ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:152 char:12
++     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
++            ~~~~~~~~~~~~~~
+Unexpected token 'HandleKeyPress' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/ThemeEditorScreen.ps1:171 char:31
++     hidden [void] _ApplyTheme() {
++                               ~
+An expression was expected after '('.
+
+Not all parse errors were reported.  Correct the reported errors and try again.
+[2026-01-09 08:33:54.606] Stack trace: 
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 2
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 510
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/base/StandardListScreen.ps1: line 1128
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TaskListScreen.ps1: line 2178
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 626
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[08:33:54.707] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[08:33:54.709] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[08:33:54.712] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[08:33:54.713] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[08:33:54.715] [Z-BUFFER] REJECTED at (27,4): currentZ=10 < zBuffer=20 char='D'
+[08:33:54.716] [Z-BUFFER] REJECTED at (28,4): currentZ=10 < zBuffer=20 char='u'
+[08:33:54.718] [Z-BUFFER] REJECTED at (29,4): currentZ=10 < zBuffer=20 char='e'
+[08:33:54.720] [Z-BUFFER] REJECTED at (49,4): currentZ=10 < zBuffer=20 char='T'
+[08:33:54.721] [Z-BUFFER] REJECTED at (50,4): currentZ=10 < zBuffer=20 char='a'
+[08:33:54.722] [Z-BUFFER] REJECTED at (51,4): currentZ=10 < zBuffer=20 char='g'
+[08:33:54.724] [Z-BUFFER] REJECTED at (52,4): currentZ=10 < zBuffer=20 char='s'
+[08:33:56.537] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[08:33:56.539] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[08:33:56.542] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[08:33:56.544] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[08:33:56.545] [Z-BUFFER] REJECTED at (27,4): currentZ=10 < zBuffer=20 char='D'
+[08:33:56.546] [Z-BUFFER] REJECTED at (28,4): currentZ=10 < zBuffer=20 char='u'
+[08:33:56.547] [Z-BUFFER] REJECTED at (29,4): currentZ=10 < zBuffer=20 char='e'
+[08:33:56.548] [Z-BUFFER] REJECTED at (49,4): currentZ=10 < zBuffer=200 char='T'
+[08:33:56.549] [Z-BUFFER] REJECTED at (50,4): currentZ=10 < zBuffer=200 char='a'
+[08:33:56.549] [Z-BUFFER] REJECTED at (51,4): currentZ=10 < zBuffer=200 char='g'
+[08:33:56.550] [Z-BUFFER] REJECTED at (52,4): currentZ=10 < zBuffer=200 char='s'
+[08:33:57.948] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[08:33:57.949] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[08:33:57.950] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[08:33:57.951] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[08:33:57.952] [Z-BUFFER] REJECTED at (27,4): currentZ=10 < zBuffer=20 char='D'
+[08:33:57.952] [Z-BUFFER] REJECTED at (28,4): currentZ=10 < zBuffer=20 char='u'
+[08:33:57.953] [Z-BUFFER] REJECTED at (29,4): currentZ=10 < zBuffer=20 char='e'
+[08:33:57.954] [Z-BUFFER] REJECTED at (49,4): currentZ=10 < zBuffer=200 char='T'
+[08:33:57.954] [Z-BUFFER] REJECTED at (50,4): currentZ=10 < zBuffer=200 char='a'
+[08:33:57.955] [Z-BUFFER] REJECTED at (51,4): currentZ=10 < zBuffer=200 char='g'
+[08:33:57.955] [Z-BUFFER] REJECTED at (52,4): currentZ=10 < zBuffer=200 char='s'
+[2026-01-09 08:33:58.369] ServiceContainer: Resolving 'SettingsScreen'...
+[2026-01-09 08:33:58.435] ServiceContainer: Resolved 'SettingsScreen' successfully

@@ -5,6 +5,8 @@
 # - Multi-stop gradients (horizontal/vertical transitions)
 # - Aggressive caching for performance
 # - JSON-based theme configuration
+#
+# REFACTORED: Delegates to PmcThemeManager for Single Source of Truth
 
 using namespace System.Collections.Generic
 
@@ -13,7 +15,7 @@ Set-StrictMode -Off
 $script:_PmcThemeEngineInstance = $null
 
 class PmcThemeEngine {
-    [hashtable] $_properties
+    # REMOVED: [hashtable] $_properties - Now delegates to PmcThemeManager
     [object] $_cache
 
     static [PmcThemeEngine] GetInstance() {
@@ -28,35 +30,18 @@ class PmcThemeEngine {
     }
 
     PmcThemeEngine() {
-        $this._properties = @{}
         # Fallback: simple hashtable
         $this._cache = @{}
     }
 
     [void] Configure([hashtable]$properties) {
-        # Deep convert any PSCustomObject values to Hashtable
-        # This is necessary because ConvertFrom-Json returns nested PSCustomObjects
-        $safeProps = @{}
-        foreach ($key in $properties.Keys) {
-            $val = $properties[$key]
-            if ($val -is [System.Management.Automation.PSCustomObject]) {
-                $hash = @{}
-                foreach ($p in $val.PSObject.Properties) {
-                    $hash[$p.Name] = $p.Value
-                }
-                $safeProps[$key] = $hash
-            } else {
-                $safeProps[$key] = $val
-            }
-        }
-        
-        $this._properties = $safeProps
+        # NO-OP: Properties are managed by PmcThemeManager
+        # We just invalidate cache to be safe
         $this.InvalidateCache()
         
         # Targeted diagnostic: log when Configure is called (only if debug enabled)
         if ((Test-Path variable:global:PmcDebug) -and $global:PmcDebug -and $global:PmcTuiLogFile) {
-            $propList = ($properties.Keys | Sort-Object) -join ', '
-            Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeEngine] Configure: $($properties.Count) properties: $propList"
+            Add-Content $global:PmcTuiLogFile "[$(Get-Date -F 'HH:mm:ss.fff')] [PmcThemeEngine] Configure called (Delegated Mode - No-Op)"
         }
     }
 
@@ -74,11 +59,13 @@ class PmcThemeEngine {
 
     # Get background ANSI - handles solid or gradient
     [string] GetBackgroundAnsi([string]$propertyName, [int]$width, [int]$charIndex) {
-        if (-not $this._properties.ContainsKey($propertyName)) {
+        # DELEGATE: Get property from Manager
+        $manager = [PmcThemeManager]::GetInstance()
+        if (-not $manager.PmcTheme.Properties.ContainsKey($propertyName)) {
             throw "Theme Property Missing: '$propertyName'"
         }
 
-        $prop = $this._properties[$propertyName]
+        $prop = $manager.PmcTheme.Properties[$propertyName]
 
         if ($prop.Type -eq 'Solid') {
             return $this._GetSolidAnsiCached($prop.Color, $true)
@@ -96,11 +83,13 @@ class PmcThemeEngine {
 
     # Get foreground ANSI - usually solid
     [string] GetForegroundAnsi([string]$propertyName) {
-        if (-not $this._properties.ContainsKey($propertyName)) {
+        # DELEGATE: Get property from Manager
+        $manager = [PmcThemeManager]::GetInstance()
+        if (-not $manager.PmcTheme.Properties.ContainsKey($propertyName)) {
             throw "Theme Property Missing: '$propertyName'"
         }
 
-        $prop = $this._properties[$propertyName]
+        $prop = $manager.PmcTheme.Properties[$propertyName]
 
         if ($prop.Type -eq 'Solid') {
             $ansi = $this._GetSolidAnsiCached($prop.Color, $false)
@@ -113,11 +102,13 @@ class PmcThemeEngine {
     # Get integer color value (Generic - for Solid colors)
     # Returns packed RGB int (0x00RRGGBB)
     [int] GetThemeColorInt([string]$propertyName) {
-        if (-not $this._properties.ContainsKey($propertyName)) {
+        # DELEGATE: Get property from Manager
+        $manager = [PmcThemeManager]::GetInstance()
+        if (-not $manager.PmcTheme.Properties.ContainsKey($propertyName)) {
             throw "Theme Property Missing: '$propertyName'"
         }
 
-        $prop = $this._properties[$propertyName]
+        $prop = $manager.PmcTheme.Properties[$propertyName]
         $hex = ""
         
         if ($prop.Type -eq 'Solid') {
@@ -142,11 +133,13 @@ class PmcThemeEngine {
     # Get gradient info for a property (returns null if solid)
     # Returns @{ Start = [int]; End = [int] } for gradient, or $null for solid
     [object] GetGradientInfo([string]$propertyName) {
-        if (-not $this._properties.ContainsKey($propertyName)) {
+        # DELEGATE: Get property from Manager
+        $manager = [PmcThemeManager]::GetInstance()
+        if (-not $manager.PmcTheme.Properties.ContainsKey($propertyName)) {
             return $null
         }
 
-        $prop = $this._properties[$propertyName]
+        $prop = $manager.PmcTheme.Properties[$propertyName]
         
         if ($prop.Type -eq 'Gradient') {
             $startHex = $prop.Start
@@ -166,11 +159,13 @@ class PmcThemeEngine {
 
     # Get foreground Packed Int - usually solid
     [int] GetForegroundInt([string]$propertyName) {
-        if (-not $this._properties.ContainsKey($propertyName)) {
+        # DELEGATE: Get property from Manager
+        $manager = [PmcThemeManager]::GetInstance()
+        if (-not $manager.PmcTheme.Properties.ContainsKey($propertyName)) {
             throw "Theme Property Missing: '$propertyName'"
         }
 
-        $prop = $this._properties[$propertyName]
+        $prop = $manager.PmcTheme.Properties[$propertyName]
 
         if ($prop.Type -eq 'Solid') {
             return $this._GetSolidIntCached($prop.Color)
@@ -182,11 +177,13 @@ class PmcThemeEngine {
 
     # Get background Packed Int
     [int] GetBackgroundInt([string]$propertyName, [int]$width, [int]$charIndex) {
-        if (-not $this._properties.ContainsKey($propertyName)) {
+        # DELEGATE: Get property from Manager
+        $manager = [PmcThemeManager]::GetInstance()
+        if (-not $manager.PmcTheme.Properties.ContainsKey($propertyName)) {
             throw "Theme Property Missing: '$propertyName'"
         }
 
-        $prop = $this._properties[$propertyName]
+        $prop = $manager.PmcTheme.Properties[$propertyName]
 
         if ($prop.Type -eq 'Solid') {
             return $this._GetSolidIntCached($prop.Color)
@@ -205,8 +202,10 @@ class PmcThemeEngine {
 
     # Public: Get gradient array as Ints (for bulk rendering)
     [int[]] GetGradientIntArray([string]$propertyName, [int]$width) {
-        if (-not $this._properties.ContainsKey($propertyName)) { return @() }
-        $prop = $this._properties[$propertyName]
+        # DELEGATE: Get property from Manager
+        $manager = [PmcThemeManager]::GetInstance()
+        if (-not $manager.PmcTheme.Properties.ContainsKey($propertyName)) { return @() }
+        $prop = $manager.PmcTheme.Properties[$propertyName]
         
         if ($prop.Type -eq 'Gradient') {
             return $this._GetGradientIntArrayCached($propertyName, $prop, $width)

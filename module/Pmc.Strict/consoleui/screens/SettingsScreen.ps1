@@ -408,7 +408,7 @@ class SettingsScreen : PmcScreen {
                     }
                     # Use Set-PmcFocus to change the current context
                     # Create proper PmcCommandContext with project name in FreeText
-                    $context = [PmcCommandContext]::new('focus', 'set')
+                    $context = New-Object -TypeName PmcCommandContext -ArgumentList 'focus', 'set'
                     $context.FreeText = @($newValue)
                     Set-PmcFocus -Context $context
                     $this.ShowSuccess("Default project updated to '$newValue'")

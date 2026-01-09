@@ -92,10 +92,14 @@ class PmcThemeManager {
         }
 
         # Configure Engine if available
+        # Configure Engine if available (Dynamic lookup to avoid circular dependency)
         try {
-            $engine = [PmcThemeEngine]::GetInstance()
-            if ($engine -and $this.PmcTheme -and $this.PmcTheme.Properties) {
-                $engine.Configure($this.PmcTheme.Properties)
+            $engineType = "PmcThemeEngine" -as [type]
+            if ($engineType) {
+                $engine = $engineType::GetInstance()
+                if ($engine -and $this.PmcTheme -and $this.PmcTheme.Properties) {
+                    $engine.Configure($this.PmcTheme.Properties)
+                }
             }
         } catch {
             # Engine might not be available
@@ -221,11 +225,15 @@ class PmcThemeManager {
         $this._Initialize()
 
         # Force PmcThemeEngine to use our properties
+        # Force PmcThemeEngine to use our properties (Dynamic lookup)
         try {
-            $engine = [PmcThemeEngine]::GetInstance()
-            if ($engine -and $this.PmcTheme -and $this.PmcTheme.Properties) {
-                $engine.Configure($this.PmcTheme.Properties)
-                $engine.InvalidateCache()
+            $engineType = "PmcThemeEngine" -as [type]
+            if ($engineType) {
+                $engine = $engineType::GetInstance()
+                if ($engine -and $this.PmcTheme -and $this.PmcTheme.Properties) {
+                    $engine.Configure($this.PmcTheme.Properties)
+                    $engine.InvalidateCache()
+                }
             }
         } catch {
             # Engine might not be available
@@ -266,11 +274,14 @@ class PmcThemeManager {
             # Reload this manager
             $this.Reload()
 
-            # Notify PmcThemeEngine of theme change
+            # Notify PmcThemeEngine of theme change (Dynamic lookup)
             try {
-                $engine = [PmcThemeEngine]::GetInstance()
-                if ($engine) {
-                    $engine.InvalidateCache()
+                $engineType = "PmcThemeEngine" -as [type]
+                if ($engineType) {
+                    $engine = $engineType::GetInstance()
+                    if ($engine) {
+                        $engine.InvalidateCache()
+                    }
                 }
             } catch {
                 # PmcThemeEngine may not be available

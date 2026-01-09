@@ -170,8 +170,8 @@ try {
     
     # Core infrastructure (no dependencies except DataService)
     . "$PSScriptRoot/ZIndex.ps1"
-    . "$PSScriptRoot/src/PmcThemeEngine.ps1"
     . "$PSScriptRoot/theme/PmcThemeManager.ps1"
+    . "$PSScriptRoot/src/PmcThemeEngine.ps1"
     . "$PSScriptRoot/layout/PmcLayoutManager.ps1"
 
     # Write-PmcTuiLog "Core dependencies loaded" "INFO"
