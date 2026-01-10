@@ -323,6 +323,7 @@ catch {
 # Write-PmcTuiLog "Loading remaining screens..." "INFO"
 try {
     # Load remaining screens AFTER base classes (they inherit from StandardListScreen, etc.)
+    . "$PSScriptRoot/screens/StartScreen.ps1"
     . "$PSScriptRoot/screens/TaskListScreen.ps1"
     . "$PSScriptRoot/screens/ProjectListScreen.ps1"
     . "$PSScriptRoot/screens/ProjectInfoScreenV4.ps1"
@@ -363,7 +364,7 @@ Start-PmcTUI -StartScreen BlockedTasks
 #>
 function Start-PmcTUI {
     param(
-        [string]$StartScreen = "TaskList"
+        [string]$StartScreen = "Start"
     )
 
     # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)..."
@@ -592,6 +593,11 @@ function Start-PmcTUI {
         # === Launch Initial Screen ===
         # Write-PmcTuiLog "Launching screen: $StartScreen" "INFO"
         switch ($StartScreen) {
+            'Start' {
+                # Default: Start Page Dashboard
+                $screen = New-Object StartScreen -ArgumentList $global:PmcContainer
+                $global:PmcApp.PushScreen($screen)
+            }
             'TaskList' {
                 # Write-PmcTuiLog "Resolving TaskListScreen from container..." "INFO"
                 $screen = $global:PmcContainer.Resolve('TaskListScreen')

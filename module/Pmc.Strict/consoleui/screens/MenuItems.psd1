@@ -51,6 +51,14 @@
         ScreenFile = 'TextExportProfileManagerScreen.ps1'
     }
 
+    'CalendarScreen' = @{
+        Menu = 'Tools'
+        Label = 'Calendar'
+        Hotkey = 'A'
+        Order = 50
+        ScreenFile = 'CalendarScreen.ps1'
+    }
+
     # ===== PROJECTS MENU =====
     'ProjectListScreen' = @{
         Menu = 'Projects'
