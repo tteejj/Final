@@ -296,32 +296,6 @@ class ProjectInfoScreenV4 : TabbedScreen {
                 return
             }
 
-            # Verify file on disk
-            if ($global:PmcTuiLogFile) {
-                # Get actual task file path from Pmc module
-                $pmcModule = Get-Module -Name 'Pmc.Strict'
-                $taskFile = & $pmcModule { Get-PmcTaskFilePath }
-                # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4.SaveChanges: Verifying tasks file: $taskFile"
-                if (Test-Path $taskFile) {
-                    try {
-                        $fileContent = Get-Content $taskFile -Raw | ConvertFrom-Json
-                        $savedProject = $fileContent.projects | Where-Object { $_.name -eq $this.ProjectName } | Select-Object -First 1
-                        if ($savedProject) {
-                            # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4.SaveChanges: File verification SUCCESS - project found, ID1='$($savedProject.ID1)'"
-                        }
-                        else {
-                            # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4.SaveChanges: File verification FAILED - PROJECT NOT FOUND (projects count=$($fileContent.projects.Count))"
-                        }
-                    }
-                    catch {
-                        # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4.SaveChanges: File verification ERROR - $_"
-                    }
-                }
-                else {
-                    # Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] ProjectInfoScreenV4.SaveChanges: File verification FAILED - FILE DOES NOT EXIST at $taskFile"
-                }
-            }
-
             # Update status
             if ($this.StatusBar) {
                 $this.StatusBar.SetRightText("Saved")
@@ -753,7 +727,7 @@ class ProjectInfoScreenV4 : TabbedScreen {
                     $fieldName = $this.FilePickerFieldName
                     
                     # Update field value
-                    $this.TabPanel.SetFieldValue($fieldName, $path)
+                    $this.TabPanel.UpdateFieldValue($fieldName, $path)
                     
                     # Auto-save
                     $this.SaveChanges()
@@ -783,7 +757,10 @@ class ProjectInfoScreenV4 : TabbedScreen {
         # Always render base tabbed screen
         ([TabbedScreen]$this).RenderContentToEngine($engine)
         
-        # Note: Active modals (FilePicker, ProfilePicker) are rendered by PmcScreen.RenderToEngine
+        # Render FilePicker if active
+        if ($this.ShowFilePicker -and $null -ne $this.FilePicker) {
+            $this.FilePicker.RenderToEngine($engine)
+        }
     }
 }
 

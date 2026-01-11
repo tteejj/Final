@@ -697,26 +697,18 @@ class ProjectListScreen : StandardListScreen {
         }
     }
 
-    # Helper to open a file from a project property
+    # Helper to open a file from a project property (expects FULL path in property)
     hidden [void] _OpenFile([object]$project, [string]$propertyName) {
         if ($null -eq $project) { return }
 
-        $fileName = Get-SafeProperty $project $propertyName
-        if ([string]::IsNullOrWhiteSpace($fileName)) {
+        $fullPath = Get-SafeProperty $project $propertyName
+        if ([string]::IsNullOrWhiteSpace($fullPath)) {
             $this.SetStatusMessage("Project has no $propertyName set", "warning")
             return
         }
 
-        $folderPath = Get-SafeProperty $project 'ProjFolder'
-        if ([string]::IsNullOrWhiteSpace($folderPath)) {
-            $this.SetStatusMessage("Project has no folder path set", "warning")
-            return
-        }
-
-        $fullPath = Join-Path $folderPath $fileName
-        
         if (-not (Test-Path $fullPath)) {
-            $this.SetStatusMessage("File not found: $fileName", "error")
+            $this.SetStatusMessage("File not found: $fullPath", "error")
             return
         }
 
@@ -725,6 +717,7 @@ class ProjectListScreen : StandardListScreen {
             $p.FileName = $fullPath
             $p.UseShellExecute = $true
             [System.Diagnostics.Process]::Start($p) | Out-Null
+            $fileName = Split-Path $fullPath -Leaf
             $this.SetStatusMessage("Opened: $fileName", "success")
         }
         catch {
@@ -841,98 +834,23 @@ class ProjectListScreen : StandardListScreen {
         if ($handled) { return $true }
 
         # Handle custom project keys after StandardListScreen (ONLY when editor/filter NOT showing!)
+        # NOTE: Most keys (O, T, C, Q, R, I, V) are registered via GetCustomActions() and handled by UniversalList.
+        # Only Enter needs special handling here to open project detail view instead of edit.
         if (-not $this.ShowInlineEditor -and -not $this.ShowFilterPanel) {
             # Custom key: Enter = View project details (user preference over standard edit behavior)
             if ($keyInfo.Key -eq ([ConsoleKey]::Enter)) {
                 $selected = $this.List.GetSelectedItem()
                 if ($selected) {
-                    $this.ViewProjectDetails($selected)
-                }
-                return $true
-            }
-
-            # Custom key: E = Edit selected project
-            if ($keyInfo.KeyChar -eq 'e' -or $keyInfo.KeyChar -eq 'E') {
-                if ($this.AllowEdit) {
-                    $selected = $this.List.GetSelectedItem()
-                    if ($selected) {
-                        $this.EditItem($selected)
+                    try {
+                        $projectName = Get-SafeProperty $selected 'name'
+                        $screen = New-Object ProjectInfoScreenV4 -ArgumentList $this.Container
+                        $screen.SetProject($projectName)
+                        $global:PmcApp.PushScreen($screen)
+                    }
+                    catch {
+                        $this.SetStatusMessage("Failed to open project view: $($_.Exception.Message)", "error")
                     }
                 }
-                return $true
-            }
-
-            # Custom key: V = View project details/stats
-            if ($keyInfo.KeyChar -eq 'v' -or $keyInfo.KeyChar -eq 'V') {
-                # Defensive check: ensure List exists
-                if ($null -eq $this.List) {
-                    # Write-PmcTuiLog "ERROR: List is null when V pressed" "ERROR"
-                    $this.SetStatusMessage("Internal error: List not initialized", "error")
-                    return $true
-                }
-
-                $selected = $this.List.GetSelectedItem()
-
-                if ($null -eq $selected) {
-                    # Write-PmcTuiLog "No project selected when V pressed" "WARNING"
-                    $this.SetStatusMessage("No project selected", "warning")
-                    return $true
-                }
-
-                try {
-                    $projectName = Get-SafeProperty $selected 'name'
-                    $screen = New-Object ProjectInfoScreenV4 -ArgumentList $this.Container
-                    $screen.SetProject($projectName)
-                    $global:PmcApp.PushScreen($screen)
-                    $this.SetStatusMessage("Viewing project: $projectName", "success")
-                }
-                catch {
-                    $errorMsg = "Failed to open project view: $($_.Exception.Message)"
-                    # Write-PmcTuiLog "!!! EXCEPTION: $errorMsg" "ERROR"
-                    # Write-PmcTuiLog "!!! Stack trace: $($_.ScriptStackTrace)" "ERROR"
-                    $this.SetStatusMessage($errorMsg, "error")
-                }
-                return $true
-            }
-
-            # Custom key: R = Archive/Unarchive
-            if ($keyInfo.KeyChar -eq 'r' -or $keyInfo.KeyChar -eq 'R') {
-                $selected = $this.List.GetSelectedItem()
-                $this.ToggleProjectArchive($selected)
-                return $true
-            }
-
-            # Custom key: O = Open project folder
-            if ($keyInfo.KeyChar -eq 'o' -or $keyInfo.KeyChar -eq 'O') {
-                $selected = $this.List.GetSelectedItem()
-                $this.OpenProjectFolder($selected)
-                return $true
-            }
-
-            # Custom key: I = Import from Excel
-            if ($keyInfo.KeyChar -eq 'i' -or $keyInfo.KeyChar -eq 'I') {
-                $this.ImportFromExcel()
-                return $true
-            }
-            
-            # Custom key: T = Open T2020
-            if ($keyInfo.KeyChar -eq 't' -or $keyInfo.KeyChar -eq 'T') {
-                $selected = $this.List.GetSelectedItem()
-                $this.OpenT2020($selected)
-                return $true
-            }
-
-            # Custom key: C = Open CAA
-            if ($keyInfo.KeyChar -eq 'c' -or $keyInfo.KeyChar -eq 'C') {
-                $selected = $this.List.GetSelectedItem()
-                $this.OpenCAA($selected)
-                return $true
-            }
-
-            # Custom key: Q = Open Request
-            if ($keyInfo.KeyChar -eq 'q' -or $keyInfo.KeyChar -eq 'Q') {
-                $selected = $this.List.GetSelectedItem()
-                $this.OpenRequest($selected)
                 return $true
             }
         }  # End of editor/filter check

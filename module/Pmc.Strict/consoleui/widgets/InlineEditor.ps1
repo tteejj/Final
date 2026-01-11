@@ -2194,10 +2194,13 @@ class InlineEditor : PmcWidget {
             }
             catch {
                 # Log callback errors but DON'T rethrow - callbacks must never crash the app
-                if (Get-Command Write-PmcTuiLog -ErrorAction SilentlyContinue) {
-                    # Write-PmcTuiLog "InlineEditor callback error: $($_.Exception.Message)" "ERROR"
-                    # Write-PmcTuiLog "Callback code: $($callback.ToString())" "ERROR"
-                    # Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
+                # ENABLED: Log callback errors for debugging
+                Write-PmcTuiLog "InlineEditor callback error: $($_.Exception.Message)" "ERROR"
+                Write-PmcTuiLog "Callback code: $($callback.ToString().Substring(0, [Math]::Min(200, $callback.ToString().Length)))" "ERROR"
+                Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
+                # Show error to user in status bar if possible
+                if ($global:PmcApp -and $global:PmcApp.CurrentScreen -and $global:PmcApp.CurrentScreen.StatusBar) {
+                    $global:PmcApp.CurrentScreen.StatusBar.SetLeftText("Error: $($_.Exception.Message)")
                 }
                 # DON'T rethrow - form submission callbacks must not crash
             }

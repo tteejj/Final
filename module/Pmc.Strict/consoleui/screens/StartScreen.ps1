@@ -18,12 +18,82 @@ class StartScreen : PmcScreen {
         $this.Header.SetBreadcrumb(@("Home"))
         $this._InitFooter()
         $this._InitCards()
+        $this._SetupMenus()
     }
 
     StartScreen([object]$container) : base("Start", "Dashboard", $container) {
         $this.Header.SetBreadcrumb(@("Home"))
         $this._InitFooter()
         $this._InitCards()
+        $this._SetupMenus()
+    }
+
+    # Setup menu items using MenuRegistry (same as TaskListScreen)
+    hidden [void] _SetupMenus() {
+        # Get singleton MenuRegistry instance
+        . "$PSScriptRoot/../services/MenuRegistry.ps1"
+        $registry = [MenuRegistry]::GetInstance()
+
+        # Load menu items from manifest (only if not already loaded)
+        $tasksMenuItems = $registry.GetMenuItems('Tasks')
+        if (-not $tasksMenuItems -or @($tasksMenuItems).Count -eq 0) {
+            $manifestPath = Join-Path $PSScriptRoot "MenuItems.psd1"
+
+            # Get or create the service container
+            if (-not $global:PmcContainer) {
+                . "$PSScriptRoot/../ServiceContainer.ps1"
+                $global:PmcContainer = [ServiceContainer]::new()
+            }
+
+            # Load manifest with container
+            $registry.LoadFromManifest($manifestPath, $global:PmcContainer)
+        }
+
+        # Build menus from registry
+        $this._PopulateMenusFromRegistry($registry)
+
+        # Store populated MenuBar globally for other screens to use
+        $global:PmcSharedMenuBar = $this.MenuBar
+    }
+
+    # Populate MenuBar from registry
+    hidden [void] _PopulateMenusFromRegistry([object]$registry) {
+        $menuMapping = @{
+            'Tasks'    = 0
+            'Projects' = 1
+            'Time'     = 2
+            'Tools'    = 3
+            'Options'  = 4
+            'Help'     = 5
+        }
+
+        foreach ($menuName in $menuMapping.Keys) {
+            $menuIndex = $menuMapping[$menuName]
+
+            if ($null -eq $this.MenuBar -or $null -eq $this.MenuBar.Menus) {
+                continue
+            }
+
+            if ($menuIndex -lt 0 -or $menuIndex -ge $this.MenuBar.Menus.Count) {
+                continue
+            }
+
+            $menu = $this.MenuBar.Menus[$menuIndex]
+            $items = $registry.GetMenuItems($menuName)
+
+            if ($null -ne $items) {
+                # Clear existing items to prevent duplication
+                $menu.Items.Clear()
+
+                foreach ($item in $items) {
+                    if ($item -isnot [hashtable]) {
+                        continue
+                    }
+                    $menuItem = New-Object -TypeName PmcMenuItem -ArgumentList $item['Label'], $item['Hotkey'], $item['Action']
+                    $menu.Items.Add($menuItem)
+                }
+            }
+        }
     }
 
     hidden [void] _InitFooter() {

@@ -283,8 +283,8 @@ class PmcFilePicker : PmcWidget {
                 return $true
             }
             'Spacebar' {
-                # Select current path
-                $this.SelectedPath = $this.CurrentPath
+                # Select highlighted item (file or folder)
+                if ($this.Items.Count -gt 0) { $this.SelectedPath = $this.Items[$this.SelectedIndex].Path } else { $this.SelectedPath = $this.CurrentPath }
                 $this.Result = $true
                 $this.IsComplete = $true
                 $this._InvokeCallback($this.OnConfirmed, $this.SelectedPath)
@@ -297,7 +297,9 @@ class PmcFilePicker : PmcWidget {
                 return $true
             }
         }
-        return $false
+        # CRITICAL: Return true for ALL keys to prevent fall-through to parent screen
+        # The FilePicker is a modal - it should capture all input while active
+        return $true
     }
 
     # === Callbacks ===

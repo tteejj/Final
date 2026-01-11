@@ -1,0 +1,200 @@
+[2026-01-10 19:55:46.189] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-10 19:55:46.195] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-10 19:55:46.197] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-10 19:55:46.199] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-10 19:55:46.200] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-10 19:55:46.202] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-10 19:55:46.204] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-10 19:55:46.206] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-10 19:55:46.207] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-10 19:55:46.209] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-10 19:55:46.211] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-10 19:55:46.213] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-10 19:55:46.215] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-10 19:55:46.217] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-10 19:55:46.219] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-10 19:55:46.249] ServiceContainer: Resolving 'Application'...
+[2026-01-10 19:55:46.252] ServiceContainer: Resolving 'Theme'...
+[2026-01-10 19:55:46.531] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-10 19:55:46.655] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-10 19:55:46.658] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-10 19:55:46.678] ServiceContainer: Resolved 'Application' successfully
+[2026-01-10 19:55:46.680] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-10 19:55:46.697] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-10 19:55:46.724] MenuRegistry: Loaded manifest with 17 entries
+[2026-01-10 19:55:46.779] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-10 19:55:46.794] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-10 19:55:46.815] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-10 19:55:46.817] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-10 19:55:46.818] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-10 19:55:46.821] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-10 19:55:46.823] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-10 19:55:46.824] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-10 19:55:46.825] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-10 19:55:46.827] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-10 19:55:46.828] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-10 19:55:46.830] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-10 19:55:46.832] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-10 19:55:46.833] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-10 19:55:46.835] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-10 19:55:46.837] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-10 19:55:46.838] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-10 19:55:46.839] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-10 19:55:46.841] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-10 19:55:46.842] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-10 19:55:46.844] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-10 19:55:46.845] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-10 19:55:46.846] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-10 19:55:46.848] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-10 19:55:46.850] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-10 19:55:46.851] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-10 19:55:46.853] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-10 19:55:46.854] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-10 19:55:46.856] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-10 19:55:46.857] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-10 19:55:46.859] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-10 19:55:46.860] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-10 19:55:46.862] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-10 19:55:46.864] ServiceContainer: Registered 'CalendarScreen' (singleton=False)
+[2026-01-10 19:55:46.865] MenuRegistry: Registered 'Calendar' in 'Tools' menu (hotkey=A order=50)
+[2026-01-10 19:55:46.866] MenuRegistry: Registered 'Calendar' in 'Tools' menu (hotkey=A order=50)
+[2026-01-10 19:55:46.868] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-10 19:55:46.870] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-10 19:55:46.872] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-10 19:55:46.874] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-10 19:55:46.903] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-10 19:55:46.905] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-10 19:55:46.907] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-10 19:55:46.908] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-10 19:55:46.909] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-10 19:55:46.911] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-10 19:55:46.912] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-10 19:55:46.914] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-10 19:55:46.915] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-10 19:55:46.917] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-10 19:55:46.919] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-10 19:55:51.259] ServiceContainer: Resolving 'ProjectListScreen'...
+[2026-01-10 19:55:51.737] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Projects
+[2026-01-10 19:55:51.758] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-10 19:55:51.787] [INFO] StandardListScreen._ConfigureListActions: Configured 12 footer shortcuts
+[2026-01-10 19:55:51.809] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Projects
+[2026-01-10 19:55:51.812] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-10 19:55:51.816] [INFO] StandardListScreen._ConfigureListActions: Configured 12 footer shortcuts
+[2026-01-10 19:55:51.827] ServiceContainer: Resolved 'ProjectListScreen' successfully
+[2026-01-10 19:55:52.039] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Projects
+[2026-01-10 19:55:52.042] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-10 19:55:52.046] [INFO] StandardListScreen._ConfigureListActions: Configured 12 footer shortcuts
+[19:55:52.580] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='T'
+[19:55:52.583] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='a'
+[19:55:52.585] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='s'
+[19:55:52.586] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='k'
+[19:55:52.588] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[19:55:53.685] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='T'
+[19:55:53.686] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='a'
+[19:55:53.688] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='s'
+[19:55:53.689] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='k'
+[19:55:53.690] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-10 19:55:54.017] ServiceContainer: Registered 'ProjectInfoScreenV4' (singleton=False)
+[2026-01-10 19:55:54.020] ServiceContainer: Resolving 'ProjectInfoScreenV4'...
+[2026-01-10 19:55:54.141] ServiceContainer: Resolving 'TaskStore'...
+[2026-01-10 19:55:54.147] ServiceContainer: Resolved 'TaskStore' successfully
+[2026-01-10 19:55:54.159] ServiceContainer: Resolved 'ProjectInfoScreenV4' successfully
+[2026-01-10 19:55:55.698] TabbedScreen.HandleKeyPress: Key=LeftArrow Char=' ' ShowEditor=False
+[2026-01-10 19:55:55.749] TabbedScreen.OnTabChanged: tabIndex=6
+[2026-01-10 19:55:56.400] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:55:56.427] TabbedScreen.OnFieldSelected: field=_action_assign_note
+[2026-01-10 19:55:56.589] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:55:56.592] TabbedScreen.OnFieldSelected: field=_action_checklists
+[2026-01-10 19:55:56.777] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:55:56.780] TabbedScreen.OnFieldSelected: field=_action_assign_checklist
+[2026-01-10 19:55:56.971] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:55:56.974] TabbedScreen.OnFieldSelected: field=_separator1
+[2026-01-10 19:55:57.113] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:55:57.116] TabbedScreen.OnFieldSelected: field=T2020
+[2026-01-10 19:55:58.070] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:55:58.072] TabbedScreen.OnFieldSelected: field=_action_t2020_browse
+[2026-01-10 19:55:58.658] TabbedScreen.HandleKeyPress: Key=Enter Char='' ShowEditor=False
+[2026-01-10 19:55:58.660] TabbedScreen.HandleKeyPress: Enter pressed (editor not showing), calling EditCurrentField
+[2026-01-10 19:55:58.674] TabbedScreen.EditCurrentField: ENTRY
+[2026-01-10 19:55:58.677] TabbedScreen.EditCurrentField: field='_action_t2020_browse' Type='readonly'
+[2026-01-10 19:55:58.683] TabbedScreen.EditCurrentField: IsAction=true, calling OnFieldEdited
+[2026-01-10 19:55:58.696] [INFO] ProjectInfoScreenV4._HandleFileAction: action=_action_t2020_browse ProjectName='proj1'
+[2026-01-10 19:55:58.705] [INFO] ProjectInfoScreenV4._BrowseForFile: fieldName=T2020 directoriesOnly=False
+[2026-01-10 19:55:58.778] [INFO] ProjectInfoScreenV4._BrowseForFile: FilePicker created, ShowFilePicker=True
+[2026-01-10 19:56:10.332] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:10.333] TabbedScreen.OnFieldSelected: field=_action_t2020_open
+[2026-01-10 19:56:14.175] TabbedScreen.HandleKeyPress: Key=Enter Char='' ShowEditor=False
+[2026-01-10 19:56:14.176] TabbedScreen.HandleKeyPress: Enter pressed (editor not showing), calling EditCurrentField
+[2026-01-10 19:56:14.176] TabbedScreen.EditCurrentField: ENTRY
+[2026-01-10 19:56:14.177] TabbedScreen.EditCurrentField: field='_action_t2020_open' Type='readonly'
+[2026-01-10 19:56:14.178] TabbedScreen.EditCurrentField: IsAction=true, calling OnFieldEdited
+[2026-01-10 19:56:14.181] [INFO] ProjectInfoScreenV4._HandleFileAction: action=_action_t2020_open ProjectName='proj1'
+[2026-01-10 19:56:24.599] TabbedScreen.HandleKeyPress: Key=Escape Char='' ShowEditor=False
+[2026-01-10 19:56:24.601] TabbedScreen.HandleKeyPress: Escape pressed, popping screen
+[2026-01-10 19:56:24.616] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Projects
+[2026-01-10 19:56:24.618] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-10 19:56:24.621] [INFO] StandardListScreen._ConfigureListActions: Configured 12 footer shortcuts
+[19:56:24.657] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='T'
+[19:56:24.658] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='a'
+[19:56:24.658] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='s'
+[19:56:24.659] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='k'
+[19:56:24.659] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[19:56:28.456] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='T'
+[19:56:28.456] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='a'
+[19:56:28.457] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='s'
+[19:56:28.457] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='k'
+[19:56:28.458] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[19:56:31.567] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='T'
+[19:56:31.568] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='a'
+[19:56:31.569] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='s'
+[19:56:31.569] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='k'
+[19:56:31.570] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[19:56:31.968] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='T'
+[19:56:31.969] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='a'
+[19:56:31.969] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='s'
+[19:56:31.970] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='k'
+[19:56:31.971] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[19:56:33.970] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='T'
+[19:56:33.971] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='a'
+[19:56:33.971] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='s'
+[19:56:33.972] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='k'
+[19:56:33.973] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[19:56:34.561] [Z-BUFFER] REJECTED at (62,7): currentZ=10 < zBuffer=20 char='T'
+[19:56:34.562] [Z-BUFFER] REJECTED at (63,7): currentZ=10 < zBuffer=20 char='a'
+[19:56:34.562] [Z-BUFFER] REJECTED at (64,7): currentZ=10 < zBuffer=20 char='s'
+[19:56:34.563] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='k'
+[19:56:34.563] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-10 19:56:35.424] ServiceContainer: Resolving 'ProjectInfoScreenV4'...
+[2026-01-10 19:56:35.434] ServiceContainer: Resolved 'ProjectInfoScreenV4' successfully
+[2026-01-10 19:56:35.811] TabbedScreen.HandleKeyPress: Key=RightArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:35.819] TabbedScreen.OnTabChanged: tabIndex=1
+[2026-01-10 19:56:36.142] TabbedScreen.HandleKeyPress: Key=RightArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:36.143] TabbedScreen.OnTabChanged: tabIndex=2
+[2026-01-10 19:56:36.317] TabbedScreen.HandleKeyPress: Key=RightArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:36.319] TabbedScreen.OnTabChanged: tabIndex=3
+[2026-01-10 19:56:36.538] TabbedScreen.HandleKeyPress: Key=RightArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:36.539] TabbedScreen.OnTabChanged: tabIndex=4
+[2026-01-10 19:56:36.760] TabbedScreen.HandleKeyPress: Key=RightArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:36.762] TabbedScreen.OnTabChanged: tabIndex=5
+[2026-01-10 19:56:36.934] TabbedScreen.HandleKeyPress: Key=RightArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:36.935] TabbedScreen.OnTabChanged: tabIndex=6
+[2026-01-10 19:56:39.419] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:39.421] TabbedScreen.OnFieldSelected: field=_action_assign_note
+[2026-01-10 19:56:39.641] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:39.642] TabbedScreen.OnFieldSelected: field=_action_checklists
+[2026-01-10 19:56:39.761] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:39.762] TabbedScreen.OnFieldSelected: field=_action_assign_checklist
+[2026-01-10 19:56:39.979] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:39.981] TabbedScreen.OnFieldSelected: field=_separator1
+[2026-01-10 19:56:41.006] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:41.007] TabbedScreen.OnFieldSelected: field=T2020
+[2026-01-10 19:56:46.006] TabbedScreen.HandleKeyPress: Key=DownArrow Char=' ' ShowEditor=False
+[2026-01-10 19:56:46.008] TabbedScreen.OnFieldSelected: field=_action_t2020_browse
+[2026-01-10 19:56:46.434] TabbedScreen.HandleKeyPress: Key=Enter Char='' ShowEditor=False
+[2026-01-10 19:56:46.435] TabbedScreen.HandleKeyPress: Enter pressed (editor not showing), calling EditCurrentField
+[2026-01-10 19:56:46.435] TabbedScreen.EditCurrentField: ENTRY
+[2026-01-10 19:56:46.436] TabbedScreen.EditCurrentField: field='_action_t2020_browse' Type='readonly'
+[2026-01-10 19:56:46.436] TabbedScreen.EditCurrentField: IsAction=true, calling OnFieldEdited
+[2026-01-10 19:56:46.437] [INFO] ProjectInfoScreenV4._HandleFileAction: action=_action_t2020_browse ProjectName='proj1'
+[2026-01-10 19:56:46.438] [INFO] ProjectInfoScreenV4._BrowseForFile: fieldName=T2020 directoriesOnly=False
+[2026-01-10 19:56:46.450] [INFO] ProjectInfoScreenV4._BrowseForFile: FilePicker created, ShowFilePicker=True

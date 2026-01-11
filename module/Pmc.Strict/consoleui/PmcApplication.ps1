@@ -429,9 +429,13 @@ class PmcApplication {
                     }
                 }
                 catch {
-                    # Console input is redirected or unavailable - skip input processing
-                    # This happens when running in non-interactive mode (e.g., piped input, automated tests)
-                    # }
+                    # INPUT HANDLING ERROR - Log it properly!
+                    if ($global:PmcTuiLogFile) {
+                        Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [ERROR] HandleKeyPress exception: $_"
+                        Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [ERROR] Stack: $($_.ScriptStackTrace)"
+                    }
+                    # Re-throw so the error is visible
+                    throw
                 }
 
                 # Mark dirty if we processed input
