@@ -92,28 +92,6 @@ class TimeReportScreen : PmcScreen {
                 # Enhanced feedback to guide user on what to do next
                 $this.ShowStatus("No time entries found. Press 'T' to add time entries in Time Tracking screen.")
                 return
-            }
-
-            # TS-M7 FIX: Group by project ID if available, otherwise by name
-            # Create grouping key for each entry: use id1 if present, otherwise project name
-            $groupedData = @{}
-            foreach ($log in $timelogs) {
-                # Determine grouping key (prefer ID over name)
-                $groupKey = ''
-                $projectDisplay = ''
-                if ($log.ContainsKey('id1') -and $log.id1) {
-                    $groupKey = "ID:$($log.id1)"
-                    $projectDisplay = $(if ($log.ContainsKey('project') -and $log.project) { "$($log.project) [#$($log.id1)]" } else { "#$($log.id1)" })
-                }
-                else {
-                    $projectVal = $(if ($log.ContainsKey('project')) { $log.project } else { 'Unknown' })
-                    $groupKey = "NAME:$projectVal"
-                    $projectDisplay = $projectVal
-                }
-
-                # Initialize group if needed
-                if (-not $groupedData.ContainsKey($groupKey)) {
-                    $groupedData[$groupKey] = @{
                         DisplayName = $projectDisplay
                         Entries     = @()
                     }

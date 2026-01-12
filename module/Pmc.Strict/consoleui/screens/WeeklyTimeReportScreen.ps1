@@ -139,41 +139,6 @@ class WeeklyTimeReportScreen : PmcScreen {
                     $dateStr -eq $dayDate
                 }
                 $weekLogs += $dayLogs
-            }
-
-            # Group by project/id1
-            $this.ProjectSummaries = @{}
-            $this.GrandTotal = 0
-
-            foreach ($log in $weekLogs) {
-                # Determine grouping key
-                $key = ''
-                if ($log.ContainsKey('id1') -and $log.id1) {
-                    $key = "#$($log.id1)"
-                }
-                else {
-                    $name = $(if ($log.ContainsKey('project')) { $log.project } else { '' })
-                    if (-not $name) { $name = 'Unknown' }
-                    $key = $name
-                }
-
-                # Initialize project entry if needed
-                if (-not $this.ProjectSummaries.ContainsKey($key)) {
-                    $name = ''
-                    $id1 = ''
-                    if ($log.ContainsKey('id1') -and $log.id1) {
-                        $id1 = $log.id1
-                        $name = $(if ($log.ContainsKey('project')) { $log.project } else { '' })
-                        if (-not $name) { $name = '' }
-                    }
-                    else {
-                        $name = $(if ($log.ContainsKey('project')) { $log.project } else { '' })
-                        if (-not $name) { $name = 'Unknown' }
-                    }
-
-                    # TS-M4/TS-M5 FIX: Include Sat/Sun columns
-                    $this.ProjectSummaries[$key] = @{
-                        Name  = $name
                         ID1   = $id1
                         Mon   = 0.0
                         Tue   = 0.0
