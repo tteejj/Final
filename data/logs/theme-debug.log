@@ -2846,3 +2846,41 @@ Check the spelling of the name, or if a path was included, verify that the path 
 [17:56:29.738] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
 [17:56:29.742] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
 [17:56:29.751] [Load-Theme] Returning theme with Hex='#ff0022'
+[18:04:29.429] === THEME SELF-HEAL START ===
+[18:04:29.442] Config path: /home/teej/ztest/config.json
+[18:04:29.487] Config loaded. Active=tronares, Hex=#ff00ff, hasHex=True
+[18:04:29.491] Hex already present, no repair needed
+[18:04:29.651] [Load-Theme] themeName='tronares' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[18:04:29.661] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[18:04:29.666] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[18:04:29.701] [Load-Theme] Returning theme with Hex='#ff0022'
+[18:04:29.768] [Load-Theme] themeName='tronares' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[18:04:29.770] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[18:04:29.784] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[18:04:29.792] [Load-Theme] Returning theme with Hex='#ff0022'
+[18:11:43.685] === THEME SELF-HEAL START ===
+[18:11:43.698] Config path: /home/teej/ztest/config.json
+[18:11:43.744] Config loaded. Active=tronares, Hex=#ff00ff, hasHex=True
+[18:11:43.748] Hex already present, no repair needed
+[18:11:43.920] [Load-Theme] themeName='tronares' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[18:11:43.930] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[18:11:43.936] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[18:11:43.973] [Load-Theme] Returning theme with Hex='#ff0022'
+[18:11:44.043] [Load-Theme] themeName='tronares' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[18:11:44.057] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[18:11:44.062] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[18:11:44.071] [Load-Theme] Returning theme with Hex='#ff0022'
+[18:12:42.012] [Set-ActiveTheme] Starting for themeName='Cyberpunk'
+[18:12:42.013] [Set-ActiveTheme] Reading config from: /home/teej/ztest/config.json
+[18:12:42.023] [Set-ActiveTheme] Set Active='cyberpunk'
+[18:12:42.027] [Load-Theme] themeName='Cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[18:12:42.028] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[18:12:42.030] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[18:12:42.033] [Load-Theme] Returning theme with Hex='#00f3ff'
+[18:12:42.033] [Set-ActiveTheme] Set Hex='#00f3ff'
+[18:12:42.035] [Set-ActiveTheme] Writing config to: /home/teej/ztest/config.json
+[18:12:42.066] [Set-ActiveTheme] Config saved successfully
+[18:12:42.075] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[18:12:42.076] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[18:12:42.077] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[18:12:42.089] [Load-Theme] Returning theme with Hex='#00f3ff'
