@@ -565,13 +565,18 @@ class PmcScreen {
     #>
     [bool] HandleModalInput([ConsoleKeyInfo]$keyInfo) {
         if ($null -ne $this._activeModal) {
+            Write-PmcTuiLog "PmcScreen.HandleModalInput: _activeModal=$($this._activeModal.GetType().Name) HasHandleInput=$($this._activeModal.PSObject.Methods['HandleInput'] -ne $null)" "DEBUG"
             if ($this._activeModal.PSObject.Methods['HandleInput']) {
                 $handled = $this._activeModal.HandleInput($keyInfo)
                 
-                # Propagate NeedsClear if modal requested it
-                if ($this._activeModal.PSObject.Properties['NeedsClear'] -and $this._activeModal.NeedsClear) {
-                     $this.NeedsClear = $true
-                     $this._activeModal.NeedsClear = $false
+                # Propagate NeedsClear if modal requested it (check for null as modal might have closed)
+                try {
+                    if ($null -ne $this._activeModal -and $this._activeModal.PSObject.Properties['NeedsClear'] -and $this._activeModal.NeedsClear) {
+                         $this.NeedsClear = $true
+                         $this._activeModal.NeedsClear = $false
+                    }
+                } catch {
+                    # Ignore property access errors
                 }
                 
                 if ($handled) { return $true }

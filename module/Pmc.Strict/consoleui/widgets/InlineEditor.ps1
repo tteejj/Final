@@ -284,6 +284,8 @@ class InlineEditor : PmcWidget {
     #>
     [bool] HandleInput([ConsoleKeyInfo]$keyInfo) {
         # Write-PmcTuiLog "InlineEditor.HandleInput: Key=$($keyInfo.Key) Expanded=$($this._expandedFieldName)" "DEBUG"
+        Write-PmcTuiLog "InlineEditor.HandleInput: ENTRY - Key=$($keyInfo.Key)" "DEBUG"
+        Write-PmcTuiLog "InlineEditor.HandleInput: ENTRY Key=$($keyInfo.Key)" "INFO"
         # Add-Content -Path "$($env:TEMP)\pmc-widget-debug.log" -Value "$(Get-Date -Format 'HH:mm:ss.fff') [InlineEditor.HandleInput] START Key=$($keyInfo.Key) Expanded=$($this._expandedFieldName) ShowFieldWidgets=$($this._showFieldWidgets) CurrentFieldIndex=$($this._currentFieldIndex) FieldsCount=$($this._fields.Count) LayoutMode=$($this.LayoutMode)"
 
         # If a field widget is expanded, route input to it
@@ -414,6 +416,7 @@ class InlineEditor : PmcWidget {
 
         # Enter key behavior depends on current field
         if ($keyInfo.Key -eq 'Enter') {
+            Write-PmcTuiLog "InlineEditor.HandleInput: Enter key at line 416, _currentFieldIndex=$($this._currentFieldIndex)" "DEBUG"
             # Write-PmcTuiLog "InlineEditor.HandleKeyPress: Enter key pressed - currentFieldIndex=$($this._currentFieldIndex)" "DEBUG"
             # Check current field type
             if ($this._currentFieldIndex -ge 0 -and $this._currentFieldIndex -lt $this._fields.Count) {
@@ -449,6 +452,7 @@ class InlineEditor : PmcWidget {
                     $this.IsConfirmed = $true
                     $values = $this.GetValues()
                     $this._InvokeCallback($this.OnConfirmed, $values)
+                    Write-PmcTuiLog "InlineEditor.HandleInput: Validation passed, calling OnConfirmed" "INFO"
                     return $true
                 }
                 else {
@@ -571,6 +575,7 @@ class InlineEditor : PmcWidget {
 
                     # CRITICAL FIX: If TextInput confirmed (Enter pressed), validate and confirm ENTIRE form
                     if ($widget.PSObject.Properties['IsConfirmed'] -and $widget.IsConfirmed) {
+                        Write-PmcTuiLog "InlineEditor.HandleInput: TextInput.IsConfirmed=true at line 574, setting InlineEditor.IsConfirmed=true" "DEBUG"
                         if ($this._ValidateAllFields()) {
                             $this.IsConfirmed = $true
                             $values = $this.GetValues()

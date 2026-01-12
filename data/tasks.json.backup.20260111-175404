@@ -220,30 +220,6 @@
       "id": "c4b46c2b-e7c5-4e92-86d0-b61cf6ce4fa4",
       "project": "",
       "date": "2026-01-09T00:00:00"
-    },
-    {
-      "task": "",
-      "created": "2026-01-11T17:55:11.388043-07:00",
-      "id2": "1234561",
-      "project": "proj1",
-      "date": "2026-01-11T00:00:00",
-      "id1": "1111112",
-      "notes": "",
-      "id": "64769e2e-515c-43e8-9b92-ef10568d0b06",
-      "minutes": 30,
-      "timestamp": "2026-01-11T17:55:11.4153592-07:00"
-    },
-    {
-      "task": "",
-      "created": "2026-01-11T17:55:11.4516099-07:00",
-      "id2": "1234561",
-      "project": "proj1",
-      "date": "2026-01-11T00:00:00",
-      "id1": "1111112",
-      "notes": "",
-      "id": "9a2897f8-05e1-4678-baa0-3f388be9d244",
-      "minutes": 30,
-      "timestamp": "2026-01-11T17:55:11.4532232-07:00"
     }
   ],
   "settings": {},
@@ -266,13 +242,12 @@
       "tags": [],
       "created": "2026-01-03T13:53:06.8552706-07:00",
       "completed": false,
-      "modified": "2026-01-11T17:54:51.7226671-07:00",
+      "modified": "2026-01-03T13:53:06.879232-07:00",
       "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3",
       "priority": 3,
       "text": "t3",
       "project": "",
       "details": "",
-      "description": "notes \n",
       "status": "todo"
     },
     {
@@ -301,17 +276,27 @@
       "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca"
     },
     {
-      "text": "t1",
+      "tags": [],
+      "created": "2026-01-09T12:23:56.5681512-07:00",
+      "completed": false,
+      "modified": "2026-01-09T12:23:56.5681512-07:00",
+      "id": "66247b3d-e967-407d-a556-750215481ff5",
+      "text": "t22",
+      "project": "",
+      "details": "",
+      "due": null,
+      "status": "pending"
+    },
+    {
+      "text": "t11",
       "completed": false,
       "due": "2026-01-18T00:00:00",
       "details": "",
-      "modified": "2026-01-11T17:54:04.466792-07:00",
+      "modified": "2026-01-11T17:53:38.1643562-07:00",
       "id": "671badfe-dcbb-4554-8df4-7753239cea88",
       "status": "pending",
       "project": "ptoj 2",
-      "tags": [
-        "tag1"
-      ],
+      "tags": [],
       "created": "2026-01-11T17:53:38.1643562-07:00"
     }
   ]

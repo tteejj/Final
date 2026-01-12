@@ -1,4 +1,4 @@
-﻿# PmcLayoutManager - Named regions and constraint-based layout system
+# PmcLayoutManager - Named regions and constraint-based layout system
 # Eliminates magic numbers and provides standard layouts for PMC screens
 
 using namespace System.Collections.Generic

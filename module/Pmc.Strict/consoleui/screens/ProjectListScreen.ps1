@@ -713,15 +713,34 @@ class ProjectListScreen : StandardListScreen {
         }
 
         try {
-            $p = New-Object System.Diagnostics.ProcessStartInfo
-            $p.FileName = $fullPath
-            $p.UseShellExecute = $true
-            [System.Diagnostics.Process]::Start($p) | Out-Null
+            $isWin = [System.Environment]::OSVersion.Platform -eq 'Win32NT'
+            if ($isWin) {
+                $p = New-Object System.Diagnostics.ProcessStartInfo
+                $p.FileName = $fullPath
+                $p.UseShellExecute = $true
+                $proc = [System.Diagnostics.Process]::Start($p)
+                if ($null -ne $proc) { $proc.Dispose() }
+            } else {
+                # Linux: Use xdg-open with stderr redirected to /dev/null
+                $p = New-Object System.Diagnostics.ProcessStartInfo
+                $p.FileName = "/bin/bash"
+                $p.Arguments = "-c `"xdg-open '$fullPath' 2>/dev/null &`""
+                $p.UseShellExecute = $false
+                $p.CreateNoWindow = $true
+                $p.RedirectStandardOutput = $true
+                $p.RedirectStandardError = $true
+                $proc = [System.Diagnostics.Process]::Start($p)
+                if ($null -ne $proc) { $proc.Dispose() }
+            }
             $fileName = Split-Path $fullPath -Leaf
             $this.SetStatusMessage("Opened: $fileName", "success")
         }
         catch {
-            $this.SetStatusMessage("Failed to open file: $($_.Exception.Message)", "error")
+            # Log to file, NOT to console
+            if ($global:PmcTuiLogFile) {
+                Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [ERROR] _OpenFile failed: $($_.Exception.Message)"
+            }
+            $this.SetStatusMessage("Failed to open file", "error")
         }
     }
 

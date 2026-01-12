@@ -444,7 +444,7 @@ class ProjectInfoScreenV4 : TabbedScreen {
                     Start-Process notepad.exe -ArgumentList $path
                 }
                 else {
-                    Start-Process xdg-open -ArgumentList $path
+                    Start-Process -FilePath "/bin/bash" -ArgumentList "-c", "xdg-open '$path' 2>/dev/null &" -NoNewWindow
                 }
             }
             elseif ($app -eq 'excel') {
@@ -464,7 +464,7 @@ class ProjectInfoScreenV4 : TabbedScreen {
                         Start-Process libreoffice -ArgumentList "--calc", $path
                     }
                     else {
-                        Start-Process xdg-open -ArgumentList $path
+                        Start-Process -FilePath "/bin/bash" -ArgumentList "-c", "xdg-open '$path' 2>/dev/null &" -NoNewWindow
                     }
                 }
             }
@@ -506,7 +506,7 @@ class ProjectInfoScreenV4 : TabbedScreen {
                 Start-Process explorer.exe -ArgumentList $path
             }
             else {
-                Start-Process xdg-open -ArgumentList $path
+                Start-Process -FilePath "/bin/bash" -ArgumentList "-c", "xdg-open '$path' 2>/dev/null &" -NoNewWindow
             }
 
             if ($this.StatusBar) {

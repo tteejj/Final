@@ -1,15 +1,89 @@
 {
   "schema_version": 1,
-  "commands": {
-    "tags": [],
-    "last_used": null,
-    "category": "Test",
-    "name": "TestCmd",
-    "id": "80b8479e-9b3c-48e0-aad2-0681ba8a843c",
-    "created": "2026-01-02T14:42:12.6541669-07:00",
-    "command_text": "echo test",
-    "usage_count": 0,
-    "modified": "2026-01-02T14:42:12.6541757-07:00",
-    "description": ""
-  }
+  "commands": [
+    {
+      "modified": "2026-01-10T21:56:38.0000000",
+      "category": "General",
+      "command_text": "c0",
+      "id": "4cc0736f-e61b-4ca0-9c57-1ba9a7529fb0",
+      "usage_count": 2,
+      "created": "2026-01-10T21:56:38.0000000",
+      "name": "c0",
+      "last_used": "2026-01-11T00:18:15.1021450-07:00",
+      "description": "",
+      "tags": null
+    },
+    {
+      "modified": "2026-01-10T21:23:00.0000000",
+      "category": "General",
+      "command_text": "c8",
+      "id": "923fcf0e-4002-4b04-9af2-5dcf1be8b60f",
+      "usage_count": 1,
+      "created": "2026-01-10T21:23:00.0000000",
+      "name": "c8",
+      "last_used": "2026-01-10T21:49:37.0000000",
+      "description": "",
+      "tags": null
+    },
+    {
+      "modified": "2026-01-10T20:49:29.0000000",
+      "category": "General",
+      "command_text": "c5",
+      "id": "2614dcc6-d524-44ea-8ba8-401384d9f870",
+      "usage_count": 0,
+      "created": "2026-01-10T20:49:29.0000000",
+      "name": "c5",
+      "last_used": null,
+      "description": "",
+      "tags": null
+    },
+    {
+      "modified": "2026-01-10T21:15:27.0000000",
+      "category": "General",
+      "command_text": "c7",
+      "id": "11f66a91-d832-4199-b22e-7f81acf6bc95",
+      "usage_count": 1,
+      "created": "2026-01-10T21:15:27.0000000",
+      "name": "c7",
+      "last_used": "2026-01-10T21:22:36.0000000",
+      "description": "",
+      "tags": null
+    },
+    {
+      "modified": "2026-01-10T20:37:42.0000000",
+      "category": "General",
+      "command_text": "test3",
+      "id": "5e1ae8f5-44c7-438c-b634-a5b9b725e7ca",
+      "usage_count": 0,
+      "created": "2026-01-10T20:37:42.0000000",
+      "name": "c3",
+      "last_used": null,
+      "description": "",
+      "tags": null
+    },
+    {
+      "modified": "2026-01-10T20:19:10.0000000",
+      "category": "General",
+      "command_text": "test",
+      "id": "8bcf859f-34c0-4437-ae83-8e1d4e2a0454",
+      "usage_count": 0,
+      "created": "2026-01-10T20:19:10.0000000",
+      "name": "c1",
+      "last_used": null,
+      "description": "",
+      "tags": null
+    },
+    {
+      "modified": "2026-01-10T20:30:49.0000000",
+      "category": "General",
+      "command_text": "test2",
+      "id": "7c562e3d-5f73-418f-82d3-281e197be5de",
+      "usage_count": 0,
+      "created": "2026-01-10T20:30:49.0000000",
+      "name": "c2",
+      "last_used": null,
+      "description": "",
+      "tags": null
+    }
+  ]
 }

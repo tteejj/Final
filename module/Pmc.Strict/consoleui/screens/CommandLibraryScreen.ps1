@@ -268,16 +268,11 @@ class CommandLibraryScreen : StandardListScreen {
                 $this.LoadData()
                 Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: LoadData completed, list now has $($this.List.Items.Count) items" "DEBUG"
                 
-                # Force immediate screen re-render
-                if ($this.RenderEngine) {
-                    Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: Starting render cycle..." "DEBUG"
-                    $this.RenderEngine.BeginFrame()
-                    $this.RenderToEngine($this.RenderEngine)
-                    $this.RenderEngine.EndFrame()
-                    Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: Render cycle completed" "DEBUG"
-                } else {
-                    Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: No RenderEngine available!" "WARNING"
-                }
+                # NOTE: Do NOT force immediate screen re-render here.
+                # StandardListScreen.DeleteItem handles InvalidateCache and RequestRender.
+                # Double rendering causes visual corruption.
+                
+                $this.SetStatusMessage("Command '$itemName' deleted", "success")
                 
                 $this.SetStatusMessage("Command '$itemName' deleted", "success")
                 Write-PmcTuiLog "CommandLibraryScreen.OnItemDeleted: Delete complete" "DEBUG"
@@ -293,21 +288,9 @@ class CommandLibraryScreen : StandardListScreen {
 
     # Virtual method called when inline editor is confirmed
     [void] OnInlineEditConfirmed([hashtable]$values) {
-        if ($null -eq $values) {
-            return
-        }
-
-        # Determine if we're adding a new command or editing existing one
-        $isAddMode = ($this.EditorMode -eq 'add')
-
-        if ($isAddMode) {
-            $this.OnItemCreated($values)
-        }
-        else {
-            if ($this.CurrentEditItem) {
-                $this.OnItemUpdated($this.CurrentEditItem, $values)
-            }
-        }
+        # CRITICAL FIX: Call base class implementation which handles editor cleanup
+        # (sets ShowInlineEditor=false, clears _activeModal, calls LoadData, etc.)
+        ([StandardListScreen]$this).OnInlineEditConfirmed($values)
     }
 
     # Virtual method called when inline editor is cancelled

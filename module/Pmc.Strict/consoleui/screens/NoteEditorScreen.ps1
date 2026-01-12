@@ -112,7 +112,9 @@ class NoteEditorScreen : PmcScreen {
         $this.Header.Width = $headerRect.Width
         $this.Header.Height = $headerRect.Height
         $this.Header.SetBreadcrumb(@("Notes", $this._note.title))
-        Write-PmcTuiLog "NoteEditorScreen.Initialize: Header via LayoutManager - X=$($headerRect.X) Y=$($headerRect.Y) W=$($headerRect.Width) H=$($headerRect.Height)" "DEBUG"
+        $this.Header.ShowSeparator = $false
+        $this.Header.Height = 0
+        Write-PmcTuiLog "NoteEditorScreen.Initialize: Header disabled - H=0, ShowSeparator=false" "DEBUG"
 
         # Use layout manager for Footer positioning
         $footerRect = $this.LayoutManager.GetRegion('Footer', $this.TermWidth, $this.TermHeight)

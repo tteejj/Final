@@ -1,0 +1,142 @@
+[2026-01-10 20:17:52.417] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-10 20:17:52.422] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-10 20:17:52.424] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-10 20:17:52.425] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-10 20:17:52.426] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-10 20:17:52.427] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-10 20:17:52.429] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-10 20:17:52.430] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-10 20:17:52.432] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-10 20:17:52.433] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-10 20:17:52.434] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-10 20:17:52.436] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-10 20:17:52.437] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-10 20:17:52.439] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-10 20:17:52.440] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-10 20:17:52.465] ServiceContainer: Resolving 'Application'...
+[2026-01-10 20:17:52.468] ServiceContainer: Resolving 'Theme'...
+[2026-01-10 20:17:52.779] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-10 20:17:52.917] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-10 20:17:52.920] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-10 20:17:52.941] ServiceContainer: Resolved 'Application' successfully
+[2026-01-10 20:17:52.943] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-10 20:17:52.964] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-10 20:17:52.996] MenuRegistry: Loaded manifest with 17 entries
+[2026-01-10 20:17:53.038] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-10 20:17:53.039] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-10 20:17:53.077] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-10 20:17:53.081] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-10 20:17:53.082] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-10 20:17:53.085] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-10 20:17:53.087] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-10 20:17:53.088] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-10 20:17:53.090] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-10 20:17:53.092] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-10 20:17:53.093] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-10 20:17:53.095] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-10 20:17:53.100] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-10 20:17:53.102] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-10 20:17:53.105] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-10 20:17:53.108] ServiceContainer: Registered 'CalendarScreen' (singleton=False)
+[2026-01-10 20:17:53.109] MenuRegistry: Registered 'Calendar' in 'Tools' menu (hotkey=A order=50)
+[2026-01-10 20:17:53.111] MenuRegistry: Registered 'Calendar' in 'Tools' menu (hotkey=A order=50)
+[2026-01-10 20:17:53.114] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-10 20:17:53.116] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-10 20:17:53.118] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-10 20:17:53.121] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-10 20:17:53.122] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-10 20:17:53.124] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-10 20:17:53.126] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-10 20:17:53.127] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-10 20:17:53.130] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-10 20:17:53.132] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-10 20:17:53.133] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-10 20:17:53.135] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-10 20:17:53.137] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-10 20:17:53.138] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-10 20:17:53.140] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-10 20:17:53.142] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-10 20:17:53.143] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-10 20:17:53.144] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-10 20:17:53.146] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-10 20:17:53.147] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-10 20:17:53.150] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-10 20:17:53.152] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-10 20:17:53.183] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-10 20:17:53.186] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-10 20:17:53.188] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-10 20:17:53.189] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-10 20:17:53.191] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-10 20:17:53.193] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-10 20:17:53.194] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-10 20:17:53.197] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-10 20:17:53.201] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-10 20:17:53.203] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-10 20:17:53.206] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-10 20:18:54.848] ServiceContainer: Resolving 'CommandLibraryScreen'...
+[2026-01-10 20:18:55.295] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Command Library
+[2026-01-10 20:18:55.319] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-10 20:18:55.326] [INFO] StandardListScreen._ConfigureListActions: Configured 5 footer shortcuts
+[2026-01-10 20:18:55.394] ServiceContainer: Resolved 'CommandLibraryScreen' successfully
+[2026-01-10 20:18:55.586] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Command Library
+[2026-01-10 20:18:55.588] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-10 20:18:55.590] [INFO] StandardListScreen._ConfigureListActions: Configured 5 footer shortcuts
+[20:18:55.948] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[20:18:55.950] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[20:18:55.951] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[20:18:55.952] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[2026-01-10 20:18:58.636] [INFO] *** STANDARDLISTSCREEN.ADDITEM CALLED on type=CommandLibraryScreen key=CommandLibrary ***
+[2026-01-10 20:18:58.828] [INFO] StandardListScreen.AddItem: ActiveModal set to InlineEditor. ShowInlineEditor=True
+[20:18:59.061] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[20:18:59.062] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[20:18:59.064] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[20:18:59.066] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[2026-01-10 20:18:59.074] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[20:19:00.595] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[20:19:00.596] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[20:19:00.597] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[20:19:00.598] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[2026-01-10 20:19:00.603] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[20:19:01.264] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[20:19:01.265] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[20:19:01.266] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[20:19:01.267] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[2026-01-10 20:19:01.273] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[20:19:02.975] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[20:19:02.977] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[20:19:02.979] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[20:19:02.980] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[2026-01-10 20:19:02.985] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[20:19:06.668] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[20:19:06.670] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[20:19:06.670] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[20:19:06.671] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[2026-01-10 20:19:06.675] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[20:19:08.636] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[20:19:08.637] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[20:19:08.641] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[20:19:08.642] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[2026-01-10 20:19:08.645] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[20:19:08.845] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[20:19:08.846] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[20:19:08.847] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[20:19:08.847] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[2026-01-10 20:19:08.850] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[20:19:09.103] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[20:19:09.104] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[20:19:09.105] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[20:19:09.106] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[2026-01-10 20:19:09.113] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[20:19:09.360] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[20:19:09.361] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[20:19:09.362] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[20:19:09.362] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[2026-01-10 20:19:09.366] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9
+[2026-01-10 20:19:10.555] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-10 20:19:10.566] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[20:19:10.582] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[20:19:10.583] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[20:19:10.584] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[20:19:10.584] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[2026-01-10 20:19:10.585] [INFO] UniversalList.RenderToEngine: SKIPPING row 0 (editor active, filling with blank)
+[2026-01-10 20:19:10.587] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=9

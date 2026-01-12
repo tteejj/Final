@@ -887,6 +887,9 @@ class StandardListScreen : PmcScreen {
                 $this.List.InvalidateCache()
             }
             
+            # CRITICAL FIX: Reload list data to remove the deleted item
+            $this.LoadData()
+            
             # Request render from Application to update display
             if ($global:PmcApp -and $global:PmcApp.PSObject.Methods['RequestRender']) {
                 $global:PmcApp.RequestRender()
@@ -913,11 +916,13 @@ class StandardListScreen : PmcScreen {
 
         try {
             # CRITICAL FIX: Disable editor flags FIRST (before calling save methods)
+        Write-PmcTuiLog "StandardListScreen._SaveEditedItem: ENTRY Mode=$($this.EditorMode)" "INFO"
             # When we call OnItemCreated/OnItemUpdated, TaskStore fires OnTasksChanged event
             # which triggers RefreshList() -> LoadData() -> rendering
             # If _showInlineEditor is still true during that render, the row gets SKIPPED
             # causing visual corruption!
             $this.ShowInlineEditor = $false
+        Write-PmcTuiLog "StandardListScreen._SaveEditedItem: Setting ShowInlineEditor=false" "INFO"
             $this._activeModal = $null
             if ($this.List) {
                 $this.List._showInlineEditor = $false
@@ -963,6 +968,9 @@ class StandardListScreen : PmcScreen {
             
             # Force full re-render
             $this.NeedsClear = $true
+            
+            # CRITICAL FIX: Reload list data to show the saved item
+            $this.LoadData()
             
             # CRITICAL FIX: Request render from Application to set IsDirty flag
             # The event loop (PmcApplication.Run) only renders when IsDirty = true
@@ -1112,7 +1120,28 @@ class StandardListScreen : PmcScreen {
         try {
             # PHASE B: Active modal gets priority
             if ($this.HandleModalInput($keyInfo)) {
-                # Write-PmcTuiLog "StandardListScreen.HandleKeyPress: Handled by Modal ($($this._activeModal.GetType().Name))" "DEBUG"
+            Write-PmcTuiLog "StandardListScreen.HandleKeyPress: BEFORE HandleModalInput - _activeModal=$($this._activeModal.GetType().Name) ShowInlineEditor=$($this.ShowInlineEditor)" "DEBUG"
+                # Check if InlineEditor completed (confirmed or cancelled)
+                if ($this.ShowInlineEditor -and $null -ne $this.InlineEditor) {
+                    Write-PmcTuiLog "StandardListScreen.HandleKeyPress: AFTER HandleModalInput=true - ShowInlineEditor=$($this.ShowInlineEditor) InlineEditor.IsConfirmed=$($this.InlineEditor.IsConfirmed) InlineEditor.IsCancelled=$($this.InlineEditor.IsCancelled)" "DEBUG"
+                    if ($this.InlineEditor.IsConfirmed) {
+                        Write-PmcTuiLog "StandardListScreen.HandleKeyPress: InlineEditor.IsConfirmed=true, calling OnInlineEditConfirmed" "INFO"
+                        $values = $this.InlineEditor.GetValues()
+                        $this.OnInlineEditConfirmed($values)
+                        # Reset editor state
+                        $this.InlineEditor.IsConfirmed = $false
+                        $this.InlineEditor.IsCancelled = $false
+                        $this.ShowInlineEditor = $false
+                        $this._activeModal = $null
+                    }
+                    elseif ($this.InlineEditor.IsCancelled) {
+                        Write-PmcTuiLog "StandardListScreen.HandleKeyPress: InlineEditor.IsCancelled=true, calling OnInlineEditCancelled" "INFO"
+                        $this.OnInlineEditCancelled()
+                        # Reset editor state
+                        $this.InlineEditor.IsConfirmed = $false
+                        $this.InlineEditor.IsCancelled = $false
+                    }
+                }
                 return $true
             }
 
