@@ -1,0 +1,363 @@
+[2026-01-13 05:00:10.655] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-13 05:00:10.659] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-13 05:00:10.661] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-13 05:00:10.663] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-13 05:00:10.664] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-13 05:00:10.665] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-13 05:00:10.666] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-13 05:00:10.667] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-13 05:00:10.668] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-13 05:00:10.669] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-13 05:00:10.670] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-13 05:00:10.671] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-13 05:00:10.672] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-13 05:00:10.673] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-13 05:00:10.674] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-13 05:00:10.694] ServiceContainer: Resolving 'Application'...
+[2026-01-13 05:00:10.705] ServiceContainer: Resolving 'Theme'...
+[2026-01-13 05:00:10.963] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-13 05:00:11.069] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-13 05:00:11.072] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-13 05:00:11.088] ServiceContainer: Resolved 'Application' successfully
+[2026-01-13 05:00:11.090] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-13 05:00:11.106] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-13 05:00:11.129] MenuRegistry: Loaded manifest with 17 entries
+[2026-01-13 05:00:11.173] ServiceContainer: Registered 'CalendarScreen' (singleton=False)
+[2026-01-13 05:00:11.175] MenuRegistry: Registered 'Calendar' in 'Tools' menu (hotkey=A order=50)
+[2026-01-13 05:00:11.195] MenuRegistry: Registered 'Calendar' in 'Tools' menu (hotkey=A order=50)
+[2026-01-13 05:00:11.197] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-13 05:00:11.198] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-13 05:00:11.201] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-13 05:00:11.203] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-13 05:00:11.204] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-13 05:00:11.205] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-13 05:00:11.207] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-13 05:00:11.208] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-13 05:00:11.210] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-13 05:00:11.211] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-13 05:00:11.213] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-13 05:00:11.214] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-13 05:00:11.216] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-13 05:00:11.217] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-13 05:00:11.218] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-13 05:00:11.220] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-13 05:00:11.221] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-13 05:00:11.223] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-13 05:00:11.224] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-13 05:00:11.225] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-13 05:00:11.227] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-13 05:00:11.229] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-13 05:00:11.230] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-13 05:00:11.231] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-13 05:00:11.233] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-13 05:00:11.234] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-13 05:00:11.236] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-13 05:00:11.237] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-13 05:00:11.238] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-13 05:00:11.240] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-13 05:00:11.242] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-13 05:00:11.243] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-13 05:00:11.244] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-13 05:00:11.246] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-13 05:00:11.247] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-13 05:00:11.277] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-13 05:00:11.279] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-13 05:00:11.280] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-13 05:00:11.281] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-13 05:00:11.283] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-13 05:00:11.284] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-13 05:00:11.286] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-13 05:00:11.287] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-13 05:00:11.288] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-13 05:00:11.290] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-13 05:00:11.292] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-13 05:00:11.293] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-13 05:00:11.296] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-13 05:00:20.895] ServiceContainer: Resolving 'WeeklyTimeReportScreen'...
+[2026-01-13 05:00:20.916] [ERROR] ServiceContainer: Failed to resolve 'WeeklyTimeReportScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:152 char:18
++                 }
++                  ~
+The Try statement is missing its Catch or Finally block.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:199 char:26
++             if ($weekLogs.Count -eq 0) {
++                          ~
+Missing ')' in function parameter list.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:212 char:5
++     }
++     ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:214 char:12
++     [void] RenderContentToEngine([object]$engine) {
++            ~~~~~~~~~~~~~~~~~~~~~
+Unexpected token 'RenderContentToEngine' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:225 char:14
++     [string] RenderContent() { return "" }
++              ~~~~~~~~~~~~~
+Unexpected token 'RenderContent' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:225 char:28
++     [string] RenderContent() { return "" }
++                            ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:341 char:12
++     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
++            ~~~~~~~~~~~~~~
+Unexpected token 'HandleKeyPress' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:384 char:1
++ }
++ ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:156 char:26
++                 if (-not $log.ContainsKey('date')) {
++                          ~~~~
+Variable is not assigned in the method.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:162 char:38
++                     $logDate = $(if ($log.date -is [DateTime]) {
++                                      ~~~~
+Variable is not assigned in the method.
+
+Not all parse errors were reported.  Correct the reported errors and try again.
+[2026-01-13 05:00:20.924] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 2
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 510
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 596
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/StartScreen.ps1: line 355
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 632
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-13 05:00:20.927] [ERROR] MenuRegistry: Error launching 'WeeklyTimeReportScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:152 char:18
++                 }
++                  ~
+The Try statement is missing its Catch or Finally block.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:199 char:26
++             if ($weekLogs.Count -eq 0) {
++                          ~
+Missing ')' in function parameter list.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:212 char:5
++     }
++     ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:214 char:12
++     [void] RenderContentToEngine([object]$engine) {
++            ~~~~~~~~~~~~~~~~~~~~~
+Unexpected token 'RenderContentToEngine' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:225 char:14
++     [string] RenderContent() { return "" }
++              ~~~~~~~~~~~~~
+Unexpected token 'RenderContent' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:225 char:28
++     [string] RenderContent() { return "" }
++                            ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:341 char:12
++     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
++            ~~~~~~~~~~~~~~
+Unexpected token 'HandleKeyPress' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:384 char:1
++ }
++ ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:156 char:26
++                 if (-not $log.ContainsKey('date')) {
++                          ~~~~
+Variable is not assigned in the method.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:162 char:38
++                     $logDate = $(if ($log.date -is [DateTime]) {
++                                      ~~~~
+Variable is not assigned in the method.
+
+Not all parse errors were reported.  Correct the reported errors and try again.
+[2026-01-13 05:00:20.928] Stack trace: 
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 2
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 510
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 596
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/StartScreen.ps1: line 355
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 632
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-13 05:00:24.610] ServiceContainer: Resolving 'TimeListScreen'...
+[2026-01-13 05:00:24.626] [ERROR] ServiceContainer: Failed to resolve 'TimeListScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:244 char:12
++     [void] OnInlineEditConfirmed([hashtable]$values) {
++            ~~~~~~~~~~~~~~~~~~~~~
+Unexpected token 'OnInlineEditConfirmed' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:273 char:12
++     [void] OnInlineEditCancelled() {
++            ~~~~~~~~~~~~~~~~~~~~~
+Unexpected token 'OnInlineEditCancelled' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:273 char:34
++     [void] OnInlineEditCancelled() {
++                                  ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:280 char:13
++     [array] GetCustomActions() {
++             ~~~~~~~~~~~~~~~~
+Unexpected token 'GetCustomActions' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:280 char:30
++     [array] GetCustomActions() {
++                              ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:298 char:12
++     [void] ShowDetailDialog([hashtable]$item) {
++            ~~~~~~~~~~~~~~~~
+Unexpected token 'ShowDetailDialog' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:375 char:12
++     [void] GenerateReport() {
++            ~~~~~~~~~~~~~~
+Unexpected token 'GenerateReport' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:375 char:27
++     [void] GenerateReport() {
++                           ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:384 char:12
++     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
++            ~~~~~~~~~~~~~~
+Unexpected token 'HandleKeyPress' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:235 char:78
++ …    if ($entry.ContainsKey('minutes') -and $null -ne $entry.minutes) {
++                                                                       ~
+Missing closing '}' in statement block or type definition.
+
+Not all parse errors were reported.  Correct the reported errors and try again.
+[2026-01-13 05:00:24.627] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 2
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 510
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 596
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/StartScreen.ps1: line 355
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 632
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-13 05:00:24.629] [ERROR] MenuRegistry: Error launching 'TimeListScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:244 char:12
++     [void] OnInlineEditConfirmed([hashtable]$values) {
++            ~~~~~~~~~~~~~~~~~~~~~
+Unexpected token 'OnInlineEditConfirmed' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:273 char:12
++     [void] OnInlineEditCancelled() {
++            ~~~~~~~~~~~~~~~~~~~~~
+Unexpected token 'OnInlineEditCancelled' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:273 char:34
++     [void] OnInlineEditCancelled() {
++                                  ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:280 char:13
++     [array] GetCustomActions() {
++             ~~~~~~~~~~~~~~~~
+Unexpected token 'GetCustomActions' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:280 char:30
++     [array] GetCustomActions() {
++                              ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:298 char:12
++     [void] ShowDetailDialog([hashtable]$item) {
++            ~~~~~~~~~~~~~~~~
+Unexpected token 'ShowDetailDialog' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:375 char:12
++     [void] GenerateReport() {
++            ~~~~~~~~~~~~~~
+Unexpected token 'GenerateReport' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:375 char:27
++     [void] GenerateReport() {
++                           ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:384 char:12
++     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
++            ~~~~~~~~~~~~~~
+Unexpected token 'HandleKeyPress' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1:235 char:78
++ …    if ($entry.ContainsKey('minutes') -and $null -ne $entry.minutes) {
++                                                                       ~
+Missing closing '}' in statement block or type definition.
+
+Not all parse errors were reported.  Correct the reported errors and try again.
+[2026-01-13 05:00:24.629] Stack trace: 
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 2
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 510
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 596
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/StartScreen.ps1: line 355
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 632
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-13 05:00:28.892] ServiceContainer: Resolving 'CommandLibraryScreen'...
+[2026-01-13 05:00:29.182] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Command Library
+[2026-01-13 05:00:29.195] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-13 05:00:29.200] [INFO] StandardListScreen._ConfigureListActions: Configured 5 footer shortcuts
+[2026-01-13 05:00:29.256] ServiceContainer: Resolved 'CommandLibraryScreen' successfully
+[2026-01-13 05:00:29.383] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Command Library
+[2026-01-13 05:00:29.385] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-13 05:00:29.386] [INFO] StandardListScreen._ConfigureListActions: Configured 5 footer shortcuts
+[05:00:29.715] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[05:00:29.716] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[05:00:29.724] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[05:00:29.724] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[05:00:35.742] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[05:00:35.743] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[05:00:35.747] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[05:00:35.748] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[05:00:36.345] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[05:00:36.346] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[05:00:36.346] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[05:00:36.347] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[05:00:39.766] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[05:00:39.767] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[05:00:39.768] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[05:00:39.768] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[05:00:40.864] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[05:00:40.865] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[05:00:40.868] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[05:00:40.869] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[05:00:41.509] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[05:00:41.510] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[05:00:41.511] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[05:00:41.511] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[05:00:41.746] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[05:00:41.747] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[05:00:41.747] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[05:00:41.748] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[05:00:42.298] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='N'
+[05:00:42.299] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[05:00:42.300] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='m'
+[05:00:42.300] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'

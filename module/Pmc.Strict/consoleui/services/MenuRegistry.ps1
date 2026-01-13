@@ -249,33 +249,6 @@ class MenuRegistry {
                         }
                     }.GetNewClosure(), $false)  # Non-singleton: create new instance each time
 
-                    Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] MenuRegistry: Registered '$label' in '$menu' menu (hotkey=$hotkey order=$order)"
-                }
-
-                # Build scriptblock that uses container to resolve screen
-                $scriptblock = [scriptblock]::Create(@"
-try {
-    `$screen = `$global:PmcContainer.Resolve('$screenName')
-    if (`$screen) {
-        `$global:PmcApp.PushScreen(`$screen)
-    } else {
-        if (`$global:PmcTuiLogFile) {
-            Add-Content -Path `$global:PmcTuiLogFile -Value "[`$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [ERROR] MenuRegistry: Failed to resolve screen '$screenName'"
-        }
-    }
-} catch {
-    if (`$global:PmcTuiLogFile) {
-        Add-Content -Path `$global:PmcTuiLogFile -Value "[`$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] [ERROR] MenuRegistry: Error launching '$screenName': `$_"
-        Add-Content -Path `$global:PmcTuiLogFile -Value "[`$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] Stack trace: `n`$(`$_.ScriptStackTrace)"
-    }
-    # Show error to user
-    if (`$global:PmcApp -and `$global:PmcApp.CurrentScreen) {
-        `$global:PmcApp.CurrentScreen.ShowError("Error launching '$label': `$_")
-    }
-}
-"@)
-
-                # Register the menu item
                 $this.AddMenuItem($menu, $label, $hotkey, $scriptblock, $order)
 
                 if ($global:PmcTuiLogFile) {

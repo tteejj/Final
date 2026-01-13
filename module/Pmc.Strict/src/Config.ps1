@@ -8,30 +8,6 @@ function Set-PmcConfigProvider {
     )
     Set-PmcConfigProviders -Get $Get -Set $Set
 }
-
-function Get-PmcConfig {
-    $providers = Get-PmcConfigProviders
-    try {
-        $cfg = & $providers.Get
-        # If provider returns empty config, try reading from default file
-        if (-not $cfg -or ($cfg.GetType().Name -eq 'Hashtable' -and $cfg.Count -eq 0)) {
-            try {
-                $root = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
-                $path = Join-Path $root 'config.json'
-                if (Test-Path $path) {
-                    $json = Get-Content -Path $path -Raw -Encoding UTF8
-                    $cfg = $json | ConvertFrom-Json
-                    $cfg = ConvertPSObjectToHashtable $cfg
-                    return $cfg
-                }
-            } catch { }
-        }
-        return $cfg
-    } catch {
-        return @{}
-    }
-}
-
 function ConvertPSObjectToHashtable {
     param($obj)
     if ($null -eq $obj) { return $null }
@@ -54,19 +30,6 @@ function Save-PmcConfig {
     
     # Debug log path
     # Use absolute path for log - try global root first, fallback to hardcoded path
-    $debugLog = $null
-    if ($global:PmcAppRoot) {
-        $debugLog = Join-Path $global:PmcAppRoot 'data/logs/config-debug.log'
-    } elseif ($PSScriptRoot) {
-        $debugLog = Join-Path (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent) 'data/logs/config-debug.log'
-    } else {
-        $debugLog = '/home/teej/ztest/data/logs/config-debug.log'
-    }
-    
-    $providers = Get-PmcConfigProviders
-    Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Save-PmcConfig] providers.Set is $($null -ne $providers.Set)" -ErrorAction SilentlyContinue
-    
-    if ($providers.Set) {
         try {
             Add-Content -Path $debugLog -Value "[$(Get-Date -F 'HH:mm:ss.fff')] [Save-PmcConfig] Calling provider Set" -ErrorAction SilentlyContinue
             & $providers.Set $cfg

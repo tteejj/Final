@@ -51,7 +51,8 @@ class ExcelMappingService {
     ExcelMappingService() {
         # Determine profiles file location
         # FIXED: Point to the actual location found in user's home directory
-        $this._profilesFile = "/home/teej/_tui/praxis-main/simpletaskpro/Data/excel-mappings.json"
+        $root = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
+        $this._profilesFile = Join-Path $root 'Data/excel-mappings.json'
 
         # Load profiles
         $this.LoadProfiles()

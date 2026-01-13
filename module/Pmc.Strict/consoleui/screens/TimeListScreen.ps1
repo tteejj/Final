@@ -241,6 +241,327 @@ class TimeListScreen : StandardListScreen {
                 } else {
                     # Write-PmcTuiLog "TimeListScreen.LoadItems: Invalid minutes value: $($entry.minutes)" "WARNING"
                     $entry['duration'] = "00:00"
+                }
+            } else {
+                $entry['duration'] = "00:00"
+            }
+
+            # Add indicator if aggregated
+            if ($entry.entry_count -gt 1) {
+                $entry['duration'] = "$($entry.duration) ($($entry.entry_count))"
+            }
+
+            # DEBUG: Log the keys in this entry
+            $keysStr = ($entry.Keys | Sort-Object) -join ', '
+            # Write-PmcTuiLog "TimeListScreen.LoadItems: Created entry with keys: $keysStr"
+            # Write-PmcTuiLog "TimeListScreen.LoadItems: date_display='$($entry.date_display)' date='$($entry.date)'"
+
+            $aggregated += $entry
+        }
+
+        # TS-M1 FIX: Notify user if there were failed date parses
+        if ($failedDateParses -gt 0) {
+            # Write-PmcTuiLog "TimeListScreen.LoadItems: $failedDateParses time entries had unparseable dates" "WARNING"
+            $this.SetStatusMessage("Warning: $failedDateParses entries have invalid dates", "warning")
+        }
+
+        # Sort by date descending (most recent first)
+        # HIGH FIX TLS-H5: Handle null dates in sort
+        $sorted = $aggregated | Sort-Object { if ($null -ne $_.date) { $_.date } else { [DateTime]::MaxValue } } -Descending
+        # Ensure we always return an array (PowerShell returns single object if count=1)
+        return @($sorted)
+    }
+
+    # Define columns for list display
+    [array] GetListColumns() {
+        return @(
+            @{ Name='date_display'; Header='Date'; Width=12 }
+            @{ Name='task'; Header='Task'; Width=25 }
+            @{ Name='project'; Header='Project'; Width=16 }
+            @{ Name='id1'; Header='ID1/Code'; Width=10 }
+            @{ Name='id2'; Header='ID2'; Width=10 }
+            @{ Name='duration'; Header='Duration'; Width=18 }
+            @{ Name='notes'; Header='Notes'; Width=40 }
+        )
+    }
+
+    # Define edit fields for InlineEditor
+    [array] GetEditFields([object]$item) {
+        # CRITICAL: Match GetColumns() field widths exactly
+        # GetColumns defines: date_display=12, task=25, project=16, id1=10, id2=10, duration=18, notes=40
+        $dateWidth = 12      # Matches date_display column
+        $taskWidth = 25      # Matches task column
+        $projectWidth = 16   # Matches project column
+        $id1Width = 10       # Matches id1 column
+        $id2Width = 10       # Matches id2 column
+        $hoursWidth = 18     # Matches duration column
+        $notesWidth = 40     # Matches notes column
+
+        if ($null -eq $item -or ($item -is [hashtable] -and $item.Count -eq 0)) {
+            # New time entry - empty fields
+            return @(
+                @{ Name='date'; Type='date'; Label='Date'; Required=$true; Value=[DateTime]::Now; Width=$dateWidth }
+                @{ Name='task'; Type='text'; Label='Task'; Value=''; Width=$taskWidth }
+                @{ Name='project'; Type='project'; Label='Project'; Value=''; Width=$projectWidth }
+                @{ Name='id1'; Type='text'; Label='ID1'; Value=''; MaxLength=10; Width=$id1Width }
+                @{ Name='id2'; Type='text'; Label='ID2'; Value=''; MaxLength=10; Width=$id2Width }
+                # MEDIUM FIX TMS-M3 & TLS-M2: Use constant for max hours validation
+                @{ Name='hours'; Type='number'; Label='Hours'; Min=$global:MIN_HOURS_PER_ENTRY; Max=$global:MAX_HOURS_PER_ENTRY; Step=0.25; Value=$global:MIN_HOURS_PER_ENTRY; Width=$hoursWidth }
+                @{ Name='notes'; Type='text'; Label='Notes'; Value=''; Width=$notesWidth }
+            )
+        } else {
+            # Existing time entry - populate from item
+            $projectVal = $(if ($item.ContainsKey('project')) { $item.project } else { '' })
+            $id1Val = $(if ($item.ContainsKey('id1')) { $item.id1 } else { '' })
+            $id2Val = $(if ($item.ContainsKey('id2')) { $item.id2 } else { '' })
+            # Convert minutes to hours for display
+            $hoursVal = $(if ($item.ContainsKey('minutes')) { [math]::Round($item.minutes / 60, 2) } else { 0.25 })
+            # HIGH FIX TLS-H1: Add null check for task field
+            $taskVal = $(if ($item.ContainsKey('task')) { $item.task } else { '' })
+            # HIGH FIX TLS-H2: Add null check for notes field
+            $notesVal = $(if ($item.ContainsKey('notes')) { $item.notes } else { '' })
+            return @(
+                @{ Name='date'; Type='date'; Label='Date'; Required=$true; Value=$item.date; Width=$dateWidth }
+                @{ Name='task'; Type='text'; Label='Task'; Value=$taskVal; Width=$taskWidth }
+                @{ Name='project'; Type='project'; Label='Project'; Value=$projectVal; Width=$projectWidth }
+                @{ Name='id1'; Type='text'; Label='ID1'; Value=$id1Val; MaxLength=10; Width=$id1Width }
+                @{ Name='id2'; Type='text'; Label='ID2'; Value=$id2Val; MaxLength=10; Width=$id2Width }
+                # MEDIUM FIX TMS-M3 & TLS-M2: Use constant for max hours validation
+                @{ Name='hours'; Type='number'; Label='Hours'; Min=$global:MIN_HOURS_PER_ENTRY; Max=$global:MAX_HOURS_PER_ENTRY; Step=0.25; Value=$hoursVal; Width=$hoursWidth }
+                @{ Name='notes'; Type='text'; Label='Notes'; Value=$notesVal; Width=$notesWidth }
+            )
+        }
+    }
+
+    # Helper: Get ID1/ID2 values from project if project is selected
+    hidden [void] PopulateIDsFromProject([hashtable]$timeData) {
+        if ($timeData.ContainsKey('project') -and -not [string]::IsNullOrWhiteSpace($timeData.project)) {
+            # Project is selected - try to get ID1/ID2 from it
+            $project = $this.Store.GetProject($timeData.project)
+            if ($project) {
+                # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Found project '$($timeData.project)'" "DEBUG"
+
+                # CRITICAL FIX: Use Get-SafeProperty for safe cross-type property access
+                $projectId1 = Get-SafeProperty $project 'ID1'
+                $projectId2 = Get-SafeProperty $project 'ID2'
+
+                # Check if user entered manual ID1 (different from project's)
+                $hasManualId1 = $timeData.ContainsKey('id1') -and -not [string]::IsNullOrWhiteSpace($timeData.id1)
+                $isManualId1 = $hasManualId1 -and ($timeData.id1 -ne $projectId1)
+                
+                if ($isManualId1) {
+                    # User entered manual ID1 - clear ID2
+                    $timeData.id2 = ''
+                } else {
+                    # Auto-populate from project if user hasn't entered custom ID1
+                    if (-not [string]::IsNullOrWhiteSpace($projectId1) -and [string]::IsNullOrWhiteSpace($timeData.id1)) {
+                        $timeData.id1 = $projectId1
+                    }
+                    # If project has ID2, use it (unless user already entered a value)
+                    if (-not [string]::IsNullOrWhiteSpace($projectId2) -and [string]::IsNullOrWhiteSpace($timeData.id2)) {
+                        $timeData.id2 = $projectId2
+                    }
+                }
+            } else {
+                # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Project '$($timeData.project)' not found" "WARNING"
+            }
+        } else {
+            # No project selected - clear ID1/ID2 if they should come from project
+            # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: No project selected, keeping user-entered ID1/ID2 values" "DEBUG"
+        }
+    }
+
+    # Handle item creation
+    [void] OnItemCreated([hashtable]$values) {
+        if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: CALLED with values: $($values | ConvertTo-Json -Compress)" "DEBUG"
+        }
+        try {
+            # ENDEMIC FIX: Safe conversion with validation
+            if (-not $values.ContainsKey('hours') -or [string]::IsNullOrWhiteSpace($values.hours)) {
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours validation failed" "DEBUG"
+                $this.SetStatusMessage("Hours field is required", "error")
+                return
+            }
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours validation passed" "DEBUG"
+
+            $hoursValue = 0.0
+            try {
+                $hoursValue = [double]$values.hours
+            } catch {
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours conversion failed" "DEBUG"
+                $this.SetStatusMessage("Invalid hours value: $($values.hours)", "error")
+                return
+            }
+
+            if ($global:PmcTuiLogFile -and $global:PmcTuiLogLevel -ge 3) {
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours value=$hoursValue, MAX_HOURS_PER_ENTRY=$global:MAX_HOURS_PER_ENTRY" "DEBUG"
+            }
+
+            # Validate hour range
+            # MEDIUM FIX TLS-M3: Use constant for hours validation
+            if ($hoursValue -le 0) {
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours <= 0" "DEBUG"
+                $this.SetStatusMessage("Hours must be greater than 0", "error")
+                return
+            }
+            if ($hoursValue -gt $global:MAX_HOURS_PER_ENTRY) {
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hours > MAX ($hoursValue > $global:MAX_HOURS_PER_ENTRY)" "DEBUG"
+                $this.SetStatusMessage("Hours must be $global:MAX_HOURS_PER_ENTRY or less", "error")
+                return
+            }
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Hour range validation passed" "DEBUG"
+
+            # HIGH FIX TMS-H3: Use Math.Round instead of [int] to prevent precision loss
+            # 2.75 hours = 165 minutes (not 165.0 truncated to 165)
+            # CRITICAL: Cast to [int] because validation requires int type
+            $minutes = [int][Math]::Round($hoursValue * 60)
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Calculated minutes=$minutes" "DEBUG"
+
+            # Safe date conversion
+            $dateValue = [DateTime]::Today
+            if ($values.ContainsKey('date') -and $values.date) {
+                try {
+                    $dateValue = [DateTime]$values.date
+                } catch {
+                    # Write-PmcTuiLog "Failed to parse date '$($values.date)', using today" "WARNING"
+                }
+            }
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Date=$dateValue" "DEBUG"
+
+            $timeData = @{
+                date = $dateValue
+                task = $(if ($values.ContainsKey('task')) { $values.task } else { '' })
+                project = $(if ($values.ContainsKey('project')) { $values.project } else { '' })
+                id1 = $(if ($values.ContainsKey('id1')) { $values.id1 } else { '' })
+                id2 = $(if ($values.ContainsKey('id2')) { $values.id2 } else { '' })
+                minutes = $minutes
+                notes = $(if ($values.ContainsKey('notes')) { $values.notes } else { '' })
+                created = [DateTime]::Now
+            }
+
+            # Populate ID1/ID2 from project if project is selected and IDs are empty
+            $this.PopulateIDsFromProject($timeData)
+
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: About to save time entry - id1='$($timeData.id1)' id2='$($timeData.id2)'" "DEBUG"
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Calling Store.AddTimeLog..." "DEBUG"
+
+            $success = $this.Store.AddTimeLog($timeData)
+            # Write-PmcTuiLog "TimeListScreen.OnItemCreated: AddTimeLog returned success=$success" "DEBUG"
+            if (-not $success) {
+                # Write-PmcTuiLog "TimeListScreen.OnItemCreated: Store.LastError=$($this.Store.LastError)" "ERROR"
+            }
+
+            $statusMsg = "Time entry added: {0:F2} hours" -f $hoursValue
+            if ($success) {
+                $this.SetStatusMessage($statusMsg, "success")
+            } else {
+                $this.SetStatusMessage("Failed to add time entry: $($this.Store.LastError)", "error")
+            }
+        } catch {
+            # Write-PmcTuiLog "OnItemCreated exception: $_" "ERROR"
+            $this.SetStatusMessage("Unexpected error: $($_.Exception.Message)", "error")
+        }
+    }
+
+    # Handle item update
+    [void] OnItemUpdated([object]$item, [hashtable]$values) {
+        try {
+            # ENDEMIC FIX: Safe conversion with validation
+            if (-not $values.ContainsKey('hours') -or [string]::IsNullOrWhiteSpace($values.hours)) {
+                $this.SetStatusMessage("Hours field is required", "error")
+                return
+            }
+
+            $hoursValue = 0.0
+            try {
+                $hoursValue = [double]$values.hours
+            } catch {
+                $this.SetStatusMessage("Invalid hours value: $($values.hours)", "error")
+                return
+            }
+
+            # Validate hour range
+            # MEDIUM FIX TLS-M3: Use constant for hours validation
+            if ($hoursValue -le 0) {
+                $this.SetStatusMessage("Hours must be greater than 0", "error")
+                return
+            }
+            if ($hoursValue -gt $global:MAX_HOURS_PER_ENTRY) {
+                $this.SetStatusMessage("Hours must be $global:MAX_HOURS_PER_ENTRY or less", "error")
+                return
+            }
+
+            # HIGH FIX TMS-H3: Use Math.Round instead of [int] to prevent precision loss
+            # 2.75 hours = 165 minutes (not 165.0 truncated to 165)
+            # CRITICAL: Cast to [int] because validation requires int type
+            $minutes = [int][Math]::Round($hoursValue * 60)
+
+            # Safe date conversion
+            $dateValue = [DateTime]::Today
+            if ($values.ContainsKey('date') -and $values.date) {
+                try {
+                    $dateValue = [DateTime]$values.date
+                } catch {
+                    # Write-PmcTuiLog "Failed to parse date '$($values.date)', using today" "WARNING"
+                }
+            }
+
+            $changes = @{
+                date = $dateValue
+                task = $(if ($values.ContainsKey('task')) { $values.task } else { '' })
+                project = $(if ($values.ContainsKey('project')) { $values.project } else { '' })
+                id1 = $(if ($values.ContainsKey('id1')) { $values.id1 } else { '' })
+                id2 = $(if ($values.ContainsKey('id2')) { $values.id2 } else { '' })
+                minutes = $minutes
+                notes = $(if ($values.ContainsKey('notes')) { $values.notes } else { '' })
+            }
+
+            # Populate ID1/ID2 from project if project is selected and IDs are empty
+            $this.PopulateIDsFromProject($changes)
+
+            # Write-PmcTuiLog "TimeListScreen.OnItemUpdated: About to save changes - id1='$($changes.id1)' id2='$($changes.id2)'" "DEBUG"
+
+            # Update time log via TaskStore
+            if ($item.ContainsKey('id') -and -not [string]::IsNullOrWhiteSpace($item.id)) {
+                # Write-PmcTuiLog "TimeListScreen.OnItemUpdated: Calling Store.UpdateTimeLog with id=$($item.id)" "DEBUG"
+                $success = $this.Store.UpdateTimeLog($item.id, $changes)
+                if ($success) {
+                    $this.SetStatusMessage("Time entry updated", "success")
+                    # TS-M6 FIX: Use RefreshList() instead of LoadData() for incremental refresh
+                    # RefreshList() is more efficient than full LoadData() for single item updates
+                    $this.RefreshList()
+                } else {
+                    $this.SetStatusMessage("Failed to update time entry: $($this.Store.LastError)", "error")
+                }
+            } else {
+                $this.SetStatusMessage("Cannot update time entry without ID", "error")
+            }
+        } catch {
+            # Write-PmcTuiLog "OnItemUpdated exception: $_" "ERROR"
+            $this.SetStatusMessage("Unexpected error: $($_.Exception.Message)", "error")
+        }
+    }
+
+    # Handle item deletion
+    [void] OnItemDeleted([object]$item) {
+        # HIGH FIX TLS-H3: Validate ID is not empty/whitespace
+        if ($item.ContainsKey('id') -and -not [string]::IsNullOrWhiteSpace($item.id)) {
+            $success = $this.Store.DeleteTimeLog($item.id)
+            if ($success) {
+                $this.SetStatusMessage("Time entry deleted", "success")
+            } else {
+                $this.SetStatusMessage("Failed to delete time entry: $($this.Store.LastError)", "error")
+            }
+        } else {
+            $this.SetStatusMessage("Cannot delete time entry without ID", "error")
+        }
+    }
+
+    # Virtual method called when inline editor is confirmed
+    # This method is called by StandardListScreen when inline editing is confirmed
+    # TimeListScreen already handles inline editing through OnItemCreated and OnItemUpdated,
+    # so this is a no-op to prevent method-not-found errors
     [void] OnInlineEditConfirmed([hashtable]$values) {
         if ($null -eq $values) {
             # Write-PmcTuiLog "TimeListScreen.OnInlineEditConfirmed called with null values" "WARNING"
@@ -411,4 +732,3 @@ class TimeListScreen : StandardListScreen {
 
         return $false
     }
-}
