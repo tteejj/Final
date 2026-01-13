@@ -91,7 +91,30 @@ class TimeReportScreen : PmcScreen {
                 $this.TotalHours = 0
                 # Enhanced feedback to guide user on what to do next
                 $this.ShowStatus("No time entries found. Press 'T' to add time entries in Time Tracking screen.")
+                # Write-PmcTuiLog "TimeReportScreen: No time entries found for report" "INFO"
                 return
+            }
+
+            # TS-M7 FIX: Group by project ID if available, otherwise by name
+            # Create grouping key for each entry: use id1 if present, otherwise project name
+            $groupedData = @{}
+            foreach ($log in $timelogs) {
+                # Determine grouping key (prefer ID over name)
+                $groupKey = ''
+                $projectDisplay = ''
+                if ($log.ContainsKey('id1') -and $log.id1) {
+                    $groupKey = "ID:$($log.id1)"
+                    $projectDisplay = $(if ($log.ContainsKey('project') -and $log.project) { "$($log.project) [#$($log.id1)]" } else { "#$($log.id1)" })
+                }
+                else {
+                    $projectVal = $(if ($log.ContainsKey('project')) { $log.project } else { 'Unknown' })
+                    $groupKey = "NAME:$projectVal"
+                    $projectDisplay = $projectVal
+                }
+
+                # Initialize group if needed
+                if (-not $groupedData.ContainsKey($groupKey)) {
+                    $groupedData[$groupKey] = @{
                         DisplayName = $projectDisplay
                         Entries     = @()
                     }
@@ -144,40 +167,46 @@ class TimeReportScreen : PmcScreen {
             $this._RenderReportToEngine($engine)
         }
     }
-
+    
     [string] RenderContent() { return "" }
 
     hidden [void] _RenderEmptyStateToEngine([object]$engine) {
         $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
 
         # Colors
-        $textColor = $this.GetThemedInt('Foreground.Field')
-        $highlightColor = $this.GetThemedInt('Foreground.FieldFocused')
-        $bg = $this.GetThemedInt('Background.Primary')
+        $textColor = $this.Header.GetThemedColorInt('Foreground.Field')
+        $mutedColor = $this.Header.GetThemedColorInt('Foreground.Muted')
+        $bg = $this.Header.GetThemedColorInt('Background.Primary')
 
-        # Title
-        $y = $contentRect.Y + 2
-        $engine.WriteAt($contentRect.X + 4, $y, "Time Report", $highlightColor, $bg)
-        $y += 2
+        # Main message
+        $message = "No time entries to report"
+        $x = $contentRect.X + [Math]::Floor(($contentRect.Width - $message.Length) / 2)
+        $y = $contentRect.Y + [Math]::Floor($contentRect.Height / 2) - 1
+        $engine.WriteAt($x, $y, $message, $textColor, $bg)
 
-        # No entries message
-        $message = "No time entries found. Press 'T' to add time entries."
-        $engine.WriteAt($contentRect.X + 4, $y, $message, $textColor, $bg)
+        # Helpful guidance
+        $hint = "Press 'T' to add time entries in Time Tracking screen"
+        $hintX = $contentRect.X + [Math]::Floor(($contentRect.Width - $hint.Length) / 2)
+        $engine.WriteAt($hintX, $y + 2, $hint, $mutedColor, $bg)
     }
 
     hidden [void] _RenderReportToEngine([object]$engine) {
         $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
 
         # Colors
-        $textColor = $this.GetThemedInt('Foreground.Field')
-        $highlightColor = $this.GetThemedInt('Foreground.FieldFocused')
-        $mutedColor = $this.GetThemedInt('Foreground.Muted')
-        $headerColor = $this.GetThemedInt('Foreground.Muted')
-        $successColor = $this.GetThemedInt('Foreground.Success')
-        $warningColor = $this.GetThemedInt('Foreground.Warning')
-        $bg = $this.GetThemedInt('Background.Primary')
-
+        $textColor = $this.Header.GetThemedColorInt('Foreground.Field')
+        $highlightColor = $this.Header.GetThemedColorInt('Foreground.FieldFocused')
+        $mutedColor = $this.Header.GetThemedColorInt('Foreground.Muted')
+        $headerColor = $this.Header.GetThemedColorInt('Foreground.Muted')
+        $successColor = $this.Header.GetThemedColorInt('Foreground.Success')
+        $warningColor = $this.Header.GetThemedColorInt('Warning')
+        $bg = $this.Header.GetThemedColorInt('Background.Primary')
+        
         $y = $contentRect.Y + 1
+
+        # Title
+        $engine.WriteAt($contentRect.X + 4, $y, "Time Summary by Project", $highlightColor, $bg)
+        $y += 2
 
         # Column headers
         $headerY = $y

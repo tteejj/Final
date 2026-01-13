@@ -263,9 +263,9 @@ class WeeklyTimeReportScreen : PmcScreen {
         $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
 
         # Colors
-        $textColor = $this.GetThemedInt('Foreground.Field')
-        $highlightColor = $this.GetThemedInt('Foreground.FieldFocused')
-        $bg = $this.GetThemedInt('Background.Primary')
+        $textColor = $this.Header.GetThemedColorInt('Foreground.Field')
+        $highlightColor = $this.Header.GetThemedColorInt('Foreground.FieldFocused')
+        $bg = $this.Header.GetThemedColorInt('Background.Primary')
 
         # Week header
         $y = $contentRect.Y + 2
@@ -283,13 +283,13 @@ class WeeklyTimeReportScreen : PmcScreen {
         $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
 
         # Colors
-        $textColor = $this.GetThemedInt('Foreground.Field')
-        $highlightColor = $this.GetThemedInt('Foreground.FieldFocused')
-        $mutedColor = $this.GetThemedInt('Foreground.Muted')
-        $headerColor = $this.GetThemedInt('Foreground.Muted')
-        $successColor = $this.GetThemedInt('Foreground.Success')
-        $warningColor = $this.GetThemedInt('Foreground.Warning')
-        $bg = $this.GetThemedInt('Background.Primary')
+        $textColor = $this.Header.GetThemedColorInt('Foreground.Field')
+        $highlightColor = $this.Header.GetThemedColorInt('Foreground.FieldFocused')
+        $mutedColor = $this.Header.GetThemedColorInt('Foreground.Muted')
+        $headerColor = $this.Header.GetThemedColorInt('Foreground.Muted')
+        $successColor = $this.Header.GetThemedColorInt('Foreground.Success')
+        $warningColor = $this.Header.GetThemedColorInt('Warning')
+        $bg = $this.Header.GetThemedColorInt('Background.Primary')
         
         $y = $contentRect.Y + 1
 
@@ -428,3 +428,4 @@ function Show-WeeklyTimeReportScreen {
 
     $screen = New-Object WeeklyTimeReportScreen
     $App.PushScreen($screen)
+}
