@@ -1,0 +1,150 @@
+[2026-01-13 08:49:32.334] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-13 08:49:32.336] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-13 08:49:32.337] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-13 08:49:32.338] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-13 08:49:32.338] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-13 08:49:32.339] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-13 08:49:32.340] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-13 08:49:32.340] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-13 08:49:32.341] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-13 08:49:32.342] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-13 08:49:32.342] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-13 08:49:32.343] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-13 08:49:32.344] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-13 08:49:32.344] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-13 08:49:32.345] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-13 08:49:32.359] ServiceContainer: Resolving 'Application'...
+[2026-01-13 08:49:32.360] ServiceContainer: Resolving 'Theme'...
+[2026-01-13 08:49:32.518] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-13 08:49:32.584] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-13 08:49:32.586] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-13 08:49:32.596] ServiceContainer: Resolved 'Application' successfully
+[2026-01-13 08:49:32.597] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-13 08:49:32.608] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-13 08:49:32.622] MenuRegistry: Loaded manifest with 17 entries
+[2026-01-13 08:49:32.647] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-13 08:49:32.647] MenuRegistry: Registered factory for 'T2020 Export Profiles'
+[2026-01-13 08:49:32.667] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-13 08:49:32.668] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-13 08:49:32.669] MenuRegistry: Registered factory for 'Weekly Report'
+[2026-01-13 08:49:32.670] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-13 08:49:32.672] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-13 08:49:32.672] MenuRegistry: Registered factory for 'Excel Profiles'
+[2026-01-13 08:49:32.673] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-13 08:49:32.674] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-13 08:49:32.675] MenuRegistry: Registered factory for 'Excel Import Profiles'
+[2026-01-13 08:49:32.676] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-13 08:49:32.677] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-13 08:49:32.677] MenuRegistry: Registered factory for 'Task List'
+[2026-01-13 08:49:32.678] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-13 08:49:32.679] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-13 08:49:32.680] MenuRegistry: Registered factory for 'Notes'
+[2026-01-13 08:49:32.680] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-13 08:49:32.682] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-13 08:49:32.682] MenuRegistry: Registered factory for 'Checklist Templates'
+[2026-01-13 08:49:32.683] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-13 08:49:32.684] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-13 08:49:32.685] MenuRegistry: Registered factory for 'Checklists'
+[2026-01-13 08:49:32.685] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-13 08:49:32.686] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-13 08:49:32.687] MenuRegistry: Registered factory for 'Time Tracking'
+[2026-01-13 08:49:32.688] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-13 08:49:32.689] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-13 08:49:32.689] MenuRegistry: Registered factory for 'Project List'
+[2026-01-13 08:49:32.690] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-13 08:49:32.691] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-13 08:49:32.692] MenuRegistry: Registered factory for 'Theme Editor'
+[2026-01-13 08:49:32.693] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-13 08:49:32.694] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-13 08:49:32.694] MenuRegistry: Registered factory for 'Time Report'
+[2026-01-13 08:49:32.695] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-13 08:49:32.696] ServiceContainer: Registered 'CalendarScreen' (singleton=False)
+[2026-01-13 08:49:32.697] MenuRegistry: Registered factory for 'Calendar'
+[2026-01-13 08:49:32.698] MenuRegistry: Registered 'Calendar' in 'Tools' menu (hotkey=A order=50)
+[2026-01-13 08:49:32.699] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-13 08:49:32.699] MenuRegistry: Registered factory for 'Settings'
+[2026-01-13 08:49:32.700] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-13 08:49:32.701] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-13 08:49:32.702] MenuRegistry: Registered factory for 'Command Library'
+[2026-01-13 08:49:32.702] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-13 08:49:32.703] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-13 08:49:32.721] MenuRegistry: Registered factory for 'Help'
+[2026-01-13 08:49:32.722] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-13 08:49:32.723] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-13 08:49:32.724] MenuRegistry: Registered factory for 'Import from Excel'
+[2026-01-13 08:49:32.725] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-13 08:49:38.597] ServiceContainer: Resolving 'TimeListScreen'...
+[2026-01-13 08:49:38.797] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Time Tracking
+[2026-01-13 08:49:38.805] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-13 08:49:38.814] [INFO] StandardListScreen._ConfigureListActions: Configured 7 footer shortcuts
+[2026-01-13 08:49:38.897] ServiceContainer: Resolved 'TimeListScreen' successfully
+[2026-01-13 08:49:38.979] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Time Tracking
+[2026-01-13 08:49:38.980] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-13 08:49:38.981] [INFO] StandardListScreen._ConfigureListActions: Configured 7 footer shortcuts
+[08:49:39.147] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[08:49:39.150] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[08:49:39.154] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[08:49:39.155] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[08:49:39.157] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[08:49:39.158] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[08:49:39.160] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[08:49:39.161] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[08:49:39.163] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=20 char='I'
+[08:49:39.167] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=20 char='D'
+[08:49:39.169] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=20 char='1'
+[08:49:39.171] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[08:49:39.173] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[08:49:39.190] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[08:49:39.192] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[08:49:39.193] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[08:49:39.194] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[08:49:39.197] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[08:49:39.198] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[08:49:43.117] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[08:49:43.119] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[08:49:43.119] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[08:49:43.122] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[08:49:43.122] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[08:49:43.122] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[08:49:43.123] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[08:49:43.123] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[08:49:43.123] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=20 char='I'
+[08:49:43.124] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=20 char='D'
+[08:49:43.124] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=20 char='1'
+[08:49:43.125] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[08:49:43.125] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[08:49:43.125] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[08:49:43.126] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[08:49:43.126] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[08:49:43.126] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[08:49:43.127] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[08:49:43.127] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[08:49:44.592] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[08:49:44.593] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[08:49:44.593] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[08:49:44.593] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[08:49:44.594] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[08:49:44.594] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[08:49:44.594] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[08:49:44.596] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[08:49:44.596] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=20 char='I'
+[08:49:44.597] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=20 char='D'
+[08:49:44.597] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=20 char='1'
+[08:49:44.597] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[08:49:44.597] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[08:49:44.598] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[08:49:44.598] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[08:49:44.598] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[08:49:44.599] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[08:49:44.599] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[08:49:44.599] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[2026-01-13 08:49:45.078] [ERROR] HandleKeyPress exception: Theme Property Missing: 'Surface'
+[2026-01-13 08:49:45.079] [ERROR] Stack: at _ResolveColor, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 128
+at GetColor, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 115
+at GetAnsiSequence, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 145
+at GetTheme, /home/teej/ztest/module/Pmc.Strict/consoleui/theme/PmcThemeManager.ps1: line 184
+at ShowDetailDialog, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1: line 660
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeListScreen.ps1: line 710
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 632
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37

@@ -134,6 +134,74 @@
         "Background.Selection": {
             "Type": "Solid",
             "Color": "#0a2515"
+        },
+        "Surface": {
+            "Type": "Solid",
+            "Color": "#030a05"
+        },
+        "OnSurface": {
+            "Type": "Solid",
+            "Color": "#aaddbb"
+        },
+        "Outline": {
+            "Type": "Solid",
+            "Color": "#116633"
+        },
+        "Header": {
+            "Type": "Solid",
+            "Color": "#228844"
+        },
+        "Title": {
+            "Type": "Solid",
+            "Color": "#228844"
+        },
+        "Text": {
+            "Type": "Solid",
+            "Color": "#aaddbb"
+        },
+        "Body": {
+            "Type": "Solid",
+            "Color": "#aaddbb"
+        },
+        "Muted": {
+            "Type": "Solid",
+            "Color": "#446655"
+        },
+        "Label": {
+            "Type": "Solid",
+            "Color": "#446655"
+        },
+        "Highlight": {
+            "Type": "Solid",
+            "Color": "#228844"
+        },
+        "Error": {
+            "Type": "Solid",
+            "Color": "#ff3333"
+        },
+        "Warning": {
+            "Type": "Solid",
+            "Color": "#ffaa00"
+        },
+        "Success": {
+            "Type": "Solid",
+            "Color": "#33ff88"
+        },
+        "Info": {
+            "Type": "Solid",
+            "Color": "#228844"
+        },
+        "Border": {
+            "Type": "Solid",
+            "Color": "#116633"
+        },
+        "Status": {
+            "Type": "Solid",
+            "Color": "#446655"
+        },
+        "Bright": {
+            "Type": "Solid",
+            "Color": "#ffffff"
         }
     }
 }
