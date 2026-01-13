@@ -3028,3 +3028,43 @@ Check the spelling of the name, or if a path was included, verify that the path 
 [10:28:03.693] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
 [10:28:03.702] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
 [10:28:03.708] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:33:16.564] === THEME SELF-HEAL START ===
+[10:33:16.570] Config path: /home/teej/ztest/config.json
+[10:33:16.599] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[10:33:16.601] Hex already present, no repair needed
+[10:33:16.701] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:33:16.707] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:33:16.711] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:33:16.737] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:33:16.778] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:33:16.780] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:33:16.789] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:33:16.795] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:33:47.279] [Set-ActiveTheme] Starting for themeName='Synthwave'
+[10:33:47.280] [Set-ActiveTheme] Reading config from: /home/teej/ztest/config.json
+[10:33:47.289] [Set-ActiveTheme] Set Active='synthwave'
+[10:33:47.293] [Load-Theme] themeName='Synthwave' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:33:47.294] [Load-Theme] Looking for: /home/teej/ztest/themes/synthwave.json (exists=True)
+[10:33:47.297] [Load-Theme] JSON loaded. Name='Synthwave' Hex='#ff00ff'
+[10:33:47.302] [Load-Theme] Returning theme with Hex='#ff00ff'
+[10:33:47.303] [Set-ActiveTheme] Set Hex='#ff00ff'
+[10:33:47.305] [Set-ActiveTheme] Writing config to: /home/teej/ztest/config.json
+[10:33:47.329] [Set-ActiveTheme] Config saved successfully
+[10:33:47.334] [Load-Theme] themeName='synthwave' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:33:47.335] [Load-Theme] Looking for: /home/teej/ztest/themes/synthwave.json (exists=True)
+[10:33:47.337] [Load-Theme] JSON loaded. Name='Synthwave' Hex='#ff00ff'
+[10:33:47.340] [Load-Theme] Returning theme with Hex='#ff00ff'
+[10:34:01.138] [Set-ActiveTheme] Starting for themeName='TronAres'
+[10:34:01.139] [Set-ActiveTheme] Reading config from: /home/teej/ztest/config.json
+[10:34:01.140] [Set-ActiveTheme] Set Active='tronares'
+[10:34:01.142] [Load-Theme] themeName='TronAres' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:34:01.143] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[10:34:01.147] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[10:34:01.152] [Load-Theme] Returning theme with Hex='#ff0022'
+[10:34:01.152] [Set-ActiveTheme] Set Hex='#ff0022'
+[10:34:01.153] [Set-ActiveTheme] Writing config to: /home/teej/ztest/config.json
+[10:34:01.155] [Set-ActiveTheme] Config saved successfully
+[10:34:01.158] [Load-Theme] themeName='tronares' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:34:01.163] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[10:34:01.165] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[10:34:01.169] [Load-Theme] Returning theme with Hex='#ff0022'

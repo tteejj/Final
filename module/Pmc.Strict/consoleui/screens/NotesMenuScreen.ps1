@@ -159,13 +159,11 @@ class NotesMenuScreen : StandardListScreen {
         $tags = ""
 
         if ($item) {
-            if ($item -is [hashtable]) {
-                $title = $(if ($item.ContainsKey('title')) { $item['title'] } else { "" })
-                $tags = $(if ($item.ContainsKey('tags') -and $item['tags']) { ($item['tags'] -join ", ") } else { "" })
-            } else {
-                $title = $(if ($item.title) { $item.title } else { "" })
-                $tags = $(if ($item.tags) { ($item.tags -join ", ") } else { "" })
-            }
+            $titleCtx = Get-SafeProperty $item 'title'
+            $title = if ($titleCtx) { $titleCtx } else { "" }
+            
+            $tagsCtx = Get-SafeProperty $item 'tags'
+            $tags = if ($tagsCtx) { ($tagsCtx -join ", ") } else { "" }
         }
 
         return @(
@@ -205,11 +203,7 @@ class NotesMenuScreen : StandardListScreen {
         # Get ID from item (handle both hashtable and object)
         $noteId = $null
         if ($item) {
-            if ($item -is [hashtable]) {
-                $noteId = $item['id']
-            } else {
-                $noteId = $item.id
-            }
+            $noteId = Get-SafeProperty $item 'id'
         }
 
         if ($noteId) {
@@ -276,7 +270,7 @@ class NotesMenuScreen : StandardListScreen {
             if ($data.ContainsKey('project') -and -not [string]::IsNullOrWhiteSpace($data.project)) {
                 $project = $data.project
                 Write-PmcTuiLog "NotesMenuScreen.OnAddItem: Assigning new note to project '$project'" "INFO"
-                $noteId = $(if ($note -is [hashtable]) { $note['id'] } else { $note.id })
+                $noteId = Get-SafeProperty $note 'id'
                 $this._noteService.UpdateNoteMetadata($noteId, @{ project = $project })
             }
 
@@ -286,7 +280,7 @@ class NotesMenuScreen : StandardListScreen {
             }
 
             # Success message
-            $noteId = $(if ($note -is [hashtable]) { $note['id'] } else { $note.id })
+            $noteId = Get-SafeProperty $note 'id'
             $this.SetStatusMessage("Note created: $title", "success")
 
             # CRITICAL FIX: DO NOT auto-open the note editor here!
@@ -327,7 +321,7 @@ class NotesMenuScreen : StandardListScreen {
         Write-PmcTuiLog "========== OnEditItem START ==========" "INFO"
         
         # Get note ID from item
-        $noteId = $(if ($item -is [hashtable]) { $item['id'] } else { $item.id })
+        $noteId = Get-SafeProperty $item 'id'
         Write-PmcTuiLog "OnEditItem: noteId = $noteId" "INFO"
         
         if (-not $noteId) {
@@ -406,7 +400,7 @@ class NotesMenuScreen : StandardListScreen {
                     Write-PmcTuiLog "OnEditItem: Got $($allItems.Count) items from _filteredData" "DEBUG"
                     for ($i = 0; $i -lt $allItems.Count; $i++) {
                         $item = $allItems[$i]
-                        $itemTitle = $(if ($item -is [hashtable]) { $item['title'] } else { $item.title })
+                        $itemTitle = Get-SafeProperty $item 'title'
                         if ($itemTitle -eq $title) {
                             Write-PmcTuiLog "OnEditItem: Found at index $i, selecting..." "DEBUG"
                             $this.List.SelectIndex($i)
@@ -433,8 +427,8 @@ class NotesMenuScreen : StandardListScreen {
     #>
     [void] OnItemDeleted($item) {
         # Get note ID from item
-        $noteId = $(if ($item -is [hashtable]) { $item['id'] } else { $item.id })
-        $noteTitle = $(if ($item -is [hashtable]) { $item['title'] } else { $item.title })
+        $noteId = Get-SafeProperty $item 'id'
+        $noteTitle = Get-SafeProperty $item 'title'
         
         if (-not $noteId) {
             $this.SetStatusMessage("Cannot delete note: ID not found", "error")
@@ -570,7 +564,7 @@ class NotesMenuScreen : StandardListScreen {
         }
 
         # Get ID
-        $noteId = $(if ($selected -is [hashtable]) { $selected['id'] } else { $selected.id })
+        $noteId = Get-SafeProperty $selected 'id'
         $this._pickingNoteId = $noteId
         
         # Show picker
