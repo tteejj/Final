@@ -652,17 +652,21 @@ class TimeListScreen : StandardListScreen {
         $maxIterations = $script:DIALOG_TIMEOUT_ITERATIONS
         $iterations = 0
 
+        # Get render engine once
+        $engine = $this.RenderEngine
+        
+        # Position dialog in center of screen
+        $termWidth = [Console]::WindowWidth
+        $termHeight = [Console]::WindowHeight
+        $dialog.X = [Math]::Max(0, [int](($termWidth - $dialog.Width) / 2))
+        $dialog.Y = [Math]::Max(0, [int](($termHeight - $dialog.Height) / 2))
+        
         while (-not $dialog.IsComplete -and $iterations -lt $maxIterations) {
             $iterations++
 
-            # Get theme from theme manager
-            $themeManager = [PmcThemeManager]::GetInstance()
-            $theme = $themeManager.GetTheme()
-
-            # Render dialog
-            $termWidth = [Console]::WindowWidth
-            $termHeight = [Console]::WindowHeight
-            $dialogOutput = $dialog.Render($termWidth, $termHeight, $theme)
+            # Render dialog using RenderToEngine
+            $dialog.RenderToEngine($engine)
+            $engine.Flush()
 
             # Handle input
             if ([Console]::KeyAvailable) {

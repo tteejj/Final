@@ -1,0 +1,152 @@
+[2026-01-13 09:01:33.072] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-13 09:01:33.075] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-13 09:01:33.076] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-13 09:01:33.076] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-13 09:01:33.077] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-13 09:01:33.078] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-13 09:01:33.078] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-13 09:01:33.079] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-13 09:01:33.080] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-13 09:01:33.080] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-13 09:01:33.081] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-13 09:01:33.082] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-13 09:01:33.082] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-13 09:01:33.083] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-13 09:01:33.084] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-13 09:01:33.098] ServiceContainer: Resolving 'Application'...
+[2026-01-13 09:01:33.099] ServiceContainer: Resolving 'Theme'...
+[2026-01-13 09:01:33.261] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-13 09:01:33.325] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-13 09:01:33.327] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-13 09:01:33.339] ServiceContainer: Resolved 'Application' successfully
+[2026-01-13 09:01:33.340] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-13 09:01:33.351] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-13 09:01:33.364] MenuRegistry: Loaded manifest with 17 entries
+[2026-01-13 09:01:33.390] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-13 09:01:33.391] MenuRegistry: Registered factory for 'Checklists'
+[2026-01-13 09:01:33.402] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-13 09:01:33.404] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-13 09:01:33.404] MenuRegistry: Registered factory for 'Import from Excel'
+[2026-01-13 09:01:33.406] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-13 09:01:33.407] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-13 09:01:33.407] MenuRegistry: Registered factory for 'Help'
+[2026-01-13 09:01:33.408] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-13 09:01:33.409] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-13 09:01:33.410] MenuRegistry: Registered factory for 'Project List'
+[2026-01-13 09:01:33.410] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-13 09:01:33.412] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-13 09:01:33.412] MenuRegistry: Registered factory for 'T2020 Export Profiles'
+[2026-01-13 09:01:33.413] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-13 09:01:33.414] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-13 09:01:33.415] MenuRegistry: Registered factory for 'Checklist Templates'
+[2026-01-13 09:01:33.415] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-13 09:01:33.416] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-13 09:01:33.417] MenuRegistry: Registered factory for 'Excel Profiles'
+[2026-01-13 09:01:33.418] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-13 09:01:33.419] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-13 09:01:33.419] MenuRegistry: Registered factory for 'Command Library'
+[2026-01-13 09:01:33.420] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-13 09:01:33.421] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-13 09:01:33.422] MenuRegistry: Registered factory for 'Time Tracking'
+[2026-01-13 09:01:33.423] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-13 09:01:33.424] ServiceContainer: Registered 'CalendarScreen' (singleton=False)
+[2026-01-13 09:01:33.424] MenuRegistry: Registered factory for 'Calendar'
+[2026-01-13 09:01:33.425] MenuRegistry: Registered 'Calendar' in 'Tools' menu (hotkey=A order=50)
+[2026-01-13 09:01:33.426] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-13 09:01:33.426] MenuRegistry: Registered factory for 'Theme Editor'
+[2026-01-13 09:01:33.427] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-13 09:01:33.428] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-13 09:01:33.429] MenuRegistry: Registered factory for 'Excel Import Profiles'
+[2026-01-13 09:01:33.430] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-13 09:01:33.431] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-13 09:01:33.431] MenuRegistry: Registered factory for 'Settings'
+[2026-01-13 09:01:33.432] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-13 09:01:33.433] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-13 09:01:33.434] MenuRegistry: Registered factory for 'Notes'
+[2026-01-13 09:01:33.451] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-13 09:01:33.453] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-13 09:01:33.453] MenuRegistry: Registered factory for 'Weekly Report'
+[2026-01-13 09:01:33.454] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-13 09:01:33.455] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-13 09:01:33.456] MenuRegistry: Registered factory for 'Task List'
+[2026-01-13 09:01:33.456] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-13 09:01:33.458] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-13 09:01:33.458] MenuRegistry: Registered factory for 'Time Report'
+[2026-01-13 09:01:33.459] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-13 09:01:38.356] ServiceContainer: Resolving 'WeeklyTimeReportScreen'...
+[2026-01-13 09:01:38.395] [ERROR] ServiceContainer: Failed to resolve 'WeeklyTimeReportScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/WeeklyTimeReportScreen.ps1:422 char:38
++ function Show-WeeklyTimeReportScreen {
++                                      ~
+Missing closing '}' in statement block or type definition.
+[2026-01-13 09:01:38.397] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 1
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 510
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 596
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/StartScreen.ps1: line 355
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 632
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
+[2026-01-13 09:01:42.952] ServiceContainer: Resolving 'TimeReportScreen'...
+[2026-01-13 09:01:42.961] [ERROR] ServiceContainer: Failed to resolve 'TimeReportScreen': At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeReportScreen.ps1:98 char:18
++                 }
++                  ~
+The Try statement is missing its Catch or Finally block.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeReportScreen.ps1:103 char:18
++             $this.ProjectSummaries = @()
++                  ~
+Missing ';' or end-of-line in property definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeReportScreen.ps1:24 char:37
++ class TimeReportScreen : PmcScreen {
++                                     ~
+Missing closing '}' in statement block or type definition.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeReportScreen.ps1:128 char:9
++         }
++         ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeReportScreen.ps1:135 char:5
++     }
++     ~
+Unexpected token '}' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeReportScreen.ps1:137 char:12
++     [void] RenderContentToEngine([object]$engine) {
++            ~~~~~~~~~~~~~~~~~~~~~
+Unexpected token 'RenderContentToEngine' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeReportScreen.ps1:148 char:14
++     [string] RenderContent() { return "" }
++              ~~~~~~~~~~~~~
+Unexpected token 'RenderContent' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeReportScreen.ps1:148 char:28
++     [string] RenderContent() { return "" }
++                            ~
+An expression was expected after '('.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeReportScreen.ps1:248 char:12
++     [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
++            ~~~~~~~~~~~~~~
+Unexpected token 'HandleKeyPress' in expression or statement.
+
+At /home/teej/ztest/module/Pmc.Strict/consoleui/screens/TimeReportScreen.ps1:289 char:1
++ }
++ ~
+Unexpected token '}' in expression or statement.
+
+Not all parse errors were reported.  Correct the reported errors and try again.
+[2026-01-13 09:01:42.962] Stack trace: at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/MenuRegistry.ps1: line 242
+at Resolve, /home/teej/ztest/module/Pmc.Strict/consoleui/ServiceContainer.ps1: line 130
+at <ScriptBlock>, <No file>: line 1
+at ExecuteSelectedItem, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 299
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/widgets/PmcMenuBar.ps1: line 510
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcScreen.ps1: line 596
+at HandleKeyPress, /home/teej/ztest/module/Pmc.Strict/consoleui/screens/StartScreen.ps1: line 355
+at Run, /home/teej/ztest/module/Pmc.Strict/consoleui/PmcApplication.ps1: line 420
+at Start-PmcTUI, /home/teej/ztest/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1: line 632
+at <ScriptBlock>, /home/teej/ztest/start.ps1: line 37
