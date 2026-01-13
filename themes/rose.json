@@ -3,6 +3,10 @@
     "Hex": "#ff6699",
     "Description": "Soft rose pink",
     "Properties": {
+        "Primary": {
+            "Type": "Solid",
+            "Color": "#ff6699"
+        },
         "Background.Field": {
             "Type": "Solid",
             "Color": "#1a0d12"

@@ -3,6 +3,10 @@
     "Hex": "#ff0022",
     "Description": "TRON ARES: BRIGHT NEON RED / CYAN / DEEP SPACE with MAX variation",
     "Properties": {
+        "Primary": {
+            "Type": "Solid",
+            "Color": "#ff0022"
+        },
         "Background.Field": {
             "Type": "Solid",
             "Color": "#0a0a12"

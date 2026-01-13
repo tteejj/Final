@@ -3,6 +3,10 @@
     "Hex": "#33cc66",
     "Description": "Fresh lime green",
     "Properties": {
+        "Primary": {
+            "Type": "Solid",
+            "Color": "#33cc66"
+        },
         "Background.Field": {
             "Type": "Solid",
             "Color": "#001a0d"

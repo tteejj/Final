@@ -47,30 +47,6 @@ class PmcThemeManager {
             # Load theme file
             $theme = Load-Theme -themeName $themeName
             if (-not $theme) {
-                $theme = Load-Theme -themeName 'default'
-            }
-            
-            if ($theme) {
-                $this.PmcTheme = @{
-                    PaletteName = $theme.Name
-                    Hex = $theme.Hex
-                    Properties = $theme.Properties
-                    TrueColor = $true
-                    HighContrast = $false
-                    ColorBlindMode = 'none'
-                }
-            } else {
-                # Minimal fallback
-                $this.PmcTheme = @{
-                    PaletteName = 'default'
-                    Hex = '#33aaff'
-                    Properties = @{}
-                    TrueColor = $true
-                    HighContrast = $false
-                    ColorBlindMode = 'none'
-                }
-            }
-        } catch {
             # Minimal fallback on any error
             $this.PmcTheme = @{
                 PaletteName = 'default'
@@ -100,50 +76,6 @@ class PmcThemeManager {
                 if ($engine -and $this.PmcTheme -and $this.PmcTheme.Properties) {
                     $engine.Configure($this.PmcTheme.Properties)
                 }
-            }
-        } catch {
-            # Engine might not be available
-        }
-    }
-
-    [string] GetColor([string]$role) {
-        # Check cache
-        if ($this._colorCache.ContainsKey($role)) {
-            return $this._colorCache[$role]
-        }
-
-        $color = $this._ResolveColor($role)
-        $this._colorCache[$role] = $color
-        return $color
-    }
-
-    hidden [string] _ResolveColor([string]$role) {
-        $props = $this.PmcTheme.Properties
-
-        # Direct property match
-        if ($props.ContainsKey($role)) {
-            return $this._ExtractColor($props[$role])
-        }
-
-        throw "Theme Property Missing: '$role'"
-    }
-
-    hidden [string] _ExtractColor($propValue) {
-        if ($propValue.Color) { return $propValue.Color }
-        throw "Invalid theme property value"
-    }
-
-    [string] GetAnsiSequence([string]$role, [bool]$background = $false) {
-        $cacheKey = "${role}_${background}"
-
-        # Check cache
-        if ($this._ansiCache.ContainsKey($cacheKey)) {
-            return $this._ansiCache[$cacheKey]
-        }
-
-        # Get hex color
-        $hex = $this.GetColor($role)
-        if ([string]::IsNullOrEmpty($hex)) {
             return ''
         }
 
@@ -263,38 +195,6 @@ class PmcThemeManager {
             if ($cfg.Display.Theme -isnot [hashtable]) {
                 $themeHash = @{}
                 foreach ($prop in $cfg.Display.Theme.PSObject.Properties) { $themeHash[$prop.Name] = $prop.Value }
-                $cfg.Display['Theme'] = $themeHash
-            }
-            $cfg.Display.Theme['Hex'] = $hex
-            [DataService]::SaveConfig($cfg)
-
-            # Force theme re-initialization
-            Initialize-PmcThemeSystem -Force
-
-            # Reload this manager
-            $this.Reload()
-
-            # Notify PmcThemeEngine of theme change (Dynamic lookup)
-            try {
-                $engineType = "PmcThemeEngine" -as [type]
-                if ($engineType) {
-                    $engine = $engineType::GetInstance()
-                    if ($engine) {
-                        $engine.InvalidateCache()
-                    }
-                }
-            } catch {
-                # PmcThemeEngine may not be available
-            }
-        } catch {
-            throw "Failed to set theme: $_"
-        }
-    }
-
-    [string] GetCurrentThemeHex() {
-        if ($this.PmcTheme -and $this.PmcTheme.Hex) {
-            return $this.PmcTheme.Hex
-        }
         return '#33aaff'
     }
 

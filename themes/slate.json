@@ -3,6 +3,10 @@
     "Hex": "#8899aa",
     "Description": "Cool blue-gray",
     "Properties": {
+        "Primary": {
+            "Type": "Solid",
+            "Color": "#8899aa"
+        },
         "Background.Field": {
             "Type": "Solid",
             "Color": "#101215"

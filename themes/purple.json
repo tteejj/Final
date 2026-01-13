@@ -3,6 +3,10 @@
     "Hex": "#9966ff",
     "Description": "Vibrant purple",
     "Properties": {
+        "Primary": {
+            "Type": "Solid",
+            "Color": "#9966ff"
+        },
         "Background.Field": {
             "Type": "Solid",
             "Color": "#0d0a1a"

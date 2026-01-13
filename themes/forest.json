@@ -3,6 +3,10 @@
     "Hex": "#228844",
     "Description": "Deep forest green",
     "Properties": {
+        "Primary": {
+            "Type": "Solid",
+            "Color": "#228844"
+        },
         "Background.Field": {
             "Type": "Solid",
             "Color": "#051008"

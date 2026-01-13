@@ -3,6 +3,10 @@
     "Hex": "#ffaa33",
     "Description": "Rich golden yellow",
     "Properties": {
+        "Primary": {
+            "Type": "Solid",
+            "Color": "#ffaa33"
+        },
         "Background.Field": {
             "Type": "Solid",
             "Color": "#1a1005"

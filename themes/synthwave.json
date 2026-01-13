@@ -3,6 +3,10 @@
   "Hex": "#ff00ff",
   "Description": "GRADIENT: MAGENTA → CYAN",
   "Properties": {
+    "Primary": {
+      "Type": "Solid",
+      "Color": "#ff00ff"
+    },
     "Background.Field": {
       "Type": "Solid",
       "Color": "#0a0015"

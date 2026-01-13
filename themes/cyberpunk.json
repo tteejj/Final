@@ -3,6 +3,10 @@
     "Hex": "#00f3ff",
     "Description": "NEON: CYAN / PINK / DARK",
     "Properties": {
+        "Primary": {
+            "Type": "Solid",
+            "Color": "#00f3ff"
+        },
         "Background.Field": {
             "Type": "Solid",
             "Color": "#050510"

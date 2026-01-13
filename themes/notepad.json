@@ -3,6 +3,10 @@
     "Hex": "#ffffff",
     "Description": "Clean white notepad style",
     "Properties": {
+        "Primary": {
+            "Type": "Solid",
+            "Color": "#000000"
+        },
         "Background.Field": {
             "Type": "Solid",
             "Color": "#ffffff"

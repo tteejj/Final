@@ -3,6 +3,10 @@
     "Hex": "#ff8833",
     "Description": "Warm sunset orange",
     "Properties": {
+        "Primary": {
+            "Type": "Solid",
+            "Color": "#ff8833"
+        },
         "Background.Field": {
             "Type": "Solid",
             "Color": "#1a0d05"
