@@ -179,16 +179,32 @@ class ProjectListScreen : StandardListScreen {
         foreach ($project in @($projects)) {
             # Count tasks in this project using hashtable lookup
             $projName = Get-SafeProperty $project 'name'
-            $project['task_count'] = $(if ($tasksByProject.ContainsKey($projName)) {
-                    $tasksByProject[$projName]
+            
+            # Use safe property set if possible, otherwise rely on HashTable behavior if it is one
+            # For objects, we can't easily "add" properties unless we wrap/convert them.
+            # TaskStore usually returns Hashtables or PSCustomObjects.
+            # If it's a Hashtable, this works. If it's a PSCustomObject, we need Add-Member.
+            
+            $count = if ($tasksByProject.ContainsKey($projName)) { $tasksByProject[$projName] } else { 0 }
+            
+            if ($project -is [hashtable]) {
+                $project['task_count'] = $count
+                
+                # Ensure status exists
+                if (-not $project.ContainsKey('status') -or $null -eq $project['status']) {
+                    $project['status'] = ''
                 }
-                else { 0 })
-
-            # PS-M3 FIX: Don't always default status to 'active' for existing projects
-            # Only add status if it's missing (preserve archived, etc.)
-            # If status is genuinely missing, leave it empty rather than assuming 'active'
-            if (-not $project.ContainsKey('status') -or $null -eq $project['status']) {
-                $project['status'] = ''
+            }
+            elseif ($project -is [PSCustomObject]) {
+                if (-not (Get-Member -InputObject $project -Name 'task_count')) {
+                    $project | Add-Member -MemberType NoteProperty -Name 'task_count' -Value $count
+                } else {
+                    $project.task_count = $count
+                }
+                
+                if (-not (Get-Member -InputObject $project -Name 'status')) {
+                     $project | Add-Member -MemberType NoteProperty -Name 'status' -Value ''
+                }
             }
         }
 
