@@ -99,15 +99,20 @@ class TimeReportScreen : PmcScreen {
             # Create grouping key for each entry: use id1 if present, otherwise project name
             $groupedData = @{}
             foreach ($log in $timelogs) {
+                # Use Get-SafeProperty for all data access
+                $id1     = Get-SafeProperty $log 'id1'
+                $project = Get-SafeProperty $log 'project'
+
                 # Determine grouping key (prefer ID over name)
                 $groupKey = ''
                 $projectDisplay = ''
-                if ($log.ContainsKey('id1') -and $log.id1) {
-                    $groupKey = "ID:$($log.id1)"
-                    $projectDisplay = $(if ($log.ContainsKey('project') -and $log.project) { "$($log.project) [#$($log.id1)]" } else { "#$($log.id1)" })
+                
+                if ($id1) {
+                    $groupKey = "ID:$id1"
+                    $projectDisplay = if ($project) { "$project [#$id1]" } else { "#$id1" }
                 }
                 else {
-                    $projectVal = $(if ($log.ContainsKey('project')) { $log.project } else { 'Unknown' })
+                    $projectVal = if ($project) { $project } else { 'Unknown' }
                     $groupKey = "NAME:$projectVal"
                     $projectDisplay = $projectVal
                 }

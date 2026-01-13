@@ -146,13 +146,19 @@ class WeeklyTimeReportScreen : PmcScreen {
             $this.GrandTotal = 0
 
             foreach ($log in $weekLogs) {
+                # Use Get-SafeProperty for all data access
+                $projectId1 = Get-SafeProperty $log 'id1'
+                $project    = Get-SafeProperty $log 'project'
+                $date       = Get-SafeProperty $log 'date'
+                $minutes    = Get-SafeProperty $log 'minutes'
+
                 # Determine grouping key
                 $key = ''
-                if ($log.ContainsKey('id1') -and $log.id1) {
-                    $key = "#$($log.id1)"
+                if ($projectId1) {
+                    $key = "#$projectId1"
                 }
                 else {
-                    $name = $(if ($log.ContainsKey('project')) { $log.project } else { '' })
+                    $name = if ($project) { $project } else { '' }
                     if (-not $name) { $name = 'Unknown' }
                     $key = $name
                 }
@@ -161,13 +167,13 @@ class WeeklyTimeReportScreen : PmcScreen {
                 if (-not $this.ProjectSummaries.ContainsKey($key)) {
                     $name = ''
                     $id1 = ''
-                    if ($log.ContainsKey('id1') -and $log.id1) {
-                        $id1 = $log.id1
-                        $name = $(if ($log.ContainsKey('project')) { $log.project } else { '' })
+                    if ($projectId1) {
+                        $id1 = $projectId1
+                        $name = if ($project) { $project } else { '' }
                         if (-not $name) { $name = '' }
                     }
                     else {
-                        $name = $(if ($log.ContainsKey('project')) { $log.project } else { '' })
+                        $name = if ($project) { $project } else { '' }
                         if (-not $name) { $name = 'Unknown' }
                     }
 
@@ -187,31 +193,29 @@ class WeeklyTimeReportScreen : PmcScreen {
                 }
 
                 # Add hours to appropriate day
-                # TS-H3 FIX: Add error handling for unsafe DateTime cast
-                if (-not $log.ContainsKey('date')) {
-                    # Write-PmcTuiLog "WeeklyTimeReportScreen: Log entry missing date field" "WARNING"
+                if (-not $date) {
                     continue
                 }
+                
                 $logDate = $null
                 try {
-                    $logDate = $(if ($log.date -is [DateTime]) {
-                            $log.date
+                    $logDate = $(if ($date -is [DateTime]) {
+                            $date
                         }
                         else {
-                            [datetime]::Parse($log.date)
+                            [datetime]::Parse($date)
                         })
                 }
                 catch {
-                    # Write-PmcTuiLog "WeeklyTimeReportScreen: Failed to parse date '$($log.date)': $_" "WARNING"
                     continue  # Skip this log entry
                 }
 
-                if (-not $log.ContainsKey('minutes')) {
-                    # Write-PmcTuiLog "WeeklyTimeReportScreen: Log entry missing minutes field" "WARNING"
+                if (-not $minutes) {
                     continue
                 }
+                
                 $dayIndex = ($logDate.DayOfWeek.value__ + 6) % 7  # 0=Mon, 1=Tue, ..., 5=Sat, 6=Sun
-                $hours = [Math]::Round($log.minutes / 60.0, 1)
+                $hours = [Math]::Round($minutes / 60.0, 1)
 
                 # TS-M4/TS-M5 FIX: Handle all 7 days including Saturday and Sunday
                 switch ($dayIndex) {
@@ -228,8 +232,9 @@ class WeeklyTimeReportScreen : PmcScreen {
                 }
                 $this.ProjectSummaries[$key].Total += $hours
                 $this.GrandTotal += $hours
-            }
 
+            }
+            
             # Update status
             if ($weekLogs.Count -eq 0) {
                 $this.ShowStatus("No time entries for this week")

@@ -2980,3 +2980,27 @@ Check the spelling of the name, or if a path was included, verify that the path 
 [09:24:31.049] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
 [09:24:31.057] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
 [09:24:31.063] [Load-Theme] Returning theme with Hex='#00f3ff'
+[09:39:47.404] === THEME SELF-HEAL START ===
+[09:39:47.416] Config path: /home/teej/ztest/config.json
+[09:39:47.445] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[09:39:47.447] Hex already present, no repair needed
+[09:39:47.545] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:39:47.551] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[09:39:47.560] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[09:39:47.584] [Load-Theme] Returning theme with Hex='#00f3ff'
+[09:39:47.627] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:39:47.629] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[09:39:47.638] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[09:39:47.644] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:10:40.074] === THEME SELF-HEAL START ===
+[10:10:40.084] Config path: /home/teej/ztest/config.json
+[10:10:40.111] Config loaded. Active=cyberpunk, Hex=#00f3ff, hasHex=True
+[10:10:40.113] Hex already present, no repair needed
+[10:10:40.213] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:10:40.218] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:10:40.227] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:10:40.251] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:10:40.293] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:10:40.294] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:10:40.303] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:10:40.309] [Load-Theme] Returning theme with Hex='#00f3ff'
