@@ -84,12 +84,18 @@ class ExcelCopyMappingEditorScreen : StandardListScreen {
             )
         } else {
             # Existing mapping
+            $name = Get-SafeProperty $item 'name'
+            $sourceSheet = Get-SafeProperty $item 'source_sheet'
+            $sourceCell = Get-SafeProperty $item 'source_cell'
+            $destSheet = Get-SafeProperty $item 'dest_sheet'
+            $destCell = Get-SafeProperty $item 'dest_cell'
+
             return @(
-                @{ Name='name'; Type='text'; Label='Mapping Name'; Required=$true; Value=$item.name }
-                @{ Name='source_sheet'; Type='text'; Label='Source Sheet'; Required=$true; Value=$item.source_sheet }
-                @{ Name='source_cell'; Type='text'; Label='Source Cell (e.g., W23)'; Required=$true; Value=$item.source_cell }
-                @{ Name='dest_sheet'; Type='text'; Label='Dest Sheet'; Required=$true; Value=$item.dest_sheet }
-                @{ Name='dest_cell'; Type='text'; Label='Dest Cell (e.g., B2)'; Required=$true; Value=$item.dest_cell }
+                @{ Name='name'; Type='text'; Label='Mapping Name'; Required=$true; Value=$name }
+                @{ Name='source_sheet'; Type='text'; Label='Source Sheet'; Required=$true; Value=$sourceSheet }
+                @{ Name='source_cell'; Type='text'; Label='Source Cell (e.g., W23)'; Required=$true; Value=$sourceCell }
+                @{ Name='dest_sheet'; Type='text'; Label='Dest Sheet'; Required=$true; Value=$destSheet }
+                @{ Name='dest_cell'; Type='text'; Label='Dest Cell (e.g., B2)'; Required=$true; Value=$destCell }
             )
         }
     }
@@ -142,7 +148,8 @@ class ExcelCopyMappingEditorScreen : StandardListScreen {
 
         # Update mapping
         try {
-            $this._copyService.UpdateMapping($this._profileId, $item.id, $values)
+            $id = Get-SafeProperty $item 'id'
+            $this._copyService.UpdateMapping($this._profileId, $id, $values)
             $this.SetStatusMessage("Mapping updated", "success")
             $this.LoadData()
             
@@ -160,7 +167,8 @@ class ExcelCopyMappingEditorScreen : StandardListScreen {
 
     [void] OnItemDeleted([object]$item) {
         try {
-            $this._copyService.DeleteMapping($this._profileId, $item.id)
+            $id = Get-SafeProperty $item 'id'
+            $this._copyService.DeleteMapping($this._profileId, $id)
             $this.SetStatusMessage("Mapping deleted", "success")
             $this.LoadData()
             

@@ -54,11 +54,16 @@ class ExcelImportMappingEditorScreen : StandardListScreen {
                 @{ Name='dest_field'; Type='text'; Label='Dest Project Field'; Required=$true; Value='' }
             )
         } else {
+            $name = Get-SafeProperty $item 'name'
+            $sheet = Get-SafeProperty $item 'source_sheet'
+            $cell = Get-SafeProperty $item 'source_cell'
+            $field = Get-SafeProperty $item 'dest_field'
+
             return @(
-                @{ Name='name'; Type='text'; Label='Mapping Name'; Required=$true; Value=$item.name }
-                @{ Name='source_sheet'; Type='text'; Label='Source Sheet Name'; Required=$true; Value=$item.source_sheet }
-                @{ Name='source_cell'; Type='text'; Label='Source Cell'; Required=$true; Value=$item.source_cell }
-                @{ Name='dest_field'; Type='text'; Label='Dest Project Field'; Required=$true; Value=$item.dest_field }
+                @{ Name='name'; Type='text'; Label='Mapping Name'; Required=$true; Value=$name }
+                @{ Name='source_sheet'; Type='text'; Label='Source Sheet Name'; Required=$true; Value=$sheet }
+                @{ Name='source_cell'; Type='text'; Label='Source Cell'; Required=$true; Value=$cell }
+                @{ Name='dest_field'; Type='text'; Label='Dest Project Field'; Required=$true; Value=$field }
             )
         }
     }
@@ -88,7 +93,8 @@ class ExcelImportMappingEditorScreen : StandardListScreen {
 
     [void] OnItemUpdated([object]$item, [hashtable]$values) {
         try {
-            $this._importService.UpdateMapping($this._profileId, $item.id, $values)
+            $id = Get-SafeProperty $item 'id'
+            $this._importService.UpdateMapping($this._profileId, $id, $values)
             $this.SetStatusMessage("Mapping updated", "success")
             $this.LoadData()
             
@@ -106,7 +112,8 @@ class ExcelImportMappingEditorScreen : StandardListScreen {
 
     [void] OnItemDeleted([object]$item) {
         try {
-            $this._importService.DeleteMapping($this._profileId, $item.id)
+            $id = Get-SafeProperty $item 'id'
+            $this._importService.DeleteMapping($this._profileId, $id)
             $this.SetStatusMessage("Mapping deleted", "success")
             $this.LoadData()
             

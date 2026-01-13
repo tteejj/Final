@@ -119,18 +119,34 @@ class ExcelProfileManagerScreen : StandardListScreen {
         # Format for display
         foreach ($profile in $profiles) {
             if ($null -ne $profile) {
-                # Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Processing profile - type=$($profile.GetType().Name) isHashtable=$($profile -is [hashtable])" "DEBUG"
+                # Safe access for ID
+                $pId = Get-SafeProperty $profile 'id'
+                $mappings = Get-SafeProperty $profile 'mappings'
+                
+                $mappingCount = $(if ($mappings) { $mappings.Count } else { 0 })
+                $isActive = $(if ($pId -eq $activeId) { "Yes" } else { "No" })
+                
+                # We need to construct a robust object for display
+                # Since we can't easily modify the input object if it's a PSCustomObject in strict mode
+                # We will just ensure the properties we read for GetColumns are available
+                
+                # Actually, the List relies on the object having these properties.
+                # If $profile is a Hashtable, we can add them.
                 if ($profile -is [hashtable]) {
-                    # Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Profile keys: $($profile.Keys -join ', ')" "DEBUG"
-                    # Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Profile name='$($profile['name'])' desc='$($profile['description'])'" "DEBUG"
+                    $profile['mapping_count'] = $mappingCount
+                    $profile['is_active'] = $isActive
+                } else {
+                    # If it's an object, we can't easily add properties without Add-Member
+                    # But StandardListScreen might expect them.
+                    # For now, let's assume the mapped columns 'mapping_count' and 'is_active' 
+                    # need to be on the object.
+                    try {
+                        $profile | Add-Member -MemberType NoteProperty -Name 'mapping_count' -Value $mappingCount -Force
+                        $profile | Add-Member -MemberType NoteProperty -Name 'is_active' -Value $isActive -Force
+                    } catch {
+                        # Ignore if already exists or fails
+                    }
                 }
-
-                $profile['mapping_count'] = $(if ($profile['mappings']) { $profile['mappings'].Count } else { 0 })
-                $profile['is_active'] = $(if ($profile['id'] -eq $activeId) { "Yes" } else { "No" })
-
-                # Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: After formatting - mapping_count=$($profile['mapping_count']) is_active=$($profile['is_active'])" "DEBUG"
-            } else {
-                # Write-PmcTuiLog "ExcelProfileManagerScreen.LoadItems: Null profile in list" "DEBUG"
             }
         }
 
@@ -146,10 +162,10 @@ class ExcelProfileManagerScreen : StandardListScreen {
                 @{ Name='start_cell'; Type='text'; Label='Start Cell'; Value='A1'; Hint='First cell with data (e.g., A1, B2)' }
             )
         } else {
-            # Existing profile - use hashtable accessor for consistency
-            $name = $(if ($item -is [hashtable]) { $item['name'] } else { $item.name })
-            $description = $(if ($item -is [hashtable]) { $item['description'] } else { $item.description })
-            $startCell = $(if ($item -is [hashtable]) { $item['start_cell'] } else { $item.start_cell })
+            # Existing profile - use safe accessor
+            $name = Get-SafeProperty $item 'name'
+            $description = Get-SafeProperty $item 'description'
+            $startCell = Get-SafeProperty $item 'start_cell'
 
             return @(
                 @{ Name='name'; Type='text'; Label='Profile Name'; Required=$true; Value=$name }
@@ -189,7 +205,7 @@ class ExcelProfileManagerScreen : StandardListScreen {
 
     [void] OnItemUpdated([object]$item, [hashtable]$values) {
         try {
-            $itemId = $(if ($item -is [hashtable]) { $item['id'] } else { $item.id })
+            $itemId = Get-SafeProperty $item 'id'
 
             # ENDEMIC FIX: Safe value access
             $changes = @{
@@ -221,8 +237,8 @@ class ExcelProfileManagerScreen : StandardListScreen {
 
     [void] OnItemDeleted([object]$item) {
         try {
-            $itemId = $(if ($item -is [hashtable]) { $item['id'] } else { $item.id })
-            $itemName = $(if ($item -is [hashtable]) { $item['name'] } else { $item.name })
+            $itemId = Get-SafeProperty $item 'id'
+            $itemName = Get-SafeProperty $item 'name'
 
             if ($itemId) {
                 $this._mappingService.DeleteProfile($itemId)
@@ -253,8 +269,8 @@ class ExcelProfileManagerScreen : StandardListScreen {
         $itemName = $(if ($item -is [hashtable]) { $item['name'] } else { $item.name })
 
         if ($itemId) {
-            . "$PSScriptRoot/ExcelMappingEditorScreen.ps1"
-            $editorScreen = New-Object ExcelMappingEditorScreen -ArgumentList $itemId, $itemName
+            . "$PSScriptRoot/ExcelImportMappingEditorScreen.ps1"
+            $editorScreen = New-Object ExcelImportMappingEditorScreen -ArgumentList $itemId, $itemName
             $global:PmcApp.PushScreen($editorScreen)
         }
     }
@@ -267,8 +283,8 @@ class ExcelProfileManagerScreen : StandardListScreen {
             return
         }
 
-        $itemId = $(if ($selectedItem -is [hashtable]) { $selectedItem['id'] } else { $selectedItem.id })
-        $itemName = $(if ($selectedItem -is [hashtable]) { $selectedItem['name'] } else { $selectedItem.name })
+        $itemId = Get-SafeProperty $selectedItem 'id'
+        $itemName = Get-SafeProperty $selectedItem 'name'
 
         try {
             $this._mappingService.SetActiveProfile($itemId)

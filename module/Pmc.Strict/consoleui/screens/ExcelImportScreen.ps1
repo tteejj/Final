@@ -201,12 +201,9 @@ class ExcelImportScreen : PmcScreen {
 
             $profileId = $null
             $profileName = 'Unnamed'
-            if ($profile -is [hashtable]) {
-                if ($profile.ContainsKey('id')) { $profileId = $profile['id'] }
-                if ($profile.ContainsKey('name')) { $profileName = $profile['name'] }
-            } else {
-                if ($profile.PSObject.Properties['id']) { $profileId = $profile.id }
-                if ($profile.PSObject.Properties['name']) { $profileName = $profile.name }
+            if ($null -ne $profile) {
+                $profileId = Get-SafeProperty $profile 'id'
+                $profileName = Get-SafeProperty $profile 'name'
             }
 
             $isActive = $(if ($profileId -eq $activeId) { " [ACTIVE]" } else { "" })
@@ -232,10 +229,9 @@ class ExcelImportScreen : PmcScreen {
         }
 
         $profileName = 'Unnamed Profile'
-        if ($this._activeProfile -is [hashtable] -and $this._activeProfile.ContainsKey('name')) {
-            $profileName = $this._activeProfile['name']
-        } elseif ($this._activeProfile.PSObject.Properties['name']) {
-            $profileName = $this._activeProfile.name
+        if ($null -ne $this._activeProfile) {
+            $val = Get-SafeProperty $this._activeProfile 'name'
+            if ($val) { $profileName = $val }
         }
 
         $engine.WriteAt(4, $y, "Profile: $profileName", $textFg, $textBg)
@@ -244,10 +240,11 @@ class ExcelImportScreen : PmcScreen {
         $maxRows = $global:MAX_PREVIEW_ROWS
         $rowCount = 0
 
-        foreach ($mapping in $this._activeProfile['mappings']) {
+        $mappings = Get-SafeProperty $this._activeProfile 'mappings'
+        foreach ($mapping in $mappings) {
             if ($rowCount -ge $maxRows) { break }
 
-            $fieldName = $mapping['display_name']
+            $fieldName = Get-SafeProperty $mapping 'display_name'
             $value = "(empty)"
             if ($this._previewData.ContainsKey($mapping['excel_cell'])) {
                 $cellValue = $this._previewData[$mapping['excel_cell']]
@@ -449,12 +446,13 @@ class ExcelImportScreen : PmcScreen {
         if ($this._selectedOption -lt $profiles.Count) {
             $this._activeProfile = $profiles[$this._selectedOption]
 
-            if ($null -eq $this._activeProfile['mappings'] -or $this._activeProfile['mappings'].Count -eq 0) {
+            $mappings = Get-SafeProperty $this._activeProfile 'mappings'
+            if ($null -eq $mappings -or $mappings.Count -eq 0) {
                 throw "Profile has no mappings"
             }
 
             # Read Preview
-            $cellsToRead = @($this._activeProfile['mappings'] | ForEach-Object { $_['excel_cell'] })
+            $cellsToRead = @($mappings | ForEach-Object { Get-SafeProperty $_ 'excel_cell' })
             if ($cellsToRead.Count -gt $global:MAX_CELLS_TO_READ) {
                 $cellsToRead = $cellsToRead | Select-Object -First $global:MAX_CELLS_TO_READ
             }
@@ -472,13 +470,15 @@ class ExcelImportScreen : PmcScreen {
 
         $projectData = @{}
         
-        foreach ($mapping in $this._activeProfile['mappings']) {
-            $cell = $mapping['excel_cell']
+        $mappings = Get-SafeProperty $this._activeProfile 'mappings'
+        foreach ($mapping in $mappings) {
+            $cell = Get-SafeProperty $mapping 'excel_cell'
             $val = if ($this._previewData.ContainsKey($cell)) { $this._previewData[$cell] } else { $null }
 
             # Type Conversion
             $converted = $val
-            switch ($mapping['data_type']) {
+            $dataType = Get-SafeProperty $mapping 'data_type'
+            switch ($dataType) {
                 'int' { 
                     try { $converted = if ($val) { [long]$val } else { 0 } } catch { throw "Invalid int: $val" }
                 }
@@ -499,11 +499,14 @@ class ExcelImportScreen : PmcScreen {
             }
             
             # Required check
-            if ($mapping['required'] -and $null -eq $converted) {
-                throw "Field '$($mapping['display_name'])' is required"
+            $req = Get-SafeProperty $mapping 'required'
+            if ($req -and $null -eq $converted) {
+                $dispName = Get-SafeProperty $mapping 'display_name'
+                throw "Field '$dispName' is required"
             }
 
-            $projectData[$mapping['project_property']] = $converted
+            $projProp = Get-SafeProperty $mapping 'project_property'
+            $projectData[$projProp] = $converted
         }
 
         if (-not $projectData['name']) { throw "Project name is required" }

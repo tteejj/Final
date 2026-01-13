@@ -107,11 +107,31 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
         $activeId = if($activeProfile) { $activeProfile.id } else { $null }
 
         # Format for display
+        # Format for display
         foreach ($profile in $profiles) {
-            $profile['source_file'] = if ($profile.source_workbook_path) { Split-Path -Leaf $profile.source_workbook_path } else { "" }
-            $profile['dest_file'] = if ($profile.dest_workbook_path) { Split-Path -Leaf $profile.dest_workbook_path } else { "" }
-            $profile['mapping_count'] = if ($profile.mappings) { $profile.mappings.Count } else { 0 }
-            $profile['is_active'] = if($profile.id -eq $activeId) { "Yes" } else { "No" }
+            $srcPath = Get-SafeProperty $profile 'source_workbook_path'
+            $dstPath = Get-SafeProperty $profile 'dest_workbook_path'
+            $mappings = Get-SafeProperty $profile 'mappings'
+            $pId = Get-SafeProperty $profile 'id'
+
+            $srcFile = if ($srcPath) { Split-Path -Leaf $srcPath } else { "" }
+            $dstFile = if ($dstPath) { Split-Path -Leaf $dstPath } else { "" }
+            $mapCount = if ($mappings) { $mappings.Count } else { 0 }
+            $isActive = if($pId -eq $activeId) { "Yes" } else { "No" }
+
+            if ($profile -is [hashtable]) {
+                $profile['source_file'] = $srcFile
+                $profile['dest_file'] = $dstFile
+                $profile['mapping_count'] = $mapCount
+                $profile['is_active'] = $isActive
+            } else {
+                try {
+                    $profile | Add-Member -MemberType NoteProperty -Name 'source_file' -Value $srcFile -Force
+                    $profile | Add-Member -MemberType NoteProperty -Name 'dest_file' -Value $dstFile -Force
+                    $profile | Add-Member -MemberType NoteProperty -Name 'mapping_count' -Value $mapCount -Force
+                    $profile | Add-Member -MemberType NoteProperty -Name 'is_active' -Value $isActive -Force
+                } catch { }
+            }
         }
 
         $this.List.SetData($profiles)
@@ -128,11 +148,16 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
             )
         } else {
             # Existing profile
+            $name = Get-SafeProperty $item 'name'
+            $desc = Get-SafeProperty $item 'description'
+            $src = Get-SafeProperty $item 'source_workbook_path'
+            $dst = Get-SafeProperty $item 'dest_workbook_path'
+
             return @(
-                @{ Name='name'; Type='text'; Label='Profile Name'; Required=$true; Value=$item.name }
-                @{ Name='description'; Type='text'; Label='Description'; Value=$item.description }
-                @{ Name='source_workbook_path'; Type='text'; Label='Source Workbook Path'; Required=$true; Value=$item.source_workbook_path; Hint='Full path to source .xlsx file' }
-                @{ Name='dest_workbook_path'; Type='text'; Label='Dest Workbook Path'; Required=$true; Value=$item.dest_workbook_path; Hint='Full path to destination .xlsx file' }
+                @{ Name='name'; Type='text'; Label='Profile Name'; Required=$true; Value=$name }
+                @{ Name='description'; Type='text'; Label='Description'; Value=$desc }
+                @{ Name='source_workbook_path'; Type='text'; Label='Source Workbook Path'; Required=$true; Value=$src; Hint='Full path to source .xlsx file' }
+                @{ Name='dest_workbook_path'; Type='text'; Label='Dest Workbook Path'; Required=$true; Value=$dst; Hint='Full path to destination .xlsx file' }
             )
         }
     }
@@ -170,7 +195,8 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
     [void] OnItemUpdated([object]$item, [hashtable]$values) {
         # Update profile
         try {
-            $this._copyService.UpdateProfile($item.id, $values)
+            $id = Get-SafeProperty $item 'id'
+            $this._copyService.UpdateProfile($id, $values)
             $this.SetStatusMessage("Profile updated", "success")
             $this.LoadData()
             
@@ -188,7 +214,8 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
 
     [void] OnItemDeleted([object]$item) {
         try {
-            $this._copyService.DeleteProfile($item.id)
+            $id = Get-SafeProperty $item 'id'
+            $this._copyService.DeleteProfile($id)
             $this.SetStatusMessage("Profile deleted", "success")
             $this.LoadData()
             
@@ -210,7 +237,9 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
 
         # Open mapping editor screen
         . "$PSScriptRoot/ExcelCopyMappingEditorScreen.ps1"
-        $editor = New-Object ExcelCopyMappingEditorScreen -ArgumentList $item.id, $item.name
+        $id = Get-SafeProperty $item 'id'
+        $name = Get-SafeProperty $item 'name'
+        $editor = New-Object ExcelCopyMappingEditorScreen -ArgumentList $id, $name
         $global:PmcApp.PushScreen($editor)
     }
 
@@ -238,7 +267,8 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
         }
 
         try {
-            $this._copyService.SetActiveProfile($item.id)
+            $id = Get-SafeProperty $item 'id'
+            $this._copyService.SetActiveProfile($id)
             $this.SetStatusMessage("Active profile set", "success")
             $this.LoadData()
             
@@ -262,7 +292,8 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
         }
 
         # Validate profile has mappings
-        if ($item.mapping_count -eq 0) {
+        $mapCount = Get-SafeProperty $item 'mapping_count'
+        if ($mapCount -eq 0) {
             $this.SetStatusMessage("Profile has no mappings to copy", "error")
             return
         }
@@ -270,7 +301,8 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
         # Execute copy operation
         try {
             $this.SetStatusMessage("Executing copy operation...", "info")
-            $result = $this._copyService.ExecuteCopy($item.id)
+            $id = Get-SafeProperty $item 'id'
+            $result = $this._copyService.ExecuteCopy($id)
 
             # Display result
             if ($result.failed_mappings -eq 0) {
