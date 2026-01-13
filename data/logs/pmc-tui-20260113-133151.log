@@ -1,0 +1,328 @@
+[2026-01-13 13:31:53.899] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-13 13:31:53.902] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-13 13:31:53.902] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-13 13:31:53.903] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-13 13:31:53.904] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-13 13:31:53.904] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-13 13:31:53.905] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-13 13:31:53.906] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-13 13:31:53.907] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-13 13:31:53.907] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-13 13:31:53.908] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-13 13:31:53.909] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-13 13:31:53.909] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-13 13:31:53.910] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-13 13:31:53.911] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-13 13:31:53.924] ServiceContainer: Resolving 'Application'...
+[2026-01-13 13:31:53.926] ServiceContainer: Resolving 'Theme'...
+[2026-01-13 13:31:54.088] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-13 13:31:54.154] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-13 13:31:54.155] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-13 13:31:54.166] ServiceContainer: Resolved 'Application' successfully
+[2026-01-13 13:31:54.167] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-13 13:31:54.177] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-13 13:31:54.196] MenuRegistry: Loaded manifest with 17 entries
+[2026-01-13 13:31:54.224] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-13 13:31:54.224] MenuRegistry: Registered factory for 'Excel Profiles'
+[2026-01-13 13:31:54.237] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-13 13:31:54.238] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-13 13:31:54.239] MenuRegistry: Registered factory for 'Theme Editor'
+[2026-01-13 13:31:54.240] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-13 13:31:54.242] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-13 13:31:54.242] MenuRegistry: Registered factory for 'Time Tracking'
+[2026-01-13 13:31:54.243] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-13 13:31:54.244] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-13 13:31:54.245] MenuRegistry: Registered factory for 'Checklists'
+[2026-01-13 13:31:54.246] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-13 13:31:54.247] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-13 13:31:54.248] MenuRegistry: Registered factory for 'Notes'
+[2026-01-13 13:31:54.248] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-13 13:31:54.250] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-13 13:31:54.250] MenuRegistry: Registered factory for 'T2020 Export Profiles'
+[2026-01-13 13:31:54.251] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-13 13:31:54.252] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-13 13:31:54.253] MenuRegistry: Registered factory for 'Command Library'
+[2026-01-13 13:31:54.254] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-13 13:31:54.255] ServiceContainer: Registered 'CalendarScreen' (singleton=False)
+[2026-01-13 13:31:54.256] MenuRegistry: Registered factory for 'Calendar'
+[2026-01-13 13:31:54.256] MenuRegistry: Registered 'Calendar' in 'Tools' menu (hotkey=A order=50)
+[2026-01-13 13:31:54.258] ServiceContainer: Registered 'TimeReportScreen' (singleton=False)
+[2026-01-13 13:31:54.258] MenuRegistry: Registered factory for 'Time Report'
+[2026-01-13 13:31:54.259] MenuRegistry: Registered 'Time Report' in 'Time' menu (hotkey=R order=20)
+[2026-01-13 13:31:54.260] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-13 13:31:54.261] MenuRegistry: Registered factory for 'Task List'
+[2026-01-13 13:31:54.262] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-13 13:31:54.263] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-13 13:31:54.263] MenuRegistry: Registered factory for 'Help'
+[2026-01-13 13:31:54.264] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-13 13:31:54.265] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-13 13:31:54.266] MenuRegistry: Registered factory for 'Project List'
+[2026-01-13 13:31:54.267] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-13 13:31:54.268] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-13 13:31:54.269] MenuRegistry: Registered factory for 'Import from Excel'
+[2026-01-13 13:31:54.269] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-13 13:31:54.271] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-13 13:31:54.271] MenuRegistry: Registered factory for 'Weekly Report'
+[2026-01-13 13:31:54.272] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-13 13:31:54.290] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-13 13:31:54.291] MenuRegistry: Registered factory for 'Checklist Templates'
+[2026-01-13 13:31:54.292] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-13 13:31:54.293] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-13 13:31:54.294] MenuRegistry: Registered factory for 'Excel Import Profiles'
+[2026-01-13 13:31:54.295] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-13 13:31:54.296] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-13 13:31:54.297] MenuRegistry: Registered factory for 'Settings'
+[2026-01-13 13:31:54.298] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-13 13:31:58.204] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Time Tracking
+[2026-01-13 13:31:58.216] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-13 13:31:58.229] [INFO] StandardListScreen._ConfigureListActions: Configured 7 footer shortcuts
+[2026-01-13 13:31:58.440] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Time Tracking
+[2026-01-13 13:31:58.441] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-13 13:31:58.443] [INFO] StandardListScreen._ConfigureListActions: Configured 7 footer shortcuts
+[13:31:58.677] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:31:58.679] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:31:58.679] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:31:58.680] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:31:58.681] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:31:58.682] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:31:58.683] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:31:58.684] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:31:58.685] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=20 char='I'
+[13:31:58.686] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=20 char='D'
+[13:31:58.687] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=20 char='1'
+[13:31:58.688] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:31:58.689] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:31:58.690] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:31:58.691] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:31:58.692] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:31:58.693] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:31:58.694] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:31:58.720] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:00.899] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:00.900] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:00.900] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:00.900] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:00.901] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:00.901] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:00.903] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:00.904] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:00.904] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:00.905] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:00.905] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=20 char='1'
+[13:32:00.906] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:00.906] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:00.907] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:00.907] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:00.908] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:00.908] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:00.908] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:00.909] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:02.627] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:02.627] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:02.627] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:02.628] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:02.628] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:02.628] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:02.629] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:02.629] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:02.629] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:02.630] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:02.630] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=20 char='1'
+[13:32:02.630] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:02.631] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:02.631] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:02.631] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:02.632] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:02.632] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:02.632] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:02.633] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:03.516] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:03.516] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:03.516] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:03.517] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:03.519] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:03.519] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:03.520] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:03.520] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:03.521] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:03.521] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:03.521] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=20 char='1'
+[13:32:03.522] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:03.522] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:03.522] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:03.523] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:03.523] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:03.523] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:03.524] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:03.525] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:04.658] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:04.658] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:04.659] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:04.659] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:04.659] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:04.660] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:04.660] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:04.660] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:04.662] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:04.663] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:04.663] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=20 char='1'
+[13:32:04.663] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:04.664] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:04.664] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:04.664] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:04.665] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:04.665] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:04.665] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:04.666] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:05.645] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:05.646] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:05.646] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:05.647] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:05.648] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:05.648] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:05.649] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:05.650] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:05.651] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=200 char='I'
+[13:32:05.651] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=200 char='D'
+[13:32:05.652] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=200 char='1'
+[13:32:05.653] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:05.654] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:05.655] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:05.656] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:05.657] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:05.657] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:05.658] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:05.659] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:07.527] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:07.528] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:07.528] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:07.529] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:07.529] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:07.530] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:07.530] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:07.530] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:07.531] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=200 char='I'
+[13:32:07.532] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=200 char='D'
+[13:32:07.532] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=200 char='1'
+[13:32:07.532] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:07.533] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:07.533] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:07.534] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:07.534] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:07.535] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:07.535] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:07.538] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:07.700] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:07.701] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:07.701] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:07.701] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:07.702] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:07.702] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:07.703] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:07.703] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:07.704] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=200 char='I'
+[13:32:07.704] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=200 char='D'
+[13:32:07.705] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=200 char='1'
+[13:32:07.705] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:07.706] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:07.706] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:07.707] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:07.707] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:07.707] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:07.708] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:07.708] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:07.882] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:07.883] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:07.883] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:07.883] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:07.884] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:07.884] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:07.884] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:07.885] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:07.885] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=200 char='I'
+[13:32:07.885] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=200 char='D'
+[13:32:07.886] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=200 char='1'
+[13:32:07.887] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:07.887] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:07.888] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:07.888] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:07.888] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:07.889] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:07.889] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:07.889] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:07.988] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:07.988] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:07.989] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:07.989] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:07.991] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:07.991] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:07.992] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:07.992] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:07.992] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=200 char='I'
+[13:32:07.993] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=200 char='D'
+[13:32:07.993] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=200 char='1'
+[13:32:07.993] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:07.994] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:07.994] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:07.994] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:07.994] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:07.995] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:07.995] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:07.997] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:08.151] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:08.151] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:08.151] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:08.152] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:08.152] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:08.153] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:08.153] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:08.153] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:08.154] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=200 char='I'
+[13:32:08.154] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=200 char='D'
+[13:32:08.154] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=200 char='1'
+[13:32:08.156] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:08.157] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:08.157] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:08.157] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:08.158] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:08.158] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:08.158] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:08.159] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:08.311] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:08.311] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:08.312] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:08.312] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:08.314] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:08.314] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:08.315] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:08.315] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:08.316] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=200 char='I'
+[13:32:08.316] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=200 char='D'
+[13:32:08.316] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=200 char='1'
+[13:32:08.317] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:08.317] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:08.318] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:08.318] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:08.318] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:08.319] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:08.319] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:08.321] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:16.356] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:16.356] [Z-BUFFER] REJECTED at (3,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:16.356] [Z-BUFFER] REJECTED at (4,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:16.357] [Z-BUFFER] REJECTED at (5,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:16.357] [Z-BUFFER] REJECTED at (14,7): currentZ=10 < zBuffer=20 char='T'
+[13:32:16.357] [Z-BUFFER] REJECTED at (15,7): currentZ=10 < zBuffer=20 char='a'
+[13:32:16.360] [Z-BUFFER] REJECTED at (16,7): currentZ=10 < zBuffer=20 char='s'
+[13:32:16.360] [Z-BUFFER] REJECTED at (17,7): currentZ=10 < zBuffer=20 char='k'
+[13:32:16.361] [Z-BUFFER] REJECTED at (55,7): currentZ=10 < zBuffer=200 char='I'
+[13:32:16.361] [Z-BUFFER] REJECTED at (56,7): currentZ=10 < zBuffer=200 char='D'
+[13:32:16.361] [Z-BUFFER] REJECTED at (57,7): currentZ=10 < zBuffer=200 char='1'
+[13:32:16.362] [Z-BUFFER] REJECTED at (65,7): currentZ=10 < zBuffer=20 char='I'
+[13:32:16.362] [Z-BUFFER] REJECTED at (66,7): currentZ=10 < zBuffer=20 char='D'
+[13:32:16.362] [Z-BUFFER] REJECTED at (67,7): currentZ=10 < zBuffer=20 char='2'
+[13:32:16.362] [Z-BUFFER] REJECTED at (93,7): currentZ=10 < zBuffer=20 char='N'
+[13:32:16.363] [Z-BUFFER] REJECTED at (94,7): currentZ=10 < zBuffer=20 char='o'
+[13:32:16.363] [Z-BUFFER] REJECTED at (95,7): currentZ=10 < zBuffer=20 char='t'
+[13:32:16.363] [Z-BUFFER] REJECTED at (96,7): currentZ=10 < zBuffer=20 char='e'
+[13:32:16.364] [Z-BUFFER] REJECTED at (97,7): currentZ=10 < zBuffer=20 char='s'

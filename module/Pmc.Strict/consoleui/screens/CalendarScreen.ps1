@@ -441,10 +441,7 @@ class CalendarScreen : PmcScreen {
     [string] RenderContent() { return "" }
 
     # === KEY HANDLING ===
-    [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
-        $handled = ([PmcScreen]$this).HandleKeyPress($keyInfo)
-        if ($handled) { return $true }
-
+    [bool] HandleInput([ConsoleKeyInfo]$keyInfo) {
         $keyChar = $keyInfo.KeyChar
 
         switch ($keyInfo.Key) {

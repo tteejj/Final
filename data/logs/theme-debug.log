@@ -3116,3 +3116,27 @@ Check the spelling of the name, or if a path was included, verify that the path 
 [12:08:42.841] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
 [12:08:42.850] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
 [12:08:42.856] [Load-Theme] Returning theme with Hex='#ff0022'
+[13:31:53.831] === THEME SELF-HEAL START ===
+[13:31:53.845] Config path: /home/teej/ztest/config.json
+[13:31:53.874] Config loaded. Active=tronares, Hex=#ff0022, hasHex=True
+[13:31:53.876] Hex already present, no repair needed
+[13:31:53.979] [Load-Theme] themeName='tronares' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[13:31:53.986] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[13:31:53.989] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[13:31:54.014] [Load-Theme] Returning theme with Hex='#ff0022'
+[13:31:54.056] [Load-Theme] themeName='tronares' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[13:31:54.058] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[13:31:54.066] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[13:31:54.073] [Load-Theme] Returning theme with Hex='#ff0022'
+[14:35:46.181] === THEME SELF-HEAL START ===
+[14:35:46.196] Config path: /home/teej/ztest/config.json
+[14:35:46.248] Config loaded. Active=tronares, Hex=#ff0022, hasHex=True
+[14:35:46.252] Hex already present, no repair needed
+[14:35:46.431] [Load-Theme] themeName='tronares' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[14:35:46.443] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[14:35:46.450] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[14:35:46.498] [Load-Theme] Returning theme with Hex='#ff0022'
+[14:35:46.573] [Load-Theme] themeName='tronares' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[14:35:46.588] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[14:35:46.592] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[14:35:46.608] [Load-Theme] Returning theme with Hex='#ff0022'
