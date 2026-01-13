@@ -242,6 +242,34 @@ class MenuRegistry {
                         . $factoryScreenPath
                         # CRITICAL FIX: Use -ArgumentList parameter for reliable argument passing
                         # Positional arguments don't work correctly with New-Object in closures
+                        if ($factoryViewMode) {
+                            return New-Object $factoryScreenTypeName -ArgumentList $c, $factoryViewMode
+                        } else {
+                            return New-Object $factoryScreenTypeName -ArgumentList $c
+                        }
+                    }.GetNewClosure(), $false)  # Non-singleton: create new instance each time
+
+                    if ($global:PmcTuiLogFile) {
+                        Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] MenuRegistry: Registered factory for '$label'"
+                    }
+                }
+
+                # Build scriptblock that uses container to resolve screen
+                $scriptblock = [scriptblock]::Create(@"
+    `$screen = `$global:PmcContainer.Resolve('$screenName')
+    if (`$screen) {
+        `$global:PmcApp.PushScreen(`$screen)
+    } else {
+        throw "MenuRegistry: Failed to resolve screen '$screenName'"
+    }
+"@)
+
+                $this.AddMenuItem($menu, $label, $hotkey, $scriptblock, $order)
+
+                if ($global:PmcTuiLogFile) {
+                    Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] MenuRegistry: Registered '$label' in '$menu' menu (hotkey=$hotkey order=$order)"
+                }
+            }
 
         } catch {
             $errorMsg = "MenuRegistry: Error loading manifest: $($_.Exception.Message)"
