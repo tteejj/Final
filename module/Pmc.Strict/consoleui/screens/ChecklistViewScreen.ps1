@@ -74,12 +74,15 @@ class ChecklistViewScreen : StandardListScreen {
         $items = @()
         $index = 0
         foreach ($item in $this._instance.items) {
-            $checkbox = $(if ($item.completed) { "[x]" } else { "[ ]" })
+            $completed = Get-SafeProperty $item 'completed'
+            $text = Get-SafeProperty $item 'text'
+            $checkbox = $(if ($completed) { "[x]" } else { "[ ]" })
+            
             $items += @{
                 _index = $index
                 checkbox = $checkbox
-                text = $item.text
-                completed = $item.completed
+                text = $text
+                completed = $completed
                 _item = $item
             }
             $index++
@@ -104,7 +107,7 @@ class ChecklistViewScreen : StandardListScreen {
             )
         } else {
             # Edit existing
-            $text = $(if ($item -is [hashtable]) { $item['text'] } else { $item.text })
+            $text = Get-SafeProperty $item 'text'
             return @(
                 @{ Name='text'; Type='text'; Label='Item Text'; Required=$true; Value=$text }
             )
@@ -148,7 +151,7 @@ class ChecklistViewScreen : StandardListScreen {
 
     [void] OnItemUpdated([object]$item, [hashtable]$values) {
         try {
-            $index = $(if ($item -is [hashtable]) { $item['_index'] } else { $item._index })
+            $index = Get-SafeProperty $item '_index'
 
             if (-not $values.ContainsKey('text') -or [string]::IsNullOrWhiteSpace($values.text)) {
                 $this.SetStatusMessage("Item text is required", "error")
@@ -179,8 +182,8 @@ class ChecklistViewScreen : StandardListScreen {
 
     [void] OnItemDeleted([object]$item) {
         try {
-            $index = $(if ($item -is [hashtable]) { $item['_index'] } else { $item._index })
-            $text = $(if ($item -is [hashtable]) { $item['text'] } else { $item.text })
+            $index = Get-SafeProperty $item '_index'
+            $text = Get-SafeProperty $item 'text'
 
             # Remove item from array
             $newItems = @()
@@ -227,7 +230,7 @@ class ChecklistViewScreen : StandardListScreen {
 
     hidden [void] _ToggleItem($item) {
         try {
-            $index = $(if ($item -is [hashtable]) { $item['_index'] } else { $item._index })
+            $index = Get-SafeProperty $item '_index'
 
             $this._checklistService.ToggleItem($this._instanceId, $index)
 

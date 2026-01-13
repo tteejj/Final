@@ -118,8 +118,8 @@ class ChecklistsMenuScreen : StandardListScreen {
 
     [void] OnItemDeleted([object]$item) {
         try {
-            $id = $(if ($item -is [hashtable]) { $item['id'] } else { $item.id })
-            $title = $(if ($item -is [hashtable]) { $item['title'] } else { $item.title })
+            $id = Get-SafeProperty $item 'id'
+            $title = Get-SafeProperty $item 'title'
 
             $this._checklistService.DeleteInstance($id)
             $this.SetStatusMessage("Checklist '$title' deleted", "success")
@@ -138,8 +138,8 @@ class ChecklistsMenuScreen : StandardListScreen {
     }
 
     [void] OnItemActivated($item) {
-        $id = $(if ($item -is [hashtable]) { $item['id'] } else { $item.id })
-        $title = $(if ($item -is [hashtable]) { $item['title'] } else { $item.title })
+        $id = Get-SafeProperty $item 'id'
+        $title = Get-SafeProperty $item 'title'
 
         # Open ChecklistViewScreen
         . "$PSScriptRoot/ChecklistViewScreen.ps1"

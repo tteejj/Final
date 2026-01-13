@@ -86,7 +86,7 @@ class ChecklistsLauncherScreen : StandardListScreen {
 
     [void] OnItemActivated($item) {
         # Get project name
-        $projectName = $(if ($item -is [hashtable]) { $item['name'] } else { $item.name })
+        $projectName = Get-SafeProperty $item 'name'
 
         if ([string]::IsNullOrWhiteSpace($projectName)) {
             $this.SetStatusMessage("Invalid project", "error")
