@@ -135,7 +135,17 @@ class TimeReportScreen : PmcScreen {
 
             foreach ($key in ($groupedData.Keys | Sort-Object)) {
                 $group = $groupedData[$key]
-                $minutes = ($group.Entries | Measure-Object -Property minutes -Sum).Sum
+                
+                # FIX TS-L2: Manually sum minutes to handle both Hashtables and Objects safely
+                # Measure-Object fails on Hashtables as they don't expose keys as properties
+                $minutes = 0
+                foreach ($entry in $group.Entries) {
+                    $m = Get-SafeProperty $entry 'minutes'
+                    if ($m -is [int] -or $m -is [double] -or $m -is [string]) {
+                        $minutes += [int]$m
+                    }
+                }
+
                 $hours = [Math]::Round($minutes / 60.0, 2)
                 $this.TotalMinutes += $minutes
                 $totalHoursAccumulated += $hours
