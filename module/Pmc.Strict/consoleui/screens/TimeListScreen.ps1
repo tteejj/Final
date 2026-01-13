@@ -732,3 +732,4 @@ class TimeListScreen : StandardListScreen {
 
         return $false
     }
+}
