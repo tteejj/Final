@@ -88,11 +88,19 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
         $serviceTemplates = $this._checklistService.GetAllTemplates()
 
         foreach ($tmpl in $serviceTemplates) {
+            $name = Get-SafeProperty $tmpl 'name'
+            $path = Get-SafeProperty $tmpl 'file_path'
+            $items = Get-SafeProperty $tmpl 'items'
+            $mod = Get-SafeProperty $tmpl 'modified'
+
+            $count = if ($items) { $items.Count } else { 0 }
+            $modStr = if ($mod -is [datetime]) { $mod.ToString("yyyy-MM-dd HH:mm") } else { "$mod" }
+
             $templates += @{
-                name = $tmpl.name
-                file_path = $tmpl.file_path
-                item_count = $tmpl.items.Count
-                modified = $tmpl.modified.ToString("yyyy-MM-dd HH:mm")
+                name = $name
+                file_path = $path
+                item_count = $count
+                modified = $modStr
             }
         }
         return $templates
@@ -120,18 +128,20 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
     [void] OnEdit() {
         $item = $this.List.GetSelectedItem()
         if ($item) {
-            $this._OpenEditor($item.file_path)
+            $path = Get-SafeProperty $item 'file_path'
+            $this._OpenEditor($path)
         }
     }
 
     [void] OnDelete() {
         $item = $this.List.GetSelectedItem()
         if ($item) {
-            $this.ShowConfirmation("Delete Template", "Are you sure you want to delete '$($item.name)'?", {
+            $name = Get-SafeProperty $item 'name'
+            $this.ShowConfirmation("Delete Template", "Are you sure you want to delete '$name'?", {
                 try {
                     # Use service to delete
-                    $this._checklistService.DeleteTemplate($item.name)
-                    $this.SetStatusMessage("Deleted template '$($item.name)'", "success")
+                    $this._checklistService.DeleteTemplate($name)
+                    $this.SetStatusMessage("Deleted template '$name'", "success")
                     $this.LoadData()
                 } catch {
                     $this.SetStatusMessage("Failed to delete: $_", "error")
@@ -152,6 +162,10 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
         # OVERRIDE: Replace 'a' action to use custom OnAdd() instead of InlineEditor
         $addOverride = { $self.OnAdd() }.GetNewClosure()
         $this.List.AddAction('a', 'Add', $addOverride)
+        
+        # OVERRIDE: Replace 'e' action to use custom OnEdit() instead of InlineEditor
+        $editOverride = { $self.OnEdit() }.GetNewClosure()
+        $this.List.AddAction('e', 'Edit', $editOverride)
 
         # Add Import Action
         $importAction = {
@@ -160,25 +174,33 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
         }.GetNewClosure()
         $this.List.AddAction('i', 'Import to Project', $importAction)
         
-        # Add TUI Editor Action (same as Edit but explicit key)
+        # 't' is redundant if we map 'e', but keeping for compatibility if users are used to it
         $tuiEditAction = { $self.OnEdit() }.GetNewClosure()
         $this.List.AddAction('t', 'Edit Template', $tuiEditAction)
 
         # Add Open in External Editor Action
         $openAction = {
             $item = $self.List.GetSelectedItem()
-            if ($item) { $self._OpenInExternalEditor($item.file_path) }
+            if ($item) { 
+                $path = Get-SafeProperty $item 'file_path'
+                $self._OpenInExternalEditor($path) 
+            }
         }.GetNewClosure()
         $this.List.AddAction('o', 'Open External', $openAction)
         
         # Update Footer
         $this.Footer.ClearShortcuts()
         $this.Footer.AddShortcut('A', 'Add')
-        $this.Footer.AddShortcut('E/T', 'Edit')
+        $this.Footer.AddShortcut('E', 'Edit')
         $this.Footer.AddShortcut('D', 'Delete')
         $this.Footer.AddShortcut('I', 'Import')
         $this.Footer.AddShortcut('O', 'Open External')
         $this.Footer.AddShortcut('Esc', 'Back')
+    }
+
+    # Handle "Enter" key
+    [void] OnItemActivated($item) {
+        $this.OnEdit()
     }
 
     # === TUI Editor Logic ===
@@ -276,8 +298,9 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
     hidden [void] _DoImport($template, $projectName) {
         try {
             # Use service to create instance from template ID (which is the name)
-            $this._checklistService.CreateInstanceFromTemplate($template.name, "project", $projectName)
-            $this.SetStatusMessage("Imported '$($template.name)' to project '$projectName'", "success")
+            $name = Get-SafeProperty $template 'name'
+            $this._checklistService.CreateInstanceFromTemplate($name, "project", $projectName)
+            $this.SetStatusMessage("Imported '$name' to project '$projectName'", "success")
         }
         catch {
             $this.SetStatusMessage("Import failed: $($_.Exception.Message)", "error")

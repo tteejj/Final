@@ -1,101 +1,107 @@
 {
-  "schema_version": 1,
   "instances": [
     {
-      "created": "2026-01-01T11:42:09.0000000",
-      "owner_id": "inbox",
-      "owner_type": "project",
-      "title": "1",
-      "items": [
-        {
-          "order": 1,
-          "completed_date": null,
-          "completed": false,
-          "text": "1"
-        }
-      ],
-      "percent_complete": 0.0,
-      "template_id": null,
-      "modified": "2026-01-01T14:13:16.0000000",
-      "total_count": 1,
       "completed_count": 0,
-      "id": "0c4520f4-931e-46ce-8287-b0d97d3a3143"
-    },
-    {
-      "created": "2026-01-07T16:36:28.2428208-07:00",
-      "owner_id": "proj1",
-      "owner_type": "project",
-      "title": "check1",
-      "items": [
-        {
-          "order": 1,
-          "completed_date": null,
-          "completed": false,
-          "text": "1"
-        },
-        {
-          "order": 2,
-          "completed_date": null,
-          "completed": false,
-          "text": "2"
-        },
-        {
-          "order": 3,
-          "completed_date": null,
-          "completed": false,
-          "text": "3"
-        },
-        {
-          "order": 4,
-          "completed_date": null,
-          "completed": false,
-          "text": "4"
-        }
-      ],
-      "percent_complete": 0.0,
-      "template_id": null,
-      "modified": "2026-01-07T16:38:30.1385947-07:00",
-      "total_count": 4,
-      "completed_count": 0,
-      "id": "52f60f14-e150-4502-b703-d4a6b7c86a0d"
-    },
-    {
-      "created": "2026-01-07T16:36:05.3201152-07:00",
-      "owner_id": "newnote22",
-      "owner_type": "note",
+      "id": "3c7b0819-0800-4753-80dc-a51e5825e053",
       "title": "newnote22 (Checklist)",
+      "owner_type": "note",
+      "modified": "2026-01-07T16:36:05.0000000",
+      "percent_complete": 0,
       "items": [
         {
-          "order": 1,
-          "completed_date": null,
           "completed": false,
+          "completed_date": null,
+          "order": 1,
           "text": "1"
         },
         {
-          "order": 2,
-          "completed_date": null,
           "completed": false,
+          "completed_date": null,
+          "order": 2,
           "text": "2"
         },
         {
-          "order": 3,
-          "completed_date": null,
           "completed": false,
+          "completed_date": null,
+          "order": 3,
           "text": "3"
         },
         {
-          "order": 4,
-          "completed_date": null,
           "completed": false,
+          "completed_date": null,
+          "order": 4,
           "text": "4"
         }
       ],
-      "percent_complete": 0,
-      "template_id": null,
-      "modified": "2026-01-07T16:36:05.3201205-07:00",
       "total_count": 4,
+      "template_id": null,
+      "owner_id": "newnote22",
+      "created": "2026-01-07T16:36:05.0000000"
+    },
+    {
       "completed_count": 0,
-      "id": "3c7b0819-0800-4753-80dc-a51e5825e053"
+      "id": "0c4520f4-931e-46ce-8287-b0d97d3a3143",
+      "title": "1",
+      "owner_type": "project",
+      "modified": "2026-01-01T14:13:16.0000000",
+      "percent_complete": 0.0,
+      "items": [
+        {
+          "completed": false,
+          "completed_date": null,
+          "order": 1,
+          "text": "1"
+        }
+      ],
+      "total_count": 1,
+      "template_id": null,
+      "owner_id": "inbox",
+      "created": "2026-01-01T11:42:09.0000000"
+    },
+    {
+      "completed_count": 0,
+      "id": "52f60f14-e150-4502-b703-d4a6b7c86a0d",
+      "title": "check1",
+      "owner_type": "project",
+      "modified": "2026-01-13T11:06:59.1171298-07:00",
+      "percent_complete": 0.0,
+      "items": [
+        {
+          "completed": false,
+          "completed_date": null,
+          "order": 1,
+          "text": "1"
+        },
+        {
+          "completed": false,
+          "completed_date": null,
+          "order": 2,
+          "text": "2"
+        },
+        {
+          "completed": false,
+          "completed_date": null,
+          "order": 3,
+          "text": "3"
+        },
+        {
+          "completed": false,
+          "completed_date": null,
+          "order": 4,
+          "text": "4"
+        },
+        {
+          "completed": false,
+          "completed_date": null,
+          "order": 5,
+          "text": "5"
+        }
+      ],
+      "total_count": 5,
+      "template_id": null,
+      "owner_id": "proj1",
+      "created": "2026-01-07T16:36:28.0000000"
     }
-  ]
+  ],
+  "schema_version": 1
 }

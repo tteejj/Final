@@ -35,8 +35,8 @@
         },
         {
           "order": 2,
-          "completed_date": "2026-01-07T16:37:05.6345092-07:00",
-          "completed": true,
+          "completed_date": null,
+          "completed": false,
           "text": "2"
         },
         {
@@ -52,11 +52,11 @@
           "text": "4"
         }
       ],
-      "percent_complete": 25.0,
+      "percent_complete": 0.0,
       "template_id": null,
-      "modified": "2026-01-07T16:38:28.6375364-07:00",
+      "modified": "2026-01-07T16:38:30.1385947-07:00",
       "total_count": 4,
-      "completed_count": 1,
+      "completed_count": 0,
       "id": "52f60f14-e150-4502-b703-d4a6b7c86a0d"
     },
     {
