@@ -242,19 +242,6 @@ class MenuRegistry {
                         . $factoryScreenPath
                         # CRITICAL FIX: Use -ArgumentList parameter for reliable argument passing
                         # Positional arguments don't work correctly with New-Object in closures
-                        if ($factoryViewMode) {
-                            return New-Object $factoryScreenTypeName -ArgumentList $c, $factoryViewMode
-                        } else {
-                            return New-Object $factoryScreenTypeName -ArgumentList $c
-                        }
-                    }.GetNewClosure(), $false)  # Non-singleton: create new instance each time
-
-                $this.AddMenuItem($menu, $label, $hotkey, $scriptblock, $order)
-
-                if ($global:PmcTuiLogFile) {
-                    Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff')] MenuRegistry: Registered '$label' in '$menu' menu (hotkey=$hotkey order=$order)"
-                }
-            }
 
         } catch {
             $errorMsg = "MenuRegistry: Error loading manifest: $($_.Exception.Message)"
