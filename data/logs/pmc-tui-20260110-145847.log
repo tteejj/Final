@@ -99,7 +99,7 @@
 [2026-01-10 14:58:55.702] ServiceContainer: Resolving 'TaskStore'...
 [2026-01-10 14:58:55.705] ServiceContainer: Resolved 'TaskStore' successfully
 [2026-01-10 14:58:55.711] ServiceContainer: Resolved 'ProjectInfoScreenV4' successfully
-[2026-01-10 14:58:57.583] TabbedScreen.HandleKeyPress: Key=Enter Char='' ShowEditor=False
+[2026-01-10 14:58:57.583] TabbedScreen.HandleKeyPress: Key=Enter Char='' ShowEditor=False
 [2026-01-10 14:58:57.590] TabbedScreen.HandleKeyPress: Enter pressed (editor not showing), calling EditCurrentField
 [2026-01-10 14:58:57.605] TabbedScreen.EditCurrentField: ENTRY
 [2026-01-10 14:58:57.608] TabbedScreen.EditCurrentField: field='ID1' Type='text'
@@ -108,7 +108,7 @@
 [2026-01-10 14:58:59.151] TabbedScreen.HandleKeyPress: Key=D1 Char='1' ShowEditor=True
 [2026-01-10 14:58:59.161] TabbedScreen.HandleKeyPress: Routing to InlineEditor...
 [2026-01-10 14:58:59.203] TabbedScreen.HandleKeyPress: InlineEditor returned handled=True IsConfirmed=False IsCancelled=False
-[2026-01-10 14:58:59.821] TabbedScreen.HandleKeyPress: Key=Enter Char='' ShowEditor=True
+[2026-01-10 14:58:59.821] TabbedScreen.HandleKeyPress: Key=Enter Char='' ShowEditor=True
 [2026-01-10 14:58:59.822] TabbedScreen.HandleKeyPress: Routing to InlineEditor...
 [2026-01-10 14:58:59.854] TabbedScreen.HandleKeyPress: InlineEditor returned handled=True IsConfirmed=True IsCancelled=False
 [2026-01-10 14:58:59.855] TabbedScreen.HandleKeyPress: IsConfirmed=true, getting values...
