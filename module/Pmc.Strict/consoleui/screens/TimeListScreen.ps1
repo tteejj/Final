@@ -345,22 +345,16 @@ class TimeListScreen : StandardListScreen {
                 $projectId1 = Get-SafeProperty $project 'ID1'
                 $projectId2 = Get-SafeProperty $project 'ID2'
 
-                # Check if user entered manual ID1 (different from project's)
-                $hasManualId1 = $timeData.ContainsKey('id1') -and -not [string]::IsNullOrWhiteSpace($timeData.id1)
-                $isManualId1 = $hasManualId1 -and ($timeData.id1 -ne $projectId1)
-                
-                if ($isManualId1) {
-                    # User entered manual ID1 - clear ID2
-                    $timeData.id2 = ''
-                } else {
-                    # Auto-populate from project if user hasn't entered custom ID1
-                    if (-not [string]::IsNullOrWhiteSpace($projectId1) -and [string]::IsNullOrWhiteSpace($timeData.id1)) {
-                        $timeData.id1 = $projectId1
-                    }
-                    # If project has ID2, use it (unless user already entered a value)
-                    if (-not [string]::IsNullOrWhiteSpace($projectId2) -and [string]::IsNullOrWhiteSpace($timeData.id2)) {
-                        $timeData.id2 = $projectId2
-                    }
+                # If project has ID1, use it (unless user already entered a value)
+                if (-not [string]::IsNullOrWhiteSpace($projectId1) -and [string]::IsNullOrWhiteSpace($timeData.id1)) {
+                    $timeData.id1 = $projectId1
+                    # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id1 from project: '$($timeData.id1)'" "DEBUG"
+                }
+
+                # If project has ID2, use it (unless user already entered a value)
+                if (-not [string]::IsNullOrWhiteSpace($projectId2) -and [string]::IsNullOrWhiteSpace($timeData.id2)) {
+                    $timeData.id2 = $projectId2
+                    # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Set id2 from project: '$($timeData.id2)'" "DEBUG"
                 }
             } else {
                 # Write-PmcTuiLog "TimeListScreen.PopulateIDsFromProject: Project '$($timeData.project)' not found" "WARNING"
@@ -652,21 +646,18 @@ class TimeListScreen : StandardListScreen {
         $maxIterations = $script:DIALOG_TIMEOUT_ITERATIONS
         $iterations = 0
 
-        # Get render engine once
+        # Get render engine and position dialog
         $engine = $this.RenderEngine
-        
-        # Position dialog in center of screen
         $termWidth = [Console]::WindowWidth
         $termHeight = [Console]::WindowHeight
         $dialog.X = [Math]::Max(0, [int](($termWidth - $dialog.Width) / 2))
         $dialog.Y = [Math]::Max(0, [int](($termHeight - $dialog.Height) / 2))
-        
+
         while (-not $dialog.IsComplete -and $iterations -lt $maxIterations) {
             $iterations++
 
             # Render dialog using RenderToEngine
             $dialog.RenderToEngine($engine)
-            $engine.Flush()
 
             # Handle input
             if ([Console]::KeyAvailable) {
@@ -692,8 +683,10 @@ class TimeListScreen : StandardListScreen {
             $this.SetStatusMessage("Dialog closed due to timeout (3 minutes)", "warning")
         }
 
-        # Redraw screen after dialog closes
-        $this.RenderEngine.ForceRedraw()
+        # Invalidate cached region to force redraw after dialog closes
+        if ($engine) {
+            $engine.InvalidateCachedRegion(0, $termHeight)
+        }
     }
 
     # Generate time report for selected period
