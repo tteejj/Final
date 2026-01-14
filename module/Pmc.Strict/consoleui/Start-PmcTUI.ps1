@@ -19,7 +19,7 @@ function Write-PmcDebugLog {
     if (-not $debugLogPath) {
         # Fallback: create path relative to script location
         $root = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
-        $logDir = Join-Path $root "data/logs"
+        $logDir = Join-Path $root "data" | Join-Path -ChildPath "logs"
         if (-not (Test-Path $logDir)) {
             New-Item -ItemType Directory -Path $logDir -Force -ErrorAction SilentlyContinue | Out-Null
         }
@@ -51,11 +51,12 @@ if ($effectiveLogLevel -gt 0) {
         # Try environment variable first, but validate it's safe
         if ($env:PMC_LOG_PATH) {
             # SECURITY: Only use Windows paths on Windows, Unix paths on Linux
-            if ($PSVersionTable.Platform -eq 'Win32NT' -or $IsWindows) {
+            $isWindows = [System.Environment]::OSVersion.Platform -eq 'Win32NT'
+            if ($isWindows) {
                 if ($env:PMC_LOG_PATH -match '^[A-Z]:' -or $env:PMC_LOG_PATH -match '^\\\\') {
                     $logPath = $env:PMC_LOG_PATH
                 }
-            } elseif ($PSVersionTable.Platform -eq 'Unix' -or -not $IsWindows) {
+            } elseif (-not $isWindows) {
                 if ($env:PMC_LOG_PATH -match '^/' -or $env:PMC_LOG_PATH -match '^\./') {
                     $logPath = $env:PMC_LOG_PATH
                 }
@@ -65,7 +66,7 @@ if ($effectiveLogLevel -gt 0) {
         # Fallback to default location
         if (-not $logPath) {
             $moduleRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
-            $logPath = Join-Path $moduleRoot ".pmc-data/logs"
+            $logPath = Join-Path $moduleRoot ".pmc-data" | Join-Path -ChildPath "logs"
         }
 
         # Create directory if needed

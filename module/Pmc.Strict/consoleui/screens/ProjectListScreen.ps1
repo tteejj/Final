@@ -698,7 +698,7 @@ class ProjectListScreen : StandardListScreen {
         }
 
         try {
-            if ($global:IsWindows) {
+            if ([System.Environment]::OSVersion.Platform -eq 'Win32NT') {
                 # Start-Process on Windows
                 Start-Process -FilePath $folderPath
             }

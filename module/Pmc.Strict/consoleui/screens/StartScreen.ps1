@@ -384,7 +384,7 @@ class StartScreen : PmcScreen {
 
         switch ($keyChar) {
             'q' {
-                if ($global:PmcApp) { $global:PmcApp.RequestExit() }
+                if ($global:PmcApp) { $global:PmcApp.Stop() }
                 return $true
             }
             'r' {

@@ -3140,3 +3140,15 @@ Check the spelling of the name, or if a path was included, verify that the path 
 [14:35:46.588] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
 [14:35:46.592] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
 [14:35:46.608] [Load-Theme] Returning theme with Hex='#ff0022'
+[22:08:45.809] === THEME SELF-HEAL START ===
+[22:08:45.823] Config path: /home/teej/ztest/config.json
+[22:08:45.871] Config loaded. Active=tronares, Hex=#ff0022, hasHex=True
+[22:08:45.875] Hex already present, no repair needed
+[22:08:46.088] [Load-Theme] themeName='tronares' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[22:08:46.104] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[22:08:46.114] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[22:08:46.162] [Load-Theme] Returning theme with Hex='#ff0022'
+[22:08:46.247] [Load-Theme] themeName='tronares' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[22:08:46.249] [Load-Theme] Looking for: /home/teej/ztest/themes/tronares.json (exists=True)
+[22:08:46.253] [Load-Theme] JSON loaded. Name='TronAres' Hex='#ff0022'
+[22:08:46.264] [Load-Theme] Returning theme with Hex='#ff0022'
