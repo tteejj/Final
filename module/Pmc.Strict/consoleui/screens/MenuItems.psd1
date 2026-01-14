@@ -117,13 +117,7 @@
         ScreenFile = 'WeeklyTimeReportScreen.ps1'
     }
 
-    'TimeReportScreen' = @{
-        Menu = 'Time'
-        Label = 'Time Report'
-        Hotkey = 'R'
-        Order = 20
-        ScreenFile = 'TimeReportScreen.ps1'
-    }
+    # TimeReportScreen removed - functionality merged into TimeListScreen and WeeklyTimeReportScreen
 
     # ===== OPTIONS MENU =====
     'ThemeEditorScreen' = @{

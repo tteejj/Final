@@ -120,13 +120,26 @@ class TimeListScreen : StandardListScreen {
             $entries = @()
         }
 
+        # Calculate total duration for status bar
+        $totalMinutes = 0
+        foreach ($entry in $entries) {
+             if ($entry.ContainsKey('minutes')) {
+                 $totalMinutes += $entry.minutes
+             }
+        }
+        $totalHours = [Math]::Round($totalMinutes / 60, 2)
+
+        # Update status bar or footer with total
+        if ($this.StatusBar) {
+             $this.StatusBar.SetRightText("Total: $totalHours hrs")
+        }
+
         # TS-M1 FIX: Track failed date parses to provide user feedback
         $failedDateParses = 0
 
-        # Group entries by date, project, and timecode
-        $grouped = @{}
+        # No aggregation - display individual entries
         foreach ($entry in $entries) {
-            # TIM-1 FIX: Format date for grouping with error handling
+            # TIM-1 FIX: Format date for display with error handling
             $dateStr = ''
             if ($entry.ContainsKey('date') -and $entry.date) {
                 try {
@@ -145,90 +158,7 @@ class TimeListScreen : StandardListScreen {
                     # Write-PmcTuiLog "TimeListScreen.LoadItems: Failed to parse date '$($entry.date)': $_" "WARNING"
                 }
             }
-
-            # Create grouping key
-            # TS-M3 FIX: Sanitize components to prevent pipe character breaking grouping
-            $project = $(if ($entry.ContainsKey('project')) { $entry.project } else { '' })
-            $id1 = $(if ($entry.ContainsKey('id1')) { $entry.id1 } else { '' })
-
-            # Replace pipe characters in components to prevent grouping key corruption
-            $dateStrSafe = $dateStr -replace '\|', '_'
-            $projectSafe = $project -replace '\|', '_'
-            $id1Safe = $id1 -replace '\|', '_'
-
-            $groupKey = "$dateStrSafe|$projectSafe|$id1Safe"
-
-            # Initialize group if needed
-            if (-not $grouped.ContainsKey($groupKey)) {
-                $grouped[$groupKey] = @{
-                    date = $entry.date
-                    date_display = $dateStr
-                    project = $project
-                    id1 = $id1
-                    id2 = $(if ($entry.ContainsKey('id2')) { $entry.id2 } else { '' })
-                    task = $(if ($entry.ContainsKey('task')) { $entry.task } else { '' })
-                    notes = $(if ($entry.ContainsKey('notes')) { $entry.notes } else { '' })
-                    minutes = 0
-                    entry_count = 0
-                    entry_ids = @()
-                }
-            }
-
-            # Aggregate minutes
-            if ($entry.ContainsKey('minutes')) {
-                $grouped[$groupKey].minutes += $entry.minutes
-            }
-            $grouped[$groupKey].entry_count++
-            if ($entry.ContainsKey('id')) {
-                $grouped[$groupKey].entry_ids += $entry.id
-            }
-
-            # Store original entry for drill-down
-            if (-not $grouped[$groupKey].ContainsKey('original_entries')) {
-                $grouped[$groupKey].original_entries = @()
-            }
-            $grouped[$groupKey].original_entries += $entry
-
-            # TS-M3 FIX: Simplify task/notes concatenation and prevent excessive string length
-            # MEDIUM FIX TLS-M1: Use script-level constants for length limits
-            # Concatenate tasks if multiple (with length limit to prevent memory issues)
-            if ($entry.ContainsKey('task') -and $entry.task) {
-                $currentTask = $grouped[$groupKey].task
-                if ($currentTask -and $currentTask -ne $entry.task) {
-                    # Limit concatenated task length to prevent excessive growth
-                    $newTask = "$currentTask; $($entry.task)"
-                    $grouped[$groupKey].task = $(if ($newTask.Length -gt $global:MAX_TASK_LENGTH) {
-                        $newTask.Substring(0, $global:MAX_TASK_TRUNCATE_LENGTH) + "..."
-                    } else {
-                        $newTask
-                    })
-                } elseif (-not $currentTask) {
-                    $grouped[$groupKey].task = $entry.task
-                }
-            }
-
-            # Concatenate notes if multiple (with length limit to prevent memory issues)
-            # MEDIUM FIX TLS-M1: Use script-level constants for length limits
-            if ($entry.ContainsKey('notes') -and $entry.notes) {
-                $currentNotes = $grouped[$groupKey].notes
-                if ($currentNotes -and $currentNotes -ne $entry.notes) {
-                    # Limit concatenated notes length to prevent excessive growth
-                    $newNotes = "$currentNotes; $($entry.notes)"
-                    $grouped[$groupKey].notes = $(if ($newNotes.Length -gt $global:MAX_NOTES_LENGTH) {
-                        $newNotes.Substring(0, $global:MAX_NOTES_TRUNCATE_LENGTH) + "..."
-                    } else {
-                        $newNotes
-                    })
-                } elseif (-not $currentNotes) {
-                    $grouped[$groupKey].notes = $entry.notes
-                }
-            }
-        }
-
-        # Convert to array and format
-        $aggregated = @()
-        foreach ($key in $grouped.Keys) {
-            $entry = $grouped[$key]
+            $entry['date_display'] = $dateStr
 
             # Format duration as HH:MM with null checks
             # CRITICAL FIX TLS-C2: Validate numeric type before division/modulo
@@ -245,18 +175,6 @@ class TimeListScreen : StandardListScreen {
             } else {
                 $entry['duration'] = "00:00"
             }
-
-            # Add indicator if aggregated
-            if ($entry.entry_count -gt 1) {
-                $entry['duration'] = "$($entry.duration) ($($entry.entry_count))"
-            }
-
-            # DEBUG: Log the keys in this entry
-            $keysStr = ($entry.Keys | Sort-Object) -join ', '
-            # Write-PmcTuiLog "TimeListScreen.LoadItems: Created entry with keys: $keysStr"
-            # Write-PmcTuiLog "TimeListScreen.LoadItems: date_display='$($entry.date_display)' date='$($entry.date)'"
-
-            $aggregated += $entry
         }
 
         # TS-M1 FIX: Notify user if there were failed date parses
@@ -267,7 +185,7 @@ class TimeListScreen : StandardListScreen {
 
         # Sort by date descending (most recent first)
         # HIGH FIX TLS-H5: Handle null dates in sort
-        $sorted = $aggregated | Sort-Object { if ($null -ne $_.date) { $_.date } else { [DateTime]::MaxValue } } -Descending
+        $sorted = $entries | Sort-Object { if ($null -ne $_.date) { $_.date } else { [DateTime]::MaxValue } } -Descending
         # Ensure we always return an array (PowerShell returns single object if count=1)
         return @($sorted)
     }
