@@ -400,7 +400,7 @@ class HybridRenderEngine {
                         $this._UpdateDirtyBounds($currentX, $finalY)
                     } else {
                         # Z-BUFFER DEBUG: Log when a write is REJECTED in dropdown area
-                        if ($finalY -ge 1 -and $finalY -le 15 -and (Test-Path variable:global:PmcTuiLogFile)) {
+                        if ($finalY -ge 1 -and $finalY -le 15 -and $global:PmcTuiLogFile) {
                             Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Z-BUFFER] REJECTED at ($currentX,$finalY): currentZ=$($this._currentZ) < zBuffer=$($this._zBuffer[$finalY][$currentX]) char='$($content[$i])'"
                         }
                     }
@@ -491,7 +491,7 @@ class HybridRenderEngine {
                         $this._UpdateDirtyBounds($currentX, $finalY)
                     } else {
                         # Z-BUFFER DEBUG: Log when a write is REJECTED in dropdown area
-                        if ($finalY -ge 1 -and $finalY -le 15 -and (Test-Path variable:global:PmcTuiLogFile)) {
+                        if ($finalY -ge 1 -and $finalY -le 15 -and $global:PmcTuiLogFile) {
                             Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Z-BUFFER] REJECTED at ($currentX,$finalY): currentZ=$($this._currentZ) < zBuffer=$($this._zBuffer[$finalY][$currentX]) char='$($content[$i])'"
                         }
                     }

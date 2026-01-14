@@ -118,7 +118,7 @@ class RenderCache {
                 $this._hits++
                 
                 # Debug logging
-                if ((Test-Path variable:global:PmcTuiLogFile) -and (Test-Path variable:global:PmcDebugLevel) -and $global:PmcDebugLevel -ge 3) {
+                if ($global:PmcTuiLogFile -and (Test-Path variable:global:PmcDebugLevel) -and $global:PmcDebugLevel -ge 3) {
                     Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [RenderCache] HIT: $key"
                 }
                 
@@ -132,7 +132,7 @@ class RenderCache {
         $this._misses++
         
         # Debug logging
-        if ((Test-Path variable:global:PmcTuiLogFile) -and (Test-Path variable:global:PmcDebugLevel) -and $global:PmcDebugLevel -ge 3) {
+        if ($global:PmcTuiLogFile -and (Test-Path variable:global:PmcDebugLevel) -and $global:PmcDebugLevel -ge 3) {
             Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [RenderCache] MISS: $key"
         }
         
@@ -175,7 +175,7 @@ class RenderCache {
         [void]$this._lruOrder.AddLast($key)
         
         # Debug logging
-        if ((Test-Path variable:global:PmcTuiLogFile) -and (Test-Path variable:global:PmcDebugLevel) -and $global:PmcDebugLevel -ge 3) {
+        if ($global:PmcTuiLogFile -and (Test-Path variable:global:PmcDebugLevel) -and $global:PmcDebugLevel -ge 3) {
             Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [RenderCache] STORE: $key (count=$($this._cache.Count))"
         }
     }
@@ -204,7 +204,7 @@ class RenderCache {
         $this._cache.Clear()
         $this._lruOrder.Clear()
         
-        if ((Test-Path variable:global:PmcTuiLogFile) -and (Test-Path variable:global:PmcDebugLevel) -and $global:PmcDebugLevel -ge 2) {
+        if ($global:PmcTuiLogFile -and (Test-Path variable:global:PmcDebugLevel) -and $global:PmcDebugLevel -ge 2) {
             Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [RenderCache] CLEAR: all entries removed"
         }
     }
@@ -273,7 +273,7 @@ class RenderCache {
             $oldestKey = $this._lruOrder.First.Value
             $this._Remove($oldestKey)
             
-            if ((Test-Path variable:global:PmcTuiLogFile) -and (Test-Path variable:global:PmcDebugLevel) -and $global:PmcDebugLevel -ge 3) {
+            if ($global:PmcTuiLogFile -and (Test-Path variable:global:PmcDebugLevel) -and $global:PmcDebugLevel -ge 3) {
                 Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [RenderCache] EVICT: $oldestKey"
             }
         }
