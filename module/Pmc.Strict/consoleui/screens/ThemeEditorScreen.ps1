@@ -60,8 +60,10 @@ class ThemeEditorScreen : PmcScreen {
         $this.StatusBar.Width = $statusBarRect.Width
 
         $contentRect = $this.LayoutManager.GetRegion('Content', $this.TermWidth, $this.TermHeight)
-        $this._contentY = $contentRect.Y
-        $this._contentHeight = $contentRect.Height
+        # CRITICAL FIX: Ensure content starts BELOW the header (Header Height is 5)
+        # LayoutManager default Content.Y=3 overlaps with Header (Y=3, H=5)
+        $this._contentY = $this.Header.Y + $this.Header.Height + 1
+        $this._contentHeight = $contentRect.Height - ($this._contentY - $contentRect.Y)
     }
 
     # === GRADIENT RENDERING ===
