@@ -319,7 +319,7 @@ class CommandLibraryScreen : StandardListScreen {
 
         try {
             # Copy to clipboard (Windows only)
-            Set-Clipboard -Value $commandText
+            Set-Clipboard -Value $commandText | Out-Null
 
             # Update usage statistics
             if ($commandId) {

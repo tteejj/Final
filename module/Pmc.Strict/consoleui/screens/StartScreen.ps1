@@ -8,23 +8,26 @@ using namespace System.Text
 Set-StrictMode -Version Latest
 
 class StartScreen : PmcScreen {
-    [int]$SelectedCard = 0
-    [array]$Cards = @()
     hidden [int]$_contentY = 4
     hidden [int]$_contentHeight = 20
     hidden [object]$_store = $null
 
+    # Dashboard Data
+    [array]$UrgentTasks = @()
+    [int]$OverdueCount = 0
+    [int]$DueTodayCount = 0
+    [int]$SelectionIndex = 0
+    [int]$ListScrollOffset = 0
+
     StartScreen() : base("Start", "Dashboard") {
         $this.Header.SetBreadcrumb(@("Home"))
         $this._InitFooter()
-        $this._InitCards()
         $this._SetupMenus()
     }
 
     StartScreen([object]$container) : base("Start", "Dashboard", $container) {
         $this.Header.SetBreadcrumb(@("Home"))
         $this._InitFooter()
-        $this._InitCards()
         $this._SetupMenus()
     }
 
@@ -98,19 +101,8 @@ class StartScreen : PmcScreen {
 
     hidden [void] _InitFooter() {
         $this.Footer.ClearShortcuts()
-        $this.Footer.AddShortcut("Left/Right", "Select")
-        $this.Footer.AddShortcut("Enter", "Open")
+        $this.Footer.AddShortcut("R", "Refresh")
         $this.Footer.AddShortcut("Q", "Quit")
-    }
-
-    hidden [void] _InitCards() {
-        $this.Cards = @(
-            @{ Id = 'hoursToday'; Label = 'Hours Today'; Value = '0.0 / 7.5'; Icon = '⏱' }
-            @{ Id = 'hoursWeek'; Label = 'Hours This Week'; Value = '0.0 / 37.5'; Icon = '📅' }
-            @{ Id = 'dueToday'; Label = 'Tasks Due Today'; Value = '0'; Icon = '📋' }
-            @{ Id = 'overdue'; Label = 'Overdue Tasks'; Value = '0'; Icon = '⚠' }
-            @{ Id = 'noDate'; Label = 'No Due Date'; Value = '0'; Icon = '❓' }
-        )
     }
 
     [void] Initialize([object]$renderEngine, [object]$container) {
@@ -152,110 +144,58 @@ class StartScreen : PmcScreen {
             if (-not $this._store.IsLoaded) {
                 $this._store.LoadData()
             }
-            $this._UpdateCardValues()
-            $this.ShowStatus("Dashboard ready - Press Enter to open selected card")
+            $this._LoadUrgentTasks()
+            $this.ShowStatus("Dashboard ready")
         }
         catch {
             $this.ShowError("Failed to load data: $_")
         }
     }
 
-    hidden [void] _UpdateCardValues() {
+    hidden [void] _LoadUrgentTasks() {
         $today = [datetime]::Today
-        $weekStart = $today.AddDays(-[int]$today.DayOfWeek)
-        
-        # Get time logs
-        $timelogs = @()
-        if ($this._store -and $this._store._data.timelogs) {
-            $timelogs = @($this._store._data.timelogs)
-        }
-        
-        # Hours today
-        $hoursToday = 0.0
-        foreach ($log in $timelogs) {
-            $logDate = $null
-            if ($log.date -is [datetime]) {
-                $logDate = $log.date.Date
-            } elseif ($log.date -is [string] -and -not [string]::IsNullOrEmpty($log.date)) {
-                try { $logDate = [datetime]::Parse($log.date).Date } catch { }
-            }
-            if ($logDate -eq $today) {
-                $minutes = 0
-                if ($log.minutes -is [int]) { $minutes = $log.minutes }
-                elseif ($log.minutes) { try { $minutes = [int]$log.minutes } catch { } }
-                $hoursToday += $minutes / 60.0
-            }
-        }
-        $this.Cards[0].Value = "{0:F1} / 7.5" -f $hoursToday
-        
-        # Hours this week
-        $hoursWeek = 0.0
-        foreach ($log in $timelogs) {
-            $logDate = $null
-            if ($log.date -is [datetime]) {
-                $logDate = $log.date.Date
-            } elseif ($log.date -is [string] -and -not [string]::IsNullOrEmpty($log.date)) {
-                try { $logDate = [datetime]::Parse($log.date).Date } catch { }
-            }
-            if ($logDate -ge $weekStart -and $logDate -le $today) {
-                $minutes = 0
-                if ($log.minutes -is [int]) { $minutes = $log.minutes }
-                elseif ($log.minutes) { try { $minutes = [int]$log.minutes } catch { } }
-                $hoursWeek += $minutes / 60.0
-            }
-        }
-        $this.Cards[1].Value = "{0:F1} / 37.5" -f $hoursWeek
-        
-        # Get tasks
         $tasks = @()
         if ($this._store -and $this._store._data.tasks) {
             $tasks = @($this._store._data.tasks)
         }
         
-        # Tasks due today
-        $dueToday = 0
+        $urgent = @()
+        $overdueCount = 0
+        $dueTodayCount = 0
+        
         foreach ($task in $tasks) {
+            $completed = Get-SafeProperty $task 'completed'
+            if ($completed) { continue }
+
             $dueDate = $null
             $due = Get-SafeProperty $task 'due'
+
             if ($due -is [datetime]) {
                 $dueDate = $due.Date
             } elseif ($due -is [string] -and -not [string]::IsNullOrEmpty($due)) {
                 try { $dueDate = [datetime]::Parse($due).Date } catch { }
             }
-            $completed = Get-SafeProperty $task 'completed'
-            if ($dueDate -eq $today -and -not $completed) {
-                $dueToday++
+
+            if ($dueDate) {
+                if ($dueDate -lt $today) {
+                    $overdueCount++
+                    $task['status_display'] = "[!]"
+                    $urgent += $task
+                } elseif ($dueDate -eq $today) {
+                    $dueTodayCount++
+                    $task['status_display'] = "[T]"
+                    $urgent += $task
+                }
             }
         }
-        $this.Cards[2].Value = $dueToday.ToString()
         
-        # Overdue tasks
-        $overdue = 0
-        foreach ($task in $tasks) {
-            $dueDate = $null
-            $due = Get-SafeProperty $task 'due'
-            if ($due -is [datetime]) {
-                $dueDate = $due.Date
-            } elseif ($due -is [string] -and -not [string]::IsNullOrEmpty($due)) {
-                try { $dueDate = [datetime]::Parse($due).Date } catch { }
-            }
-            $completed = Get-SafeProperty $task 'completed'
-            if ($dueDate -and $dueDate -lt $today -and -not $completed) {
-                $overdue++
-            }
+        # Sort by due date
+        $this.UrgentTasks = $urgent | Sort-Object {
+            $d = Get-SafeProperty $_ 'due'
+            if ($d -is [datetime]) { $d } else { [datetime]::Parse($d) }
         }
-        $this.Cards[3].Value = $overdue.ToString()
-        
-        # Tasks with no due date
-        $noDate = 0
-        foreach ($task in $tasks) {
-            $due = Get-SafeProperty $task 'due'
-            $completed = Get-SafeProperty $task 'completed'
-            if ([string]::IsNullOrEmpty($due) -and -not $completed) {
-                $noDate++
-            }
-        }
-        $this.Cards[4].Value = $noDate.ToString()
+        $this.OverdueCount = $overdueCount
+        $this.DueTodayCount = $dueTodayCount
     }
 
     # === RENDERING ===
@@ -263,89 +203,105 @@ class StartScreen : PmcScreen {
         $textColor = $this.Header.GetThemedColorInt('Foreground.Field')
         $mutedColor = $this.Header.GetThemedColorInt('Foreground.Muted')
         $headerColor = $this.Header.GetThemedColorInt('Foreground.Title')
-        $selectedBg = $this.Header.GetThemedColorInt('Background.FieldFocused')
-        $selectedFg = $this.Header.GetThemedColorInt('Foreground.FieldFocused')
-        $successColor = $this.Header.GetThemedColorInt('Foreground.Success')
-        $warningColor = $this.Header.GetThemedColorInt('Foreground.Warning')
-        $errorColor = $this.Header.GetThemedColorInt('Foreground.Error')
         $bg = $this.Header.GetThemedColorInt('Background.Primary')
+        $borderFg = $this.Header.GetThemedColorInt('Border.Widget')
+
+        # Layout: 2 columns
+        # Left: Task List (60%)
+        # Right: Calendar (40%)
+
+        $leftWidth = [int][Math]::Floor($this.TermWidth * 0.6)
+        $rightWidth = $this.TermWidth - $leftWidth
 
         $y = $this._contentY
-        $startX = $this.Header.X + 2
+        $h = $this._contentHeight
 
-        # Welcome message
-        $engine.WriteAt($startX, $y, "Welcome to PMC", $headerColor, $bg)
-        $engine.WriteAt($startX + 15, $y, " - " + [datetime]::Today.ToString("dddd, MMMM d, yyyy"), $mutedColor, $bg)
-        $y += 2
-
-        # Calculate card dimensions
-        $cardWidth = 18
-        $cardHeight = 5
-        $cardSpacing = 2
-        $cardsPerRow = 5
-
-        # Render cards
-        for ($i = 0; $i -lt $this.Cards.Count; $i++) {
-            $card = $this.Cards[$i]
-            $isSelected = ($i -eq $this.SelectedCard)
-            
-            $cardX = $startX + ($i * ($cardWidth + $cardSpacing))
-            $cardY = $y
-
-            # Card colors
-            $cardBg = $bg
-            $cardFg = $textColor
-            $valueFg = $headerColor
-            
-            if ($isSelected) {
-                $cardBg = $selectedBg
-                $cardFg = $selectedFg
-                $valueFg = $selectedFg
-            }
-            
-            # Special colors for certain cards
-            if ($card.Id -eq 'overdue' -and [int]$card.Value -gt 0) {
-                $valueFg = $errorColor
-            } elseif ($card.Id -eq 'dueToday' -and [int]$card.Value -gt 0) {
-                $valueFg = $warningColor
-            }
-
-            # Draw card box with UNICODE rounded corners
-            # Normal: ╭─╮ │ │ ╰─╯
-            # Selected: ┏━┓ ┃ ┃ ┗━┛ (double lines)
-            if ($isSelected) {
-                $topBorder = "┏" + [string]::new('━', $cardWidth - 2) + "┓"
-                $midBorder = "┃" + [string]::new(' ', $cardWidth - 2) + "┃"
-                $botBorder = "┗" + [string]::new('━', $cardWidth - 2) + "┛"
-            } else {
-                $topBorder = "╭" + [string]::new('─', $cardWidth - 2) + "╮"
-                $midBorder = "│" + [string]::new(' ', $cardWidth - 2) + "│"
-                $botBorder = "╰" + [string]::new('─', $cardWidth - 2) + "╯"
-            }
-
-            $engine.WriteAt($cardX, $cardY, $topBorder, $cardFg, $cardBg)
-            $engine.WriteAt($cardX, $cardY + 1, $midBorder, $cardFg, $cardBg)
-            $engine.WriteAt($cardX, $cardY + 2, $midBorder, $cardFg, $cardBg)
-            $engine.WriteAt($cardX, $cardY + 3, $midBorder, $cardFg, $cardBg)
-            $engine.WriteAt($cardX, $cardY + 4, $botBorder, $cardFg, $cardBg)
-
-            # Card label (centered)
-            $label = $card.Label
-            if ($label.Length -gt $cardWidth - 4) {
-                $label = $label.Substring(0, $cardWidth - 4)
-            }
-            $labelX = $cardX + 1 + [Math]::Floor((($cardWidth - 2) - $label.Length) / 2)
-            $engine.WriteAt($labelX, $cardY + 1, $label, $cardFg, $cardBg)
-
-            # Card value (centered, larger)
-            $value = $card.Value.ToString()
-            $valueX = $cardX + 1 + [Math]::Floor((($cardWidth - 2) - $value.Length) / 2)
-            $engine.WriteAt($valueX, $cardY + 3, $value, $valueFg, $cardBg)
+        # Draw vertical separator
+        for ($i = 0; $i -lt $h; $i++) {
+            $engine.WriteAt($leftWidth, $y + $i, "│", $borderFg, $bg)
         }
 
-        # Instructions
-        $y += $cardHeight + 2
-        $engine.WriteAt($startX, $y, "Use Left/Right arrows to select, Enter to open", $mutedColor, $bg)
+        # === Left Column: Urgent Tasks ===
+        $leftX = 2
+        $engine.WriteAt($leftX, $y, "Urgent Tasks ($($this.UrgentTasks.Count))", $headerColor, $bg)
+        $engine.WriteAt($leftX + 20, $y, " [!] Overdue: $($this.OverdueCount) | [T] Today: $($this.DueTodayCount)", $mutedColor, $bg)
+
+        $listY = $y + 2
+        $listH = $h - 2
+
+        if ($this.UrgentTasks.Count -eq 0) {
+            $engine.WriteAt($leftX, $listY, "No urgent tasks.", $mutedColor, $bg)
+        } else {
+            $displayCount = [Math]::Min($this.UrgentTasks.Count, $listH)
+            
+            for ($i = 0; $i -lt $displayCount; $i++) {
+                $task = $this.UrgentTasks[$i]
+                $status = $task.status_display
+                $text = Get-SafeProperty $task 'text'
+
+                # Truncate text if needed
+                $maxLen = $leftWidth - 10
+                if ($text.Length -gt $maxLen) {
+                    $text = $text.Substring(0, $maxLen) + "..."
+                }
+
+                $color = $textColor
+                if ($status -eq "[!]") { $color = $this.Header.GetThemedColorInt('Foreground.Error') }
+                if ($status -eq "[T]") { $color = $this.Header.GetThemedColorInt('Foreground.Warning') }
+
+                $line = "$status $text"
+                $engine.WriteAt($leftX, $listY + $i, $line, $color, $bg)
+            }
+        }
+
+        # === Right Column: Calendar ===
+        $rightX = $leftWidth + 2
+        $engine.WriteAt($rightX, $y, "Calendar: " + [datetime]::Today.ToString("MMMM yyyy"), $headerColor, $bg)
+
+        # Render mini calendar (adapted from CalendarScreen logic)
+        $this._RenderCalendar($engine, $rightX, $y + 2)
+    }
+
+    hidden [void] _RenderCalendar([object]$engine, [int]$x, [int]$y) {
+        $textColor = $this.Header.GetThemedColorInt('Foreground.Field')
+        $mutedColor = $this.Header.GetThemedColorInt('Foreground.Muted')
+        $todayBg = $this.Header.GetThemedColorInt('Foreground.Success')
+        $bg = $this.Header.GetThemedColorInt('Background.Primary')
+
+        $currentDate = [datetime]::Today
+
+        # Day headers
+        $engine.WriteAt($x, $y, "Su Mo Tu We Th Fr Sa", $mutedColor, $bg)
+
+        # Days
+        $firstOfMonth = [datetime]::new($currentDate.Year, $currentDate.Month, 1)
+        $daysInMonth = [datetime]::DaysInMonth($currentDate.Year, $currentDate.Month)
+        $startDayOfWeek = [int]$firstOfMonth.DayOfWeek
+
+        $dayX = $x + ($startDayOfWeek * 3)
+        $dayY = $y + 1
+
+        for ($day = 1; $day -le $daysInMonth; $day++) {
+            $date = [datetime]::new($currentDate.Year, $currentDate.Month, $day)
+            $isToday = ($date.Date -eq $currentDate.Date)
+            
+            $dayStr = $day.ToString().PadLeft(2)
+            $color = $textColor
+            $bgColor = $bg
+
+            if ($isToday) {
+                $color = $bg
+                $bgColor = $todayBg
+            }
+
+            $engine.WriteAt($dayX, $dayY, $dayStr, $color, $bgColor)
+
+            $dayX += 3
+            if ($date.DayOfWeek -eq [DayOfWeek]::Saturday) {
+                $dayX = $x
+                $dayY++
+            }
+        }
     }
 
     [string] RenderContent() { return "" }
@@ -358,24 +314,6 @@ class StartScreen : PmcScreen {
         $keyChar = [char]::ToLower($keyInfo.KeyChar)
 
         switch ($keyInfo.Key) {
-            'LeftArrow' {
-                if ($this.SelectedCard -gt 0) {
-                    $this.SelectedCard--
-                    $this._ShowCardInfo()
-                }
-                return $true
-            }
-            'RightArrow' {
-                if ($this.SelectedCard -lt ($this.Cards.Count - 1)) {
-                    $this.SelectedCard++
-                    $this._ShowCardInfo()
-                }
-                return $true
-            }
-            'Enter' {
-                $this._OpenSelectedCard()
-                return $true
-            }
             'Escape' {
                 if ($global:PmcApp) { $global:PmcApp.RequestExit() }
                 return $true
@@ -394,38 +332,6 @@ class StartScreen : PmcScreen {
         }
 
         return $false
-    }
-
-    hidden [void] _ShowCardInfo() {
-        $card = $this.Cards[$this.SelectedCard]
-        $this.ShowStatus("$($card.Label): $($card.Value) - Press Enter to open")
-    }
-
-    hidden [void] _OpenSelectedCard() {
-        $card = $this.Cards[$this.SelectedCard]
-        
-        if (-not $global:PmcApp) {
-            $this.ShowError("Application not available")
-            return
-        }
-
-        switch ($card.Id) {
-            'hoursToday' {
-                $this._NavigateToTimeList('today')
-            }
-            'hoursWeek' {
-                $this._NavigateToTimeList('week')
-            }
-            'dueToday' {
-                $this._NavigateToTaskList('today')
-            }
-            'overdue' {
-                $this._NavigateToTaskList('overdue')
-            }
-            'noDate' {
-                $this._NavigateToTaskList('nodate')
-            }
-        }
     }
 
     hidden [void] _NavigateToTimeList([string]$filter) {

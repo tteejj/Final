@@ -21,7 +21,7 @@
         },
         "Background.RowSelected": {
             "Type": "Solid",
-            "Color": "#ffffff"
+            "Color": "#e0e0e0"
         },
         "Background.Warning": {
             "Type": "Solid",
@@ -133,7 +133,7 @@
         },
         "Background.Selection": {
             "Type": "Solid",
-            "Color": "#ffffff"
+            "Color": "#e0e0e0"
         },
         "Background.Surface": {
             "Type": "Solid",
