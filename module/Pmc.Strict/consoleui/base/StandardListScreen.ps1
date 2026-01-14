@@ -1120,7 +1120,9 @@ class StandardListScreen : PmcScreen {
         try {
             # PHASE B: Active modal gets priority
             if ($this.HandleModalInput($keyInfo)) {
-            Write-PmcTuiLog "StandardListScreen.HandleKeyPress: BEFORE HandleModalInput - _activeModal=$($this._activeModal.GetType().Name) ShowInlineEditor=$($this.ShowInlineEditor)" "DEBUG"
+                $modalName = "null"
+                if ($this._activeModal) { $modalName = $this._activeModal.GetType().Name }
+                Write-PmcTuiLog "StandardListScreen.HandleKeyPress: BEFORE HandleModalInput - _activeModal=$modalName ShowInlineEditor=$($this.ShowInlineEditor)" "DEBUG"
                 # Check if InlineEditor completed (confirmed or cancelled)
                 if ($this.ShowInlineEditor -and $null -ne $this.InlineEditor) {
                     Write-PmcTuiLog "StandardListScreen.HandleKeyPress: AFTER HandleModalInput=true - ShowInlineEditor=$($this.ShowInlineEditor) InlineEditor.IsConfirmed=$($this.InlineEditor.IsConfirmed) InlineEditor.IsCancelled=$($this.InlineEditor.IsCancelled)" "DEBUG"
