@@ -88,6 +88,14 @@
     }
 
     # ===== TASKS MENU =====
+    'StartScreen' = @{
+        Menu = 'Tasks'
+        Label = 'Dashboard'
+        Hotkey = 'D'
+        Order = 1
+        ScreenFile = 'StartScreen.ps1'
+    }
+
     'TaskListScreen_Default' = @{
         Menu = 'Tasks'
         Label = 'Task List'

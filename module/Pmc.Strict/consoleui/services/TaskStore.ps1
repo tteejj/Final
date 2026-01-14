@@ -1172,6 +1172,63 @@ class TaskStore {
                 return $false
             }
 
+            # CHECK FOR NAME CHANGE: If name changed, update all related tasks and timelogs
+            # We need to check if the 'name' key was in the changes, and if it differs from the ORIGINAL name
+            # But we've already applied the changes to $project.
+            # However, we can check if $changes contains 'name'.
+            # If so, we need to know the OLD name.
+            # We can find the old name by looking at the backup we just made, or we should have captured it earlier.
+            # BETTER APPROACH: Capture old name at the start of the function.
+            # But wait, we didn't capture it.
+            # Alternative: We can use the backup to find the project by ID.
+
+            if ($changes.ContainsKey('name')) {
+                $newName = $changes['name']
+                $projectId = Get-SafeProperty $project 'id'
+
+                # Find the old project in the backup
+                $oldProject = $null
+                if ($this._dataBackup -and $this._dataBackup.projects) {
+                    $oldProject = $this._dataBackup.projects | Where-Object { (Get-SafeProperty $_ 'id') -eq $projectId } | Select-Object -First 1
+                }
+
+                if ($oldProject) {
+                    $oldName = Get-SafeProperty $oldProject 'name'
+
+                    if ($oldName -ne $newName) {
+                        # Write-PmcTuiLog "UpdateProject: Name changed from '$oldName' to '$newName'. Cascading updates..." "INFO"
+
+                        # Update Tasks
+                        $updatedTasks = 0
+                        foreach ($task in $this._data.tasks) {
+                            if ((Get-SafeProperty $task 'project') -eq $oldName) {
+                                if ($task -is [hashtable]) {
+                                    $task['project'] = $newName
+                                } else {
+                                    $task.project = $newName
+                                }
+                                $updatedTasks++
+                            }
+                        }
+
+                        # Update TimeLogs
+                        $updatedLogs = 0
+                        foreach ($log in $this._data.timelogs) {
+                            if ((Get-SafeProperty $log 'project') -eq $oldName) {
+                                if ($log -is [hashtable]) {
+                                    $log['project'] = $newName
+                                } else {
+                                    $log.project = $newName
+                                }
+                                $updatedLogs++
+                            }
+                        }
+
+                        # Write-PmcTuiLog "UpdateProject: Cascaded update to $updatedTasks tasks and $updatedLogs timelogs." "INFO"
+                    }
+                }
+            }
+
             # Mark pending changes
             $this.HasPendingChanges = $true
 
