@@ -196,7 +196,7 @@ class ClassLoader {
             # Use dot-sourcing to load in current scope
             . $fileInfo.Path
 
-            $this.Log("✓ Loaded: $($fileInfo.Name)", "DEBUG")
+            $this.Log("[OK] Loaded: $($fileInfo.Name)", "DEBUG")
             return $true
 
         } catch {
@@ -220,7 +220,7 @@ class ClassLoader {
         if ($this.FailedFiles.Count -gt 0) {
             $this.Log("--- Failed Files ---", "ERROR")
             foreach ($f in $this.FailedFiles) {
-                $this.Log("  ✗ $($f.Name): $($f.LastError)", "ERROR")
+                $this.Log("  [X] $($f.Name): $($f.LastError)", "ERROR")
             }
         }
     }

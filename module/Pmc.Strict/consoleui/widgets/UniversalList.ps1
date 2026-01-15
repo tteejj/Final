@@ -1120,6 +1120,13 @@ class UniversalList : PmcWidget {
             $engine.WriteRow($this.X + 2, $rowY, $newCache.Text, $newCache.Foregrounds, $newCache.Backgrounds, $newCache.Attributes)
         }
         
+        # CRITICAL: Redraw left and right borders to fix corruption from WriteRow
+        for ($i = 0; $i -lt $maxVisibleRows; $i++) {
+            $rowY = $this.Y + 3 + $i
+            $engine.WriteAt($this.X, $rowY, "|", $borderColor, $rowBg)
+            $engine.WriteAt($this.X + $this.Width - 1, $rowY, "|", $borderColor, $rowBg)
+        }
+        
         # 5. Status Footer (Item Count)
         try {
             $countText = "($($itemCount) items)"

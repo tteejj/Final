@@ -18,6 +18,11 @@ class StartScreen : PmcScreen {
     [int]$DueTodayCount = 0
     [int]$SelectionIndex = 0
     [int]$ListScrollOffset = 0
+    
+    # Hours metrics
+    [decimal]$HoursToday = 0
+    [decimal]$HoursWeek = 0
+    [decimal]$HoursMonth = 0
 
     StartScreen() : base("Start", "Dashboard") {
         $this.Header.SetBreadcrumb(@("Home"))
@@ -145,6 +150,7 @@ class StartScreen : PmcScreen {
                 $this._store.LoadData()
             }
             $this._LoadUrgentTasks()
+            $this._LoadHoursData()
             $this.ShowStatus("Dashboard ready")
         }
         catch {
@@ -197,6 +203,57 @@ class StartScreen : PmcScreen {
         $this.OverdueCount = $tmpOverdue
         $this.DueTodayCount = $tmpDueToday
     }
+    
+    # Load hours logged (today, this week, this month)
+    hidden [void] _LoadHoursData() {
+        $today = [datetime]::Today
+        $weekStart = $today.AddDays(-[int]$today.DayOfWeek)
+        $monthStart = [datetime]::new($today.Year, $today.Month, 1)
+        
+        $todayMinutes = 0
+        $weekMinutes = 0
+        $monthMinutes = 0
+        
+        if ($this._store -and $this._store._data.timelogs) {
+            foreach ($log in $this._store._data.timelogs) {
+                $logDate = $null
+                $dateVal = Get-SafeProperty $log 'date'
+                $minutes = Get-SafeProperty $log 'minutes'
+                
+                if ($null -eq $minutes) {
+                    # Try hours instead
+                    $hours = Get-SafeProperty $log 'hours'
+                    if ($null -ne $hours) {
+                        $minutes = [decimal]$hours * 60
+                    } else {
+                        continue
+                    }
+                }
+                
+                if ($dateVal -is [datetime]) {
+                    $logDate = $dateVal.Date
+                } elseif ($dateVal -is [string] -and -not [string]::IsNullOrEmpty($dateVal)) {
+                    try { $logDate = [datetime]::Parse($dateVal).Date } catch { continue }
+                } else {
+                    continue
+                }
+                
+                if ($logDate -eq $today) {
+                    $todayMinutes += $minutes
+                }
+                if ($logDate -ge $weekStart) {
+                    $weekMinutes += $minutes
+                }
+                if ($logDate -ge $monthStart) {
+                    $monthMinutes += $minutes
+                }
+            }
+        }
+        
+        $this.HoursToday = [Math]::Round($todayMinutes / 60, 1)
+        $this.HoursWeek = [Math]::Round($weekMinutes / 60, 1)
+        $this.HoursMonth = [Math]::Round($monthMinutes / 60, 1)
+    }
 
     # === RENDERING ===
     [void] RenderContentToEngine([object]$engine) {
@@ -205,20 +262,27 @@ class StartScreen : PmcScreen {
         $headerColor = $this.Header.GetThemedColorInt('Foreground.Title')
         $bg = $this.Header.GetThemedColorInt('Background.Primary')
         $borderFg = $this.Header.GetThemedColorInt('Border.Widget')
+        $successColor = $this.Header.GetThemedColorInt('Foreground.Success')
 
-        # Layout: 2 columns
+        $y = $this._contentY
+        
+        # === HOURS LOGGED ROW (text display at top) ===
+        $hoursText = "Hours Logged:  Today: $($this.HoursToday)h  |  Week: $($this.HoursWeek)h  |  Month: $($this.HoursMonth)h"
+        $engine.WriteAt(2, $y, $hoursText, $successColor, $bg)
+        $y += 2
+        
+        # Layout: 2 columns below hours
         # Left: Task List (60%)
         # Right: Calendar (40%)
 
         $leftWidth = [int][Math]::Floor($this.TermWidth * 0.6)
         $rightWidth = $this.TermWidth - $leftWidth
 
-        $y = $this._contentY
-        $h = $this._contentHeight
+        $h = $this._contentHeight - 2  # Account for hours row
 
         # Draw vertical separator
         for ($i = 0; $i -lt $h; $i++) {
-            $engine.WriteAt($leftWidth, $y + $i, "│", $borderFg, $bg)
+            $engine.WriteAt($leftWidth, $y + $i, "|", $borderFg, $bg)
         }
 
         # === Left Column: Urgent Tasks ===

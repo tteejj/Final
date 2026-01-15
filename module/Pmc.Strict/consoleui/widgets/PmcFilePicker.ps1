@@ -152,7 +152,7 @@ class PmcFilePicker : PmcWidget {
         $engine.WriteAt($this.X + $this.Width - 1, $this.Y + $this.Height - 1, '┘', $borderFg, $primaryBg)
 
         # Draw header
-        $headerText = "📁 Select Directory"
+        $headerText = "[Dir] Select Directory"
         $headerPadded = $headerText.PadRight($this.Width - 2)
         $engine.WriteAt($this.X + 1, $this.Y + 1, $headerPadded.Substring(0, $this.Width - 2), $titleFg, $primaryBg)
 
@@ -185,8 +185,8 @@ class PmcFilePicker : PmcWidget {
             $itemBg = if ($isSelected) { $selectedBg } else { $primaryBg }
             $itemFg = if ($isSelected) { $selectedFg } else { if ($item.IsDirectory) { $titleFg } else { $primaryFg } }
 
-            # Item text
-            $icon = if ($item.IsDirectory) { "📁" } else { "📄" }
+            # Item text - use ASCII icons
+            $icon = if ($item.IsDirectory) { "[D]" } else { "[F]" }
             $displayName = $item.Name
             $maxNameLen = $this.Width - 6
             if ($displayName.Length -gt $maxNameLen) {
