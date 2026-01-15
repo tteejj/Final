@@ -1,89 +1,89 @@
 {
-  "schema_version": 1,
   "commands": [
     {
-      "tags": null,
-      "command_text": "c0",
-      "usage_count": 8,
-      "created": "2026-01-10T21:56:38.0000000",
-      "last_used": "2026-01-13T10:28:32.4535385-07:00",
       "description": "",
-      "name": "c0",
-      "modified": "2026-01-10T21:56:38.0000000",
-      "category": "General",
-      "id": "4cc0736f-e61b-4ca0-9c57-1ba9a7529fb0"
-    },
-    {
-      "tags": null,
-      "command_text": "c8",
-      "usage_count": 1,
-      "created": "2026-01-10T21:23:00.0000000",
-      "last_used": "2026-01-10T21:49:37.0000000",
-      "description": "",
-      "name": "c8",
-      "modified": "2026-01-10T21:23:00.0000000",
-      "category": "General",
-      "id": "923fcf0e-4002-4b04-9af2-5dcf1be8b60f"
-    },
-    {
-      "tags": null,
-      "command_text": "test",
       "usage_count": 0,
-      "created": "2026-01-10T20:19:10.0000000",
+      "id": "5e1ae8f5-44c7-438c-b634-a5b9b725e7ca",
       "last_used": null,
-      "description": "",
-      "name": "c1",
-      "modified": "2026-01-10T20:19:10.0000000",
-      "category": "General",
-      "id": "8bcf859f-34c0-4437-ae83-8e1d4e2a0454"
-    },
-    {
-      "tags": null,
-      "command_text": "c5",
-      "usage_count": 0,
-      "created": "2026-01-10T20:49:29.0000000",
-      "last_used": null,
-      "description": "",
-      "name": "c5",
-      "modified": "2026-01-10T20:49:29.0000000",
-      "category": "General",
-      "id": "2614dcc6-d524-44ea-8ba8-401384d9f870"
-    },
-    {
-      "tags": null,
       "command_text": "test3",
-      "usage_count": 0,
       "created": "2026-01-10T20:37:42.0000000",
-      "last_used": null,
-      "description": "",
-      "name": "c3",
+      "category": "General",
+      "tags": null,
       "modified": "2026-01-10T20:37:42.0000000",
-      "category": "General",
-      "id": "5e1ae8f5-44c7-438c-b634-a5b9b725e7ca"
+      "name": "c3"
     },
     {
-      "tags": null,
-      "command_text": "c7",
+      "description": "",
       "usage_count": 1,
-      "created": "2026-01-10T21:15:27.0000000",
-      "last_used": "2026-01-10T21:22:36.0000000",
-      "description": "",
-      "name": "c7",
-      "modified": "2026-01-10T21:15:27.0000000",
+      "id": "2614dcc6-d524-44ea-8ba8-401384d9f870",
+      "last_used": "2026-01-14T21:12:11.6123270-07:00",
+      "command_text": "c5",
+      "created": "2026-01-10T20:49:29.0000000",
       "category": "General",
-      "id": "11f66a91-d832-4199-b22e-7f81acf6bc95"
+      "tags": null,
+      "modified": "2026-01-10T20:49:29.0000000",
+      "name": "c5"
     },
     {
-      "tags": null,
-      "command_text": "test2",
-      "usage_count": 0,
-      "created": "2026-01-10T20:30:49.0000000",
-      "last_used": null,
       "description": "",
-      "name": "c2",
-      "modified": "2026-01-10T20:30:49.0000000",
+      "usage_count": 11,
+      "id": "4cc0736f-e61b-4ca0-9c57-1ba9a7529fb0",
+      "last_used": "2026-01-14T21:11:59.9500478-07:00",
+      "command_text": "c0",
+      "created": "2026-01-10T21:56:38.0000000",
       "category": "General",
-      "id": "7c562e3d-5f73-418f-82d3-281e197be5de"
+      "tags": null,
+      "modified": "2026-01-10T21:56:38.0000000",
+      "name": "c0"
+    },
+    {
+      "description": "",
+      "usage_count": 0,
+      "id": "8bcf859f-34c0-4437-ae83-8e1d4e2a0454",
+      "last_used": null,
+      "command_text": "test",
+      "created": "2026-01-10T20:19:10.0000000",
+      "category": "General",
+      "tags": null,
+      "modified": "2026-01-10T20:19:10.0000000",
+      "name": "c1"
+    },
+    {
+      "description": "",
+      "usage_count": 1,
+      "id": "11f66a91-d832-4199-b22e-7f81acf6bc95",
+      "last_used": "2026-01-10T21:22:36.0000000",
+      "command_text": "c7",
+      "created": "2026-01-10T21:15:27.0000000",
+      "category": "General",
+      "tags": null,
+      "modified": "2026-01-10T21:15:27.0000000",
+      "name": "c7"
+    },
+    {
+      "description": "",
+      "usage_count": 2,
+      "id": "923fcf0e-4002-4b04-9af2-5dcf1be8b60f",
+      "last_used": "2026-01-14T21:12:03.8273601-07:00",
+      "command_text": "c8",
+      "created": "2026-01-10T21:23:00.0000000",
+      "category": "General",
+      "tags": null,
+      "modified": "2026-01-10T21:23:00.0000000",
+      "name": "c8"
+    },
+    {
+      "description": "",
+      "usage_count": 0,
+      "id": "7c562e3d-5f73-418f-82d3-281e197be5de",
+      "last_used": null,
+      "command_text": "test2",
+      "created": "2026-01-10T20:30:49.0000000",
+      "category": "General",
+      "tags": null,
+      "modified": "2026-01-10T20:30:49.0000000",
+      "name": "c2"
     }
-  ]
+  ],
+  "schema_version": 1
 }

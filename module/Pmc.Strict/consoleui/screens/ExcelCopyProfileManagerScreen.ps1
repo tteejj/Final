@@ -22,6 +22,8 @@ Manage Excel-to-Excel copy profiles:
 #>
 class ExcelCopyProfileManagerScreen : StandardListScreen {
     hidden [ExcelCopyService]$_copyService = $null
+    hidden [object]$_filePicker = $null
+    hidden [string]$_browseMode = $null  # 'source' or 'dest'
 
     # Static: Register menu items
     static [void] RegisterMenuItems([object]$registry) {
@@ -143,8 +145,8 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
             return @(
                 @{ Name='name'; Type='text'; Label='Profile Name'; Required=$true; Value='' }
                 @{ Name='description'; Type='text'; Label='Description'; Value='' }
-                @{ Name='source_workbook_path'; Type='text'; Label='Source Workbook Path'; Required=$true; Value=''; Hint='Full path to source .xlsx file' }
-                @{ Name='dest_workbook_path'; Type='text'; Label='Dest Workbook Path'; Required=$true; Value=''; Hint='Full path to destination .xlsx file' }
+                @{ Name='source_workbook_path'; Type='text'; Label='Source Workbook'; Required=$true; Value=''; Hint='Press B to browse' }
+                @{ Name='dest_workbook_path'; Type='text'; Label='Dest Workbook'; Required=$true; Value=''; Hint='Press D to browse' }
             )
         } else {
             # Existing profile
@@ -156,8 +158,8 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
             return @(
                 @{ Name='name'; Type='text'; Label='Profile Name'; Required=$true; Value=$name }
                 @{ Name='description'; Type='text'; Label='Description'; Value=$desc }
-                @{ Name='source_workbook_path'; Type='text'; Label='Source Workbook Path'; Required=$true; Value=$src; Hint='Full path to source .xlsx file' }
-                @{ Name='dest_workbook_path'; Type='text'; Label='Dest Workbook Path'; Required=$true; Value=$dst; Hint='Full path to destination .xlsx file' }
+                @{ Name='source_workbook_path'; Type='text'; Label='Source Workbook'; Required=$true; Value=$src; Hint='Press B to browse' }
+                @{ Name='dest_workbook_path'; Type='text'; Label='Dest Workbook'; Required=$true; Value=$dst; Hint='Press D to browse' }
             )
         }
     }
@@ -247,6 +249,16 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
     [array] GetCustomActions() {
         return @(
             @{
+                Label = "Browse Source (B)"
+                Key = 'b'
+                Callback = { $this.BrowseSourceFile() }.GetNewClosure()
+            }
+            @{
+                Label = "Browse Dest (D)"  
+                Key = 'd'
+                Callback = { $this.BrowseDestFile() }.GetNewClosure()
+            }
+            @{
                 Label = "Set Active (S)"
                 Key = 's'
                 Callback = { $this.SetActiveProfile() }.GetNewClosure()
@@ -257,6 +269,103 @@ class ExcelCopyProfileManagerScreen : StandardListScreen {
                 Callback = { $this.ExecuteCopy() }.GetNewClosure()
             }
         )
+    }
+
+    # === File Browser Methods ===
+    
+    [void] BrowseSourceFile() {
+        $item = $this.List.GetSelectedItem()
+        if ($null -eq $item) {
+            $this.SetStatusMessage("Select a profile first, then press B to browse for source file", "error")
+            return
+        }
+        
+        # Get current source path as starting location
+        $srcPath = Get-SafeProperty $item 'source_workbook_path'
+        $startPath = if ($srcPath -and (Test-Path (Split-Path $srcPath -Parent))) {
+            Split-Path $srcPath -Parent
+        } else {
+            [Environment]::GetFolderPath('UserProfile')
+        }
+        
+        # Open file picker (DirectoriesOnly = false for file selection)
+        $this._filePicker = [PmcFilePicker]::new($startPath, $false)
+        $this._browseMode = 'source'
+        $this._activeModal = $this._filePicker
+        $this.NeedsClear = $true
+        $this.SetStatusMessage("Navigate and press Enter on .xlsx file, Space to select, Esc to cancel", "info")
+    }
+    
+    [void] BrowseDestFile() {
+        $item = $this.List.GetSelectedItem()
+        if ($null -eq $item) {
+            $this.SetStatusMessage("Select a profile first, then press D to browse for destination file", "error")
+            return
+        }
+        
+        # Get current dest path as starting location
+        $dstPath = Get-SafeProperty $item 'dest_workbook_path'
+        $startPath = if ($dstPath -and (Test-Path (Split-Path $dstPath -Parent))) {
+            Split-Path $dstPath -Parent
+        } else {
+            [Environment]::GetFolderPath('UserProfile')
+        }
+        
+        # Open file picker
+        $this._filePicker = [PmcFilePicker]::new($startPath, $false)
+        $this._browseMode = 'dest'
+        $this._activeModal = $this._filePicker
+        $this.NeedsClear = $true
+        $this.SetStatusMessage("Navigate and press Enter on .xlsx file, Space to select, Esc to cancel", "info")
+    }
+    
+    # Override HandleKeyPress to handle file picker completion
+    [bool] HandleKeyPress([ConsoleKeyInfo]$keyInfo) {
+        # Check if file picker is active
+        if ($null -ne $this._filePicker -and $this._activeModal -eq $this._filePicker) {
+            $handled = $this._filePicker.HandleInput($keyInfo)
+            
+            # Check if file picker completed
+            if ($this._filePicker.IsComplete) {
+                if ($this._filePicker.Result -and $this._filePicker.SelectedPath) {
+                    $selectedPath = $this._filePicker.SelectedPath
+                    $item = $this.List.GetSelectedItem()
+                    
+                    if ($null -ne $item) {
+                        $id = Get-SafeProperty $item 'id'
+                        $changes = @{}
+                        
+                        if ($this._browseMode -eq 'source') {
+                            $changes['source_workbook_path'] = $selectedPath
+                            $this.SetStatusMessage("Source set to: $(Split-Path -Leaf $selectedPath)", "success")
+                        } elseif ($this._browseMode -eq 'dest') {
+                            $changes['dest_workbook_path'] = $selectedPath
+                            $this.SetStatusMessage("Destination set to: $(Split-Path -Leaf $selectedPath)", "success")
+                        }
+                        
+                        try {
+                            $this._copyService.UpdateProfile($id, $changes)
+                            $this.LoadData()
+                        } catch {
+                            $this.SetStatusMessage("Error updating profile: $_", "error")
+                        }
+                    }
+                } else {
+                    $this.SetStatusMessage("Browse cancelled", "info")
+                }
+                
+                # Close picker
+                $this._filePicker = $null
+                $this._browseMode = $null
+                $this._activeModal = $null
+                $this.NeedsClear = $true
+            }
+            
+            return $true
+        }
+        
+        # Default handling
+        return ([StandardListScreen]$this).HandleKeyPress($keyInfo)
     }
 
     [void] SetActiveProfile() {

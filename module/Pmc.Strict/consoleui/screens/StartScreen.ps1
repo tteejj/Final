@@ -160,8 +160,8 @@ class StartScreen : PmcScreen {
         }
         
         $urgent = @()
-        $overdueCount = 0
-        $dueTodayCount = 0
+        $tmpOverdue = 0
+        $tmpDueToday = 0
         
         foreach ($task in $tasks) {
             $completed = Get-SafeProperty $task 'completed'
@@ -178,11 +178,11 @@ class StartScreen : PmcScreen {
 
             if ($dueDate) {
                 if ($dueDate -lt $today) {
-                    $overdueCount++
+                    $tmpOverdue++
                     $task['status_display'] = "[!]"
                     $urgent += $task
                 } elseif ($dueDate -eq $today) {
-                    $dueTodayCount++
+                    $tmpDueToday++
                     $task['status_display'] = "[T]"
                     $urgent += $task
                 }
@@ -194,8 +194,8 @@ class StartScreen : PmcScreen {
             $d = Get-SafeProperty $_ 'due'
             if ($d -is [datetime]) { $d } else { [datetime]::Parse($d) }
         }
-        $this.OverdueCount = $overdueCount
-        $this.DueTodayCount = $dueTodayCount
+        $this.OverdueCount = $tmpOverdue
+        $this.DueTodayCount = $tmpDueToday
     }
 
     # === RENDERING ===

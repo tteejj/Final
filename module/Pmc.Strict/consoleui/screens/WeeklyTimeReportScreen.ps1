@@ -307,12 +307,11 @@ class WeeklyTimeReportScreen : PmcScreen {
         $headerY = $y
         $headers = ""
         if ($this.IncludeWeekends) {
-            # Adjusted for alignment:
-            # Name (20) + 1 + ID1 (5) + 1 + 7*7 + Total (8)
-            $headers = "Name                 ID1   Mon    Tue    Wed    Thu    Fri    Sat    Sun       Total"
+            # Alignment: Name(20)+1 + ID1(5)+1 + 7×(6+1) + Total(8)
+            $headers = "Name                 ID1   " + "   Mon".PadLeft(6) + "   Tue".PadLeft(7) + "   Wed".PadLeft(7) + "   Thu".PadLeft(7) + "   Fri".PadLeft(7) + "   Sat".PadLeft(7) + "   Sun".PadLeft(7) + "   Total".PadLeft(9)
         }
         else {
-            $headers = "Name                 ID1   Mon    Tue    Wed    Thu    Fri       Total"
+            $headers = "Name                 ID1   " + "   Mon".PadLeft(6) + "   Tue".PadLeft(7) + "   Wed".PadLeft(7) + "   Thu".PadLeft(7) + "   Fri".PadLeft(7) + "   Total".PadLeft(9)
         }
         $engine.WriteAt($contentRect.X + 4, $headerY, $headers, $headerColor, $bg)
         $y++
