@@ -416,4 +416,7 @@ function Test-FieldValid {
     return $errors
 }
 
-Export-ModuleMember -Function Test-TaskValid, Test-ProjectValid, Test-TimeLogValid, Get-ValidationErrors, Test-FieldValid
+# Only export if running in a module context
+if ($MyInvocation.ScriptName -like '*.psm1') {
+    Export-ModuleMember -Function Test-TaskValid, Test-ProjectValid, Test-TimeLogValid, Get-ValidationErrors, Test-FieldValid
+}
