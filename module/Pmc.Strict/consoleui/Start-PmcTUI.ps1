@@ -28,7 +28,7 @@ function Write-PmcDebugLog {
     }
     
     try {
-        # Add-Content -Path $debugLogPath -Value $Message -ErrorAction SilentlyContinue
+        Add-Content -Path $debugLogPath -Value $Message -ErrorAction SilentlyContinue
     } catch {
         # Silently fail - don't crash app for logging issues
     }
@@ -76,11 +76,11 @@ if ($effectiveLogLevel -gt 0) {
 
         $global:PmcTuiLogFile = Join-Path $logPath "pmc-tui-$(Get-Date -Format 'yyyyMMdd-HHmmss').log"
         $global:PmcTuiLogLevel = $effectiveLogLevel
-        # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Debug logging enabled: $global:PmcTuiLogFile (Level $effectiveLogLevel)"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Debug logging enabled: $global:PmcTuiLogFile (Level $effectiveLogLevel)"
     }
     catch {
         # If log setup fails, disable logging and continue
-        # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] WARNING: Failed to setup logging: $_"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] WARNING: Failed to setup logging: $_"
         $global:PmcTuiLogFile = $null
         $global:PmcTuiLogLevel = 0
     }
@@ -119,29 +119,29 @@ function Write-PmcTuiLog {
         # Silently fail on log write errors to prevent cascading failures
         # This can happen if path is invalid or disk is full
         if ($Level -eq "ERROR") {
-            # Write-PmcDebugLog $logLine
+            Write-PmcDebugLog $logLine
         }
     }
     if ($Level -eq "ERROR") {
-        # Write-PmcDebugLog $logLine
+        Write-PmcDebugLog $logLine
     }
 }
 
-# Write-PmcTuiLog "Loading PMC module..." "INFO"
+Write-PmcTuiLog "Loading PMC module..." "INFO"
 
 # STANDALONE: No module import - consoleui is self-contained
 # All data access goes through DataService.ps1
 $global:PmcAppRoot = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
 
-# Write-PmcTuiLog "Loading dependencies (FieldSchemas, etc.)..." "INFO"
+Write-PmcTuiLog "Loading dependencies (FieldSchemas, etc.)..." "INFO"
 
 try {
     . "$PSScriptRoot/DepsLoader.ps1"
-    # Write-PmcTuiLog "Dependencies loaded" "INFO"
+    Write-PmcTuiLog "Dependencies loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load dependencies: $_" "ERROR"
-    # Write-PmcTuiLog $_.ScriptStackTrace "ERROR"
+    Write-PmcTuiLog "Failed to load dependencies: $_" "ERROR"
+    Write-PmcTuiLog $_.ScriptStackTrace "ERROR"
     throw
 }
 
@@ -149,22 +149,22 @@ catch {
 # MANUAL LOADING - Direct loads in correct dependency order
 # ============================================================================
 
-# Write-PmcTuiLog "Loading SpeedTUI framework..." "INFO"
+Write-PmcTuiLog "Loading SpeedTUI framework..." "INFO"
 try {
     # Load PmcCache Core Class (Unified Caching) - Required for ThemeEngine and others
     . "$PSScriptRoot/../Core/PmcCache.ps1"
     
     . "$PSScriptRoot/SpeedTUILoader.ps1"
-    # Write-PmcTuiLog "SpeedTUI framework loaded" "INFO"
+    Write-PmcTuiLog "SpeedTUI framework loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load SpeedTUI: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load SpeedTUI: $_" "ERROR"
     throw
 }
 
 # REMOVED: PraxisVT loading - not used by TUI (archived 2025-12-21)
 
-# Write-PmcTuiLog "Loading core dependencies..." "INFO"
+Write-PmcTuiLog "Loading core dependencies..." "INFO"
 try {
     # CRITICAL: Load DataService FIRST - PmcThemeManager depends on it for standalone mode
     . "$PSScriptRoot/services/DataService.ps1"
@@ -175,27 +175,27 @@ try {
     . "$PSScriptRoot/src/PmcThemeEngine.ps1"
     . "$PSScriptRoot/layout/PmcLayoutManager.ps1"
 
-    # Write-PmcTuiLog "Core dependencies loaded" "INFO"
+    Write-PmcTuiLog "Core dependencies loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load core dependencies: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load core dependencies: $_" "ERROR"
     throw
 }
 
-# Write-PmcTuiLog "Loading widget base classes..." "INFO"
+Write-PmcTuiLog "Loading widget base classes..." "INFO"
 try {
     # Base widget classes (PmcWidget needs SpeedTUI Component + PmcThemeEngine)
     . "$PSScriptRoot/widgets/PmcWidget.ps1"
     . "$PSScriptRoot/widgets/PmcDialog.ps1"
 
-    # Write-PmcTuiLog "Widget base classes loaded" "INFO"
+    Write-PmcTuiLog "Widget base classes loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load widget base classes: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load widget base classes: $_" "ERROR"
     throw
 }
 
-# Write-PmcTuiLog "Loading services..." "INFO"
+Write-PmcTuiLog "Loading services..." "INFO"
 try {
     # Load DataService FIRST (standalone file I/O - no module dependency)
     . "$PSScriptRoot/services/DataService.ps1"
@@ -213,14 +213,14 @@ try {
     . "$PSScriptRoot/services/FileNoteService.ps1"
     . "$PSScriptRoot/services/PreferencesService.ps1"
     . "$PSScriptRoot/services/TaskStore.ps1"
-    # Write-PmcTuiLog "Services loaded" "INFO"
+    Write-PmcTuiLog "Services loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load services: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load services: $_" "ERROR"
     throw
 }
 
-# Write-PmcTuiLog "Loading helpers..." "INFO"
+Write-PmcTuiLog "Loading helpers..." "INFO"
 try {
     # Load helpers BEFORE widgets (TextAreaEditor depends on GapBuffer)
     . "$PSScriptRoot/helpers/ConfigCache.ps1"
@@ -233,14 +233,14 @@ try {
     . "$PSScriptRoot/helpers/TypeNormalization.ps1"
     . "$PSScriptRoot/helpers/ValidationHelper.ps1"
     . "$PSScriptRoot/helpers/BackupCleanupHelper.ps1"  # FIX 7.2: Cleanup stale backups
-    # Write-PmcTuiLog "Helpers loaded" "INFO"
+    Write-PmcTuiLog "Helpers loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load helpers: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load helpers: $_" "ERROR"
     throw
 }
 
-# Write-PmcTuiLog "Loading widgets..." "INFO"
+Write-PmcTuiLog "Loading widgets..." "INFO"
 try {
     # All widgets (inherit from PmcWidget) - MUST load before PmcScreen
     # IMPORTANT: Load TextInput and ProjectPicker BEFORE InlineEditor (which depends on them)
@@ -262,10 +262,10 @@ try {
     . "$PSScriptRoot/widgets/TextAreaEditor.ps1"
     . "$PSScriptRoot/widgets/TimeEntryDetailDialog.ps1"
     . "$PSScriptRoot/widgets/UniversalList.ps1"
-    # Write-PmcTuiLog "Widgets loaded" "INFO"
+    Write-PmcTuiLog "Widgets loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load widgets: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load widgets: $_" "ERROR"
     throw
 }
 
@@ -274,54 +274,54 @@ try {
     . "$PSScriptRoot/helpers/GapBuffer.ps1"
 } catch { throw }
 
-# Write-PmcTuiLog "Loading screen base class..." "INFO"
+Write-PmcTuiLog "Loading screen base class..." "INFO"
 try {
     # PmcScreen base (uses PmcHeader, PmcFooter, PmcMenuBar - MUST be after widgets)
     . "$PSScriptRoot/PmcScreen.ps1"
 
-    # Write-PmcTuiLog "Screen base class loaded" "INFO"
+    Write-PmcTuiLog "Screen base class loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load screen base: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load screen base: $_" "ERROR"
     throw
 }
 
-# Write-PmcTuiLog "Loading HelpViewScreen (needed by base classes)..." "INFO"
+Write-PmcTuiLog "Loading HelpViewScreen (needed by base classes)..." "INFO"
 try {
     # Load HelpViewScreen FIRST (StandardListScreen depends on it)
     . "$PSScriptRoot/screens/HelpViewScreen.ps1"
-    # Write-PmcTuiLog "HelpViewScreen loaded" "INFO"
+    Write-PmcTuiLog "HelpViewScreen loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load HelpViewScreen: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load HelpViewScreen: $_" "ERROR"
     throw
 }
 
-# Write-PmcTuiLog "Loading base classes..." "INFO"
+Write-PmcTuiLog "Loading base classes..." "INFO"
 try {
     . "$PSScriptRoot/base/StandardDashboard.ps1"
     . "$PSScriptRoot/base/StandardFormScreen.ps1"
     . "$PSScriptRoot/base/StandardListScreen.ps1"
     . "$PSScriptRoot/base/TabbedScreen.ps1"
-    # Write-PmcTuiLog "Base classes loaded" "INFO"
+    Write-PmcTuiLog "Base classes loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load base classes: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load base classes: $_" "ERROR"
     throw
 }
 
-# Write-PmcTuiLog "Loading ServiceContainer (needed by screens)..." "INFO"
+Write-PmcTuiLog "Loading ServiceContainer (needed by screens)..." "INFO"
 try {
     # Load ServiceContainer BEFORE screens (TaskListScreen depends on it)
     . "$PSScriptRoot/ServiceContainer.ps1"
-    # Write-PmcTuiLog "ServiceContainer loaded" "INFO"
+    Write-PmcTuiLog "ServiceContainer loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load ServiceContainer: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load ServiceContainer: $_" "ERROR"
     throw
 }
 
-# Write-PmcTuiLog "Loading remaining screens..." "INFO"
+Write-PmcTuiLog "Loading remaining screens..." "INFO"
 try {
     # Load remaining screens AFTER base classes (they inherit from StandardListScreen, etc.)
     . "$PSScriptRoot/screens/StartScreen.ps1"
@@ -329,24 +329,24 @@ try {
     . "$PSScriptRoot/screens/ProjectListScreen.ps1"
     . "$PSScriptRoot/screens/ProjectInfoScreenV4.ps1"
     . "$PSScriptRoot/screens/NoteEditorScreen.ps1"
-    # Write-PmcTuiLog "Remaining screens loaded" "INFO"
+    Write-PmcTuiLog "Remaining screens loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load screens: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load screens: $_" "ERROR"
     throw
 }
 
-# Write-PmcTuiLog "Loading PmcApplication..." "INFO"
+Write-PmcTuiLog "Loading PmcApplication..." "INFO"
 try {
     . "$PSScriptRoot/PmcApplication.ps1"
-    # Write-PmcTuiLog "PmcApplication loaded" "INFO"
+    Write-PmcTuiLog "PmcApplication loaded" "INFO"
 }
 catch {
-    # Write-PmcTuiLog "Failed to load PmcApplication: $_" "ERROR"
+    Write-PmcTuiLog "Failed to load PmcApplication: $_" "ERROR"
     throw
 }
 
-# Write-PmcTuiLog "All components loaded successfully" "INFO"
+Write-PmcTuiLog "All components loaded successfully" "INFO"
 
 <#
 .SYNOPSIS
@@ -368,8 +368,8 @@ function Start-PmcTUI {
         [string]$StartScreen = "Start"
     )
 
-    # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)..."
-    # Write-PmcTuiLog "Starting PMC TUI with screen: $StartScreen" "INFO"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)..."
+        Write-PmcTuiLog "Starting PMC TUI with screen: $StartScreen" "INFO"
 
     try {
         # === FIX 7.2: Cleanup stale backup files at startup ===
@@ -418,20 +418,20 @@ function Start-PmcTUI {
         if ([MenuRegistry]) {
             [MenuRegistry]::_instance = $null
         }
-        # Write-PmcTuiLog "Cleared stale PmcSharedMenuBar and MenuRegistry singleton" "INFO"
+        Write-PmcTuiLog "Cleared stale PmcSharedMenuBar and MenuRegistry singleton" "INFO"
 
         # === Create DI Container ===
-        # Write-PmcTuiLog "Creating ServiceContainer..." "INFO"
+        Write-PmcTuiLog "Creating ServiceContainer..." "INFO"
         $global:PmcContainer = [ServiceContainer]::new()
-        # Write-PmcTuiLog "ServiceContainer created" "INFO"
+        Write-PmcTuiLog "ServiceContainer created" "INFO"
 
         # === Register Core Services (in dependency order) ===
 
         # 1. Theme (no dependencies)
-        # Write-PmcTuiLog "Registering Theme service..." "INFO"
+        Write-PmcTuiLog "Registering Theme service..." "INFO"
         $global:PmcContainer.Register('Theme', {
                 param($container)
-                # Write-PmcTuiLog "Resolving Theme: Resetting singletons and initializing..." "INFO"
+                Write-PmcTuiLog "Resolving Theme: Resetting singletons and initializing..." "INFO"
                 
                 # CRITICAL FIX: Reset singletons to ensure fresh theme data from config
                 # This fixes gradient themes not loading because singletons cached old data
@@ -445,24 +445,24 @@ function Start-PmcTUI {
                 $manager = [PmcThemeManager]::GetInstance()
                 $themeHex = $manager.GetCurrentThemeHex()
                 
-                # Write-PmcTuiLog "Theme initialized: $themeHex" "INFO"
+                Write-PmcTuiLog "Theme initialized: $themeHex" "INFO"
                 return $manager
             }, $true)
 
         # Register ThemeManager (depends on Theme)
-        # Write-PmcTuiLog "Registering ThemeManager..." "INFO"
+        Write-PmcTuiLog "Registering ThemeManager..." "INFO"
         $global:PmcContainer.Register('ThemeManager', {
                 param($container)
-                # Write-PmcTuiLog "Resolving ThemeManager..." "INFO"
+                Write-PmcTuiLog "Resolving ThemeManager..." "INFO"
                 $null = $container.Resolve('Theme')
                 return [PmcThemeManager]::GetInstance()
             }, $true)
 
         # 2. Config (no dependencies) - CACHED for performance
-        # Write-PmcTuiLog "Registering Config service..." "INFO"
+        Write-PmcTuiLog "Registering Config service..." "INFO"
         $global:PmcContainer.Register('Config', {
                 param($container)
-                # Write-PmcTuiLog "Resolving Config..." "INFO"
+                Write-PmcTuiLog "Resolving Config..." "INFO"
 
                 # STANDALONE: Use DataService for config (no module dependency)
                 try {
@@ -475,64 +475,64 @@ function Start-PmcTUI {
             }, $true)
 
         # 3. TaskStore (depends on Theme via state)
-        # Write-PmcTuiLog "Registering TaskStore service..." "INFO"
+        Write-PmcTuiLog "Registering TaskStore service..." "INFO"
         $global:PmcContainer.Register('TaskStore', {
                 param($container)
-                # Write-PmcTuiLog "Resolving TaskStore..." "INFO"
+                Write-PmcTuiLog "Resolving TaskStore..." "INFO"
                 # Ensure theme is initialized first
                 $null = $container.Resolve('Theme')
                 return [TaskStore]::GetInstance()
             }, $true)
 
         # 4. MenuRegistry (depends on Theme)
-        # Write-PmcTuiLog "Registering MenuRegistry service..." "INFO"
+        Write-PmcTuiLog "Registering MenuRegistry service..." "INFO"
         $global:PmcContainer.Register('MenuRegistry', {
                 param($container)
-                # Write-PmcTuiLog "Resolving MenuRegistry..." "INFO"
+                Write-PmcTuiLog "Resolving MenuRegistry..." "INFO"
                 # Ensure theme is initialized first
                 $null = $container.Resolve('Theme')
                 return [MenuRegistry]::GetInstance()
             }, $true)
 
         # 5. Application (depends on Theme)
-        # Write-PmcTuiLog "Registering Application service..." "INFO"
+        Write-PmcTuiLog "Registering Application service..." "INFO"
         $global:PmcContainer.Register('Application', {
                 param($container)
-                # Write-PmcTuiLog "Resolving Application..." "INFO"
+                Write-PmcTuiLog "Resolving Application..." "INFO"
                 # Ensure theme is initialized first
                 $null = $container.Resolve('Theme')
                 return [PmcApplication]::new($container)
             }, $true)
 
         # 6. CommandService (no dependencies)
-        # Write-PmcTuiLog "Registering CommandService..." "INFO"
+        Write-PmcTuiLog "Registering CommandService..." "INFO"
         $global:PmcContainer.Register('CommandService', {
                 param($container)
-                # Write-PmcTuiLog "Resolving CommandService..." "INFO"
+                Write-PmcTuiLog "Resolving CommandService..." "INFO"
                 return [CommandService]::GetInstance()
             }, $true)
 
         # 7. ChecklistService (no dependencies)
-        # Write-PmcTuiLog "Registering ChecklistService..." "INFO"
+        Write-PmcTuiLog "Registering ChecklistService..." "INFO"
         $global:PmcContainer.Register('ChecklistService', {
                 param($container)
-                # Write-PmcTuiLog "Resolving ChecklistService..." "INFO"
+                Write-PmcTuiLog "Resolving ChecklistService..." "INFO"
                 return [ChecklistService]::GetInstance()
             }, $true)
 
         # 8. NoteService (no dependencies)
-        # Write-PmcTuiLog "Registering NoteService..." "INFO"
+        Write-PmcTuiLog "Registering NoteService..." "INFO"
         $global:PmcContainer.Register('NoteService', {
                 param($container)
-                # Write-PmcTuiLog "Resolving NoteService..." "INFO"
+                Write-PmcTuiLog "Resolving NoteService..." "INFO"
                 return [NoteService]::GetInstance()
             }, $true)
 
         # 9. ExcelMappingService (no dependencies)
-        # Write-PmcTuiLog "Registering ExcelMappingService..." "INFO"
+        Write-PmcTuiLog "Registering ExcelMappingService..." "INFO"
         $global:PmcContainer.Register('ExcelMappingService', {
                 param($container)
-                # Write-PmcTuiLog "Resolving ExcelMappingService..." "INFO"
+                Write-PmcTuiLog "Resolving ExcelMappingService..." "INFO"
                 return [ExcelMappingService]::GetInstance()
             }, $true)
 
@@ -543,10 +543,10 @@ function Start-PmcTUI {
             }, $true)
 
         # 11. PreferencesService (no dependencies)
-        # Write-PmcTuiLog "Registering PreferencesService..." "INFO"
+        Write-PmcTuiLog "Registering PreferencesService..." "INFO"
         $global:PmcContainer.Register('PreferencesService', {
                 param($container)
-                # Write-PmcTuiLog "Resolving PreferencesService..." "INFO"
+                Write-PmcTuiLog "Resolving PreferencesService..." "INFO"
                 return [PreferencesService]::GetInstance()
             }, $true)
 
@@ -563,11 +563,11 @@ function Start-PmcTUI {
             }, $true)
 
         # 14. Screen factories (depend on Application, TaskStore, etc.)
-        # Write-PmcTuiLog "Registering screen factories..." "INFO"
+        Write-PmcTuiLog "Registering screen factories..." "INFO"
 
         $global:PmcContainer.Register('TaskListScreen', {
                 param($container)
-                # Write-PmcTuiLog "Resolving TaskListScreen..." "INFO"
+                Write-PmcTuiLog "Resolving TaskListScreen..." "INFO"
                 # Ensure dependencies
                 $null = $container.Resolve('Theme')
                 $null = $container.Resolve('TaskStore')
@@ -575,24 +575,24 @@ function Start-PmcTUI {
             }, $false)  # Not singleton - create new instance each time
 
         # === Resolve Application ===
-        # Write-PmcTuiLog "Resolving Application from container..." "INFO"
+        Write-PmcTuiLog "Resolving Application from container..." "INFO"
         $global:PmcApp = $global:PmcContainer.Resolve('Application')
-        # Write-PmcTuiLog "Application resolved and assigned to `$global:PmcApp" "INFO"
+        Write-PmcTuiLog "Application resolved and assigned to `$global:PmcApp" "INFO"
 
         # === Load Menus from Manifest ===
-        # Write-PmcTuiLog "Loading menus from manifest..." "INFO"
+        Write-PmcTuiLog "Loading menus from manifest..." "INFO"
         $menuRegistry = $global:PmcContainer.Resolve('MenuRegistry')
         $manifestPath = Join-Path $PSScriptRoot "screens/MenuItems.psd1"
         if (Test-Path $manifestPath) {
             $menuRegistry.LoadFromManifest($manifestPath, $global:PmcContainer)
-            # Write-PmcTuiLog "Menus loaded from $manifestPath" "INFO"
+            Write-PmcTuiLog "Menus loaded from $manifestPath" "INFO"
         }
         else {
-            # Write-PmcTuiLog "Menu manifest not found at $manifestPath" "ERROR"
+            Write-PmcTuiLog "Menu manifest not found at $manifestPath" "ERROR"
         }
 
         # === Launch Initial Screen ===
-        # Write-PmcTuiLog "Launching screen: $StartScreen" "INFO"
+        Write-PmcTuiLog "Launching screen: $StartScreen" "INFO"
         switch ($StartScreen) {
             'Start' {
                 # Default: Start Page Dashboard
@@ -600,54 +600,54 @@ function Start-PmcTUI {
                 $global:PmcApp.PushScreen($screen)
             }
             'TaskList' {
-                # Write-PmcTuiLog "Resolving TaskListScreen from container..." "INFO"
+                Write-PmcTuiLog "Resolving TaskListScreen from container..." "INFO"
                 $screen = $global:PmcContainer.Resolve('TaskListScreen')
-                # Write-PmcTuiLog "Pushing screen to app..." "INFO"
+                Write-PmcTuiLog "Pushing screen to app..." "INFO"
                 try {
                     $global:PmcApp.PushScreen($screen)
-                    # Write-PmcTuiLog "Screen pushed successfully" "INFO"
+                    Write-PmcTuiLog "Screen pushed successfully" "INFO"
                 }
                 catch {
-                    # Add-Content -Path "$(Join-Path ([System.IO.Path]::GetTempPath()) 'pmc_debug.txt')" -Value "[$(Get-Date)] FATAL ERROR IN PUSHSCREEN: $_"
-                    # Add-Content -Path "$(Join-Path ([System.IO.Path]::GetTempPath()) 'pmc_debug.txt')" -Value "[$(Get-Date)] Stack Trace: $($_.ScriptStackTrace)"
+                    Add-Content -Path "$(Join-Path ([System.IO.Path]::GetTempPath()) 'pmc_debug.txt')" -Value "[$(Get-Date)] FATAL ERROR IN PUSHSCREEN: $_"
+                    Add-Content -Path "$(Join-Path ([System.IO.Path]::GetTempPath()) 'pmc_debug.txt')" -Value "[$(Get-Date)] Stack Trace: $($_.ScriptStackTrace)"
                     throw
                 }
 
             }
             'Demo' {
-                # Write-PmcTuiLog "Loading DemoScreen (not containerized)..." "INFO"
+                Write-PmcTuiLog "Loading DemoScreen (not containerized)..." "INFO"
                 . "$PSScriptRoot/DemoScreen.ps1"
                 $screen = [DemoScreen]::new()
                 $global:PmcApp.PushScreen($screen)
-                # Write-PmcTuiLog "Demo screen pushed" "INFO"
+                Write-PmcTuiLog "Demo screen pushed" "INFO"
             }
             default {
-                # Write-PmcTuiLog "Unknown screen: $StartScreen" "ERROR"
+                Write-PmcTuiLog "Unknown screen: $StartScreen" "ERROR"
                 throw "Unknown screen: $StartScreen"
             }
         }
 
         # Run event loop
-        # Write-PmcTuiLog "Starting event loop..." "INFO"
+        Write-PmcTuiLog "Starting event loop..." "INFO"
         Write-Host "Initialization complete. Starting Application Loop..." -ForegroundColor Cyan
         $global:PmcApp.Run()
-        # Write-PmcTuiLog "Event loop exited normally" "INFO"
+        Write-PmcTuiLog "Event loop exited normally" "INFO"
 
     }
     catch {
-        # Write-PmcTuiLog "EXCEPTION: $_" "ERROR"
-        # Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
-        # Write-PmcTuiLog "Exception details: $($_.Exception | Out-String)" "ERROR"
+        Write-PmcTuiLog "EXCEPTION: $_" "ERROR"
+        Write-PmcTuiLog "Stack trace: $($_.ScriptStackTrace)" "ERROR"
+        Write-PmcTuiLog "Exception details: $($_.Exception | Out-String)" "ERROR"
 
-        # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] PMC TUI Error: $_"
-        # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Log file: $global:PmcTuiLogFile"
-        # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Stack trace: $($_.ScriptStackTrace)"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] PMC TUI Error: $_"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Log file: $global:PmcTuiLogFile"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Stack trace: $($_.ScriptStackTrace)"
         throw
     }
     finally {
         # Cleanup
-        # Write-PmcTuiLog "Cleanup - showing cursor and resetting terminal" "INFO"
-        # Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Log saved to: $global:PmcTuiLogFile"
+        Write-PmcTuiLog "Cleanup - showing cursor and resetting terminal" "INFO"
+        Write-PmcDebugLog "[$(Get-Date -Format 'HH:mm:ss.fff')] [Start-PmcTUI] Log saved to: $global:PmcTuiLogFile"
     }
 }
 

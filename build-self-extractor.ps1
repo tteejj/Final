@@ -1,7 +1,7 @@
 
 $ErrorActionPreference = "Stop"
 
-$sourceDir = "/home/teej/ztest"
+$sourceDir = $PSScriptRoot
 $buildDir = Join-Path $sourceDir "build_temp"
 $outputScript = Join-Path $sourceDir "install_pmc.ps1"
 
@@ -11,27 +11,37 @@ New-Item -ItemType Directory -Path $buildDir | Out-Null
 
 Write-Host "Copying files..."
 
-# Helper to copy with exclusion
-function Copy-ToBuild {
-    param($Path)
-    $dest = Join-Path $buildDir $Path
-    if (Test-Path "$sourceDir/$Path") {
-        Copy-Item -Path "$sourceDir/$Path" -Destination $dest -Recurse -Container
+# Helper to copy files/folders
+function Copy-ItemSafe {
+    param($Path, $Destination)
+    $src = Join-Path $sourceDir $Path
+    if (Test-Path $src) {
+        $destPath = Join-Path $buildDir $Destination
+        $parent = Split-Path $destPath -Parent
+        if (-not (Test-Path $parent)) { New-Item -ItemType Directory -Path $parent -Force | Out-Null }
+        Copy-Item -Path $src -Destination $destPath -Recurse -Force
+    } else {
+        Write-Warning "Source not found: $Path"
     }
 }
 
 # ==== CORE APPLICATION FILES ====
-Copy-ToBuild "lib"          # SpeedTUI library
-Copy-ToBuild "module"       # PMC module code
-Copy-ToBuild "themes"       # All theme JSON files
-Copy-ToBuild "docs"         # Documentation
+Copy-ItemSafe "lib/SpeedTUI" "lib/SpeedTUI"
+Copy-ItemSafe "module/Pmc.Strict" "module/Pmc.Strict"
+Copy-ItemSafe "themes" "themes"
+# Include checklist templates if they exist (factory defaults)
+Copy-ItemSafe "module/checklist_templates" "module/checklist_templates"
 
 # Entry point
-Copy-Item "$sourceDir/start.ps1" "$buildDir/"
+Copy-ItemSafe "start.ps1" "start.ps1"
 
 # ==== CONFIG FILES ====
-# Default config (theme settings, display options)
-$defaultConfig = @'
+# Copy default config if it exists, otherwise create default
+$configPath = Join-Path $sourceDir "config.json"
+if (Test-Path $configPath) {
+    Copy-ItemSafe "config.json" "config.json"
+} else {
+    $defaultConfig = @'
 {
   "Display": {
     "Icons": {
@@ -44,14 +54,20 @@ $defaultConfig = @'
   }
 }
 '@
-Set-Content -Path "$buildDir/config.json" -Value $defaultConfig
+    Set-Content -Path "$buildDir/config.json" -Value $defaultConfig
+}
 
 # ==== DATA DIRECTORY STRUCTURE ====
 New-Item -ItemType Directory -Path "$buildDir/data" -Force | Out-Null
 New-Item -ItemType Directory -Path "$buildDir/data/logs" -Force | Out-Null
 New-Item -ItemType Directory -Path "$buildDir/data/backups" -Force | Out-Null
 
-# Empty tasks.json template (NO user data)
+# Copy Excel configs if they exist
+Copy-ItemSafe "data/excel-mappings.json" "data/excel-mappings.json"
+Copy-ItemSafe "data/excel-copy-profiles.json" "data/excel-copy-profiles.json"
+
+# Tasks.json - Create empty if not exists (don't overwrite user data in installer, but for self-extractor we package default)
+# The installer script (generated below) logic handles not overwriting if exists on target.
 $emptyTasksJson = @'
 {
   "tasks": [],
@@ -64,28 +80,14 @@ $emptyTasksJson = @'
 '@
 Set-Content -Path "$buildDir/data/tasks.json" -Value $emptyTasksJson
 
-# Excel config files (empty defaults)
-$emptyMappings = @'
-{
-  "mappings": [],
-  "lastUsed": null
-}
-'@
-Set-Content -Path "$buildDir/data/excel-mappings.json" -Value $emptyMappings
-
-$emptyCopyProfiles = @'
-{
-  "profiles": [],
-  "activeProfileId": null
-}
-'@
-Set-Content -Path "$buildDir/data/excel-copy-profiles.json" -Value $emptyCopyProfiles
-
 # ==== CLEANUP ====
-# Remove unwanted files from build dir
+# Remove unwanted files from build dir (just in case they were copied recursively)
 Get-ChildItem $buildDir -Recurse -Filter "*.log" | Remove-Item -Force -ErrorAction SilentlyContinue
-Get-ChildItem $buildDir -Recurse -Include ".DS_Store", "*.bak*", "*.undo", ".git*" | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
-Get-ChildItem $buildDir -Recurse -Filter "Test*.ps1" | Remove-Item -Force -ErrorAction SilentlyContinue
+Get-ChildItem $buildDir -Recurse -Include ".DS_Store", "*.bak*", "*.undo", ".git*", ".pmc-data", "ISSUES_FOUND.md", "*.tmp" | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
+# Remove test files from module
+Get-ChildItem "$buildDir/module" -Recurse -Filter "Test*.ps1" | Remove-Item -Force -ErrorAction SilentlyContinue
+# Remove repro scripts
+Get-ChildItem "$buildDir/module" -Recurse -Filter "repro*.ps1" | Remove-Item -Force -ErrorAction SilentlyContinue
 
 # 2. Compress
 Write-Host "Compressing..."
@@ -116,8 +118,17 @@ Write-Host "Extracting PMC TUI..." -ForegroundColor Cyan
 [System.IO.File]::WriteAllBytes(`$zipPath, `$bytes)
 
 # Extract
-if (Test-Path `$installDir) { Remove-Item `$installDir -Recurse -Force }
+if (Test-Path `$installDir) {
+    Write-Host "Backing up existing installation..."
+    `$backupDir = "`$installDir.bak.`$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+    Rename-Item `$installDir `$backupDir
+}
 Expand-Archive -Path `$zipPath -DestinationPath `$installDir -Force
+
+# Restore Data if exists (Upgrade scenario)
+# We need to be careful not to overwrite user data with defaults if they exist in the backup
+# But here we just extract to a fresh dir.
+# If the user runs this in a folder where they want to install, it creates PMC_TUI.
 
 # Cleanup
 Remove-Item `$zipPath -Force
