@@ -941,8 +941,8 @@ class UniversalList : PmcWidget {
                 $label = $label.Substring(0, $colWidth)
             }
             
-            # Write Header directly
-            $engine.WriteAt($currentX, $this.Y + 1, $label, $primaryColor, $defaultBg)
+            # Write Header directly - use rowBg for proper contrast on all themes
+            $engine.WriteAt($currentX, $this.Y + 1, $label, $primaryColor, $rowBg)
             $currentX += $colWidth
         }
         

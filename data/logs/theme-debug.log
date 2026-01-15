@@ -3278,3 +3278,41 @@ Check the spelling of the name, or if a path was included, verify that the path 
 [22:13:59.108] [Load-Theme] Looking for: /home/teej/ztest/themes/forest.json (exists=True)
 [22:13:59.111] [Load-Theme] JSON loaded. Name='Forest' Hex='#228844'
 [22:13:59.118] [Load-Theme] Returning theme with Hex='#228844'
+[22:22:53.213] === THEME SELF-HEAL START ===
+[22:22:53.220] Config path: /home/teej/ztest/config.json
+[22:22:53.248] Config loaded. Active=forest, Hex=#228844, hasHex=True
+[22:22:53.250] Hex already present, no repair needed
+[22:22:53.344] [Load-Theme] themeName='forest' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[22:22:53.349] [Load-Theme] Looking for: /home/teej/ztest/themes/forest.json (exists=True)
+[22:22:53.353] [Load-Theme] JSON loaded. Name='Forest' Hex='#228844'
+[22:22:53.373] [Load-Theme] Returning theme with Hex='#228844'
+[22:22:53.414] [Load-Theme] themeName='forest' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[22:22:53.416] [Load-Theme] Looking for: /home/teej/ztest/themes/forest.json (exists=True)
+[22:22:53.419] [Load-Theme] JSON loaded. Name='Forest' Hex='#228844'
+[22:22:53.426] [Load-Theme] Returning theme with Hex='#228844'
+[22:22:59.996] [Set-ActiveTheme] Starting for themeName='Notepad'
+[22:22:59.997] [Set-ActiveTheme] Reading config from: /home/teej/ztest/config.json
+[22:23:00.006] [Set-ActiveTheme] Set Active='notepad'
+[22:23:00.009] [Load-Theme] themeName='Notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[22:23:00.010] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[22:23:00.012] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[22:23:00.017] [Load-Theme] Returning theme with Hex='#ffffff'
+[22:23:00.018] [Set-ActiveTheme] Set Hex='#ffffff'
+[22:23:00.020] [Set-ActiveTheme] Writing config to: /home/teej/ztest/config.json
+[22:23:00.038] [Set-ActiveTheme] Config saved successfully
+[22:23:00.044] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[22:23:00.044] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[22:23:00.046] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[22:23:00.054] [Load-Theme] Returning theme with Hex='#ffffff'
+[22:27:08.781] === THEME SELF-HEAL START ===
+[22:27:08.788] Config path: /home/teej/ztest/config.json
+[22:27:08.816] Config loaded. Active=notepad, Hex=#ffffff, hasHex=True
+[22:27:08.818] Hex already present, no repair needed
+[22:27:08.908] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[22:27:08.914] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[22:27:08.917] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[22:27:08.941] [Load-Theme] Returning theme with Hex='#ffffff'
+[22:27:08.982] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[22:27:08.983] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[22:27:08.987] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[22:27:08.996] [Load-Theme] Returning theme with Hex='#ffffff'
