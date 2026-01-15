@@ -1,0 +1,10 @@
+DEBUG : TaskStore.LoadData: Starting
+DEBUG : TaskStore.LoadData: Calling Get-PmcData
+ERROR : TaskStore.LoadData: EXCEPTION: Access to the path '/pmc-config-debug.log' is denied.
+ERROR : TaskStore.LoadData: Stack trace: at Get-PmcConfig, /home/teej/ztest/module/Pmc.Strict/src/Config.ps1: line 14
+at Get-PmcTaskFilePath, /home/teej/ztest/module/Pmc.Strict/src/Storage.ps1: line 45
+at Get-PmcData, /home/teej/ztest/module/Pmc.Strict/Pmc.Strict.psm1: line 667
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/services/TaskStore.ps1: line 267
+at LoadData, /home/teej/ztest/module/Pmc.Strict/consoleui/services/TaskStore.ps1: line 267
+at GetInstance, /home/teej/ztest/module/Pmc.Strict/consoleui/services/TaskStore.ps1: line 209
+at <ScriptBlock>, /home/teej/ztest/module/Pmc.Strict/consoleui/repro_save.ps1: line 70

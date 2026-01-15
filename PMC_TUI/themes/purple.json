@@ -1,0 +1,207 @@
+{
+    "Name": "Purple",
+    "Hex": "#9966ff",
+    "Description": "Vibrant purple",
+    "Properties": {
+        "Primary": {
+            "Type": "Solid",
+            "Color": "#9966ff"
+        },
+        "Background.Field": {
+            "Type": "Solid",
+            "Color": "#0d0a1a"
+        },
+        "Background.FieldFocused": {
+            "Type": "Solid",
+            "Color": "#2a1f4d"
+        },
+        "Background.Row": {
+            "Type": "Solid",
+            "Color": "#0d0a1a"
+        },
+        "Background.RowSelected": {
+            "Type": "Solid",
+            "Color": "#2a1f4d"
+        },
+        "Background.Warning": {
+            "Type": "Solid",
+            "Color": "#332200"
+        },
+        "Background.MenuBar": {
+            "Type": "Solid",
+            "Color": "#1a1433"
+        },
+        "Background.TabActive": {
+            "Type": "Solid",
+            "Color": "#2a1f4d"
+        },
+        "Background.TabInactive": {
+            "Type": "Solid",
+            "Color": "#0a0815"
+        },
+        "Background.Primary": {
+            "Type": "Solid",
+            "Color": "#0d0a1a"
+        },
+        "Background.Widget": {
+            "Type": "Solid",
+            "Color": "#0a0815"
+        },
+        "Background.Panel": {
+            "Type": "Solid",
+            "Color": "#0a0815"
+        },
+        "Background.Header": {
+            "Type": "Solid",
+            "Color": "#1a1433"
+        },
+        "Background.Footer": {
+            "Type": "Solid",
+            "Color": "#1a1433"
+        },
+        "Foreground.Field": {
+            "Type": "Solid",
+            "Color": "#ddccff"
+        },
+        "Foreground.FieldFocused": {
+            "Type": "Solid",
+            "Color": "#ffffff"
+        },
+        "Foreground.Row": {
+            "Type": "Solid",
+            "Color": "#ddccff"
+        },
+        "Foreground.RowSelected": {
+            "Type": "Solid",
+            "Color": "#ffffff"
+        },
+        "Foreground.Title": {
+            "Type": "Solid",
+            "Color": "#9966ff"
+        },
+        "Foreground.Muted": {
+            "Type": "Solid",
+            "Color": "#7755aa"
+        },
+        "Foreground.Warning": {
+            "Type": "Solid",
+            "Color": "#ffaa00"
+        },
+        "Foreground.Error": {
+            "Type": "Solid",
+            "Color": "#ff3333"
+        },
+        "Foreground.Success": {
+            "Type": "Solid",
+            "Color": "#33ff88"
+        },
+        "Foreground.TabActive": {
+            "Type": "Solid",
+            "Color": "#ffffff"
+        },
+        "Foreground.TabInactive": {
+            "Type": "Solid",
+            "Color": "#7755aa"
+        },
+        "Foreground.Primary": {
+            "Type": "Solid",
+            "Color": "#9966ff"
+        },
+        "Border.Widget": {
+            "Type": "Solid",
+            "Color": "#6644cc"
+        },
+        "Foreground.Secondary": {
+            "Type": "Solid",
+            "Color": "#7755aa"
+        },
+        "Foreground.Accent": {
+            "Type": "Solid",
+            "Color": "#ffffff"
+        },
+        "Background.Accent": {
+            "Type": "Solid",
+            "Color": "#2a1f4d"
+        },
+        "Foreground.Border": {
+            "Type": "Solid",
+            "Color": "#6644cc"
+        },
+        "Foreground.Selection": {
+            "Type": "Solid",
+            "Color": "#ffffff"
+        },
+        "Background.Selection": {
+            "Type": "Solid",
+            "Color": "#2a1f4d"
+        },
+        "Surface": {
+            "Type": "Solid",
+            "Color": "#0a0815"
+        },
+        "OnSurface": {
+            "Type": "Solid",
+            "Color": "#ddccff"
+        },
+        "Outline": {
+            "Type": "Solid",
+            "Color": "#6644cc"
+        },
+        "Header": {
+            "Type": "Solid",
+            "Color": "#9966ff"
+        },
+        "Title": {
+            "Type": "Solid",
+            "Color": "#9966ff"
+        },
+        "Text": {
+            "Type": "Solid",
+            "Color": "#ddccff"
+        },
+        "Body": {
+            "Type": "Solid",
+            "Color": "#ddccff"
+        },
+        "Muted": {
+            "Type": "Solid",
+            "Color": "#7755aa"
+        },
+        "Label": {
+            "Type": "Solid",
+            "Color": "#7755aa"
+        },
+        "Highlight": {
+            "Type": "Solid",
+            "Color": "#9966ff"
+        },
+        "Error": {
+            "Type": "Solid",
+            "Color": "#ff3333"
+        },
+        "Warning": {
+            "Type": "Solid",
+            "Color": "#ffaa00"
+        },
+        "Success": {
+            "Type": "Solid",
+            "Color": "#33ff88"
+        },
+        "Info": {
+            "Type": "Solid",
+            "Color": "#9966ff"
+        },
+        "Border": {
+            "Type": "Solid",
+            "Color": "#6644cc"
+        },
+        "Status": {
+            "Type": "Solid",
+            "Color": "#7755aa"
+        },
+        "Bright": {
+            "Type": "Solid",
+            "Color": "#ffffff"
+        }
+    }
+}

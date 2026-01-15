@@ -20,18 +20,72 @@ function Copy-ToBuild {
     }
 }
 
-# Copy structure
-Copy-ToBuild "lib"
-Copy-ToBuild "module"
-Copy-ToBuild "themes"
-Copy-ToBuild "docs"
-Copy-Item "$sourceDir/start.ps1" "$buildDir/"
-if (Test-Path "$sourceDir/config.json") { Copy-Item "$sourceDir/config.json" "$buildDir/" }
-if (Test-Path "$sourceDir/tasks.json") { Copy-Item "$sourceDir/tasks.json" "$buildDir/" }
+# ==== CORE APPLICATION FILES ====
+Copy-ToBuild "lib"          # SpeedTUI library
+Copy-ToBuild "module"       # PMC module code
+Copy-ToBuild "themes"       # All theme JSON files
+Copy-ToBuild "docs"         # Documentation
 
-# Clean up excluded items from build dir (e.g. if inside copied folders)
-Get-ChildItem $buildDir -Recurse -Filter "*.log" | Remove-Item -Force
-Get-ChildItem $buildDir -Recurse -Include ".DS_Store" | Remove-Item -Force
+# Entry point
+Copy-Item "$sourceDir/start.ps1" "$buildDir/"
+
+# ==== CONFIG FILES ====
+# Default config (theme settings, display options)
+$defaultConfig = @'
+{
+  "Display": {
+    "Icons": {
+      "Mode": "ascii"
+    },
+    "Theme": {
+      "Active": "default",
+      "Hex": "#4488ff"
+    }
+  }
+}
+'@
+Set-Content -Path "$buildDir/config.json" -Value $defaultConfig
+
+# ==== DATA DIRECTORY STRUCTURE ====
+New-Item -ItemType Directory -Path "$buildDir/data" -Force | Out-Null
+New-Item -ItemType Directory -Path "$buildDir/data/logs" -Force | Out-Null
+New-Item -ItemType Directory -Path "$buildDir/data/backups" -Force | Out-Null
+
+# Empty tasks.json template (NO user data)
+$emptyTasksJson = @'
+{
+  "tasks": [],
+  "projects": [],
+  "timelogs": [],
+  "notes": [],
+  "checklists": [],
+  "commands": []
+}
+'@
+Set-Content -Path "$buildDir/data/tasks.json" -Value $emptyTasksJson
+
+# Excel config files (empty defaults)
+$emptyMappings = @'
+{
+  "mappings": [],
+  "lastUsed": null
+}
+'@
+Set-Content -Path "$buildDir/data/excel-mappings.json" -Value $emptyMappings
+
+$emptyCopyProfiles = @'
+{
+  "profiles": [],
+  "activeProfileId": null
+}
+'@
+Set-Content -Path "$buildDir/data/excel-copy-profiles.json" -Value $emptyCopyProfiles
+
+# ==== CLEANUP ====
+# Remove unwanted files from build dir
+Get-ChildItem $buildDir -Recurse -Filter "*.log" | Remove-Item -Force -ErrorAction SilentlyContinue
+Get-ChildItem $buildDir -Recurse -Include ".DS_Store", "*.bak*", "*.undo", ".git*" | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
+Get-ChildItem $buildDir -Recurse -Filter "Test*.ps1" | Remove-Item -Force -ErrorAction SilentlyContinue
 
 # 2. Compress
 Write-Host "Compressing..."

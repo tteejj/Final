@@ -1,0 +1,11 @@
+{
+  "Display": {
+    "Icons": {
+      "Mode": "ascii"
+    },
+    "Theme": {
+      "Active": "default",
+      "Hex": "#4488ff"
+    }
+  }
+}
