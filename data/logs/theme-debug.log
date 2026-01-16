@@ -1,0 +1,12 @@
+[12:18:18.625] === THEME SELF-HEAL START ===
+[12:18:18.627] Config path: /home/teej/ztest/config.json
+[12:18:18.652] Config loaded. Active=notepad, Hex=#ffffff, hasHex=True
+[12:18:18.654] Hex already present, no repair needed
+[12:18:18.742] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[12:18:18.766] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[12:18:18.770] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[12:18:18.793] [Load-Theme] Returning theme with Hex='#ffffff'
+[12:18:18.831] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[12:18:18.832] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[12:18:18.835] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[12:18:18.843] [Load-Theme] Returning theme with Hex='#ffffff'

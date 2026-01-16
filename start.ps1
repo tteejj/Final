@@ -33,8 +33,13 @@ try {
     # Dot-source to load the function
     . "$script:AppRoot/module/Pmc.Strict/consoleui/Start-PmcTUI.ps1"
     
-    # Now call the function explicitly
-    Start-PmcTUI -debug $debug
+    # Call function with appropriate debug switch based on level
+    switch ($debug) {
+        1 { Start-PmcTUI -debug1 }
+        2 { Start-PmcTUI -debug2 }
+        3 { Start-PmcTUI -debug3 }
+        default { Start-PmcTUI }
+    }
 }
 catch {
     Write-Host "PMC TUI Error: $_" -ForegroundColor Red

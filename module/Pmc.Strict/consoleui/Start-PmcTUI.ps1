@@ -51,12 +51,12 @@ if ($effectiveLogLevel -gt 0) {
         # Try environment variable first, but validate it's safe
         if ($env:PMC_LOG_PATH) {
             # SECURITY: Only use Windows paths on Windows, Unix paths on Linux
-            $isWindows = [System.Environment]::OSVersion.Platform -eq 'Win32NT'
-            if ($isWindows) {
+            # Use PowerShell 7's built-in $IsWindows automatic variable
+            if ($IsWindows) {
                 if ($env:PMC_LOG_PATH -match '^[A-Z]:' -or $env:PMC_LOG_PATH -match '^\\\\') {
                     $logPath = $env:PMC_LOG_PATH
                 }
-            } elseif (-not $isWindows) {
+            } else {
                 if ($env:PMC_LOG_PATH -match '^/' -or $env:PMC_LOG_PATH -match '^\./') {
                     $logPath = $env:PMC_LOG_PATH
                 }

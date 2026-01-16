@@ -310,7 +310,7 @@ class ChecklistTemplatesFolderScreen : StandardListScreen {
     # === External Editor ===
     
     hidden [void] _OpenInExternalEditor($filePath) {
-        if ($global:IsWindows) {
+        if ($IsWindows) {
             Start-Process "notepad.exe" -ArgumentList $filePath
         } else {
             if (Get-Command "xdg-open" -ErrorAction SilentlyContinue) {

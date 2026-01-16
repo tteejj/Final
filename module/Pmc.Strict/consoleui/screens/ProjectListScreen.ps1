@@ -821,7 +821,7 @@ class ProjectListScreen : StandardListScreen {
                     try {
                         if ($PSVersionTable.PSVersion.Major -ge 6) {
                             # PowerShell Core - check for Excel COM object on Windows
-                            if ($global:IsWindows) {
+                            if ($IsWindows) {
                                 $excelAvailable = $null -ne (Get-Command excel.exe -ErrorAction SilentlyContinue)
                             }
                         }
