@@ -1,3 +1,9 @@
 [12:18:16.684] [Start-PmcTUI] WARNING: Failed to setup logging: Cannot overwrite variable IsWindows because it is read-only or constant.
 [12:18:18.592] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
 [12:19:13.414] [Start-PmcTUI] Log saved to: 
+[12:57:01.536] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20260116-125701.log (Level 2)
+[12:57:03.499] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[12:57:34.676] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20260116-125701.log
+[13:02:29.343] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20260116-130229.log (Level 2)
+[13:02:31.239] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[13:02:49.217] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20260116-130229.log

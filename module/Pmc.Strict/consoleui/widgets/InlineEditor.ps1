@@ -536,16 +536,17 @@ class InlineEditor : PmcWidget {
         }
 
         # For all fields with widgets, allow direct typing (inline editing)
-        if ($this._currentFieldIndex -ge 0 -and $this._currentFieldIndex -lt $this._fields.Count) {
+        # CRITICAL: Skip this entire block for Escape - let it fall through to dedicated handler below
+        if ($this._currentFieldIndex -ge 0 -and $this._currentFieldIndex -lt $this._fields.Count -and $keyInfo.Key -ne 'Escape') {
             $currentField = $this._fields[$this._currentFieldIndex]
             # Write-PmcTuiLog "InlineEditor.HandleInput: Current field index=$($this._currentFieldIndex) name=$($currentField.Name) type=$($currentField.Type)" "DEBUG"
 
             # Text, Textarea, Date, Tags, Project AND Number fields - pass input to widget
             if ($currentField.Type -eq 'text' -or $currentField.Type -eq 'textarea' -or $currentField.Type -eq 'date' -or $currentField.Type -eq 'tags' -or $currentField.Type -eq 'project' -or $currentField.Type -eq 'number') {
-                # Don't pass navigation keys to widget - let InlineEditor handle them
+                # Don't pass navigation keys to widget - return false to let navigation handlers above process them
                 # NOTE: Enter is NOT in this list - it's already handled above at line 383
                 if ($keyInfo.Key -eq 'Tab' -or $keyInfo.Key -eq 'UpArrow' -or $keyInfo.Key -eq 'DownArrow') {
-                    return $false  # Let InlineEditor handle navigation
+                    return $false  # Let navigation handlers above process these
                 }
 
                 # Clear validation errors when user starts editing a field
@@ -608,6 +609,16 @@ class InlineEditor : PmcWidget {
                 $this._ExpandCurrentField()
                 return $true
             }
+        }
+
+        # CRITICAL: Handle Escape at the end - after all other handlers have had a chance
+        # This ensures Escape can cancel the editor even when a text field is focused
+        if ($keyInfo.Key -eq 'Escape') {
+            Write-PmcTuiLog "InlineEditor.HandleInput: Escape key - setting IsCancelled=true" "INFO"
+            $this.IsCancelled = $true
+            $this.NeedsClear = $true
+            $this._InvokeCallback($this.OnCancelled, $null)
+            return $true
         }
 
         return $false

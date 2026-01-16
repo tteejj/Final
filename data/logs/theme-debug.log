@@ -10,3 +10,27 @@
 [12:18:18.832] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
 [12:18:18.835] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
 [12:18:18.843] [Load-Theme] Returning theme with Hex='#ffffff'
+[12:57:03.529] === THEME SELF-HEAL START ===
+[12:57:03.531] Config path: /home/teej/ztest/config.json
+[12:57:03.561] Config loaded. Active=notepad, Hex=#ffffff, hasHex=True
+[12:57:03.564] Hex already present, no repair needed
+[12:57:03.719] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[12:57:03.723] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[12:57:03.727] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[12:57:03.754] [Load-Theme] Returning theme with Hex='#ffffff'
+[12:57:03.796] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[12:57:03.797] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[12:57:03.800] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[12:57:03.815] [Load-Theme] Returning theme with Hex='#ffffff'
+[13:02:31.271] === THEME SELF-HEAL START ===
+[13:02:31.273] Config path: /home/teej/ztest/config.json
+[13:02:31.301] Config loaded. Active=notepad, Hex=#ffffff, hasHex=True
+[13:02:31.303] Hex already present, no repair needed
+[13:02:31.443] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[13:02:31.447] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[13:02:31.451] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[13:02:31.479] [Load-Theme] Returning theme with Hex='#ffffff'
+[13:02:31.520] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[13:02:31.522] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[13:02:31.525] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[13:02:31.553] [Load-Theme] Returning theme with Hex='#ffffff'

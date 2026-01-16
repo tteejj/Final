@@ -287,16 +287,17 @@ class StartScreen : PmcScreen {
 
         # === Left Column: Urgent Tasks ===
         $leftX = 2
-        $engine.WriteAt($leftX, $y, "Urgent Tasks ($($this.UrgentTasks.Count))", $headerColor, $bg)
+        $urgentCount = if ($null -ne $this.UrgentTasks) { @($this.UrgentTasks).Count } else { 0 }
+        $engine.WriteAt($leftX, $y, "Urgent Tasks ($urgentCount)", $headerColor, $bg)
         $engine.WriteAt($leftX + 20, $y, " [!] Overdue: $($this.OverdueCount) | [T] Today: $($this.DueTodayCount)", $mutedColor, $bg)
 
         $listY = $y + 2
         $listH = $h - 2
 
-        if ($this.UrgentTasks.Count -eq 0) {
+        if ($urgentCount -eq 0) {
             $engine.WriteAt($leftX, $listY, "No urgent tasks.", $mutedColor, $bg)
         } else {
-            $displayCount = [Math]::Min($this.UrgentTasks.Count, $listH)
+            $displayCount = [Math]::Min($urgentCount, $listH)
             
             for ($i = 0; $i -lt $displayCount; $i++) {
                 $task = $this.UrgentTasks[$i]
