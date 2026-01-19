@@ -94,17 +94,17 @@ class ThemePicker {
         # Draw modal box
         $engine.Fill($x, $y, $w, $h, ' ', [Colors]::Foreground, [Colors]::PanelBg)
         $engine.DrawBox($x, $y, $w, $h, [Colors]::Accent, [Colors]::PanelBg)
-        $engine.WriteAt($x + 2, $y, " Select Theme ", [Colors]::White, [Colors]::Accent)
+        $engine.WriteAt($x + 2, $y, " Select Theme ", [Colors]::Bright, [Colors]::Accent)
         
         # Instructions
-        $engine.WriteAt($x + 2, $y + 2, "Current: $($this._currentTheme)", [Colors]::Gray, [Colors]::PanelBg)
+        $engine.WriteAt($x + 2, $y + 2, "Current: $($this._currentTheme)", [Colors]::Muted, [Colors]::PanelBg)
         
         # Theme list
         $listY = $y + 4
         $listH = $h - 6
         
         if ($this._themes.Count -eq 0) {
-            $engine.WriteAt($x + 4, $listY, "No themes found in themes/", [Colors]::Gray, [Colors]::PanelBg)
+            $engine.WriteAt($x + 4, $listY, "No themes found in themes/", [Colors]::Muted, [Colors]::PanelBg)
         } else {
             for ($i = 0; $i -lt [Math]::Min($listH, $this._themes.Count); $i++) {
                 $theme = $this._themes[$i]
@@ -119,7 +119,7 @@ class ThemePicker {
                 
                 # Marker for current theme
                 $marker = if ($isCurrent) { "*" } else { " " }
-                $engine.WriteAt($x + 2, $listY + $i, $marker, [Colors]::Cyan, $bg)
+                $engine.WriteAt($x + 2, $listY + $i, $marker, [Colors]::Title, $bg)
                 
                 # Theme name
                 $displayName = $theme.Name
@@ -135,7 +135,7 @@ class ThemePicker {
         }
         
         # Footer
-        $engine.WriteAt($x + 2, $y + $h - 2, "Enter: Apply & Restart  Esc: Cancel", [Colors]::Gray, [Colors]::PanelBg)
+        $engine.WriteAt($x + 2, $y + $h - 2, "Enter: Apply & Restart  Esc: Cancel", [Colors]::Muted, [Colors]::PanelBg)
         
         $engine.EndLayer()
     }

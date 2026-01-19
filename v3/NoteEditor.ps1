@@ -41,12 +41,12 @@ class NoteEditor {
             
             # Draw Window
             $engine.DrawBox($x, $y, $w, $h, [Colors]::Accent, [Colors]::PanelBg)
-            $engine.WriteAt($x + 2, $y, " Editing: $title ", [Colors]::White, [Colors]::PanelBg)
+            $engine.WriteAt($x + 2, $y, " Editing: $title ", [Colors]::Bright, [Colors]::PanelBg)
             
             # Draw Help
             $help = "[Ctrl+S/Esc] Save & Close  [Ctrl+C/X/V/A] Clipboard"
             if ($help.Length -gt $w - 4) { $help = "[Esc] Save & Close" }
-            $engine.WriteAt($x + 2, $y + $h - 1, " $help ", [Colors]::Gray, [Colors]::PanelBg)
+            $engine.WriteAt($x + 2, $y + $h - 1, " $help ", [Colors]::Muted, [Colors]::PanelBg)
             
             # --- Auto-Save Logic (Atomic) ---
             if ($this._dirty -and $this._autoSavePath -and ([DateTime]::Now - $this._lastSaveTime).TotalSeconds -gt 5) {
@@ -161,8 +161,8 @@ class NoteEditor {
                     
                     # Determine color
                     $isSelected = ($selStart -ne -1 -and $charIdx -ge $selStart -and $charIdx -lt $selEnd)
-                    $fg = if ($isSelected) { [Colors]::Black } else { [Colors]::Foreground }
-                    $bg = if ($isSelected) { [Colors]::Cyan } else { [Colors]::PanelBg }
+                    $fg = if ($isSelected) { [Colors]::CursorBg } else { [Colors]::Foreground }
+                    $bg = if ($isSelected) { [Colors]::Title } else { [Colors]::PanelBg }
                     
                     $engine.WriteAt($renderX, $displayY, $char, $fg, $bg)
                     $renderX++
@@ -173,7 +173,7 @@ class NoteEditor {
                     $cursorX = $x + 2 + $curCol
                     if ($cursorX -ge $x + 2 -and $cursorX -lt $maxRenderX) {
                         $charUnderCursor = if ($curCol -lt $lineLen) { $lineText[$curCol] } else { " " }
-                        $engine.WriteAt($cursorX, $displayY, $charUnderCursor, [Colors]::Black, [Colors]::White)
+                        $engine.WriteAt($cursorX, $displayY, $charUnderCursor, [Colors]::CursorBg, [Colors]::Bright)
                     }
                 }
                 

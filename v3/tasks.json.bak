@@ -1,412 +1,413 @@
 {
-  "settings": {},
   "notes": [
     {
+      "created": "2026-01-17T15:51:53.6019247-07:00",
       "id": "aae0fd4e-1d16-4d88-9686-778cdbdb1f0e",
       "title": "New Note",
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "content": "",
       "modified": "2026-01-17T15:51:59.6122476-07:00",
-      "created": "2026-01-17T15:51:53.6019247-07:00",
-      "content": ""
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead"
     },
     {
+      "created": "2026-01-17T17:15:39.6142986-07:00",
       "id": "acded868-2fc8-4b33-8a0b-865e9d40b8fc",
       "title": "New Note",
-      "projectId": "GLOBAL_NOTES",
+      "content": "",
       "modified": "2026-01-17T17:16:26.7166873-07:00",
-      "created": "2026-01-17T17:15:39.6142986-07:00",
-      "content": ""
-    }
-  ],
-  "checklists": [
-    {
-      "id": "1b77df46-df70-4f34-a85f-9d56c6484b5f",
-      "title": "New Checklist",
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "modified": "2026-01-17T15:52:36.0494192-07:00",
-      "created": "2026-01-17T15:52:36.049319-07:00",
-      "items": []
-    },
-    {
-      "id": "780a6667-21c4-4f82-91b6-2e785e6002b0",
-      "title": "New Checklist",
-      "projectId": "GLOBAL_CHECKLISTS",
-      "modified": "2026-01-18T15:35:58.0849652-07:00",
-      "created": "2026-01-18T15:35:50.9387463-07:00",
-      "items": [
-        {
-          "text": "New item",
-          "checked": false,
-          "id": "31a6b87d-0c6a-4632-9ffe-6d1e3a89cfc6"
-        }
-      ]
-    },
-    {
-      "id": "c686c40c-c15d-483b-9e07-4d9a405e83ca",
-      "title": "New Checklist",
-      "projectId": "GLOBAL_CHECKLISTS",
-      "modified": "2026-01-18T15:46:20.4411164-07:00",
-      "created": "2026-01-18T15:45:51.7862756-07:00",
-      "items": [
-        {
-          "text": "a",
-          "checked": false,
-          "id": "0106d974-b971-413a-ae5e-2e01f2fc2f38"
-        },
-        {
-          "text": "b",
-          "checked": false,
-          "id": "f68a229f-cc14-4354-82c5-6a9b24cf844e"
-        },
-        {
-          "text": "c",
-          "checked": false,
-          "id": "bf11a60a-c2c1-49c4-944a-37c92dfec032"
-        },
-        {
-          "text": "d",
-          "checked": false,
-          "id": "ca718a86-462c-4d1b-a2f0-518ef829c738"
-        },
-        {
-          "text": "e",
-          "checked": true,
-          "id": "f6b3ac42-f79e-4abd-9c6d-a82ab795a0f7"
-        }
-      ]
-    }
-  ],
-  "timelogs": [
-    {
-      "id": "965ed454-946d-46fe-816f-fc221246a9d8",
-      "timestamp": "2026-01-09T18:32:16.8030799-07:00",
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "date": "2026-01-09T00:00:00",
-      "minutes": 60,
-      "created": "2026-01-09T18:32:16.7481935-07:00"
-    },
-    {
-      "id": "64769e2e-515c-43e8-9b92-ef10568d0b06",
-      "timestamp": "2026-01-11T17:55:11.4153592-07:00",
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "date": "2026-01-11T00:00:00",
-      "minutes": 30,
-      "created": "2026-01-11T17:55:11.388043-07:00"
-    },
-    {
-      "id": "9a2897f8-05e1-4678-baa0-3f388be9d244",
-      "timestamp": "2026-01-11T17:55:11.4532232-07:00",
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "date": "2026-01-11T00:00:00",
-      "minutes": 30,
-      "created": "2026-01-11T17:55:11.4516099-07:00"
-    },
-    {
-      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2",
-      "hours": 1.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry11",
-      "date": "2026-01-17",
-      "created": "2026-01-17T09:10:17.9471582-07:00"
-    },
-    {
-      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117",
-      "hours": 0.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry",
-      "date": "2026-01-17",
-      "created": "2026-01-17T09:19:44.0951884-07:00"
-    },
-    {
-      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8",
-      "hours": 0.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry",
-      "date": "2026-01-17",
-      "created": "2026-01-17T09:25:01.8476168-07:00"
-    },
-    {
-      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f",
-      "hours": 0.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry",
-      "date": "2026-01-17",
-      "created": "2026-01-17T09:25:58.1970967-07:00"
-    },
-    {
-      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1",
-      "hours": 0.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry",
-      "date": "2026-01-17",
-      "created": "2026-01-17T09:48:43.2847458-07:00"
-    },
-    {
-      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd",
-      "hours": 0.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry",
-      "date": "2026-01-17",
-      "created": "2026-01-17T09:59:58.5628307-07:00"
-    },
-    {
-      "id": "73e8327e-1718-4867-b484-5854c915f533",
-      "hours": 0.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry",
-      "date": "2026-01-17",
-      "created": "2026-01-17T10:07:38.3138082-07:00"
-    },
-    {
-      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558",
-      "hours": 0.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry",
-      "date": "2026-01-17",
-      "created": "2026-01-17T10:19:33.2286784-07:00"
-    },
-    {
-      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a",
-      "hours": 0.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry",
-      "date": "2026-01-17",
-      "created": "2026-01-17T10:25:59.9721231-07:00"
-    },
-    {
-      "id": "26227243-4cd1-496a-9aae-578d2e91e771",
-      "hours": 0.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry",
-      "date": "2026-01-17",
-      "created": "2026-01-17T10:32:57.4712218-07:00"
-    },
-    {
-      "id": "73bc1499-aa36-4622-8d5a-05a997879aed",
-      "hours": 2.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry",
-      "date": "2026-01-17",
-      "created": "2026-01-17T10:35:21.2169363-07:00"
-    },
-    {
-      "id": "94fab5b2-669c-4f7b-9e15-ac4f405e8f91",
-      "hours": 1.25,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "New entry",
-      "date": "2026-01-17",
-      "created": "2026-01-17T15:29:48.6582552-07:00"
-    },
-    {
-      "id": "679053f3-50ca-4d8b-b233-b661e5ade3f1",
-      "hours": 0.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "",
-      "date": "2026-01-17",
-      "created": "2026-01-17T15:41:32.3174341-07:00"
-    },
-    {
-      "id": "5fe46c0e-3a49-47f9-8967-ed52c280f87d",
-      "hours": 0.0,
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "description": "111111",
-      "date": "2026-01-17",
-      "created": "2026-01-17T15:45:23.7633434-07:00"
-    },
-    {
-      "id": "bf94bad8-8d0c-4bdd-acd7-8f7ece2c6f0b",
-      "hours": 0.0,
-      "projectId": "",
-      "description": "",
-      "date": "2026-01-18",
-      "created": "2026-01-18T15:37:42.620067-07:00"
-    },
-    {
-      "id": "9de05e80-9706-4f49-a6a1-a5f37a8ac84b",
-      "hours": 0.5,
-      "projectId": "",
-      "description": "",
-      "date": "2026-01-18",
-      "id1": "050",
-      "created": "2026-01-18T15:43:55.5496093-07:00"
-    },
-    {
-      "id": "2722c08f-6a67-484f-81f6-844ac4e118b0",
-      "hours": 0.0,
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "description": "",
-      "date": "2026-01-18",
-      "created": "2026-01-18T16:02:42.8686934-07:00"
-    },
-    {
-      "id": "fba7c957-17d6-469a-b98c-2b8f365559c8",
-      "hours": 0.0,
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "description": "",
-      "date": "2026-01-18",
-      "created": "2026-01-18T16:06:30.5982339-07:00"
-    },
-    {
-      "id": "5bb0e8ae-4441-4e51-b04e-d2bd3e00f115",
-      "hours": 0.0,
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "description": "",
-      "date": "2026-01-18",
-      "created": "2026-01-18T16:07:14.504905-07:00"
-    },
-    {
-      "id": "03affbb1-ec90-4e23-8171-7deff1a931f6",
-      "hours": 0.0,
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "description": "",
-      "date": "2026-01-18",
-      "created": "2026-01-18T16:13:51.2282867-07:00"
-    },
-    {
-      "id": "f82a0095-c6e0-4484-9057-ed801b10fd54",
-      "hours": 0.0,
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "description": "",
-      "date": "2026-01-18",
-      "created": "2026-01-18T16:21:05.3940729-07:00"
-    },
-    {
-      "id": "792b3545-a060-4f29-94e2-be6b0f0ec00a",
-      "hours": 1.0,
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "description": "",
-      "date": "2026-01-18",
-      "created": "2026-01-18T16:23:55.4228515-07:00"
-    },
-    {
-      "id": "0b90b2f6-6226-4d62-a10f-0494051ce79f",
-      "hours": 0.0,
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "description": "",
-      "date": "2026-01-18",
-      "created": "2026-01-18T16:27:24.6324481-07:00"
-    },
-    {
-      "id": "c38233d6-b908-4eb8-aa8d-aa7b4931b1ab",
-      "hours": 0.0,
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "description": "",
-      "date": "2026-01-18",
-      "created": "2026-01-18T16:32:26.4166095-07:00"
-    },
-    {
-      "id": "2d9bd3fd-12ee-4f7c-97ca-4856e2d451ed",
-      "hours": 0.0,
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "description": "",
-      "date": "2026-01-18",
-      "created": "2026-01-18T16:41:27.8714382-07:00"
-    },
-    {
-      "id": "783de883-fded-4b7a-b48b-a20e023aff05",
-      "hours": 1.25,
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "description": "",
-      "date": "2026-01-18",
-      "created": "2026-01-18T16:45:49.7326848-07:00"
+      "projectId": "GLOBAL_NOTES"
     }
   ],
   "tasks": [
     {
+      "created": "2026-01-03T13:40:04.1941435-07:00",
       "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
-      "description": "details\n2",
-      "due": "2026-01-03T00:00:00",
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "status": "completed",
-      "modified": "2026-01-18T17:08:44.4477708-07:00",
-      "priority": 3,
       "text": "t2",
+      "due": "2026-01-03T00:00:00",
+      "priority": 3,
+      "description": "details\n2",
+      "status": "completed",
       "completed": true,
-      "created": "2026-01-03T13:40:04.1941435-07:00"
+      "modified": "2026-01-18T17:08:47.190884-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
     },
     {
+      "created": "2026-01-03T13:53:06.8552706-07:00",
       "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3",
-      "description": "",
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "status": "todo",
-      "modified": "2026-01-17T12:34:48.3922069-07:00",
-      "priority": 3,
       "text": "t3",
-      "completed": false,
-      "created": "2026-01-03T13:53:06.8552706-07:00"
-    },
-    {
-      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
-      "due": "2026-01-06T00:00:00",
-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "status": "todo",
-      "modified": "2026-01-06T17:26:23.7914548-07:00",
       "priority": 3,
-      "text": "t5",
-      "completed": false,
-      "created": "2026-01-06T17:26:23.746147-07:00"
-    },
-    {
-      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394",
-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
-      "status": "pending",
-      "modified": "2026-01-07T08:12:24.2971891-07:00",
-      "text": "subtask1",
-      "completed": false,
-      "created": "2026-01-07T08:12:24.2971891-07:00"
-    },
-    {
-      "id": "671badfe-dcbb-4554-8df4-7753239cea88",
       "description": "",
-      "due": "2026-01-18T00:00:00",
-      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62",
+      "status": "todo",
+      "completed": false,
+      "modified": "2026-01-17T12:34:48.3922069-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
+    },
+    {
+      "created": "2026-01-06T17:26:23.746147-07:00",
+      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
+      "text": "t5",
+      "due": "2026-01-06T00:00:00",
+      "priority": 3,
+      "status": "todo",
+      "completed": false,
+      "modified": "2026-01-06T17:26:23.7914548-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead"
+    },
+    {
+      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+      "created": "2026-01-07T08:12:24.2971891-07:00",
+      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394",
+      "text": "subtask1",
+      "description": "note",
       "status": "pending",
+      "completed": false,
+      "modified": "2026-01-19T08:40:25.0780583-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
+    },
+    {
+      "created": "2026-01-11T17:53:38.1643562-07:00",
+      "id": "671badfe-dcbb-4554-8df4-7753239cea88",
+      "text": "t1",
+      "due": "2026-01-18T00:00:00",
       "tags": [
         "tag1"
       ],
-      "modified": "2026-01-18T17:03:27.7634239-07:00",
       "priority": 3,
-      "text": "t1",
+      "description": "",
+      "status": "pending",
       "completed": false,
-      "created": "2026-01-11T17:53:38.1643562-07:00"
+      "modified": "2026-01-18T17:03:27.7634239-07:00",
+      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62"
     },
     {
-      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0",
       "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+      "created": "2026-01-17T13:02:15.6642561-07:00",
       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
       "text": "test",
-      "modified": "2026-01-17T13:02:15.6642561-07:00",
-      "created": "2026-01-17T13:02:15.6642561-07:00"
+      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0",
+      "modified": "2026-01-17T13:02:15.6642561-07:00"
     }
   ],
+  "settings": {},
   "projects": [
     {
-      "id": "c0f82390-e410-459c-9602-0e227090f455",
-      "task_count": 3,
-      "status": "active",
       "name": "Inbox",
+      "id": "c0f82390-e410-459c-9602-0e227090f455",
+      "created": "2026-01-01 08:09:47",
       "description": "Default inbox",
-      "created": "2026-01-01 08:09:47"
+      "status": "active",
+      "task_count": 3
     },
     {
-      "id": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
-      "task_count": 1,
-      "status": "active",
-      "modified": "2026-01-10T20:10:28.926031-07:00",
-      "T2020": "/home/teej/pmc/ALL_TIME_SCREEN_REVIEW.md",
       "name": "Project 1",
+      "id": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "created": "2026-01-03T09:53:52.1554583-07:00",
       "description": "Main project",
-      "created": "2026-01-03T09:53:52.1554583-07:00"
+      "status": "active",
+      "task_count": 1,
+      "T2020": "/home/teej/pmc/ALL_TIME_SCREEN_REVIEW.md",
+      "modified": "2026-01-10T20:10:28.926031-07:00"
     },
     {
-      "id": "f1f1418e-df69-4737-970b-ee0711139c62",
-      "task_count": 1,
-      "status": "active",
-      "modified": "2026-01-10T13:30:12.1391838-07:00",
       "name": "Project 2",
+      "id": "f1f1418e-df69-4737-970b-ee0711139c62",
+      "created": "2026-01-10T13:30:12.064892-07:00",
       "description": "Secondary project",
-      "created": "2026-01-10T13:30:12.064892-07:00"
+      "status": "active",
+      "task_count": 1,
+      "modified": "2026-01-10T13:30:12.1391838-07:00"
+    }
+  ],
+  "checklists": [
+    {
+      "items": [],
+      "created": "2026-01-17T15:52:36.049319-07:00",
+      "id": "1b77df46-df70-4f34-a85f-9d56c6484b5f",
+      "title": "New Checklist",
+      "modified": "2026-01-17T15:52:36.0494192-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead"
+    },
+    {
+      "items": [
+        {
+          "checked": false,
+          "id": "31a6b87d-0c6a-4632-9ffe-6d1e3a89cfc6",
+          "text": "New item"
+        }
+      ],
+      "created": "2026-01-18T15:35:50.9387463-07:00",
+      "id": "780a6667-21c4-4f82-91b6-2e785e6002b0",
+      "title": "New Checklist",
+      "modified": "2026-01-18T15:35:58.0849652-07:00",
+      "projectId": "GLOBAL_CHECKLISTS"
+    },
+    {
+      "items": [
+        {
+          "checked": false,
+          "id": "0106d974-b971-413a-ae5e-2e01f2fc2f38",
+          "text": "a"
+        },
+        {
+          "checked": false,
+          "id": "f68a229f-cc14-4354-82c5-6a9b24cf844e",
+          "text": "b"
+        },
+        {
+          "checked": false,
+          "id": "bf11a60a-c2c1-49c4-944a-37c92dfec032",
+          "text": "c"
+        },
+        {
+          "checked": false,
+          "id": "ca718a86-462c-4d1b-a2f0-518ef829c738",
+          "text": "d"
+        },
+        {
+          "checked": true,
+          "id": "f6b3ac42-f79e-4abd-9c6d-a82ab795a0f7",
+          "text": "e"
+        }
+      ],
+      "created": "2026-01-18T15:45:51.7862756-07:00",
+      "id": "c686c40c-c15d-483b-9e07-4d9a405e83ca",
+      "title": "New Checklist",
+      "modified": "2026-01-18T15:46:20.4411164-07:00",
+      "projectId": "GLOBAL_CHECKLISTS"
+    }
+  ],
+  "timelogs": [
+    {
+      "timestamp": "2026-01-09T18:32:16.8030799-07:00",
+      "created": "2026-01-09T18:32:16.7481935-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "965ed454-946d-46fe-816f-fc221246a9d8",
+      "minutes": 60,
+      "date": "2026-01-09T00:00:00"
+    },
+    {
+      "timestamp": "2026-01-11T17:55:11.4153592-07:00",
+      "created": "2026-01-11T17:55:11.388043-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "64769e2e-515c-43e8-9b92-ef10568d0b06",
+      "minutes": 30,
+      "date": "2026-01-11T00:00:00"
+    },
+    {
+      "timestamp": "2026-01-11T17:55:11.4532232-07:00",
+      "created": "2026-01-11T17:55:11.4516099-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "9a2897f8-05e1-4678-baa0-3f388be9d244",
+      "minutes": 30,
+      "date": "2026-01-11T00:00:00"
+    },
+    {
+      "created": "2026-01-17T09:10:17.9471582-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2",
+      "description": "New entry11",
+      "hours": 1.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T09:19:44.0951884-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117",
+      "description": "New entry",
+      "hours": 0.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T09:25:01.8476168-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8",
+      "description": "New entry",
+      "hours": 0.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T09:25:58.1970967-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f",
+      "description": "New entry",
+      "hours": 0.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T09:48:43.2847458-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1",
+      "description": "New entry",
+      "hours": 0.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T09:59:58.5628307-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd",
+      "description": "New entry",
+      "hours": 0.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T10:07:38.3138082-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "73e8327e-1718-4867-b484-5854c915f533",
+      "description": "New entry",
+      "hours": 0.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T10:19:33.2286784-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558",
+      "description": "New entry",
+      "hours": 0.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T10:25:59.9721231-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a",
+      "description": "New entry",
+      "hours": 0.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T10:32:57.4712218-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "26227243-4cd1-496a-9aae-578d2e91e771",
+      "description": "New entry",
+      "hours": 0.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T10:35:21.2169363-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "73bc1499-aa36-4622-8d5a-05a997879aed",
+      "description": "New entry",
+      "hours": 2.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T15:29:48.6582552-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "94fab5b2-669c-4f7b-9e15-ac4f405e8f91",
+      "description": "New entry",
+      "hours": 1.25,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T15:41:32.3174341-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "679053f3-50ca-4d8b-b233-b661e5ade3f1",
+      "description": "",
+      "hours": 0.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-17T15:45:23.7633434-07:00",
+      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+      "id": "5fe46c0e-3a49-47f9-8967-ed52c280f87d",
+      "description": "111111",
+      "hours": 0.0,
+      "date": "2026-01-17"
+    },
+    {
+      "created": "2026-01-18T15:37:42.620067-07:00",
+      "projectId": "",
+      "id": "bf94bad8-8d0c-4bdd-acd7-8f7ece2c6f0b",
+      "description": "",
+      "hours": 0.0,
+      "date": "2026-01-18"
+    },
+    {
+      "created": "2026-01-18T15:43:55.5496093-07:00",
+      "projectId": "",
+      "id": "9de05e80-9706-4f49-a6a1-a5f37a8ac84b",
+      "description": "",
+      "hours": 0.5,
+      "id1": "050",
+      "date": "2026-01-18"
+    },
+    {
+      "created": "2026-01-18T16:02:42.8686934-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+      "id": "2722c08f-6a67-484f-81f6-844ac4e118b0",
+      "description": "",
+      "hours": 0.0,
+      "date": "2026-01-18"
+    },
+    {
+      "created": "2026-01-18T16:06:30.5982339-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+      "id": "fba7c957-17d6-469a-b98c-2b8f365559c8",
+      "description": "",
+      "hours": 0.0,
+      "date": "2026-01-18"
+    },
+    {
+      "created": "2026-01-18T16:07:14.504905-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+      "id": "5bb0e8ae-4441-4e51-b04e-d2bd3e00f115",
+      "description": "",
+      "hours": 0.0,
+      "date": "2026-01-18"
+    },
+    {
+      "created": "2026-01-18T16:13:51.2282867-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+      "id": "03affbb1-ec90-4e23-8171-7deff1a931f6",
+      "description": "",
+      "hours": 0.0,
+      "date": "2026-01-18"
+    },
+    {
+      "created": "2026-01-18T16:21:05.3940729-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+      "id": "f82a0095-c6e0-4484-9057-ed801b10fd54",
+      "description": "",
+      "hours": 0.0,
+      "date": "2026-01-18"
+    },
+    {
+      "created": "2026-01-18T16:23:55.4228515-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+      "id": "792b3545-a060-4f29-94e2-be6b0f0ec00a",
+      "description": "",
+      "hours": 1.0,
+      "date": "2026-01-18"
+    },
+    {
+      "created": "2026-01-18T16:27:24.6324481-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+      "id": "0b90b2f6-6226-4d62-a10f-0494051ce79f",
+      "description": "",
+      "hours": 0.0,
+      "date": "2026-01-18"
+    },
+    {
+      "created": "2026-01-18T16:32:26.4166095-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+      "id": "c38233d6-b908-4eb8-aa8d-aa7b4931b1ab",
+      "description": "",
+      "hours": 0.0,
+      "date": "2026-01-18"
+    },
+    {
+      "created": "2026-01-18T16:41:27.8714382-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+      "id": "2d9bd3fd-12ee-4f7c-97ca-4856e2d451ed",
+      "description": "",
+      "hours": 0.0,
+      "date": "2026-01-18"
+    },
+    {
+      "created": "2026-01-18T16:45:49.7326848-07:00",
+      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+      "id": "783de883-fded-4b7a-b48b-a20e023aff05",
+      "description": "",
+      "hours": 1.25,
+      "date": "2026-01-18"
     }
   ]
 }

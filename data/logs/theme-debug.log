@@ -46,3 +46,71 @@
 [13:50:10.741] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
 [13:50:10.744] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
 [13:50:10.759] [Load-Theme] Returning theme with Hex='#ffffff'
+[08:40:03.833] [Load-Theme] themeName='default' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:40:03.845] [Load-Theme] Looking for: /home/teej/ztest/themes/default.json (exists=True)
+[08:40:03.864] [Load-Theme] JSON loaded. Name='Default' Hex='#33aaff'
+[08:40:03.896] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:40:48.124] [Load-Theme] themeName='default' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:40:48.125] [Load-Theme] Looking for: /home/teej/ztest/themes/default.json (exists=True)
+[08:40:48.127] [Load-Theme] JSON loaded. Name='Default' Hex='#33aaff'
+[08:40:48.132] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:40:57.129] [Load-Theme] themeName='default' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:40:57.142] [Load-Theme] Looking for: /home/teej/ztest/themes/default.json (exists=True)
+[08:40:57.161] [Load-Theme] JSON loaded. Name='Default' Hex='#33aaff'
+[08:40:57.193] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:45:53.946] [Load-Theme] themeName='default' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:45:53.958] [Load-Theme] Looking for: /home/teej/ztest/themes/default.json (exists=True)
+[08:45:53.977] [Load-Theme] JSON loaded. Name='Default' Hex='#33aaff'
+[08:45:54.008] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:46:01.706] [Load-Theme] themeName='default' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:46:01.708] [Load-Theme] Looking for: /home/teej/ztest/themes/default.json (exists=True)
+[08:46:01.711] [Load-Theme] JSON loaded. Name='Default' Hex='#33aaff'
+[08:46:01.716] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:46:07.739] [Load-Theme] themeName='default' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:46:07.752] [Load-Theme] Looking for: /home/teej/ztest/themes/default.json (exists=True)
+[08:46:07.771] [Load-Theme] JSON loaded. Name='Default' Hex='#33aaff'
+[08:46:07.806] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:56:57.715] [Load-Theme] themeName='default' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:56:57.728] [Load-Theme] Looking for: /home/teej/ztest/themes/default.json (exists=True)
+[08:56:57.746] [Load-Theme] JSON loaded. Name='Default' Hex='#33aaff'
+[08:56:57.778] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:57:06.895] [Load-Theme] themeName='default' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:57:06.896] [Load-Theme] Looking for: /home/teej/ztest/themes/default.json (exists=True)
+[08:57:06.898] [Load-Theme] JSON loaded. Name='Default' Hex='#33aaff'
+[08:57:06.903] [Load-Theme] Returning theme with Hex='#33aaff'
+[08:57:23.847] [Load-Theme] themeName='default' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[08:57:23.860] [Load-Theme] Looking for: /home/teej/ztest/themes/default.json (exists=True)
+[08:57:23.885] [Load-Theme] JSON loaded. Name='Default' Hex='#33aaff'
+[08:57:23.915] [Load-Theme] Returning theme with Hex='#33aaff'
+[09:10:55.022] [Load-Theme] themeName='default' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:10:55.035] [Load-Theme] Looking for: /home/teej/ztest/themes/default.json (exists=True)
+[09:10:55.055] [Load-Theme] JSON loaded. Name='Default' Hex='#33aaff'
+[09:10:55.091] [Load-Theme] Returning theme with Hex='#33aaff'
+[09:16:49.383] [Load-Theme] themeName='forest' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:16:49.393] [Load-Theme] Looking for: /home/teej/ztest/themes/forest.json (exists=True)
+[09:16:49.398] [Load-Theme] JSON loaded. Name='Forest' Hex='#228844'
+[09:16:49.428] [Load-Theme] Returning theme with Hex='#228844'
+[09:18:53.703] [Load-Theme] themeName='forest' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:18:53.735] [Load-Theme] Looking for: /home/teej/ztest/themes/forest.json (exists=True)
+[09:18:53.739] [Load-Theme] JSON loaded. Name='Forest' Hex='#228844'
+[09:18:53.768] [Load-Theme] Returning theme with Hex='#228844'
+[09:19:00.949] [Load-Theme] themeName='gold' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:19:00.950] [Load-Theme] Looking for: /home/teej/ztest/themes/gold.json (exists=True)
+[09:19:00.953] [Load-Theme] JSON loaded. Name='Gold' Hex='#ffaa33'
+[09:19:00.961] [Load-Theme] Returning theme with Hex='#ffaa33'
+[09:19:15.118] [Load-Theme] themeName='lime' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:19:15.120] [Load-Theme] Looking for: /home/teej/ztest/themes/lime.json (exists=True)
+[09:19:15.126] [Load-Theme] JSON loaded. Name='Lime' Hex='#33cc66'
+[09:19:15.130] [Load-Theme] Returning theme with Hex='#33cc66'
+[09:30:31.474] [Load-Theme] themeName='lime' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:30:31.489] [Load-Theme] Looking for: /home/teej/ztest/themes/lime.json (exists=True)
+[09:30:31.492] [Load-Theme] JSON loaded. Name='Lime' Hex='#33cc66'
+[09:30:31.515] [Load-Theme] Returning theme with Hex='#33cc66'
+[09:30:47.842] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:30:47.844] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[09:30:47.846] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[09:30:47.851] [Load-Theme] Returning theme with Hex='#ffffff'
+[09:56:01.188] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[09:56:01.199] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[09:56:01.216] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[09:56:01.254] [Load-Theme] Returning theme with Hex='#ffffff'

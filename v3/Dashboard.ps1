@@ -182,7 +182,7 @@ class Dashboard {
                 $notesH = $h - 1  # Full height minus status bar
                 $notesBorder = if ($view.FocusedPanel -eq "Details") { [Colors]::Accent } else { [Colors]::PanelBorder }
                 $engine.DrawBox($detailsX, 0, $detailsW, $notesH, $notesBorder, [Colors]::PanelBg)
-                $engine.WriteAt($detailsX + 2, 0, " Notes ", [Colors]::Cyan, [Colors]::PanelBg)
+                $engine.WriteAt($detailsX + 2, 0, " Notes ", [Colors]::Title, [Colors]::PanelBg)
                 
                 if ($selectedTask) {
                      $desc = if ($selectedTask.ContainsKey('description') -and $selectedTask['description']) { $selectedTask['description'] } else { "(No notes. Press 'M' to add)" }

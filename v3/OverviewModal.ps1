@@ -36,7 +36,7 @@ class OverviewModal {
         $engine.DrawBox($x, $y, $w, $h, [Colors]::Accent, [Colors]::Background)
         
         # Title
-        $engine.WriteAt($x + 2, $y, " Overview ", [Colors]::White, [Colors]::Accent)
+        $engine.WriteAt($x + 2, $y, " Overview ", [Colors]::Bright, [Colors]::Accent)
         
         $state = $this._store.GetState()
         
@@ -107,7 +107,7 @@ class OverviewModal {
         $barW = $halfW - 6
         $filledW = [int](($todayPct / 100) * $barW)
         $bar = ("█" * $filledW) + ("░" * ($barW - $filledW))
-        $barColor = if ($todayPct -ge 100) { [Colors]::Green } elseif ($todayPct -ge 50) { [Colors]::Yellow } else { [Colors]::Red }
+        $barColor = if ($todayPct -ge 100) { [Colors]::Success } elseif ($todayPct -ge 50) { [Colors]::Warning } else { [Colors]::Error }
         $engine.WriteAt($x + 4, $contentY + 3, $bar, $barColor, [Colors]::Background)
         
         # Week Box
@@ -116,7 +116,7 @@ class OverviewModal {
         $engine.WriteAt($x + 4 + $halfW + 1, $contentY + 2, ("Hours: {0:N1} / 37.5  ({1:N0}%)" -f $weekHours, $weekPct), [Colors]::Foreground, [Colors]::Background)
         $filledW = [int](($weekPct / 100) * $barW)
         $bar = ("█" * $filledW) + ("░" * ($barW - $filledW))
-        $barColor = if ($weekPct -ge 100) { [Colors]::Green } elseif ($weekPct -ge 50) { [Colors]::Yellow } else { [Colors]::Red }
+        $barColor = if ($weekPct -ge 100) { [Colors]::Success } elseif ($weekPct -ge 50) { [Colors]::Warning } else { [Colors]::Error }
         $engine.WriteAt($x + 4 + $halfW + 1, $contentY + 3, $bar, $barColor, [Colors]::Background)
         
         # Today's Tasks
@@ -124,14 +124,14 @@ class OverviewModal {
         $this._RenderBox($engine, $x + 2, $tasksY, $w - 4, 6, "Today's Tasks ($($tasksToday.Count))")
         
         if ($tasksToday.Count -eq 0) {
-            $engine.WriteAt($x + 4, $tasksY + 2, "(No tasks due today)", [Colors]::Gray, [Colors]::Background)
+            $engine.WriteAt($x + 4, $tasksY + 2, "(No tasks due today)", [Colors]::Muted, [Colors]::Background)
         } else {
             for ($i = 0; $i -lt [Math]::Min(4, $tasksToday.Count); $i++) {
                 $task = $tasksToday[$i]
                 $icon = if ($task['status'] -eq 'done') { "✓" } else { "○" }
                 $name = if ($task['name']) { $task['name'] } else { "(Untitled)" }
                 if ($name.Length -gt $w - 12) { $name = $name.Substring(0, $w - 15) + "..." }
-                $fg = if ($task['status'] -eq 'done') { [Colors]::Gray } else { [Colors]::Foreground }
+                $fg = if ($task['status'] -eq 'done') { [Colors]::Muted } else { [Colors]::Foreground }
                 $engine.WriteAt($x + 4, $tasksY + 2 + $i, "$icon $name", $fg, [Colors]::Background)
             }
         }
@@ -141,20 +141,20 @@ class OverviewModal {
         $this._RenderBox($engine, $x + 2, $unassignedY, $w - 4, 5, "Unassigned Tasks ($($unassignedTasks.Count))")
         
         if ($unassignedTasks.Count -eq 0) {
-            $engine.WriteAt($x + 4, $unassignedY + 2, "(No unassigned tasks)", [Colors]::Gray, [Colors]::Background)
+            $engine.WriteAt($x + 4, $unassignedY + 2, "(No unassigned tasks)", [Colors]::Muted, [Colors]::Background)
         } else {
             for ($i = 0; $i -lt [Math]::Min(3, $unassignedTasks.Count); $i++) {
                 $task = $unassignedTasks[$i]
                 $name = if ($task['name']) { $task['name'] } else { "(Untitled)" }
                 if ($name.Length -gt $w - 12) { $name = $name.Substring(0, $w - 15) + "..." }
-                $engine.WriteAt($x + 4, $unassignedY + 2 + $i, "• $name", [Colors]::Yellow, [Colors]::Background)
+                $engine.WriteAt($x + 4, $unassignedY + 2 + $i, "• $name", [Colors]::Warning, [Colors]::Background)
             }
         }
         
         # Status bar
         $statusY = $y + $h - 2
         $engine.Fill($x, $statusY, $w, 1, " ", [Colors]::Foreground, [Colors]::SelectionBg)
-        $engine.WriteAt($x, $statusY, " [Esc] Close  [R] Refresh", [Colors]::White, [Colors]::SelectionBg)
+        $engine.WriteAt($x, $statusY, " [Esc] Close  [R] Refresh", [Colors]::Bright, [Colors]::SelectionBg)
         
         $engine.EndLayer()
     }
@@ -169,7 +169,7 @@ class OverviewModal {
         $engine.WriteAt($x, $y + $h - 1, "└" + ("─" * ($w - 2)) + "┘", [Colors]::PanelBorder, [Colors]::Background)
         
         # Title
-        $engine.WriteAt($x + 2, $y, " $title ", [Colors]::Cyan, [Colors]::Background)
+        $engine.WriteAt($x + 2, $y, " $title ", [Colors]::Title, [Colors]::Background)
     }
     
     [string] HandleInput([ConsoleKeyInfo]$key) {

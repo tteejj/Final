@@ -98,7 +98,7 @@ class SmartEditor {
             
             # Background Color: Active = Blue, Inactive = DarkGray
             $bg = if ($isActive) { [Colors]::SelectionBg } else { [Colors]::PanelBg }
-            $fg = if ($isActive) { [Colors]::White } else { [Colors]::Gray }
+            $fg = if ($isActive) { [Colors]::Bright } else { [Colors]::Muted }
             
             # Clear field area
             $engine.Fill($absX, $this._screenY, $f.Width, 1, " ", $fg, $bg)
@@ -130,7 +130,7 @@ class SmartEditor {
                 if ($relCursor -ge 0 -and $relCursor -le $visibleText.Length) { # Allow cursor at end
                      $cursorChar = " "
                      if ($relCursor -lt $visibleText.Length) { $cursorChar = $visibleText[$relCursor] }
-                     $engine.WriteAt($absX + $relCursor, $this._screenY, $cursorChar, [Colors]::Black, [Colors]::White)
+                     $engine.WriteAt($absX + $relCursor, $this._screenY, $cursorChar, [Colors]::CursorBg, [Colors]::Bright)
                 }
                 
                 # Render Expanded Widget (Overlay)
@@ -155,7 +155,7 @@ class SmartEditor {
             for ($i = 0; $i -lt [Math]::Min($matches.Count, 6); $i++) {
                 $p = $matches[$i]
                 $bg = if ($i -eq $this._projectSelectionIndex) { [Colors]::SelectionBg } else { [Colors]::PanelBg }
-                $engine.WriteAt($x + 1, $y + 1 + $i, $p.PadRight(28).Substring(0,28), [Colors]::White, $bg)
+                $engine.WriteAt($x + 1, $y + 1 + $i, $p.PadRight(28).Substring(0,28), [Colors]::Bright, $bg)
             }
         }
 
@@ -185,7 +185,7 @@ class SmartEditor {
         # Draw Box
         $engine.DrawBox($x, $y, $w, $h, [Colors]::Accent, [Colors]::PanelBg)
         $bg = [Colors]::PanelBg
-        $fg = [Colors]::White
+        $fg = [Colors]::Bright
         
         # Header (Month Year)
         $title = $this._calendarMonth.ToString("MMMM yyyy")
@@ -193,7 +193,7 @@ class SmartEditor {
         $engine.WriteAt($x + 1 + $pad, $y + 1, $title, [Colors]::Accent, $bg)
         
         # Days Header
-        $engine.WriteAt($x + 2, $y + 2, "Su Mo Tu We Th Fr Sa", [Colors]::Gray, $bg)
+        $engine.WriteAt($x + 2, $y + 2, "Su Mo Tu We Th Fr Sa", [Colors]::Muted, $bg)
         
         # Grid
         $firstDay = [DateTime]::new($this._calendarMonth.Year, $this._calendarMonth.Month, 1)
@@ -221,7 +221,7 @@ class SmartEditor {
                     
                     if ($isSelected) {
                         $cBg = [Colors]::SelectionBg
-                        $cFg = [Colors]::White
+                        $cFg = [Colors]::Bright
                     }
                     elseif ($isToday) {
                         $cFg = [Colors]::Accent

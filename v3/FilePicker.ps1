@@ -134,23 +134,23 @@ class FilePicker {
         $engine.DrawBox($x, $y, $w, $h, [Colors]::Accent, [Colors]::Background)
         
         # Title
-        $engine.WriteAt($x + 2, $y, " $($this._title) ", [Colors]::White, [Colors]::Accent)
+        $engine.WriteAt($x + 2, $y, " $($this._title) ", [Colors]::Bright, [Colors]::Accent)
         
         # Current path
         $pathDisplay = $this._currentPath
         if ($pathDisplay.Length -gt $w - 6) {
             $pathDisplay = "..." + $pathDisplay.Substring($pathDisplay.Length - ($w - 9))
         }
-        $engine.WriteAt($x + 2, $y + 1, $pathDisplay, [Colors]::Cyan, [Colors]::Background)
+        $engine.WriteAt($x + 2, $y + 1, $pathDisplay, [Colors]::Title, [Colors]::Background)
         
         # Separator
         $engine.WriteAt($x + 1, $y + 2, ("─" * ($w - 2)), [Colors]::PanelBorder, [Colors]::Background)
         
         # Column headers
         $nameWidth = $w - 35
-        $engine.WriteAt($x + 2, $y + 3, "Name".PadRight($nameWidth), [Colors]::Gray, [Colors]::Background)
-        $engine.WriteAt($x + 2 + $nameWidth, $y + 3, "Size".PadRight(12), [Colors]::Gray, [Colors]::Background)
-        $engine.WriteAt($x + 2 + $nameWidth + 12, $y + 3, "Modified", [Colors]::Gray, [Colors]::Background)
+        $engine.WriteAt($x + 2, $y + 3, "Name".PadRight($nameWidth), [Colors]::Muted, [Colors]::Background)
+        $engine.WriteAt($x + 2 + $nameWidth, $y + 3, "Size".PadRight(12), [Colors]::Muted, [Colors]::Background)
+        $engine.WriteAt($x + 2 + $nameWidth + 12, $y + 3, "Modified", [Colors]::Muted, [Colors]::Background)
         
         # File list area
         $listY = $y + 4
@@ -198,7 +198,7 @@ class FilePicker {
             
             for ($i = 0; $i -lt $listH; $i++) {
                 $char = if ($i -ge $thumbPos -and $i -lt $thumbPos + $thumbSize) { "█" } else { "░" }
-                $engine.WriteAt($x + $w - 2, $listY + $i, $char, [Colors]::Gray, [Colors]::Background)
+                $engine.WriteAt($x + $w - 2, $listY + $i, $char, [Colors]::Muted, [Colors]::Background)
             }
         }
         
@@ -207,7 +207,7 @@ class FilePicker {
         $engine.Fill($x, $statusY, $w, 1, " ", [Colors]::Foreground, [Colors]::SelectionBg)
         
         $statusText = " [Space] Select  [Enter] Open Folder  [Esc] Cancel  [Backspace] Parent"
-        $engine.WriteAt($x, $statusY, $statusText, [Colors]::White, [Colors]::SelectionBg)
+        $engine.WriteAt($x, $statusY, $statusText, [Colors]::Bright, [Colors]::SelectionBg)
         
         $engine.EndLayer()
     }

@@ -1,1 +1,17 @@
---- Log Started: 01/19/2026 07:04:30 (Level: 1) ---
+--- Log Started: 01/19/2026 09:56:00 (Level: 1) ---
+09:56:01.108 [INFO] ThemeApply: Checking for PmcThemeManager type...
+09:56:01.113 [INFO] ThemeApply: PmcThemeManager type found, getting instance...
+09:56:01.269 [INFO] ThemeApply: ThemeManager instance: True
+09:56:01.271 [INFO] ThemeApply: PmcTheme: True
+09:56:01.275 [INFO] ThemeApply: Theme PaletteName: Notepad
+09:56:01.276 [INFO] ThemeApply: Theme Hex: #ffffff
+09:56:01.279 [INFO] ThemeApply: Properties null: False
+09:56:01.281 [INFO] ThemeApply: Properties count: 73
+09:56:01.287 [INFO] ThemeApply: Property keys (first 10): Text.Primary, Background.Row, Surface, Foreground.Title, Background.ButtonSelected, Foreground.Secondary, Text, Foreground.Outline, Primary, Foreground.TabInactive
+09:56:01.340 [INFO] ThemeApply: Theme 'Notepad' applied to Colors class
+09:56:01.344 [INFO] ThemeApply: Colors::Background = 0xFFFFFF
+09:56:01.347 [INFO] ThemeApply: Colors::PanelBg = 0xFFFFFF
+09:56:01.350 [INFO] ThemeApply: Colors::Title = 0x000000
+09:56:01.352 [INFO] ThemeApply: Colors::SelectionBg = 0x000000
+09:56:01.354 [INFO] ThemeApply: Colors::SelectionFg = 0x000000
+09:56:01.356 [INFO] ThemeApply: Colors::Bright = 0x000000

@@ -24,6 +24,7 @@ class CommandPalette {
             @{ Key = "O"; Category = "Global"; Name = "Overview"; Description = "Open overview dashboard" }
             @{ Key = "W"; Category = "Global"; Name = "Weekly Report"; Description = "View weekly time report" }
             @{ Key = "?"; Category = "Global"; Name = "Command Palette"; Description = "This menu" }
+            @{ Key = "0"; Category = "Global"; Name = "Theme Picker"; Description = "Change application theme" }
             @{ Key = "Ctrl+S"; Category = "Global"; Name = "Save"; Description = "Save all data" }
             @{ Key = "Tab"; Category = "Navigation"; Name = "Next Panel"; Description = "Move focus to next panel" }
             @{ Key = "Arrows"; Category = "Navigation"; Name = "Navigate"; Description = "Move between panels/items" }
@@ -107,16 +108,16 @@ class CommandPalette {
             # Fill and draw box
             $engine.Fill($x, $y, $w, $h, ' ', [Colors]::Foreground, [Colors]::PanelBg)
             $engine.DrawBox($x, $y, $w, $h, [Colors]::Accent, [Colors]::PanelBg)
-            $engine.WriteAt($x + 2, $y, " Command Palette ", [Colors]::White, [Colors]::Accent)
+            $engine.WriteAt($x + 2, $y, " Command Palette ", [Colors]::Bright, [Colors]::Accent)
             
             # Filter input
             $filterY = $y + 2
-            $engine.WriteAt($x + 2, $filterY, ">", [Colors]::Cyan, [Colors]::PanelBg)
+            $engine.WriteAt($x + 2, $filterY, ">", [Colors]::Title, [Colors]::PanelBg)
             $filterDisplay = $this._filter
             if ($filterDisplay.Length -gt $w - 8) { $filterDisplay = $filterDisplay.Substring(0, $w - 8) }
-            $engine.WriteAt($x + 4, $filterY, $filterDisplay.PadRight($w - 8), [Colors]::White, [Colors]::PanelBg)
+            $engine.WriteAt($x + 4, $filterY, $filterDisplay.PadRight($w - 8), [Colors]::Bright, [Colors]::PanelBg)
             $cursorX = $x + 4 + $filterDisplay.Length
-            $engine.WriteAt($cursorX, $filterY, "_", [Colors]::Cyan, [Colors]::PanelBg)
+            $engine.WriteAt($cursorX, $filterY, "_", [Colors]::Title, [Colors]::PanelBg)
             
             # Separator
             $engine.WriteAt($x + 1, $filterY + 1, ("─" * ($w - 2)), [Colors]::PanelBorder, [Colors]::PanelBg)
@@ -127,7 +128,7 @@ class CommandPalette {
             
             $count = $this._filtered.Count
             if ($count -eq 0) {
-                $engine.WriteAt($x + 4, $listY, "No commands match filter", [Colors]::Gray, [Colors]::PanelBg)
+                $engine.WriteAt($x + 4, $listY, "No commands match filter", [Colors]::Muted, [Colors]::PanelBg)
             } else {
                 # Scroll adjustment with clamping
                 $this._scrollOffset = [Math]::Max(0, [Math]::Min($this._scrollOffset, [Math]::Max(0, $count - $listH)))
@@ -153,7 +154,7 @@ class CommandPalette {
                     
                     # Key
                     $keyStr = "[$($cmd.Key)]".PadRight(12)
-                    $engine.WriteAt($x + 2, $listY + $i, $keyStr, [Colors]::Cyan, $bg)
+                    $engine.WriteAt($x + 2, $listY + $i, $keyStr, [Colors]::Title, $bg)
                     
                     # Name
                     $nameStr = $cmd.Name
@@ -164,13 +165,13 @@ class CommandPalette {
                     $descWidth = $w - 36
                     $descStr = $cmd.Description
                     if ($descStr.Length -gt $descWidth) { $descStr = $descStr.Substring(0, $descWidth - 3) + "..." }
-                    $engine.WriteAt($x + 33, $listY + $i, $descStr, [Colors]::Gray, $bg)
+                    $engine.WriteAt($x + 33, $listY + $i, $descStr, [Colors]::Muted, $bg)
                 }
             }
             
             # Footer
             $footerY = $y + $h - 2
-            $engine.WriteAt($x + 2, $footerY, "Type to filter  Up/Down Navigate  Esc Close", [Colors]::Gray, [Colors]::PanelBg)
+            $engine.WriteAt($x + 2, $footerY, "Type to filter  Up/Down Navigate  Esc Close", [Colors]::Muted, [Colors]::PanelBg)
             
             $engine.EndLayer()
         } catch {

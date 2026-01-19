@@ -85,14 +85,14 @@ class TimeModal {
         
         # Title with Project Name
         $title = " Time: $($this._projectName) "
-        $engine.WriteAt($x + 2, $y, $title, [Colors]::White, [Colors]::Accent)
+        $engine.WriteAt($x + 2, $y, $title, [Colors]::Bright, [Colors]::Accent)
         
         # Tabs
         $tabY = $y + 1
         $tabs = @("Entries", "Weekly")
         $tabX = $x + 2
         for ($i = 0; $i -lt $tabs.Count; $i++) {
-            $fg = if ($i -eq $this._activeTab) { [Colors]::White } else { [Colors]::Gray }
+            $fg = if ($i -eq $this._activeTab) { [Colors]::Bright } else { [Colors]::Muted }
             $bg = if ($i -eq $this._activeTab) { [Colors]::SelectionBg } else { [Colors]::Background }
             $tabText = " $($i + 1):$($tabs[$i]) "
             $engine.WriteAt($tabX, $tabY, $tabText, $fg, $bg)
@@ -112,14 +112,14 @@ class TimeModal {
         # Footer / Menu
         $menuY = $y + $h - 2
         # Explicitly clear footer line (Corrected width to avoid artifacts)
-        $engine.Fill($x + 1, $menuY, $w - 2, 1, " ", [Colors]::White, [Colors]::PanelBg)
+        $engine.Fill($x + 1, $menuY, $w - 2, 1, " ", [Colors]::Bright, [Colors]::PanelBg)
         
         if ($this._editing) {
             $menu = "[Enter] Save Field  [Tab] Next Field  [Esc] Cancel Edit"
-            $engine.WriteAt($x + 2, $menuY, $menu, [Colors]::White, [Colors]::PanelBg)
+            $engine.WriteAt($x + 2, $menuY, $menu, [Colors]::Bright, [Colors]::PanelBg)
         } else {
             $menu = "[N] New  [Enter] Edit  [Delete] Remove  [Tab] Weekly  [Esc] Close"
-            $engine.WriteAt($x + 2, $menuY, $menu, [Colors]::White, [Colors]::PanelBg)
+            $engine.WriteAt($x + 2, $menuY, $menu, [Colors]::Bright, [Colors]::PanelBg)
         }
         
         # Render Calendar Overlay
@@ -150,10 +150,10 @@ class TimeModal {
         $engine.Fill($x + 1, $y, $w - 2, $h, " ", [Colors]::Foreground, [Colors]::PanelBg)
         
         # Column headers - Date, ID1, Hours, Description
-        $engine.WriteAt($x + 2, $y, "Date".PadRight(12), [Colors]::Cyan, [Colors]::PanelBg)
-        $engine.WriteAt($x + 14, $y, "ID1".PadRight(8), [Colors]::Cyan, [Colors]::PanelBg)
-        $engine.WriteAt($x + 22, $y, "Hours".PadRight(8), [Colors]::Cyan, [Colors]::PanelBg)
-        $engine.WriteAt($x + 30, $y, "Description", [Colors]::Cyan, [Colors]::PanelBg)
+        $engine.WriteAt($x + 2, $y, "Date".PadRight(12), [Colors]::Title, [Colors]::PanelBg)
+        $engine.WriteAt($x + 14, $y, "ID1".PadRight(8), [Colors]::Title, [Colors]::PanelBg)
+        $engine.WriteAt($x + 22, $y, "Hours".PadRight(8), [Colors]::Title, [Colors]::PanelBg)
+        $engine.WriteAt($x + 30, $y, "Description", [Colors]::Title, [Colors]::PanelBg)
         
         $engine.WriteAt($x + 1, $y + 1, ("─" * ($w - 2)), [Colors]::PanelBorder, [Colors]::PanelBg)
         
@@ -162,7 +162,7 @@ class TimeModal {
         $maxDesc = [Math]::Max(0, $w - 34)
         
         if ($this._timelogs.Count -eq 0) {
-            $engine.WriteAt($x + 4, $listY, "(No time entries. Press N to add one)", [Colors]::Gray, [Colors]::PanelBg)
+            $engine.WriteAt($x + 4, $listY, "(No time entries. Press N to add one)", [Colors]::Muted, [Colors]::PanelBg)
         } else {
             # Adjust scroll
             if ($this._selectedIndex -lt $this._scrollOffset) {
@@ -204,25 +204,25 @@ class TimeModal {
                     $editVal = $this._editBuffer['Value']
                     
                     if ($this._editField -eq 0) { # Date
-                        $engine.WriteAt($x + 2, $rowY, $editVal.PadRight(12), [Colors]::Black, [Colors]::Cyan)
+                        $engine.WriteAt($x + 2, $rowY, $editVal.PadRight(12), [Colors]::CursorBg, [Colors]::Title)
                         $engine.WriteAt($x + 14, $rowY, $id1.PadRight(8), $fg, $bg)
                         $engine.WriteAt($x + 22, $rowY, $hours.PadRight(8), $fg, $bg)
                         $engine.WriteAt($x + 30, $rowY, $desc.PadRight($maxDesc), $fg, $bg)
                     } elseif ($this._editField -eq 1) { # ID1
                         $engine.WriteAt($x + 2, $rowY, $date.PadRight(12), $fg, $bg)
-                        $engine.WriteAt($x + 14, $rowY, $editVal.PadRight(8), [Colors]::Black, [Colors]::Cyan)
+                        $engine.WriteAt($x + 14, $rowY, $editVal.PadRight(8), [Colors]::CursorBg, [Colors]::Title)
                         $engine.WriteAt($x + 22, $rowY, $hours.PadRight(8), $fg, $bg)
                         $engine.WriteAt($x + 30, $rowY, $desc.PadRight($maxDesc), $fg, $bg)
                     } elseif ($this._editField -eq 2) { # Hours
                         $engine.WriteAt($x + 2, $rowY, $date.PadRight(12), $fg, $bg)
                         $engine.WriteAt($x + 14, $rowY, $id1.PadRight(8), $fg, $bg)
-                        $engine.WriteAt($x + 22, $rowY, $editVal.PadRight(8), [Colors]::Black, [Colors]::Cyan)
+                        $engine.WriteAt($x + 22, $rowY, $editVal.PadRight(8), [Colors]::CursorBg, [Colors]::Title)
                         $engine.WriteAt($x + 30, $rowY, $desc.PadRight($maxDesc), $fg, $bg)
                     } elseif ($this._editField -eq 3) { # Description
                         $engine.WriteAt($x + 2, $rowY, $date.PadRight(12), $fg, $bg)
                         $engine.WriteAt($x + 14, $rowY, $id1.PadRight(8), $fg, $bg)
                         $engine.WriteAt($x + 22, $rowY, $hours.PadRight(8), $fg, $bg)
-                        $engine.WriteAt($x + 30, $rowY, $editVal, [Colors]::Black, [Colors]::Cyan)
+                        $engine.WriteAt($x + 30, $rowY, $editVal, [Colors]::CursorBg, [Colors]::Title)
                     }
                 } else {
                     $engine.WriteAt($x + 2, $rowY, $date.PadRight(12), $fg, $bg)
@@ -239,7 +239,7 @@ class TimeModal {
             $total = ($this._timelogs | ForEach-Object { [double]$_['hours'] } | Measure-Object -Sum).Sum
         }
         $totalStr = "Total: {0:N2} hours" -f $total
-        $engine.WriteAt($x + 2, $y + $h - 1, $totalStr, [Colors]::Cyan, [Colors]::PanelBg)
+        $engine.WriteAt($x + 2, $y + $h - 1, $totalStr, [Colors]::Title, [Colors]::PanelBg)
     }
     
     hidden [void] _RenderWeeklyTab([HybridRenderEngine]$engine, [int]$x, [int]$y, [int]$w, [int]$h) {
@@ -255,13 +255,13 @@ class TimeModal {
         
         # Week header
         $weekRange = "$($startOfWeek.ToString('MMM dd')) - $($startOfWeek.AddDays(6).ToString('MMM dd, yyyy'))"
-        $engine.WriteAt($x + 2, $y, "◀ $weekRange ▶  [Weekly Report]", [Colors]::Cyan, [Colors]::PanelBg)
+        $engine.WriteAt($x + 2, $y, "◀ $weekRange ▶  [Weekly Report]", [Colors]::Title, [Colors]::PanelBg)
         
         # Column headers: Project/ID1, Hours, Description
         $headerY = $y + 2
-        $engine.WriteAt($x + 2, $headerY, "Project/ID".PadRight(20), [Colors]::Cyan, [Colors]::PanelBg)
-        $engine.WriteAt($x + 22, $headerY, "Hours".PadRight(10), [Colors]::Cyan, [Colors]::PanelBg)
-        $engine.WriteAt($x + 32, $headerY, "Description", [Colors]::Cyan, [Colors]::PanelBg)
+        $engine.WriteAt($x + 2, $headerY, "Project/ID".PadRight(20), [Colors]::Title, [Colors]::PanelBg)
+        $engine.WriteAt($x + 22, $headerY, "Hours".PadRight(10), [Colors]::Title, [Colors]::PanelBg)
+        $engine.WriteAt($x + 32, $headerY, "Description", [Colors]::Title, [Colors]::PanelBg)
         $engine.WriteAt($x + 1, $headerY + 1, ("─" * ($w - 2)), [Colors]::PanelBorder, [Colors]::PanelBg)
         
         # Get all timelogs for the week and aggregate by project OR ID1
@@ -339,12 +339,12 @@ class TimeModal {
             $bg = [Colors]::PanelBg
             
             $engine.WriteAt($x + 2, $listY + $row, $name.PadRight(20), $fg, $bg)
-            $engine.WriteAt($x + 22, $listY + $row, $hours.PadRight(10), [Colors]::Cyan, $bg)
+            $engine.WriteAt($x + 22, $listY + $row, $hours.PadRight(10), [Colors]::Title, $bg)
             $row++
         }
         
         if ($row -eq 0) {
-            $engine.WriteAt($x + 4, $listY, "(No time entries this week)", [Colors]::Gray, [Colors]::PanelBg)
+            $engine.WriteAt($x + 4, $listY, "(No time entries this week)", [Colors]::Muted, [Colors]::PanelBg)
         }
         
         # Summary at bottom
@@ -360,7 +360,7 @@ class TimeModal {
         $barWidth = $w - 10
         $filledWidth = [Math]::Min($barWidth, [int](($pct / 100) * $barWidth))
         $bar = ("█" * $filledWidth) + ("░" * ($barWidth - $filledWidth))
-        $barColor = if ($pct -ge 100) { [Colors]::Green } elseif ($pct -ge 80) { [Colors]::Yellow } else { [Colors]::Red }
+        $barColor = if ($pct -ge 100) { [Colors]::Success } elseif ($pct -ge 80) { [Colors]::Warning } else { [Colors]::Error }
         $engine.WriteAt($x + 2, $barY, $bar, $barColor, [Colors]::PanelBg)
     }
     
@@ -625,11 +625,11 @@ class TimeModal {
         
         # Header: Month Year
         $header = $this._calendarMonth.ToString("MMMM yyyy")
-        $engine.WriteAt($x + 2, $y, " $header ", [Colors]::White, [Colors]::Accent)
+        $engine.WriteAt($x + 2, $y, " $header ", [Colors]::Bright, [Colors]::Accent)
         
         # Days Header
         $days = "Su Mo Tu We Th Fr Sa"
-        $engine.WriteAt($x + 2, $y + 2, $days, [Colors]::Gray, [Colors]::PanelBg)
+        $engine.WriteAt($x + 2, $y + 2, $days, [Colors]::Muted, [Colors]::PanelBg)
         
         # Calendar Grid
         $firstDayOfMonth = [DateTime]::new($this._calendarMonth.Year, $this._calendarMonth.Month, 1)
@@ -653,8 +653,8 @@ class TimeModal {
                 $isCurrentMonth = ($currentDate.Month -eq $this._calendarMonth.Month)
                 $isSelected = ($currentDate.Date -eq $selectedDate.Date)
                 
-                $fg = if ($isSelected) { [Colors]::Black } elseif ($isCurrentMonth) { [Colors]::White } else { [Colors]::Gray }
-                $bg = if ($isSelected) { [Colors]::Cyan } else { [Colors]::PanelBg }
+                $fg = if ($isSelected) { [Colors]::CursorBg } elseif ($isCurrentMonth) { [Colors]::Bright } else { [Colors]::Muted }
+                $bg = if ($isSelected) { [Colors]::Title } else { [Colors]::PanelBg }
                 
                 $engine.WriteAt($drawX, $drawY, $dayStr, $fg, $bg)
                 

@@ -21,7 +21,7 @@ class WeeklyView {
         $title = "Weekly Report: $($monday.ToString('MMM dd')) - $($weekDates[6].ToString('MMM dd'))"
         if ($this._weekOffset -eq 0) { $title += " (This Week)" }
         $engine.DrawBox(0, 0, $w, $h, [Colors]::Accent, [Colors]::Background)
-        $engine.WriteAt(2, 0, " $title ", [Colors]::White, [Colors]::Background)
+        $engine.WriteAt(2, 0, " $title ", [Colors]::Bright, [Colors]::Background)
         
         # Grid Headers
         # Name (20) | Mon | Tue | Wed | Thu | Fri | Sat | Sun | Total
@@ -30,7 +30,7 @@ class WeeklyView {
         $startX = 2
         $headerY = 2
         
-        $engine.WriteAt($startX, $headerY, "Project".PadRight($nameW), [Colors]::Cyan, [Colors]::Background)
+        $engine.WriteAt($startX, $headerY, "Project".PadRight($nameW), [Colors]::Title, [Colors]::Background)
         
         $x = $startX + $nameW + 1
         $days = @("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
@@ -38,12 +38,12 @@ class WeeklyView {
             $d = $days[$i]
             $date = $weekDates[$i]
             $header = "$d " + $date.Day
-            $engine.WriteAt($x, $headerY, $header.PadLeft($colW), [Colors]::Cyan, [Colors]::Background)
+            $engine.WriteAt($x, $headerY, $header.PadLeft($colW), [Colors]::Title, [Colors]::Background)
             $x += $colW + 1
         }
-        $engine.WriteAt($x, $headerY, "Total".PadLeft($colW), [Colors]::White, [Colors]::Background)
+        $engine.WriteAt($x, $headerY, "Total".PadLeft($colW), [Colors]::Bright, [Colors]::Background)
         
-        $engine.Fill($startX, $headerY + 1, $w - 4, 1, "-", [Colors]::DarkGray, [Colors]::Background)
+        $engine.Fill($startX, $headerY + 1, $w - 4, 1, "-", [Colors]::Muted, [Colors]::Background)
         
         # Process Data
         $timelogs = $state.Data.timelogs
@@ -105,40 +105,40 @@ class WeeklyView {
                 
                 $name = $projNames[$projId]
                 if ($name.Length -gt $nameW) { $name = $name.Substring(0, $nameW) }
-                $engine.WriteAt($startX, $y, $name.PadRight($nameW), [Colors]::White, [Colors]::Background)
+                $engine.WriteAt($startX, $y, $name.PadRight($nameW), [Colors]::Bright, [Colors]::Background)
                 
                 $x = $startX + $nameW + 1
                 for ($i = 0; $i -lt 7; $i++) {
                     $val = $row[$i]
                     $txt = if ($val -gt 0) { $val.ToString("0.0") } else { "-" }
-                    $col = if ($val -gt 0) { [Colors]::Green } else { [Colors]::DarkGray }
+                    $col = if ($val -gt 0) { [Colors]::Success } else { [Colors]::Muted }
                     $engine.WriteAt($x, $y, $txt.PadLeft($colW), $col, [Colors]::Background)
                     $x += $colW + 1
                 }
                 
-                $engine.WriteAt($x, $y, $rowTotal.ToString("0.0").PadLeft($colW), [Colors]::White, [Colors]::Background)
+                $engine.WriteAt($x, $y, $rowTotal.ToString("0.0").PadLeft($colW), [Colors]::Bright, [Colors]::Background)
                 $grandTotal += $rowTotal
                 $y++
             }
         }
         
         # Totals Row
-        $engine.Fill($startX, $y, $w - 4, 1, "-", [Colors]::DarkGray, [Colors]::Background)
+        $engine.Fill($startX, $y, $w - 4, 1, "-", [Colors]::Muted, [Colors]::Background)
         $y++
-        $engine.WriteAt($startX, $y, "TOTALS".PadRight($nameW), [Colors]::White, [Colors]::Background)
+        $engine.WriteAt($startX, $y, "TOTALS".PadRight($nameW), [Colors]::Bright, [Colors]::Background)
         
         $x = $startX + $nameW + 1
         for ($i = 0; $i -lt 7; $i++) {
             $val = $dayTotals[$i]
             $txt = if ($val -gt 0) { $val.ToString("0.0") } else { "-" }
-            $engine.WriteAt($x, $y, $txt.PadLeft($colW), [Colors]::White, [Colors]::Background)
+            $engine.WriteAt($x, $y, $txt.PadLeft($colW), [Colors]::Bright, [Colors]::Background)
             $x += $colW + 1
         }
         $engine.WriteAt($x, $y, $grandTotal.ToString("0.0").PadLeft($colW), [Colors]::Accent, [Colors]::Background)
         
         # Status Bar
         $engine.Fill(0, $h, $w, 2, " ", [Colors]::Foreground, [Colors]::SelectionBg)
-        $engine.WriteAt(0, $h + 1, " [Weekly] | arrows: Navigate | Esc: Back", [Colors]::White, [Colors]::SelectionBg)
+        $engine.WriteAt(0, $h + 1, " [Weekly] | arrows: Navigate | Esc: Back", [Colors]::Bright, [Colors]::SelectionBg)
     }
     
     [bool] HandleInput([ConsoleKeyInfo]$key) {

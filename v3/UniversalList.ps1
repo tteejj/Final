@@ -21,7 +21,7 @@ class UniversalList {
         $engine.DrawBox($x, $y, $w, $h, $borderColor, [Colors]::PanelBg)
         
         if ($items.Count -eq 0) {
-            $engine.WriteAt($x + 2, $y + 1, "Empty", [Colors]::Gray, [Colors]::PanelBg)
+            $engine.WriteAt($x + 2, $y + 1, "Empty", [Colors]::Muted, [Colors]::PanelBg)
             $this._scrollOffset = 0
             return
         }
@@ -48,7 +48,7 @@ class UniversalList {
             $colW = [Math]::Max(0, $colW)
             
             $header = $hTxt.PadRight($colW).Substring(0, $colW)
-            $engine.WriteAt($currentColX, $y, $header, [Colors]::Cyan, [Colors]::PanelBg)
+            $engine.WriteAt($currentColX, $y, $header, [Colors]::Title, [Colors]::PanelBg)
             # Clear the gap so border doesn't show through
             $engine.WriteAt($currentColX + $colW, $y, " ", [Colors]::Background, [Colors]::PanelBg)
             $currentColX += $colW + 1
@@ -58,7 +58,7 @@ class UniversalList {
         if ($items.Count -gt $visibleRows) {
             $scrollPct = if ($maxOffset -gt 0) { [int](($this._scrollOffset / $maxOffset) * 100) } else { 0 }
             $scrollInfo = " $($this._scrollOffset + 1)-$([Math]::Min($this._scrollOffset + $visibleRows, $items.Count))/$($items.Count)"
-            $engine.WriteAt($x + $w - $scrollInfo.Length - 1, $y, $scrollInfo, [Colors]::Gray, [Colors]::PanelBg)
+            $engine.WriteAt($x + $w - $scrollInfo.Length - 1, $y, $scrollInfo, [Colors]::Muted, [Colors]::PanelBg)
         }
         
         # Rows (with scroll offset)
@@ -104,7 +104,7 @@ class UniversalList {
         
         for ($i = 0; $i -lt $height; $i++) {
             $char = if ($i -ge $thumbPos -and $i -lt $thumbPos + $thumbSize) { "█" } else { "░" }
-            $engine.WriteAt($x, $y + $i, $char, [Colors]::Gray, [Colors]::PanelBg)
+            $engine.WriteAt($x, $y + $i, $char, [Colors]::Muted, [Colors]::PanelBg)
         }
     }
 }

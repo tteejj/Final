@@ -66,18 +66,17 @@ enum KeyCode {
 }
 
 class Colors {
-    static [int] $White   = 0xFFFFFF
-    static [int] $Black   = 0x000000
-    static [int] $Red     = 0xFF0000
-    static [int] $Green   = 0x00FF00
-    static [int] $Blue    = 0x0000FF
-    static [int] $Yellow  = 0xFFFF00
-    static [int] $Cyan    = 0x00FFFF
-    static [int] $Magenta = 0xFF00FF
-    static [int] $Gray    = 0x808080
-    static [int] $DarkGray = 0x404040
+    # ALL colors are theme-derived - no hardcoded fallbacks
+    # These are default values that get overwritten by theme loading
     
-    # Theme-specific
+    # Semantic UI Colors (use these instead of basic colors)
+    static [int] $Title        = 0x00FFFF  # For headers, column titles (replaces Cyan)
+    static [int] $Muted        = 0x808080  # For secondary text, hints (replaces Gray)
+    static [int] $Bright       = 0xFFFFFF  # For emphasis, highlights (replaces White)
+    static [int] $Cursor       = 0xFFFFFF  # For cursor/caret display
+    static [int] $CursorBg     = 0x000000  # Background behind cursor
+    
+    # Core Theme Colors
     static [int] $Background     = 0x1E1E1E
     static [int] $PanelBg        = 0x252526
     static [int] $PanelBorder    = 0x3E3E42

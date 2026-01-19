@@ -140,4 +140,30 @@ class DataService {
     static [string] Timestamp() {
         return (Get-Date).ToString("yyyy-MM-ddTHH:mm:ss.fffffffK")
     }
+    
+    # Static config methods for PmcThemeManager compatibility
+    static [hashtable] LoadConfig() {
+        # Config.json is at the app root (parent of v3 folder)
+        $configPath = Join-Path $global:PmcAppRoot "config.json"
+        
+        if (-not (Test-Path $configPath)) {
+            return @{}
+        }
+        
+        try {
+            $json = Get-Content -Raw $configPath | ConvertFrom-Json
+            $config = @{}
+            foreach ($prop in $json.PSObject.Properties) {
+                $config[$prop.Name] = $prop.Value
+            }
+            return $config
+        } catch {
+            return @{}
+        }
+    }
+    
+    static [void] SaveConfig([hashtable]$config) {
+        $configPath = Join-Path $global:PmcAppRoot "config.json"
+        $config | ConvertTo-Json -Depth 10 | Set-Content -Path $configPath -Encoding UTF8
+    }
 }

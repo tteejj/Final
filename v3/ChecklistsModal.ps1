@@ -77,13 +77,13 @@ class ChecklistsModal {
     hidden [void] _RenderChecklistList([HybridRenderEngine]$engine, [int]$x, [int]$y, [int]$w, [int]$h) {
         # Title
         $title = " Checklists: $($this._projectName) "
-        $engine.WriteAt($x + 2, $y, $title, [Colors]::White, [Colors]::Accent)
+        $engine.WriteAt($x + 2, $y, $title, [Colors]::Bright, [Colors]::Accent)
         
         $listY = $y + 2
         $listH = $h - 5
         
         if ($this._checklists.Count -eq 0) {
-            $engine.WriteAt($x + 4, $listY, "(No checklists. Press N to create one)", [Colors]::Gray, [Colors]::Background)
+            $engine.WriteAt($x + 4, $listY, "(No checklists. Press N to create one)", [Colors]::Muted, [Colors]::Background)
         } else {
             for ($displayRow = 0; $displayRow -lt $listH; $displayRow++) {
                 $idx = $displayRow + $this._scrollOffset
@@ -114,13 +114,13 @@ class ChecklistsModal {
         $statusY = $y + $h - 2
         $engine.Fill($x, $statusY, $w, 1, " ", [Colors]::Foreground, [Colors]::SelectionBg)
         $statusText = " [N] New  [Enter] View/Edit  [Delete] Remove  [Esc] Close"
-        $engine.WriteAt($x, $statusY, $statusText, [Colors]::White, [Colors]::SelectionBg)
+        $engine.WriteAt($x, $statusY, $statusText, [Colors]::Bright, [Colors]::SelectionBg)
     }
     
     hidden [void] _RenderChecklistItems([HybridRenderEngine]$engine, [int]$x, [int]$y, [int]$w, [int]$h) {
         # Title
         $title = " Checklist: $($this._currentChecklist['title']) "
-        $engine.WriteAt($x + 2, $y, $title, [Colors]::White, [Colors]::Accent)
+        $engine.WriteAt($x + 2, $y, $title, [Colors]::Bright, [Colors]::Accent)
         
         $items = if ($this._currentChecklist['items']) { $this._currentChecklist['items'] } else { @() }
         if ($null -eq $items) { $items = @() }
@@ -133,7 +133,7 @@ class ChecklistsModal {
         $engine.Fill($x + 2, $listY, $w - 4, $listH, " ", [Colors]::Foreground, [Colors]::Background)
         
         if ($items.Count -eq 0) {
-            $engine.WriteAt($x + 4, $listY, "(No items. Press A to add one)", [Colors]::Gray, [Colors]::Background)
+            $engine.WriteAt($x + 4, $listY, "(No items. Press A to add one)", [Colors]::Muted, [Colors]::Background)
         } else {
             for ($displayRow = 0; $displayRow -lt $listH; $displayRow++) {
                 $idx = $displayRow
@@ -164,13 +164,13 @@ class ChecklistsModal {
         $barWidth = $w - 16
         $filledWidth = [int](($pct / 100) * $barWidth)
         $bar = ("█" * $filledWidth) + ("░" * ($barWidth - $filledWidth))
-        $engine.WriteAt($x + 3, $progressY, "Progress: $bar $pct%", [Colors]::Cyan, [Colors]::Background)
+        $engine.WriteAt($x + 3, $progressY, "Progress: $bar $pct%", [Colors]::Title, [Colors]::Background)
         
         # Status bar
         $statusY = $y + $h - 2
         $engine.Fill($x, $statusY, $w, 1, " ", [Colors]::Foreground, [Colors]::SelectionBg)
         $statusText = " [Space] Toggle  [A] Add Item  [Delete] Remove  [Esc] Back"
-        $engine.WriteAt($x, $statusY, $statusText, [Colors]::White, [Colors]::SelectionBg)
+        $engine.WriteAt($x, $statusY, $statusText, [Colors]::Bright, [Colors]::SelectionBg)
     }
     
     [string] HandleInput([ConsoleKeyInfo]$key) {

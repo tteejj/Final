@@ -69,14 +69,14 @@ class NotesModal {
         
         # Title
         $title = " Notes: $($this._projectName) "
-        $engine.WriteAt($x + 2, $y, $title, [Colors]::White, [Colors]::Accent)
+        $engine.WriteAt($x + 2, $y, $title, [Colors]::Bright, [Colors]::Accent)
         
         # Notes list
         $listY = $y + 2
         $listH = $h - 5
         
         if ($this._notes.Count -eq 0) {
-            $engine.WriteAt($x + 4, $listY, "(No notes. Press N to create one)", [Colors]::Gray, [Colors]::Background)
+            $engine.WriteAt($x + 4, $listY, "(No notes. Press N to create one)", [Colors]::Muted, [Colors]::Background)
         } else {
             # Adjust scroll
             if ($this._selectedIndex -lt $this._scrollOffset) {
@@ -125,7 +125,7 @@ class NotesModal {
         $statusY = $y + $h - 2
         $engine.Fill($x, $statusY, $w, 1, " ", [Colors]::Foreground, [Colors]::SelectionBg)
         $statusText = " [N] New  [Enter] Edit  [Delete] Remove  [Esc] Close"
-        $engine.WriteAt($x, $statusY, $statusText, [Colors]::White, [Colors]::SelectionBg)
+        $engine.WriteAt($x, $statusY, $statusText, [Colors]::Bright, [Colors]::SelectionBg)
         
         $engine.EndLayer()
     }
