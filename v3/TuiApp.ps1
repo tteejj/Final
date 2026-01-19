@@ -13,6 +13,7 @@ class TuiApp {
     hidden [NotesModal]$_globalNotesModal
     hidden [ChecklistsModal]$_globalChecklistsModal
     hidden [CommandPalette]$_commandPalette
+    hidden [ThemePicker]$_themePicker
     hidden [StatusBar]$_statusBar
     hidden [bool]$_wasModalVisible = $false
     hidden [bool]$_running
@@ -29,6 +30,7 @@ class TuiApp {
         $this._globalNotesModal = [NotesModal]::new($store)
         $this._globalChecklistsModal = [ChecklistsModal]::new($store)
         $this._commandPalette = [CommandPalette]::new()
+        $this._themePicker = [ThemePicker]::new()
         $this._statusBar = [StatusBar]::new()
         $this._running = $false
     }
@@ -76,7 +78,7 @@ class TuiApp {
             $state = $this._store.GetState()
             
             # Force render if in edit mode, view changed, or modal visible
-            $modalVisible = $this._projectInfoModal.IsVisible() -or $this._timeModal.IsVisible() -or $this._overviewModal.IsVisible() -or $this._globalNotesModal.IsVisible() -or $this._globalChecklistsModal.IsVisible() -or $this._commandPalette.IsVisible()
+            $modalVisible = $this._projectInfoModal.IsVisible() -or $this._timeModal.IsVisible() -or $this._overviewModal.IsVisible() -or $this._globalNotesModal.IsVisible() -or $this._globalChecklistsModal.IsVisible() -or $this._commandPalette.IsVisible() -or $this._themePicker.IsVisible()
             
             # Detect if a modal just closed (State transition from Visible -> Not Visible)
             $modalJustClosed = $this._wasModalVisible -and -not $modalVisible
@@ -123,6 +125,9 @@ class TuiApp {
                 }
                 if ($this._commandPalette.IsVisible()) {
                     $this._commandPalette.Render($this._engine)
+                }
+                if ($this._themePicker.IsVisible()) {
+                    $this._themePicker.Render($this._engine)
                 }
                 
                 # Render dynamic status bar - ONLY if no modal is open
@@ -184,13 +189,26 @@ class TuiApp {
             return
         }
         
+        # === THEME PICKER HANDLER ===
+        if ($this._themePicker.IsVisible()) {
+            $result = $this._themePicker.HandleInput($key)
+            if ($result -eq "Restart") {
+                # Save all data first
+                $this._store.Dispatch([ActionType]::SAVE_DATA, @{})
+                # Request restart
+                $this._running = $false
+                $global:PmcRestartRequested = $true
+            }
+            return
+        }
+        
         # === COMMAND PALETTE HANDLER (TOP PRIORITY MODAL) ===
         if ($this._commandPalette.IsVisible()) {
             $result = $this._commandPalette.HandleInput($key)
             if ($result.Action -eq "Execute") {
-                # User selected a command - show status message
-                $this._statusBar.ShowMessage("Selected: $($result.Command.Name)", "Info")
-                # Commands are informational only - user should press the actual key
+                $cmd = $result.Command
+                # Actually execute the command by simulating key
+                $this._ExecuteCommandKey($cmd.Key)
             }
             return
         }
@@ -264,6 +282,13 @@ class TuiApp {
              } catch {
                  [Logger]::Error("Failed to open General Time Modal", $_)
              }
+             return
+        }
+        
+        # Theme Picker (0)
+        if ($key.KeyChar -eq '0') {
+             [Logger]::Log("Global Shortcut: 0 (Theme Picker) Detected", 2)
+             $this._themePicker.Open()
              return
         }
         
@@ -693,4 +718,40 @@ class TuiApp {
         
         return "Dashboard.$($state.View.FocusedPanel)"
     }
+    
+    # Execute a command from the command palette by key string
+    hidden [void] _ExecuteCommandKey([string]$keyStr) {
+        $state = $this._store.GetState()
+        
+        switch ($keyStr) {
+            "Q" { $this._running = $false }
+            "H" { $this._globalNotesModal.Open("GLOBAL_NOTES", "General Notes") }
+            "K" { $this._globalChecklistsModal.Open("GLOBAL_CHECKLISTS", "Global Checklists") }
+            "L" { $this._timeModal.Open("", "General Time") }
+            "O" { $this._overviewModal.Open() }
+            "W" { $this._store.Dispatch([ActionType]::SET_VIEW, @{ ViewName = "WeeklyReport" }) }
+            "?" { $this._commandPalette.Open($state.View.FocusedPanel) }
+            "0" { $this._themePicker.Open() }
+            "V" {
+                if ($state.View.FocusedPanel -eq "Sidebar" -and $state.Data.projects.Count -gt 0) {
+                    $proj = $state.Data.projects[$state.View.Selection.Sidebar]
+                    if ($proj) { $this._projectInfoModal.Open($proj) }
+                }
+            }
+            "T" {
+                if ($state.View.FocusedPanel -eq "Sidebar" -and $state.Data.projects.Count -gt 0) {
+                    $proj = $state.Data.projects[$state.View.Selection.Sidebar]
+                    if ($proj) { $this._timeModal.Open($proj['id'], $proj['name']) }
+                }
+            }
+            "Ctrl+S" { 
+                $this._store.Dispatch([ActionType]::SAVE_DATA, @{})
+                $this._statusBar.ShowMessage("Saved successfully", "Success")
+            }
+            default {
+                $this._statusBar.ShowMessage("Command '$keyStr' - use key directly", "Info")
+            }
+        }
+    }
 }
+

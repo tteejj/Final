@@ -64,6 +64,7 @@ $files = @(
     "TimeModal.ps1",
     "OverviewModal.ps1",
     "CommandPalette.ps1",
+    "ThemePicker.ps1",
     "StatusBar.ps1",
     "TuiApp.ps1"
 )
@@ -169,23 +170,89 @@ try {
         Write-Host "DEBUG: Theme loading skipped: $_" -ForegroundColor DarkYellow
     }
 
-    # 4. Initialize
-    $dataService = [DataService]::new((Join-Path $scriptDir "tasks.json"))
-    $store = [FluxStore]::new($dataService)
-    $engine = [HybridRenderEngine]::new()
+    # 4. Initialize and Run (with restart support)
+    $global:PmcRestartRequested = $false
+    
+    do {
+        $global:PmcRestartRequested = $false
+        
+        $dataService = [DataService]::new((Join-Path $scriptDir "tasks.json"))
+        $store = [FluxStore]::new($dataService)
+        $engine = [HybridRenderEngine]::new()
 
-    $app = [TuiApp]::new($engine, $store)
+        $app = [TuiApp]::new($engine, $store)
 
-    # 5. Start
-    Write-Host "Starting FluxTUI V3..." -ForegroundColor Cyan
-    $app.Run()
+        # 5. Start
+        if ($global:PmcRestartRequested -eq $false) {
+            Write-Host "Starting FluxTUI V3..." -ForegroundColor Cyan
+        } else {
+            Write-Host "Restarting FluxTUI V3 (theme changed)..." -ForegroundColor Cyan
+        }
+        
+        $app.Run()
+        
+        # If restart requested, cleanup and reload theme colors
+        if ($global:PmcRestartRequested) {
+            $engine.Cleanup()
+            
+            # Reload PmcThemeManager to get new theme
+            try {
+                [PmcThemeManager]::Reset()
+                $themeManager = [PmcThemeManager]::GetInstance()
+                if ($themeManager -and $themeManager.PmcTheme -and $themeManager.PmcTheme.Properties) {
+                    $props = $themeManager.PmcTheme.Properties
+                    
+                    $hexToInt = {
+                        param([string]$hex)
+                        if ([string]::IsNullOrEmpty($hex)) { return -1 }
+                        $hex = $hex.TrimStart('#')
+                        if ($hex.Length -ne 6) { return -1 }
+                        try { return [Convert]::ToInt32($hex, 16) } catch { return -1 }
+                    }
+                    
+                    if ($props.ContainsKey('Background') -and $props.Background.Color) {
+                        [Colors]::Background = & $hexToInt $props.Background.Color
+                    }
+                    if ($props.ContainsKey('Surface') -and $props.Surface.Color) {
+                        [Colors]::PanelBg = & $hexToInt $props.Surface.Color
+                    }
+                    if ($props.ContainsKey('Border') -and $props.Border.Color) {
+                        [Colors]::PanelBorder = & $hexToInt $props.Border.Color
+                    }
+                    if ($props.ContainsKey('Text') -and $props.Text.Color) {
+                        [Colors]::Foreground = & $hexToInt $props.Text.Color
+                    }
+                    if ($props.ContainsKey('Primary') -and $props.Primary.Color) {
+                        [Colors]::Accent = & $hexToInt $props.Primary.Color
+                    }
+                    if ($props.ContainsKey('Success') -and $props.Success.Color) {
+                        [Colors]::Success = & $hexToInt $props.Success.Color
+                    }
+                    if ($props.ContainsKey('Warning') -and $props.Warning.Color) {
+                        [Colors]::Warning = & $hexToInt $props.Warning.Color
+                    }
+                    if ($props.ContainsKey('Error') -and $props.Error.Color) {
+                        [Colors]::Error = & $hexToInt $props.Error.Color
+                    }
+                    if ($props.ContainsKey('Highlight') -and $props.Highlight.Color) {
+                        [Colors]::SelectionBg = & $hexToInt $props.Highlight.Color
+                    }
+                    
+                    Write-Host "DEBUG: Theme '$($themeManager.PmcTheme.PaletteName)' applied for restart" -ForegroundColor Green
+                }
+            } catch {
+                Write-Host "DEBUG: Theme reload on restart failed: $_" -ForegroundColor DarkYellow
+            }
+        }
+        
+    } while ($global:PmcRestartRequested)
 
 } catch {
     [Logger]::Log("Fatal Error (Trapped): $($_.Exception.Message)", 3)
     [Logger]::Log($_.ScriptStackTrace, 3)
     # Don't Write-Error as it corrupts TUI. 
-    # If StatusBar existed globally here we could use it, but safe to just log.e-Error "Stack Trace: $($_.ScriptStackTrace)"
     if ([Logger]) {
         [Logger]::Error("Fatal crash in bootstrapper", $_.Exception)
     }
 }
+
