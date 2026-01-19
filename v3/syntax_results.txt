@@ -1,0 +1,21 @@
+Diagnostic Start...
+Checking /home/teej/git/Final/Enums.ps1 ... OK
+Checking /home/teej/git/Final/Logger.ps1 ... OK
+Checking /home/teej/git/Final/PerformanceCore.ps1 ... OK
+Checking /home/teej/git/Final/CellBuffer.ps1 ... OK
+Checking /home/teej/git/Final/GapBuffer.ps1 ... OK
+Checking /home/teej/git/Final/RenderCache.ps1 ... OK
+Checking /home/teej/git/Final/HybridRenderEngine.ps1 ... OK
+Checking /home/teej/git/Final/DataService.ps1 ... OK
+Checking /home/teej/git/Final/FluxStore.ps1 ... OK
+Checking /home/teej/git/Final/NoteEditor.ps1 ... OK
+Checking /home/teej/git/Final/SmartEditor.ps1 ... OK
+Checking /home/teej/git/Final/ProjectInfoModal.ps1 ... OK
+Checking /home/teej/git/Final/TimeModal.ps1 ... OK
+Checking /home/teej/git/Final/OverviewModal.ps1 ... OK
+Checking /home/teej/git/Final/NotesModal.ps1 ... OK
+Checking /home/teej/git/Final/ChecklistsModal.ps1 ... OK
+Checking /home/teej/git/Final/StatusBar.ps1 ... OK
+Checking /home/teej/git/Final/TuiApp.ps1 ... OK
+Checking /home/teej/git/Final/start-v3.ps1 ... OK
+ALL CHECKS PASSED.

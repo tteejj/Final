@@ -1,0 +1,46 @@
+Testing /home/teej/git/Final/Enums.ps1... OK
+Testing /home/teej/git/Final/PerformanceCore.ps1... OK
+Testing /home/teej/git/Final/CellBuffer.ps1... OK
+Testing /home/teej/git/Final/RenderCache.ps1... OK
+Testing /home/teej/git/Final/HybridRenderEngine.ps1... FAIL
+At /home/teej/git/Final/HybridRenderEngine.ps1:120 char:19
++         if (-not [InternalStringCache]::_initialized) {
++                   ~~~~~~~~~~~~~~~~~~~
+Unable to find type [InternalStringCache].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:121 char:14
++             [InternalStringCache]::Initialize()
++              ~~~~~~~~~~~~~~~~~~~
+Unable to find type [InternalStringCache].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:167 char:35
++             $this._frontBuffer = [CellBuffer]::new($this.Width, $this …
++                                   ~~~~~~~~~~
+Unable to find type [CellBuffer].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:168 char:34
++             $this._backBuffer = [CellBuffer]::new($this.Width, $this. …
++                                  ~~~~~~~~~~
+Unable to find type [CellBuffer].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:1350 char:42
++         if ([InternalStringBuilderPool]::$_pool.Count -gt 0) {
++                                          ~~~~~~
+Variable is not assigned in the method.
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:1351 char:48
++             $sb = [InternalStringBuilderPool]::$_pool.Pop()
++                                                ~~~~~~
+Variable is not assigned in the method.
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:1359 char:61
++ …    if ($null -ne $sb -and [InternalStringBuilderPool]::$_pool.Count - …
++                                                          ~~~~~~
+Variable is not assigned in the method.
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:1360 char:42
++             [InternalStringBuilderPool]::$_pool.Push($sb)
++                                          ~~~~~~
+Variable is not assigned in the method.
+at Test-Load, /home/teej/git/Final/debug_crash.ps1: line 7
+at <ScriptBlock>, /home/teej/git/Final/debug_crash.ps1: line 26

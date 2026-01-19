@@ -1,0 +1,8 @@
+FATAL ERROR IN MAIN LOOP: The property 'Count' cannot be found on this object. Verify that the property exists.
+Stack Trace: at Render, /home/teej/git/Final/Dashboard.ps1: line 123
+at Run, /home/teej/git/Final/TuiApp.ps1: line 90
+at <ScriptBlock>, /home/teej/git/Final/start-v3.ps1: line 88
+FATAL ERROR IN MAIN LOOP: The property 'Count' cannot be found on this object. Verify that the property exists.
+Stack Trace: at Render, /home/teej/git/Final/Dashboard.ps1: line 123
+at Run, /home/teej/git/Final/TuiApp.ps1: line 90
+at <ScriptBlock>, /home/teej/git/Final/start-v3.ps1: line 88

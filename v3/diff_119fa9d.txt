@@ -1,0 +1,736 @@
+commit 119fa9d7ce82aa0e6eace7aa5d3a7a376d1cdba8
+Author: Ralph Autonomous <ralph@autonomous.ai>
+Date:   Sat Jan 17 15:29:10 2026 -0700
+
+    4
+
+diff --git a/Dashboard.ps1 b/Dashboard.ps1
+index cd4c291..1218f6f 100644
+--- a/Dashboard.ps1
++++ b/Dashboard.ps1
+@@ -21,7 +21,7 @@ class TaskHierarchy {
+             
+             $dueStr = ""
+             if ($parent.ContainsKey('due') -and $parent['due']) { 
+-                try { $dueStr = ([DateTime]::Parse($parent['due'])).ToString("MM-dd") } catch {} 
++                try { $dueStr = ([DateTime]::Parse($parent['due'])).ToString("yyyy-MM-dd") } catch {} 
+             }
+             
+             $tagsStr = if ($parent.ContainsKey('tags') -and $parent['tags']) { "#" + ($parent['tags'] -join " #") } else { "" }
+@@ -156,8 +156,8 @@ class Dashboard {
+         $taskCols = @(
+             @{ Header = "S"; Field = "status"; Width = 3 },
+             @{ Header = "P"; Field = "prio"; Width = 3 },
+-            @{ Header = "Task / Tags"; Field = "text"; Width = $taskListW - 18 },
+-            @{ Header = "Due"; Field = "due"; Width = 6 }
++            @{ Header = "Task / Tags"; Field = "text"; Width = $taskListW - 24 },
++            @{ Header = "Due"; Field = "due"; Width = 12 }
+         )
+         
+         $this._taskList.Render($engine, $sidebarW, 0, $taskListW, $h, $displayTasks.ToArray(), $taskCols, $view.Selection.TaskList, ($view.FocusedPanel -eq "TaskList"))
+diff --git a/UniversalList.ps1 b/UniversalList.ps1
+index 3a13801..00ae09c 100644
+--- a/UniversalList.ps1
++++ b/UniversalList.ps1
+@@ -42,13 +42,13 @@ class UniversalList {
+         $currentColX = $x + 1
+         foreach ($col in $columns) {
+             $hTxt = if ($col.ContainsKey('Header')) { $col['Header'] } else { "" }
+-            $w = if ($col.ContainsKey('Width')) { $col['Width'] } else { 10 }
++            $colW = if ($col.ContainsKey('Width')) { $col['Width'] } else { 10 }
+             
+-            $header = $hTxt.PadRight($w).Substring(0, $w)
++            $header = $hTxt.PadRight($colW).Substring(0, $colW)
+             $engine.WriteAt($currentColX, $y, $header, [Colors]::Cyan, [Colors]::PanelBg)
+             # Clear the gap so border doesn't show through
+-            $engine.WriteAt($currentColX + $w, $y, " ", [Colors]::Background, [Colors]::PanelBg)
+-            $currentColX += $w + 1
++            $engine.WriteAt($currentColX + $colW, $y, " ", [Colors]::Background, [Colors]::PanelBg)
++            $currentColX += $colW + 1
+         }
+         
+         # Scrollbar indicator in header if needed
+diff --git a/pmc_v3.log b/pmc_v3.log
+index 3046e7f..1fcf2b0 100644
+--- a/pmc_v3.log
++++ b/pmc_v3.log
+@@ -1 +1,7 @@
+---- Log Started: 01/17/2026 15:22:43 (Level: 1) ---
++--- Log Started: 01/17/2026 15:25:39 (Level: 1) ---
++15:27:19.048 [ERROR] Fatal crash in bootstrapper
++System.Management.Automation.MethodException: Cannot find an overload for "Log" and the argument count: "1".
++   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)
++   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)
++   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
++   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+diff --git a/tasks.json b/tasks.json
+index dbd00cf..934e387 100644
+--- a/tasks.json
++++ b/tasks.json
+@@ -1,249 +1,240 @@
+ {
+-  "notes": null,
+   "settings": {},
+-  "checklists": null,
+   "tasks": [
+     {
+-      "status": "todo",
+-      "description": "details",
+-      "completed": false,
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "modified": "2026-01-06T17:28:45.4439701-07:00",
+       "due": "2026-01-03T00:00:00",
++      "completed": false,
+       "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+-      "created": "2026-01-03T13:40:04.1941435-07:00",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "priority": 3,
++      "description": "details",
++      "status": "todo",
++      "created": "2026-01-03T13:40:04.1941435-07:00",
+       "text": "t2"
+     },
+     {
+-      "completed": false,
+-      "status": "todo",
+-      "description": "",
+-      "text": "t3",
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "modified": "2026-01-17T12:34:48.3922069-07:00",
++      "text": "t3",
++      "completed": false,
+       "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "priority": 3,
++      "description": "",
++      "status": "todo",
+       "created": "2026-01-03T13:53:06.8552706-07:00"
+     },
+     {
+-      "status": "todo",
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "modified": "2026-01-06T17:26:23.7914548-07:00",
+-      "completed": false,
+       "due": "2026-01-06T00:00:00",
++      "completed": false,
+       "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
+-      "created": "2026-01-06T17:26:23.746147-07:00",
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "priority": 3,
++      "created": "2026-01-06T17:26:23.746147-07:00",
++      "status": "todo",
+       "text": "t5"
+     },
+     {
+-      "completed": false,
++      "modified": "2026-01-07T08:12:24.2971891-07:00",
+       "status": "pending",
+-      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394",
+-      "text": "subtask1",
+       "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+-      "modified": "2026-01-07T08:12:24.2971891-07:00",
++      "text": "subtask1",
++      "created": "2026-01-07T08:12:24.2971891-07:00",
++      "completed": false,
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "created": "2026-01-07T08:12:24.2971891-07:00"
++      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394"
+     },
+     {
+-      "status": "pending",
+-      "modified": "2026-01-11T17:54:04.466792-07:00",
+-      "due": "2026-01-18T00:00:00",
+-      "completed": false,
++      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62",
+       "tags": [
+         "tag1"
+       ],
++      "modified": "2026-01-11T17:54:04.466792-07:00",
++      "due": "2026-01-18T00:00:00",
++      "completed": false,
+       "id": "671badfe-dcbb-4554-8df4-7753239cea88",
+-      "created": "2026-01-11T17:53:38.1643562-07:00",
+-      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62",
+       "priority": 3,
++      "created": "2026-01-11T17:53:38.1643562-07:00",
++      "status": "pending",
+       "text": "t1"
+     },
+     {
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+       "modified": "2026-01-17T13:02:15.6642561-07:00",
+       "text": "test",
+-      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0",
+       "created": "2026-01-17T13:02:15.6642561-07:00",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca"
+-    },
+-    {
+-      "id": "1d4fc657-b666-4367-812c-22fe629ef9e7",
+-      "text": "",
+-      "modified": "2026-01-17T15:23:21.1211125-07:00",
+-      "due": "2026-01-26T00:00:00",
+-      "created": "2026-01-17T15:23:21.1211125-07:00",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca"
++      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0"
+     }
+   ],
+   "projects": [
+     {
+-      "status": "active",
+-      "description": "Default inbox",
+-      "task_count": 3,
+       "name": "Inbox",
++      "created": "2026-01-01 08:09:47",
++      "task_count": 3,
+       "id": "c0f82390-e410-459c-9602-0e227090f455",
+-      "created": "2026-01-01 08:09:47"
++      "description": "Default inbox",
++      "status": "active"
+     },
+     {
+-      "status": "active",
+-      "description": "Main project",
+-      "T2020": "/home/teej/pmc/ALL_TIME_SCREEN_REVIEW.md",
+-      "task_count": 1,
+-      "modified": "2026-01-10T20:10:28.926031-07:00",
+       "name": "Project 1",
++      "modified": "2026-01-10T20:10:28.926031-07:00",
++      "created": "2026-01-03T09:53:52.1554583-07:00",
++      "task_count": 1,
+       "id": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "created": "2026-01-03T09:53:52.1554583-07:00"
++      "description": "Main project",
++      "status": "active",
++      "T2020": "/home/teej/pmc/ALL_TIME_SCREEN_REVIEW.md"
+     },
+     {
++      "status": "active",
+       "name": "Project 2",
+-      "description": "Secondary project",
+-      "task_count": 1,
+       "modified": "2026-01-10T13:30:12.1391838-07:00",
+       "created": "2026-01-10T13:30:12.064892-07:00",
+-      "id": "f1f1418e-df69-4737-970b-ee0711139c62",
+-      "status": "active"
++      "task_count": 1,
++      "description": "Secondary project",
++      "id": "f1f1418e-df69-4737-970b-ee0711139c62"
+     }
+   ],
+   "timelogs": [
+     {
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "id": "712ce57b-e85d-4f6e-91a9-54474fe04e10",
+-      "minutes": 45,
+       "timestamp": "2026-01-02T10:56:57.8362507-07:00",
++      "minutes": 45,
+       "date": "2026-01-02T00:00:00",
+-      "created": "2026-01-02T10:56:57.812294-07:00"
++      "created": "2026-01-02T10:56:57.812294-07:00",
++      "id": "712ce57b-e85d-4f6e-91a9-54474fe04e10"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "id": "965ed454-946d-46fe-816f-fc221246a9d8",
+-      "minutes": 60,
+       "timestamp": "2026-01-09T18:32:16.8030799-07:00",
++      "minutes": 60,
+       "date": "2026-01-09T00:00:00",
+-      "created": "2026-01-09T18:32:16.7481935-07:00"
++      "created": "2026-01-09T18:32:16.7481935-07:00",
++      "id": "965ed454-946d-46fe-816f-fc221246a9d8"
+     },
+     {
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "id": "c4b46c2b-e7c5-4e92-86d0-b61cf6ce4fa4",
+-      "minutes": 15,
+       "timestamp": "2026-01-09T19:16:18.9611364-07:00",
++      "minutes": 15,
+       "date": "2026-01-09T00:00:00",
+-      "created": "2026-01-09T19:16:18.9051597-07:00"
++      "created": "2026-01-09T19:16:18.9051597-07:00",
++      "id": "c4b46c2b-e7c5-4e92-86d0-b61cf6ce4fa4"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "id": "64769e2e-515c-43e8-9b92-ef10568d0b06",
+-      "minutes": 30,
+       "timestamp": "2026-01-11T17:55:11.4153592-07:00",
++      "minutes": 30,
+       "date": "2026-01-11T00:00:00",
+-      "created": "2026-01-11T17:55:11.388043-07:00"
++      "created": "2026-01-11T17:55:11.388043-07:00",
++      "id": "64769e2e-515c-43e8-9b92-ef10568d0b06"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "id": "9a2897f8-05e1-4678-baa0-3f388be9d244",
+-      "minutes": 30,
+       "timestamp": "2026-01-11T17:55:11.4532232-07:00",
++      "minutes": 30,
+       "date": "2026-01-11T00:00:00",
+-      "created": "2026-01-11T17:55:11.4516099-07:00"
++      "created": "2026-01-11T17:55:11.4516099-07:00",
++      "id": "9a2897f8-05e1-4678-baa0-3f388be9d244"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry11",
+       "hours": 1.0,
+-      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:10:17.9471582-07:00"
++      "created": "2026-01-17T09:10:17.9471582-07:00",
++      "description": "New entry11",
++      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry",
+       "hours": 0.0,
+-      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:19:44.0951884-07:00"
++      "created": "2026-01-17T09:19:44.0951884-07:00",
++      "description": "New entry",
++      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry",
+       "hours": 0.0,
+-      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:25:01.8476168-07:00"
++      "created": "2026-01-17T09:25:01.8476168-07:00",
++      "description": "New entry",
++      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry",
+       "hours": 0.0,
+-      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:25:58.1970967-07:00"
++      "created": "2026-01-17T09:25:58.1970967-07:00",
++      "description": "New entry",
++      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry",
+       "hours": 0.0,
+-      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:48:43.2847458-07:00"
++      "created": "2026-01-17T09:48:43.2847458-07:00",
++      "description": "New entry",
++      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry",
+       "hours": 0.0,
+-      "id": "316dad33-db32-48f5-99aa-c44c9b0c5896",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:52:37.5113621-07:00"
++      "created": "2026-01-17T09:52:37.5113621-07:00",
++      "description": "New entry",
++      "id": "316dad33-db32-48f5-99aa-c44c9b0c5896"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry",
+       "hours": 0.0,
+-      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:59:58.5628307-07:00"
++      "created": "2026-01-17T09:59:58.5628307-07:00",
++      "description": "New entry",
++      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry",
+       "hours": 0.0,
+-      "id": "73e8327e-1718-4867-b484-5854c915f533",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T10:07:38.3138082-07:00"
++      "created": "2026-01-17T10:07:38.3138082-07:00",
++      "description": "New entry",
++      "id": "73e8327e-1718-4867-b484-5854c915f533"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry",
+       "hours": 0.0,
+-      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T10:19:33.2286784-07:00"
++      "created": "2026-01-17T10:19:33.2286784-07:00",
++      "description": "New entry",
++      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry",
+       "hours": 0.0,
+-      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T10:25:59.9721231-07:00"
++      "created": "2026-01-17T10:25:59.9721231-07:00",
++      "description": "New entry",
++      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry",
+       "hours": 0.0,
+-      "id": "26227243-4cd1-496a-9aae-578d2e91e771",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T10:32:57.4712218-07:00"
++      "created": "2026-01-17T10:32:57.4712218-07:00",
++      "description": "New entry",
++      "id": "26227243-4cd1-496a-9aae-578d2e91e771"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "New entry",
+       "hours": 2.0,
+-      "id": "73bc1499-aa36-4622-8d5a-05a997879aed",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T10:35:21.2169363-07:00"
++      "created": "2026-01-17T10:35:21.2169363-07:00",
++      "description": "New entry",
++      "id": "73bc1499-aa36-4622-8d5a-05a997879aed"
+     }
+-  ]
++  ],
++  "checklists": null,
++  "notes": null
+ }
+diff --git a/tasks.json.bak b/tasks.json.bak
+index 0e4fcc4..dbd00cf 100644
+--- a/tasks.json.bak
++++ b/tasks.json.bak
+@@ -1,240 +1,249 @@
+ {
++  "notes": null,
++  "settings": {},
++  "checklists": null,
+   "tasks": [
+     {
+-      "modified": "2026-01-06T17:28:45.4439701-07:00",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "status": "todo",
+       "description": "details",
+-      "text": "t2",
+-      "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+-      "priority": 3,
++      "completed": false,
++      "modified": "2026-01-06T17:28:45.4439701-07:00",
+       "due": "2026-01-03T00:00:00",
++      "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+       "created": "2026-01-03T13:40:04.1941435-07:00",
+-      "completed": false
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "priority": 3,
++      "text": "t2"
+     },
+     {
+-      "created": "2026-01-03T13:53:06.8552706-07:00",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "completed": false,
+       "status": "todo",
+       "description": "",
+       "text": "t3",
++      "modified": "2026-01-17T12:34:48.3922069-07:00",
+       "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3",
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "priority": 3,
+-      "modified": "2026-01-17T12:34:48.3922069-07:00",
+-      "completed": false
++      "created": "2026-01-03T13:53:06.8552706-07:00"
+     },
+     {
+-      "modified": "2026-01-06T17:26:23.7914548-07:00",
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "status": "todo",
+-      "priority": 3,
+-      "text": "t5",
+-      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
++      "modified": "2026-01-06T17:26:23.7914548-07:00",
++      "completed": false,
+       "due": "2026-01-06T00:00:00",
++      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
+       "created": "2026-01-06T17:26:23.746147-07:00",
+-      "completed": false
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "priority": 3,
++      "text": "t5"
+     },
+     {
+-      "created": "2026-01-07T08:12:24.2971891-07:00",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "completed": false,
+       "status": "pending",
+-      "text": "subtask1",
+       "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394",
++      "text": "subtask1",
+       "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+       "modified": "2026-01-07T08:12:24.2971891-07:00",
+-      "completed": false
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "created": "2026-01-07T08:12:24.2971891-07:00"
+     },
+     {
+-      "modified": "2026-01-11T17:54:04.466792-07:00",
+-      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62",
+       "status": "pending",
+-      "priority": 3,
+-      "text": "t1",
+-      "id": "671badfe-dcbb-4554-8df4-7753239cea88",
++      "modified": "2026-01-11T17:54:04.466792-07:00",
++      "due": "2026-01-18T00:00:00",
++      "completed": false,
+       "tags": [
+         "tag1"
+       ],
+-      "due": "2026-01-18T00:00:00",
++      "id": "671badfe-dcbb-4554-8df4-7753239cea88",
+       "created": "2026-01-11T17:53:38.1643562-07:00",
+-      "completed": false
++      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62",
++      "priority": 3,
++      "text": "t1"
+     },
+     {
+       "modified": "2026-01-17T13:02:15.6642561-07:00",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "text": "test",
+       "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0",
+-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+-      "created": "2026-01-17T13:02:15.6642561-07:00"
++      "created": "2026-01-17T13:02:15.6642561-07:00",
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca"
++    },
++    {
++      "id": "1d4fc657-b666-4367-812c-22fe629ef9e7",
++      "text": "",
++      "modified": "2026-01-17T15:23:21.1211125-07:00",
++      "due": "2026-01-26T00:00:00",
++      "created": "2026-01-17T15:23:21.1211125-07:00",
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca"
+     }
+   ],
+-  "notes": null,
+   "projects": [
+     {
+       "status": "active",
+       "description": "Default inbox",
+-      "id": "c0f82390-e410-459c-9602-0e227090f455",
+-      "name": "Inbox",
+       "task_count": 3,
++      "name": "Inbox",
++      "id": "c0f82390-e410-459c-9602-0e227090f455",
+       "created": "2026-01-01 08:09:47"
+     },
+     {
+-      "modified": "2026-01-10T20:10:28.926031-07:00",
+-      "description": "Main project",
+       "status": "active",
++      "description": "Main project",
+       "T2020": "/home/teej/pmc/ALL_TIME_SCREEN_REVIEW.md",
+-      "id": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "name": "Project 1",
+       "task_count": 1,
++      "modified": "2026-01-10T20:10:28.926031-07:00",
++      "name": "Project 1",
++      "id": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "created": "2026-01-03T09:53:52.1554583-07:00"
+     },
+     {
+-      "modified": "2026-01-10T13:30:12.1391838-07:00",
+-      "status": "active",
+-      "description": "Secondary project",
+-      "id": "f1f1418e-df69-4737-970b-ee0711139c62",
+       "name": "Project 2",
++      "description": "Secondary project",
+       "task_count": 1,
+-      "created": "2026-01-10T13:30:12.064892-07:00"
++      "modified": "2026-01-10T13:30:12.1391838-07:00",
++      "created": "2026-01-10T13:30:12.064892-07:00",
++      "id": "f1f1418e-df69-4737-970b-ee0711139c62",
++      "status": "active"
+     }
+   ],
+-  "checklists": null,
+   "timelogs": [
+     {
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "minutes": 45,
+       "id": "712ce57b-e85d-4f6e-91a9-54474fe04e10",
+-      "date": "2026-01-02T00:00:00",
++      "minutes": 45,
+       "timestamp": "2026-01-02T10:56:57.8362507-07:00",
++      "date": "2026-01-02T00:00:00",
+       "created": "2026-01-02T10:56:57.812294-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "minutes": 60,
+       "id": "965ed454-946d-46fe-816f-fc221246a9d8",
+-      "date": "2026-01-09T00:00:00",
++      "minutes": 60,
+       "timestamp": "2026-01-09T18:32:16.8030799-07:00",
++      "date": "2026-01-09T00:00:00",
+       "created": "2026-01-09T18:32:16.7481935-07:00"
+     },
+     {
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "minutes": 15,
+       "id": "c4b46c2b-e7c5-4e92-86d0-b61cf6ce4fa4",
+-      "date": "2026-01-09T00:00:00",
++      "minutes": 15,
+       "timestamp": "2026-01-09T19:16:18.9611364-07:00",
++      "date": "2026-01-09T00:00:00",
+       "created": "2026-01-09T19:16:18.9051597-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "minutes": 30,
+       "id": "64769e2e-515c-43e8-9b92-ef10568d0b06",
+-      "date": "2026-01-11T00:00:00",
++      "minutes": 30,
+       "timestamp": "2026-01-11T17:55:11.4153592-07:00",
++      "date": "2026-01-11T00:00:00",
+       "created": "2026-01-11T17:55:11.388043-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "minutes": 30,
+       "id": "9a2897f8-05e1-4678-baa0-3f388be9d244",
+-      "date": "2026-01-11T00:00:00",
++      "minutes": 30,
+       "timestamp": "2026-01-11T17:55:11.4532232-07:00",
++      "date": "2026-01-11T00:00:00",
+       "created": "2026-01-11T17:55:11.4516099-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry11",
+       "hours": 1.0,
+-      "date": "2026-01-17",
+       "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2",
++      "date": "2026-01-17",
+       "created": "2026-01-17T09:10:17.9471582-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117",
++      "date": "2026-01-17",
+       "created": "2026-01-17T09:19:44.0951884-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8",
++      "date": "2026-01-17",
+       "created": "2026-01-17T09:25:01.8476168-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f",
++      "date": "2026-01-17",
+       "created": "2026-01-17T09:25:58.1970967-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1",
++      "date": "2026-01-17",
+       "created": "2026-01-17T09:48:43.2847458-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "id": "316dad33-db32-48f5-99aa-c44c9b0c5896",
++      "date": "2026-01-17",
+       "created": "2026-01-17T09:52:37.5113621-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "id": "b46c89d9-19fb-4788-b80d-d00365787cfd",
++      "date": "2026-01-17",
+       "created": "2026-01-17T09:59:58.5628307-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "id": "73e8327e-1718-4867-b484-5854c915f533",
++      "date": "2026-01-17",
+       "created": "2026-01-17T10:07:38.3138082-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558",
++      "date": "2026-01-17",
+       "created": "2026-01-17T10:19:33.2286784-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a",
++      "date": "2026-01-17",
+       "created": "2026-01-17T10:25:59.9721231-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "id": "26227243-4cd1-496a-9aae-578d2e91e771",
++      "date": "2026-01-17",
+       "created": "2026-01-17T10:32:57.4712218-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+       "hours": 2.0,
+-      "date": "2026-01-17",
+       "id": "73bc1499-aa36-4622-8d5a-05a997879aed",
++      "date": "2026-01-17",
+       "created": "2026-01-17T10:35:21.2169363-07:00"
+     }
+-  ],
+-  "settings": {}
++  ]
+ }

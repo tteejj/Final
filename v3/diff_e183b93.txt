@@ -1,0 +1,3074 @@
+commit e183b93657e0d15e4deb4042df32d025f9f49266
+Author: Ralph Autonomous <ralph@autonomous.ai>
+Date:   Sat Jan 17 17:16:58 2026 -0700
+
+    what the hell happened
+
+diff --git a/ChecklistsModal.ps1 b/ChecklistsModal.ps1
+index 1e0d2e1..9159e44 100644
+--- a/ChecklistsModal.ps1
++++ b/ChecklistsModal.ps1
+@@ -14,6 +14,7 @@ class ChecklistsModal {
+     hidden [bool]$_viewingChecklist = $false
+     hidden [object]$_currentChecklist = $null
+     hidden [int]$_checklistItemIndex = 0
++    hidden [HybridRenderEngine]$_engine
+     
+     ChecklistsModal([FluxStore]$store) {
+         $this._store = $store
+@@ -50,6 +51,7 @@ class ChecklistsModal {
+     }
+     
+     [void] Render([HybridRenderEngine]$engine) {
++        $this._engine = $engine
+         if (-not $this._visible) { return }
+         
+         $engine.BeginLayer(110)
+@@ -96,6 +98,7 @@ class ChecklistsModal {
+                 
+                 $title = if ($checklist['title']) { $checklist['title'] } else { "(Untitled)" }
+                 $items = if ($checklist['items']) { $checklist['items'] } else { @() }
++                if ($null -eq $items) { $items = @() }
+                 $completed = @($items | Where-Object { $_['checked'] }).Count
+                 $total = $items.Count
+                 
+@@ -120,6 +123,7 @@ class ChecklistsModal {
+         $engine.WriteAt($x + 2, $y, $title, [Colors]::White, [Colors]::Accent)
+         
+         $items = if ($this._currentChecklist['items']) { $this._currentChecklist['items'] } else { @() }
++        if ($null -eq $items) { $items = @() }
+         
+         $listY = $y + 2
+         $listH = $h - 5
+@@ -212,12 +216,19 @@ class ChecklistsModal {
+                 }
+                 return "Continue"
+             }
++            'E' {
++                if ($this._checklists.Count -gt 0) {
++                     $this._RenameChecklist()
++                }
++                return "Continue"
++            }
+         }
+         return "Continue"
+     }
+     
+     hidden [string] _HandleChecklistItemInput([ConsoleKeyInfo]$key) {
+         $items = if ($this._currentChecklist['items']) { $this._currentChecklist['items'] } else { @() }
++        if ($null -eq $items) { $items = @() }
+         
+         switch ($key.Key) {
+             'Escape' {
+@@ -344,4 +355,29 @@ class ChecklistsModal {
+         $this._store.Dispatch([ActionType]::SAVE_DATA, @{})
+         $this._LoadChecklists()
+     }
++
++    hidden [void] _RenameChecklist() {
++        if ($this._selectedIndex -ge $this._checklists.Count) { return }
++        $checklist = $this._checklists[$this._selectedIndex]
++        
++        try {
++            $editor = [NoteEditor]::new($checklist['title'])
++            $newTitle = $editor.RenderAndEdit($this._engine, "Rename Checklist")
++            if ($null -ne $newTitle) {
++                # Update State
++                $state = $this._store.GetState()
++                for ($i = 0; $i -lt $state.Data.checklists.Count; $i++) {
++                    if ($state.Data.checklists[$i]['id'] -eq $checklist['id']) {
++                        $state.Data.checklists[$i]['title'] = $newTitle.Trim()
++                        $state.Data.checklists[$i]['modified'] = [DataService]::Timestamp()
++                        break
++                    }
++                }
++                $this._store.Dispatch([ActionType]::SAVE_DATA, @{})
++                $this._LoadChecklists()
++            }
++        } catch {
++             [Logger]::Error("ChecklistsModal._RenameChecklist: Error", $_)
++        }
++    }
+ }
+diff --git a/HybridRenderEngine.Dependencies.ps1 b/HybridRenderEngine.Dependencies.ps1
+new file mode 100644
+index 0000000..adf14ae
+--- /dev/null
++++ b/HybridRenderEngine.Dependencies.ps1
+@@ -0,0 +1,47 @@
++
++# HybridRenderEngine Dependencies
++# Extracted to separate file to ensure types are loaded before HybridRenderEngine.ps1 is parsed.
++
++try {
++    # Check if type exists to avoid Add-Type errors on reload
++    [void][InternalStringBuilderPool_Backup]
++} catch {
++    Add-Type -TypeDefinition @'
++    using System;
++    using System.Text;
++    using System.Collections.Concurrent;
++    using System.Collections.Generic;
++
++    public class InternalCachedWidget_Backup {
++        public int X;
++        public int Y;
++        public int Width;
++        public int Height;
++        public int ZIndex;
++        public string ContentHash;
++        public object Cells; 
++
++        public InternalCachedWidget_Backup(int x, int y, int w, int h, int z) {
++            X = x; Y = y; Width = w; Height = h; ZIndex = z;
++            ContentHash = "";
++        }
++    }
++
++    public static class InternalStringBuilderPool_Backup {
++        private static ConcurrentQueue<StringBuilder> _pool = new ConcurrentQueue<StringBuilder>();
++
++        public static StringBuilder Get() {
++            if (_pool.TryDequeue(out StringBuilder sb)) {
++                sb.Clear();
++                return sb;
++            }
++            return new StringBuilder(256);
++        }
++
++        public static void Recycle(StringBuilder sb) {
++            if (sb != null) _pool.Enqueue(sb);
++        }
++    }
++'@
++    # Write-Host "DEBUG: HybridRenderEngine Dependencies Loaded." -ForegroundColor DarkGray
++}
+diff --git a/HybridRenderEngine.ps1 b/HybridRenderEngine.ps1
+index 5a1ea2c..0e7f12a 100644
+--- a/HybridRenderEngine.ps1
++++ b/HybridRenderEngine.ps1
+@@ -28,6 +28,7 @@
+ 
+ using namespace System.Text
+ using namespace System.Collections.Generic
++using namespace System.Collections.Concurrent
+ 
+ # Ensure dependencies are loaded (CellBuffer, PerformanceCore)
+ # These usually come from the module loader, but we depend on them here.
+@@ -111,7 +112,7 @@ class HybridRenderEngine {
+         if ($this._initialized) { return }
+ 
+         # Prepare the terminal
+-        [Console]::Clear()
++        # [Console]::Clear()
+         [Console]::CursorVisible = $false
+         [Console]::SetCursorPosition(0, 0)
+         
+@@ -126,7 +127,7 @@ class HybridRenderEngine {
+ 
+     [void] Cleanup() {
+         [Console]::CursorVisible = $true
+-        [Console]::Clear()
++        # [Console]::Clear()
+         $this._initialized = $false
+     }
+ 
+@@ -134,6 +135,10 @@ class HybridRenderEngine {
+         try {
+             $newWidth = [Console]::WindowWidth
+             $newHeight = [Console]::WindowHeight
++
++            # Fallback for headless/test environments
++            if ($newWidth -le 0) { $newWidth = 120 }
++            if ($newHeight -le 0) { $newHeight = 30 }
+             
+             # Only resize if actually changed to avoid overhead
+             if ($this.Width -ne $newWidth -or $this.Height -ne $newHeight) {
+@@ -686,7 +691,7 @@ class HybridRenderEngine {
+         # Force full redraw on next frame
+         $this.InvalidateCachedRegion(0, $this.Height - 1)
+         # Also clear the terminal immediately to prevent artifacts during transition
+-        [Console]::Clear()
++        # [Console]::Clear()
+     }
+ 
+     [void] DrawBox([int]$x, [int]$y, [int]$width, [int]$height, [int]$fg, [int]$bg) {
+@@ -761,7 +766,7 @@ class HybridRenderEngine {
+                 }
+             }
+             [Console]::Write($sb.ToString())
+-            [InternalStringBuilderPool]::Recycle($sb)
++            [InternalStringBuilderPool_Backup]::Recycle($sb)
+         }
+         catch {
+             # Ignore errors if console is not available
+@@ -810,7 +815,7 @@ class HybridRenderEngine {
+         $maxY = [Math]::Min($this.Height - 1, $this._dirtyBounds.MaxY)
+ 
+         # Use Pooled StringBuilder to save memory
+-        $sb = [InternalStringBuilderPool]::Get()
++        $sb = [InternalStringBuilderPool_Backup]::Get()
+ 
+         $currentFg = -1
+         $currentBg = -1
+@@ -1218,14 +1223,14 @@ class HybridRenderEngine {
+     #>
+     [object] CaptureWidget([int]$x, [int]$y, [int]$width, [int]$height, [int]$zIndex) {
+         # Ensure RenderCache classes are loaded
+-        $cachedType = ([System.Management.Automation.PSTypeName]'CachedWidget').Type
++        $cachedType = ([System.Management.Automation.PSTypeName]'InternalCachedWidget_Backup').Type
+         if (-not $cachedType) {
+             # RenderCache not loaded - return null
+             return $null
+         }
+         
+         # Create cached widget
+-        $cached = [CachedWidget]::new($x, $y, $width, $height, $zIndex)
++        $cached = [InternalCachedWidget_Backup]::new($x, $y, $width, $height, $zIndex)
+         
+         # Clamp bounds to screen
+         $startX = [Math]::Max(0, $x)
+@@ -1321,4 +1326,7 @@ class HybridRenderEngine {
+         
+         $this._currentZ = $oldZ
+     }
+-}
+\ No newline at end of file
++
++}
++
++
+diff --git a/NotesModal.ps1 b/NotesModal.ps1
+index 772cf74..b069d6c 100644
+--- a/NotesModal.ps1
++++ b/NotesModal.ps1
+@@ -172,6 +172,12 @@ class NotesModal {
+                 }
+                 return "Continue"
+             }
++            'E' {
++                if ($this._notes.Count -gt 0) {
++                    $this._RenameNote($engine)
++                }
++                return "Continue"
++            }
+         }
+         return "Continue"
+     }
+@@ -246,6 +252,45 @@ class NotesModal {
+         }
+     }
+     
++    hidden [void] _RenameNote([HybridRenderEngine]$engine) {
++        if ($this._selectedIndex -ge $this._notes.Count) { return }
++        $note = $this._notes[$this._selectedIndex]
++        
++        # Use simple InputBox (if available) or makeshift one
++        # Ideally we'd have a reusable InputBox class?
++        # For now, let's use a simple blocking read loop or just hacked logic
++        # Actually, let's use the SmartEditor for a single line? Or just Read-Host style?
++        # Read-Host is blocking and bypasses TUI. Bad.
++        
++        # Let's try to infer if we can assume InputLogic or similar exists.
++        # Check TuiApp usage of SmartEditor...
++        # For simplicity in this crunch time, let's just default to "Untitled" -> "Note <Date>"
++        # OR: modify the title based on the first line of content?
++        # User explicitly asked to "name" it.
++        
++        # HACK: Use NoteEditor on the title string itself!
++        # It's a bit heavy but works.
++        try {
++            $editor = [NoteEditor]::new($note['title'])
++            $newTitle = $editor.RenderAndEdit($engine, "Rename Note")
++            if ($null -ne $newTitle) {
++                # Update State
++                $state = $this._store.GetState()
++                foreach ($n in $state.Data.notes) {
++                    if ($n['id'] -eq $note['id']) {
++                        $n['title'] = $newTitle.Trim()
++                        $n['modified'] = [DataService]::Timestamp()
++                        break
++                    }
++                }
++                $this._store.Dispatch([ActionType]::SAVE_DATA, @{})
++                $this._LoadNotes()
++            }
++        } catch {
++             [Logger]::Error("NotesModal._RenameNote: Error", $_)
++        }
++    }
++
+     hidden [void] _DeleteNote() {
+         if ($this._selectedIndex -ge $this._notes.Count) { return }
+         
+diff --git a/TuiApp.ps1 b/TuiApp.ps1
+index 7d05eff..2cebc63 100644
+--- a/TuiApp.ps1
++++ b/TuiApp.ps1
+@@ -11,6 +11,7 @@ class TuiApp {
+     hidden [TimeModal]$_timeModal
+     hidden [OverviewModal]$_overviewModal
+     hidden [NotesModal]$_globalNotesModal
++    hidden [ChecklistsModal]$_globalChecklistsModal
+     hidden [StatusBar]$_statusBar
+     hidden [bool]$_wasModalVisible = $false
+     hidden [bool]$_running
+@@ -25,6 +26,7 @@ class TuiApp {
+         $this._timeModal = [TimeModal]::new($store)
+         $this._overviewModal = [OverviewModal]::new($store)
+         $this._globalNotesModal = [NotesModal]::new($store)
++        $this._globalChecklistsModal = [ChecklistsModal]::new($store)
+         $this._statusBar = [StatusBar]::new()
+         $this._running = $false
+     }
+@@ -53,66 +55,79 @@ class TuiApp {
+         $this._smartEditor.LoadProjects($this._store.GetState().Data.projects)
+         
+         while ($this._running) {
+-            # 1. Process Input (Non-blocking)
+-            if ([Console]::KeyAvailable) {
+-                $key = [Console]::ReadKey($true)
+-                $this._HandleInput($key)
+-            }
+-            
+-            # 2. Render
+-            $state = $this._store.GetState()
+-            
+-            # Force render if in edit mode, view changed, or modal visible
+-            $modalVisible = $this._projectInfoModal.IsVisible() -or $this._timeModal.IsVisible() -or $this._overviewModal.IsVisible()
+-            
+-            # Detect if a modal just closed (State transition from Visible -> Not Visible)
+-            $modalJustClosed = $this._wasModalVisible -and -not $modalVisible
+-            if ($modalJustClosed) {
+-                $this._engine.RequestClear()
+-            }
+-            $this._wasModalVisible = $modalVisible
+-            
+-            $needsRender = $state.View.Editing -or $state.Version -ne $lastVersion -or $modalVisible -or $modalJustClosed
+-            
+-            if ($needsRender) {
+-                $this._engine.BeginFrame()
+-                
+-                # Render View
+-                if ($state.View.CurrentView -eq "WeeklyReport") {
+-                    $this._weeklyView.Render($this._engine, $state)
+-                } else {
+-                    $this._dashboard.Render($this._engine, $state)
++            try {
++                # DEBUG: Log every tick to ensure it's alive (optional, remove later if spammy)
++                # "DEBUG: Loop Tick" | Out-File "/tmp/tui_tick.log" -Append
++
++                # 1. Process Input (Non-blocking)
++                if ([Console]::KeyAvailable) {
++                     $key = [Console]::ReadKey($true)
++                     $this._HandleInput($key)
+                 }
+                 
+-                # Render SmartEditor Overlay if active
+-                if ($state.View.Editing) {
+-                    $this._smartEditor.Render($this._engine)
+-                }
++                # 2. Render
++                $state = $this._store.GetState()
+                 
+-                # Render modals (in z-order)
+-                if ($this._projectInfoModal.IsVisible()) {
+-                    $this._projectInfoModal.Render($this._engine)
+-                }
+-                if ($this._timeModal.IsVisible()) {
+-                    $this._timeModal.Render($this._engine)
+-                }
+-                if ($this._overviewModal.IsVisible()) {
+-                    $this._overviewModal.Render($this._engine)
+-                }
+-                if ($this._globalNotesModal.IsVisible()) {
+-                    $this._globalNotesModal.Render($this._engine)
++                # Force render if in edit mode, view changed, or modal visible
++                $modalVisible = $this._projectInfoModal.IsVisible() -or $this._timeModal.IsVisible() -or $this._overviewModal.IsVisible() -or $this._globalNotesModal.IsVisible() -or $this._globalChecklistsModal.IsVisible()
++                
++                # Detect if a modal just closed (State transition from Visible -> Not Visible)
++                $modalJustClosed = $this._wasModalVisible -and -not $modalVisible
++                if ($modalJustClosed) {
++                    $this._engine.RequestClear()
+                 }
++                $this._wasModalVisible = $modalVisible
++                
++                $needsRender = $state.View.Editing -or $state.Version -ne $lastVersion -or $modalVisible -or $modalJustClosed
+                 
+-                # Render dynamic status bar
+-                $context = $this._GetStatusContext($state)
+-                $this._statusBar.Render($this._engine, $context)
++                if ($needsRender) {
++                    $this._engine.BeginFrame()
++                    
++                    # Render View
++                    if ($state.View.CurrentView -eq "WeeklyReport") {
++                        $this._weeklyView.Render($this._engine, $state)
++                    } else {
++                        $this._dashboard.Render($this._engine, $state)
++                    }
++                    
++                    # Render SmartEditor Overlay if active
++                    if ($state.View.Editing) {
++                        $this._smartEditor.Render($this._engine)
++                    }
++                    
++                    # Render modals (in z-order)
++                    if ($this._projectInfoModal.IsVisible()) {
++                        $this._projectInfoModal.Render($this._engine)
++                    }
++                    if ($this._timeModal.IsVisible()) {
++                        $this._timeModal.Render($this._engine)
++                    }
++                    if ($this._overviewModal.IsVisible()) {
++                        $this._overviewModal.Render($this._engine)
++                    }
++                    if ($this._globalNotesModal.IsVisible()) {
++                        $this._globalNotesModal.Render($this._engine)
++                    }
++                    if ($this._globalChecklistsModal.IsVisible()) {
++                        $this._globalChecklistsModal.Render($this._engine)
++                    }
++                    
++                    # Render dynamic status bar
++                    $context = $this._GetStatusContext($state)
++                    $this._statusBar.Render($this._engine, $context)
++                    
++                    $this._engine.EndFrame()
++                    $lastVersion = $state.Version
++                }
+                 
+-                $this._engine.EndFrame()
+-                $lastVersion = $state.Version
++                # 3. Cap CPU
++                Start-Sleep -Milliseconds 16 # ~60 FPS
++
++            } catch {
++                 "FATAL ERROR IN MAIN LOOP: $_" | Out-File "./error.log" -Append
++                 "Stack Trace: $($_.ScriptStackTrace)" | Out-File "./error.log" -Append
++                 $this._running = $false
+             }
+-            
+-            # 3. Cap CPU
+-            Start-Sleep -Milliseconds 16 # ~60 FPS
+         }
+         
+         $this._engine.Cleanup()
+@@ -121,6 +136,15 @@ class TuiApp {
+     hidden [void] _HandleInput([ConsoleKeyInfo]$key) {
+         $state = $this._store.GetState()
+         
++        # === GLOBAL CHECKLISTS MODAL HANDLER ===
++        if ($this._globalChecklistsModal.IsVisible()) {
++            $result = $this._globalChecklistsModal.HandleInput($key)
++            if ($result -eq "Close") {
++                $this._store.Dispatch([ActionType]::SET_FOCUS, @{ PanelName = $state.View.FocusedPanel })
++            }
++            return
++        }
++
+         # === GLOBAL NOTES MODAL HANDLER ===
+         if ($this._globalNotesModal.IsVisible()) {
+             $result = $this._globalNotesModal.HandleInput($key, $this._engine)
+@@ -151,8 +175,9 @@ class TuiApp {
+         # [Logger]::Log("Key: $($key.Key) Mod: $($key.Modifiers)", 4)
+         
+         # === GLOBAL SHORTCUTS ===
+-        if ($key.Key -eq 'N' -and ($key.Modifiers -band [ConsoleModifiers]::Shift)) {
+-             [Logger]::Log("Global Shortcut: Shift+N Detected", 2)
++        # Global Notes (Shift+N or G)
++        if (($key.Key -eq 'N' -and ($key.Modifiers -band [ConsoleModifiers]::Shift)) -or ($key.Key -eq 'G' -and $key.Modifiers -eq 0)) {
++             [Logger]::Log("Global Shortcut: Shift+N or G Detected", 2)
+              try {
+                  $this._globalNotesModal.Open("GLOBAL_NOTES", "General Notes")
+              } catch {
+@@ -161,6 +186,17 @@ class TuiApp {
+              return
+         }
+         
++        # Global Checklists (Shift+C or K)
++        if (($key.Key -eq 'C' -and ($key.Modifiers -band [ConsoleModifiers]::Shift)) -or ($key.Key -eq 'K' -and $key.Modifiers -eq 0)) {
++             [Logger]::Log("Global Shortcut: Shift+C or K Detected", 2)
++             try {
++                 $this._globalChecklistsModal.Open("GLOBAL_CHECKLISTS", "Global Checklists")
++             } catch {
++                 [Logger]::Error("Failed to open Global Checklists", $_)
++             }
++             return
++        }
++        
+         # === PROJECT INFO MODAL HANDLER ===
+         if ($this._projectInfoModal.IsVisible()) {
+             $result = $this._projectInfoModal.HandleInput($key)
+diff --git a/UniversalList.ps1 b/UniversalList.ps1
+index 7e22f4e..bc9888a 100644
+--- a/UniversalList.ps1
++++ b/UniversalList.ps1
+@@ -45,6 +45,7 @@ class UniversalList {
+         foreach ($col in $columns) {
+             $hTxt = if ($col.ContainsKey('Header')) { $col['Header'] } else { "" }
+             $colW = if ($col.ContainsKey('Width')) { $col['Width'] } else { 10 }
++            $colW = [Math]::Max(0, $colW)
+             
+             $header = $hTxt.PadRight($colW).Substring(0, $colW)
+             $engine.WriteAt($currentColX, $y, $header, [Colors]::Cyan, [Colors]::PanelBg)
+@@ -77,6 +78,7 @@ class UniversalList {
+             foreach ($col in $columns) {
+                 $field = if ($col.ContainsKey('Field')) { $col['Field'] } else { "" }
+                 $w = if ($col.ContainsKey('Width')) { $col['Width'] } else { 10 }
++                $w = [Math]::Max(0, $w)
+                 
+                 $val = if ($item.ContainsKey($field)) { [string]$item[$field] } else { "" }
+                 $text = $val.PadRight($w).Substring(0, $w)
+diff --git a/crash.log b/crash.log
+new file mode 100644
+index 0000000..96b4b1b
+--- /dev/null
++++ b/crash.log
+@@ -0,0 +1,10 @@
++--- Log Started: 01/17/2026 16:32:34 (Level: 1) ---
++16:32:34.924 [ERROR] Fatal crash in bootstrapper
++System.Management.Automation.ParseException: At /home/teej/git/Final/ChecklistsModal.ps1:219 char:45
+++                      $this._RenameChecklist($engine)
+++                                             ~~~~~~~
++Variable is not assigned in the method.
++   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)
++   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)
++   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
++   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+diff --git a/crash_read.log b/crash_read.log
+new file mode 100644
+index 0000000..efe9760
+--- /dev/null
++++ b/crash_read.log
+@@ -0,0 +1,10 @@
++--- Log Started: 01/17/2026 16:09:42 (Level: 1) ---
++16:09:43.145 [ERROR] Fatal crash in bootstrapper
++System.Management.Automation.ParseException: At /home/teej/git/Final/ChecklistsModal.ps1:219 char:45
+++                      $this._RenameChecklist($engine)
+++                                             ~~~~~~~
++Variable is not assigned in the method.
++   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)
++   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)
++   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
++   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+diff --git a/debug_crash.log b/debug_crash.log
+new file mode 100644
+index 0000000..7a820e9
+--- /dev/null
++++ b/debug_crash.log
+@@ -0,0 +1 @@
++--- Log Started: 01/17/2026 16:20:47 (Level: 3) ---
+diff --git a/debug_crash.ps1 b/debug_crash.ps1
+new file mode 100644
+index 0000000..e817d9f
+--- /dev/null
++++ b/debug_crash.ps1
+@@ -0,0 +1,52 @@
++
++$ErrorActionPreference = "Stop"
++
++function Test-Load($path) {
++    Write-Host "Testing $path..." -NoNewline
++    try {
++        . $path
++        Write-Host " OK" -ForegroundColor Green
++    } catch {
++        Write-Host " FAIL" -ForegroundColor Red
++        Write-Host $_.Exception.Message -ForegroundColor Yellow
++        Write-Host $_.ScriptStackTrace -ForegroundColor Gray
++        exit 1
++    }
++}
++
++$scriptDir = $PSScriptRoot
++. "$scriptDir/Logger.ps1"
++[Logger]::Initialize("$scriptDir/debug_crash.log", 3)
++
++# Load Dependencies manually
++Test-Load "$scriptDir/Enums.ps1"
++Test-Load "$scriptDir/PerformanceCore.ps1"
++Test-Load "$scriptDir/CellBuffer.ps1"
++Test-Load "$scriptDir/RenderCache.ps1"
++Test-Load "$scriptDir/HybridRenderEngine.ps1"
++Test-Load "$scriptDir/GapBuffer.ps1"
++Test-Load "$scriptDir/DataService.ps1"
++Test-Load "$scriptDir/FluxStore.ps1"
++Test-Load "$scriptDir/NoteEditor.ps1"
++Test-Load "$scriptDir/UniversalList.ps1"
++Test-Load "$scriptDir/Dashboard.ps1"
++Test-Load "$scriptDir/WeeklyView.ps1"
++Test-Load "$scriptDir/InputLogic.ps1"
++Test-Load "$scriptDir/SmartEditor.ps1"
++Test-Load "$scriptDir/FilePicker.ps1"
++Test-Load "$scriptDir/TabbedModal.ps1"
++
++# Suspects
++Test-Load "$scriptDir/NotesModal.ps1"
++Test-Load "$scriptDir/ChecklistsModal.ps1"
++Test-Load "$scriptDir/FieldMappingService.ps1"
++Test-Load "$scriptDir/TextExportService.ps1"
++Test-Load "$scriptDir/ProjectInfoModal.ps1"
++Test-Load "$scriptDir/TimeModal.ps1"
++Test-Load "$scriptDir/OverviewModal.ps1"
++Test-Load "$scriptDir/StatusBar.ps1"
++
++# Final Suspect
++Test-Load "$scriptDir/TuiApp.ps1"
++
++Write-Host "All files loaded successfully." -ForegroundColor Cyan
+diff --git a/debug_results.txt b/debug_results.txt
+new file mode 100644
+index 0000000..f590539
+--- /dev/null
++++ b/debug_results.txt
+@@ -0,0 +1,51 @@
++Testing /home/teej/git/Final/Enums.ps1... OK
++Testing /home/teej/git/Final/PerformanceCore.ps1... OK
++Testing /home/teej/git/Final/CellBuffer.ps1... OK
++Testing /home/teej/git/Final/RenderCache.ps1... OK
++Testing /home/teej/git/Final/HybridRenderEngine.ps1... FAIL
++At /home/teej/git/Final/HybridRenderEngine.ps1:120 char:19
+++         if (-not [InternalStringCache]::_initialized) {
+++                   ~~~~~~~~~~~~~~~~~~~
++Unable to find type [InternalStringCache].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:121 char:14
+++             [InternalStringCache]::Initialize()
+++              ~~~~~~~~~~~~~~~~~~~
++Unable to find type [InternalStringCache].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:167 char:35
+++             $this._frontBuffer = [CellBuffer]::new($this.Width, $this …
+++                                   ~~~~~~~~~~
++Unable to find type [CellBuffer].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:168 char:34
+++             $this._backBuffer = [CellBuffer]::new($this.Width, $this. …
+++                                  ~~~~~~~~~~
++Unable to find type [CellBuffer].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:756 char:20
+++             $sb = [InternalStringBuilderPool]::Get()
+++                    ~~~~~~~~~~~~~~~~~~~~~~~~~
++Unable to find type [InternalStringBuilderPool].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:764 char:14
+++             [InternalStringBuilderPool]::Recycle($sb)
+++              ~~~~~~~~~~~~~~~~~~~~~~~~~
++Unable to find type [InternalStringBuilderPool].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:813 char:16
+++         $sb = [InternalStringBuilderPool]::Get()
+++                ~~~~~~~~~~~~~~~~~~~~~~~~~
++Unable to find type [InternalStringBuilderPool].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:915 char:10
+++         [InternalStringBuilderPool]::Recycle($sb)
+++          ~~~~~~~~~~~~~~~~~~~~~~~~~
++Unable to find type [InternalStringBuilderPool].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:1228 char:20
+++         $cached = [CachedWidget]::new($x, $y, $width, $height, $zInde …
+++                    ~~~~~~~~~~~~
++Unable to find type [CachedWidget].
++at Test-Load, /home/teej/git/Final/debug_crash.ps1: line 7
++at <ScriptBlock>, /home/teej/git/Final/debug_crash.ps1: line 26
+diff --git a/debug_results2.txt b/debug_results2.txt
+new file mode 100644
+index 0000000..8331330
+--- /dev/null
++++ b/debug_results2.txt
+@@ -0,0 +1,46 @@
++Testing /home/teej/git/Final/Enums.ps1... OK
++Testing /home/teej/git/Final/PerformanceCore.ps1... OK
++Testing /home/teej/git/Final/CellBuffer.ps1... OK
++Testing /home/teej/git/Final/RenderCache.ps1... OK
++Testing /home/teej/git/Final/HybridRenderEngine.ps1... FAIL
++At /home/teej/git/Final/HybridRenderEngine.ps1:120 char:19
+++         if (-not [InternalStringCache]::_initialized) {
+++                   ~~~~~~~~~~~~~~~~~~~
++Unable to find type [InternalStringCache].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:121 char:14
+++             [InternalStringCache]::Initialize()
+++              ~~~~~~~~~~~~~~~~~~~
++Unable to find type [InternalStringCache].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:167 char:35
+++             $this._frontBuffer = [CellBuffer]::new($this.Width, $this …
+++                                   ~~~~~~~~~~
++Unable to find type [CellBuffer].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:168 char:34
+++             $this._backBuffer = [CellBuffer]::new($this.Width, $this. …
+++                                  ~~~~~~~~~~
++Unable to find type [CellBuffer].
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:1350 char:42
+++         if ([InternalStringBuilderPool]::$_pool.Count -gt 0) {
+++                                          ~~~~~~
++Variable is not assigned in the method.
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:1351 char:48
+++             $sb = [InternalStringBuilderPool]::$_pool.Pop()
+++                                                ~~~~~~
++Variable is not assigned in the method.
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:1359 char:61
+++ …    if ($null -ne $sb -and [InternalStringBuilderPool]::$_pool.Count - …
+++                                                          ~~~~~~
++Variable is not assigned in the method.
++
++At /home/teej/git/Final/HybridRenderEngine.ps1:1360 char:42
+++             [InternalStringBuilderPool]::$_pool.Push($sb)
+++                                          ~~~~~~
++Variable is not assigned in the method.
++at Test-Load, /home/teej/git/Final/debug_crash.ps1: line 7
++at <ScriptBlock>, /home/teej/git/Final/debug_crash.ps1: line 26
+diff --git a/original_engine.ps1 b/original_engine.ps1
+new file mode 100644
+index 0000000..5a1ea2c
+--- /dev/null
++++ b/original_engine.ps1
+@@ -0,0 +1,1324 @@
++# SpeedTUI Hybrid Render Engine
++# "The Best of Both Worlds" - Combines Cell-based precision with Layer-based flexibility.
++#
++# ARCHITECTURAL OVERVIEW:
++# -----------------------
++# This engine represents the evolution of the SpeedTUI rendering pipeline. It merges the
++# robustness of the OptimizedRenderEngine (Z-Layers, Compatibility) with the high-performance
++# architecture of the EnhancedRenderEngine (Cell Buffers, Smart Diffing).
++#
++# KEY FEATURES:
++# 1. CELL-BASED RENDERING: Uses a grid of Cell objects (Char, Color, Attributes) instead of
++#    strings. This prevents text bleeding and allows precise merging of layers.
++# 2. Z-BUFFERING: Supports overlapping layers (popups over backgrounds) natively.
++#    Uses a Depth Buffer to determine which pixel wins at any given coordinate.
++# 3. VIEWPORT CLIPPING: Prevents UI components from drawing outside their bounds.
++#    Essential for scrollable lists and complex layouts.
++# 4. DIRTY RECTANGLE TRACKING: Only processes screen areas that actually changed,
++#    massively improving performance for small updates (like progress bars).
++# 5. OBJECT POOLING: reuses StringBuilder objects to minimize memory allocation pressure.
++#
++# USAGE:
++# $engine = [HybridRenderEngine]::new()
++# $engine.Initialize()
++# $engine.BeginFrame()
++# $engine.BeginLayer(10) # Draw on top
++# $engine.WriteAt(0,0, "Popup")
++# $engine.EndFrame()
++
++using namespace System.Text
++using namespace System.Collections.Generic
++
++# Ensure dependencies are loaded (CellBuffer, PerformanceCore)
++# These usually come from the module loader, but we depend on them here.
++
++class LayoutRegion {
++    [string]$ID
++    [int]$X
++    [int]$Y
++    [int]$Width
++    [int]$Height
++    [int]$ZIndex
++    [string]$ParentID
++    [bool]$Clip
++
++    LayoutRegion([string]$id, [int]$x, [int]$y, [int]$width, [int]$height) {
++        $this.ID = $id
++        $this.X = $x
++        $this.Y = $y
++        $this.Width = $width
++        $this.Height = $height
++        $this.ZIndex = 0
++        $this.ParentID = ""
++        $this.Clip = $true
++    }
++}
++
++class HybridRenderEngine {
++    # -- CORE BUFFERS --
++    # FrontBuffer: Represents exactly what is currently visible on the user's screen.
++    hidden [object]$_frontBuffer  # NativeCellBuffer or CellBuffer
++    # BackBuffer: The "Canvas" we are currently painting on for the next frame.
++    hidden [object]$_backBuffer   # NativeCellBuffer or CellBuffer
++    # ZBuffer: Stores the depth (layer index) of each cell. Used to decide if a new
++    # write should overwrite existing content or appear behind it.
++    hidden [int[][]] $_zBuffer
++
++    # -- STATE MANAGEMENT --
++    hidden [bool]$_initialized = $false
++    hidden [bool]$_inFrame = $false
++    
++    # -- RENDERING CONTEXT --
++    # Current Z-Index (Depth). Higher numbers appear on top.
++    hidden [int]$_currentZ = 0
++    # Clipping Stack: Stores active viewports. Content outside the top rect is discarded.
++    hidden [Stack[object]]$_clipStack
++    # Offset Stack: Stores coordinate translations. (0,0) becomes (OffsetX, OffsetY).
++    hidden [Stack[object]]$_offsetStack
++    # Dirty Bounds: Tracks the min/max X/Y coordinates that have been touched this frame.
++    # Used to optimize the Diffing phase (don't scan the whole screen if only one line changed).
++    hidden [object]$_dirtyBounds
++    # Cursor Logic: Where the cursor *should* be after rendering.
++    hidden [int]$_cursorX = -1
++    hidden [int]$_cursorY = -1
++
++    # -- DIMENSIONS --
++    [int]$Width
++    [int]$Height
++
++    # -- PERFORMANCE TRACKING --
++    hidden [int]$_frameCount = 0
++    hidden [int]$_cellsUpdated = 0
++
++    # -- CACHING --
++    static hidden [hashtable]$_ansiCache = @{}
++
++    # -- LAYOUT SYSTEM --
++    hidden [hashtable]$_regions = @{}
++
++    HybridRenderEngine() {
++        $this._clipStack = [Stack[object]]::new()
++        $this._offsetStack = [Stack[object]]::new()
++        $this.UpdateDimensions()
++        $this._InitializeBuffers()
++    }
++
++    # -------------------------------------------------------------------------
++    # LIFECYCLE METHODS
++    # -------------------------------------------------------------------------
++
++    [void] Initialize() {
++        if ($this._initialized) { return }
++
++        # Prepare the terminal
++        [Console]::Clear()
++        [Console]::CursorVisible = $false
++        [Console]::SetCursorPosition(0, 0)
++        
++        # Ensure internal performance caches are ready
++        # (InternalStringCache/InternalVT100 from PerformanceCore.ps1)
++        if (-not [InternalStringCache]::_initialized) {
++            [InternalStringCache]::Initialize()
++        }
++
++        $this._initialized = $true
++    }
++
++    [void] Cleanup() {
++        [Console]::CursorVisible = $true
++        [Console]::Clear()
++        $this._initialized = $false
++    }
++
++    [void] UpdateDimensions() {
++        try {
++            $newWidth = [Console]::WindowWidth
++            $newHeight = [Console]::WindowHeight
++            
++            # Only resize if actually changed to avoid overhead
++            if ($this.Width -ne $newWidth -or $this.Height -ne $newHeight) {
++                $this.Width = $newWidth
++                $this.Height = $newHeight
++                $this._InitializeBuffers()
++            }
++        }
++        catch {
++            # Safe fallbacks if running in non-interactive environment
++            $this.Width = 80
++            $this.Height = 24
++            $this._InitializeBuffers()
++        }
++    }
++
++    [void] Resize([int]$width, [int]$height) {
++        $this.Width = $width
++        $this.Height = $height
++        $this._InitializeBuffers()
++    }
++
++    hidden [void] _InitializeBuffers() {
++        # Re-allocate all buffers to match new dimensions
++        # Use C# NativeCellBuffer for ~50-100x speedup (if loaded)
++        $nativeType = ([System.Management.Automation.PSTypeName]'NativeCellBuffer').Type
++        if ($nativeType) {
++            $this._frontBuffer = $nativeType::new($this.Width, $this.Height)
++            $this._backBuffer = $nativeType::new($this.Width, $this.Height)
++        } else {
++            $this._frontBuffer = [CellBuffer]::new($this.Width, $this.Height)
++            $this._backBuffer = [CellBuffer]::new($this.Width, $this.Height)
++        }
++        
++        # Z-Buffer is a primitive int array for speed
++        $this._zBuffer = [int[][]]::new($this.Height)
++        for ($y = 0; $y -lt $this.Height; $y++) {
++            $this._zBuffer[$y] = [int[]]::new($this.Width)
++        }
++        
++        # Reset Dirty Bounds to full screen initially
++        $this._ResetDirtyBounds($true)
++    }
++
++    # -------------------------------------------------------------------------
++    # FRAME MANAGEMENT
++    # -------------------------------------------------------------------------
++
++    [void] BeginFrame() {
++        if (-not $this._initialized) { throw "Engine not initialized" }
++        
++        $this._inFrame = $true
++        $this._currentZ = 0
++        $this._cellsUpdated = 0
++        
++        # Reset BackBuffer (Clear text/colors)
++        # Note: We don't allocate new memory, just reset values.
++        $this._backBuffer.Clear()
++
++        # Reset Z-Buffer to lowest possible value so Layer 0 can write
++        $minInt = [int]::MinValue
++        for ($y = 0; $y -lt $this.Height; $y++) {
++            # Array.Fill is faster than loop
++            # Check if PowerShell version supports it, otherwise loop
++            for ($x = 0; $x -lt $this.Width; $x++) {
++                $this._zBuffer[$y][$x] = $minInt
++            }
++        }
++        
++        # Reset Render State
++        $this._clipStack.Clear()
++        $this._offsetStack.Clear()
++        $this._ResetDirtyBounds($false) # Start with "nothing changed"
++    }
++
++    [void] EndFrame() {
++        if (-not $this._inFrame) { return }
++
++        # THE MAGIC HAPPENS HERE:
++        # Compare BackBuffer vs FrontBuffer and emit minimal ANSI.
++        # We assume _dirtyBounds contains the area that might have changed.
++        
++        $diff = $this._BuildOptimizedDiff()
++        
++        if ($diff.Length -gt 0) {
++            [Console]::Write($diff)
++        }
++
++        # Apply Logical Cursor Position (if set)
++        if ($this._cursorX -ge 0 -and $this._cursorY -ge 0) {
++            [Console]::SetCursorPosition($this._cursorX, $this._cursorY)
++        }
++
++        # Swap Buffers: BackBuffer becomes the new FrontBuffer
++        # We use CopyFrom because swapping references breaks if we hold references elsewhere,
++        # but for this engine, swapping content is safer.
++        $this._frontBuffer.CopyFrom($this._backBuffer)
++
++        $this._frameCount++
++        $this._inFrame = $false
++    }
++
++    # -------------------------------------------------------------------------
++    # Z-LAYER & CLIPPING API
++    # -------------------------------------------------------------------------
++
++    # Sets the current drawing layer. Higher Z = On Top.
++    [void] BeginLayer([int]$zIndex) {
++        $this._currentZ = $zIndex
++    }
++
++    [void] EndLayer() {
++        $this._currentZ = 0
++    }
++
++    # Restricts rendering to a specific rectangle. Useful for scrolling lists.
++    [void] PushClip([int]$x, [int]$y, [int]$width, [int]$height) {
++        # Calculate intersection with current clip (if any)
++        $newClip = @{ X = $x; Y = $y; R = ($x + $width); B = ($y + $height) }
++
++        if ($this._clipStack.Count -gt 0) {
++            $parent = $this._clipStack.Peek()
++            $newClip.X = [Math]::Max($newClip.X, $parent.X)
++            $newClip.Y = [Math]::Max($newClip.Y, $parent.Y)
++            $newClip.R = [Math]::Min($newClip.R, $parent.R)
++            $newClip.B = [Math]::Min($newClip.B, $parent.B)
++        }
++        
++        $this._clipStack.Push($newClip)
++    }
++
++    [void] PopClip() {
++        if ($this._clipStack.Count -gt 0) {
++            [void]$this._clipStack.Pop()
++        }
++    }
++
++    # Translates the coordinate system.
++    # PushOffset(10, 5) means WriteAt(0,0) will actually draw at Screen(10,5).
++    # Useful for reusable components that draw relative to their container.
++    [void] PushOffset([int]$x, [int]$y) {
++        $current = @{ X = 0; Y = 0 }
++        if ($this._offsetStack.Count -gt 0) {
++            $current = $this._offsetStack.Peek()
++        }
++        
++        $newOffset = @{ 
++            X = $current.X + $x
++            Y = $current.Y + $y
++        }
++        
++        $this._offsetStack.Push($newOffset)
++    }
++
++    [void] PopOffset() {
++        if ($this._offsetStack.Count -gt 0) {
++            [void]$this._offsetStack.Pop()
++        }
++    }
++
++    # Sets where the hardware cursor should be placed at the end of the frame.
++    # Use -1, -1 to hide it (or leave it where drawing ended).
++    [void] SetCursor([int]$x, [int]$y) {
++        # Apply current offset to cursor position if needed?
++        # Typically cursor is set in local coordinates too.
++        $offsetX = 0
++        $offsetY = 0
++        if ($this._offsetStack.Count -gt 0) {
++            $current = $this._offsetStack.Peek()
++            $offsetX = $current.X
++            $offsetY = $current.Y
++        }
++
++        $this._cursorX = $x + $offsetX
++        $this._cursorY = $y + $offsetY
++    }
++
++    # Shows the hardware cursor (makes it visible on screen)
++    [void] ShowCursor() {
++        [Console]::CursorVisible = $true
++    }
++
++    # Hides the hardware cursor (makes it invisible)
++    [void] HideCursor() {
++        [Console]::CursorVisible = $false
++    }
++
++
++    # -------------------------------------------------------------------------
++    # DRAWING API
++    # -------------------------------------------------------------------------
++
++    [void] WriteAt([int]$x, [int]$y, [string]$content) {
++        if (-not $this._inFrame -or [string]::IsNullOrEmpty($content)) { return }
++
++        # Apply Offset (Coordinate Translation)
++        $offsetX = 0
++        $offsetY = 0
++        if ($this._offsetStack.Count -gt 0) {
++            $current = $this._offsetStack.Peek()
++            $offsetX = $current.X
++            $offsetY = $current.Y
++        }
++        
++        $finalX = $x + $offsetX
++        $finalY = $y + $offsetY
++
++        # 1. Parse ANSI content (Extract text + attributes)
++        # We reuse the logic style from EnhancedRenderEngine for parsing
++        # (This is simplified for brevity - assumes logic similar to Enhanced)
++        
++        # State tracking for the string
++        $currentFg = -1
++        $currentBg = -1
++        $currentAttr = 0
++        
++        $currentX = $finalX
++        $len = $content.Length
++        $i = 0
++        
++        # Check current clip bounds
++        $clip = $null
++        if ($this._clipStack.Count -gt 0) { $clip = $this._clipStack.Peek() }
++
++        while ($i -lt $len) {
++            # Check for ANSI escape sequence start
++            if ($content[$i] -eq "`e" -and ($i + 1) -lt $len -and $content[$i + 1] -eq '[') {
++                # -- ANSI PARSING BLOCK --
++                # (Ideally abstracted, but inline here for performance/portability)
++                $seqEnd = $i + 2
++                while ($seqEnd -lt $len -and $content[$seqEnd] -match '[0-9;]') { $seqEnd++ }
++                
++                if ($seqEnd -lt $len) {
++                    $cmd = $content[$seqEnd]
++                    $paramStr = $content.Substring($i + 2, $seqEnd - ($i + 2))
++                    
++                    # Update current color/attr state based on params
++                    # (Simplified logic: Calls a helper to update state vars)
++                    $this._ParseAnsiState($cmd, $paramStr, [ref]$currentFg, [ref]$currentBg, [ref]$currentAttr)
++                    
++                    $i = $seqEnd + 1
++                    continue
++                }
++            }
++            
++            # Normal Character Processing
++            # 1. Check Bounds (Screen)
++            if ($finalY -ge 0 -and $finalY -lt $this.Height -and $currentX -ge 0 -and $currentX -lt $this.Width) {
++                
++                # 2. Check Clipping (Viewport)
++                $isClipped = $false
++                if ($clip) {
++                    if ($currentX -lt $clip.X -or $currentX -ge $clip.R -or $finalY -lt $clip.Y -or $finalY -ge $clip.B) {
++                        $isClipped = $true
++                    }
++                }
++
++                # 3. Check Z-Index (Depth)
++                if (-not $isClipped) {
++                    if ($this._currentZ -ge $this._zBuffer[$finalY][$currentX]) {
++                        # ** WRITE IS ALLOWED **
++                        
++                        # Update Back Buffer
++                        $this._backBuffer.SetCell($currentX, $finalY, $content[$i], $currentFg, $currentBg, $currentAttr)
++                        
++                        # Update Z Buffer
++                        $this._zBuffer[$finalY][$currentX] = $this._currentZ
++                        
++                        # Update Dirty Rectangle (Grow to include this point)
++                        $this._UpdateDirtyBounds($currentX, $finalY)
++                    } else {
++                        # Z-BUFFER DEBUG: Log when a write is REJECTED in dropdown area
++                        if ($finalY -ge 1 -and $finalY -le 15 -and (Test-Path variable:global:PmcTuiLogFile)) {
++                            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Z-BUFFER] REJECTED at ($currentX,$finalY): currentZ=$($this._currentZ) < zBuffer=$($this._zBuffer[$finalY][$currentX]) char='$($content[$i])'"
++                        }
++                    }
++                }
++            }
++            
++            $currentX++
++            $i++
++        }
++    }
++
++    [void] WriteAt([int]$x, [int]$y, [string]$content, [int]$fg, [int]$bg) {
++        if (-not $this._inFrame -or [string]::IsNullOrEmpty($content)) { return }
++
++        # OPTIMIZATION: Use WriteRow if available (Native Speedup)
++        # We need to construct arrays, but for solid colors we can pass null?
++        # NativeCellBuffer.WriteRow signature: (int x, int y, string text, int[] fgs, int[] bgs, byte[] attrs, ...)
++        # If we pass null arrays, NativeCellBuffer might crash or not handle it.
++        # We need to check NativeRenderCore.ps1 implementation.
++        # Assuming we need to fill arrays.
++        
++        # However, creating arrays in PowerShell might be slower than the loop for short strings.
++        # But for long strings (like fills), WriteRow is much faster.
++        # Threshold: 10 chars?
++        
++        if ($content.Length -gt 5) {
++             # Construct arrays
++             $len = $content.Length
++             $fgs = [int[]]::new($len)
++             $bgs = [int[]]::new($len)
++             $attrs = [byte[]]::new($len)
++             
++             # Fill arrays (Array.Fill is fast)
++             # PowerShell 7+ supports [Array]::Fill
++             # Or loop.
++             
++             # Actually, if we modify NativeCellBuffer.WriteRow to accept single int for solid color, that would be best.
++             # But we can't easily change C# signature without recompiling.
++             # So we fill arrays.
++             
++             for ($i = 0; $i -lt $len; $i++) {
++                 $fgs[$i] = $fg
++                 $bgs[$i] = $bg
++                 $attrs[$i] = 0
++             }
++             
++             $this.WriteRow($x, $y, $content, $fgs, $bgs, $attrs)
++             return
++        }
++
++        # Fallback to loop for short strings
++        # Apply Offset
++        $offsetX = 0
++        $offsetY = 0
++        if ($this._offsetStack.Count -gt 0) {
++            $current = $this._offsetStack.Peek()
++            $offsetX = $current.X
++            $offsetY = $current.Y
++        }
++        
++        $finalX = $x + $offsetX
++        $finalY = $y + $offsetY
++        $currentX = $finalX
++        
++        # Check current clip bounds
++        $clip = $null
++        if ($this._clipStack.Count -gt 0) { $clip = $this._clipStack.Peek() }
++
++        $len = $content.Length
++        for ($i = 0; $i -lt $len; $i++) {
++            # Check Bounds
++            if ($finalY -ge 0 -and $finalY -lt $this.Height -and $currentX -ge 0 -and $currentX -lt $this.Width) {
++                
++                # Check Clipping
++                $isClipped = $false
++                if ($clip) {
++                    if ($currentX -lt $clip.X -or $currentX -ge $clip.R -or $finalY -lt $clip.Y -or $finalY -ge $clip.B) {
++                        $isClipped = $true
++                    }
++                }
++
++                # Check Z-Index
++                if (-not $isClipped) {
++                    if ($this._currentZ -ge $this._zBuffer[$finalY][$currentX]) {
++                        # Write
++                        $this._backBuffer.SetCell($currentX, $finalY, $content[$i], $fg, $bg, 0)
++                        $this._zBuffer[$finalY][$currentX] = $this._currentZ
++                        $this._UpdateDirtyBounds($currentX, $finalY)
++                    } else {
++                        # Z-BUFFER DEBUG: Log when a write is REJECTED in dropdown area
++                        if ($finalY -ge 1 -and $finalY -le 15 -and (Test-Path variable:global:PmcTuiLogFile)) {
++                            Add-Content -Path $global:PmcTuiLogFile -Value "[$(Get-Date -Format 'HH:mm:ss.fff')] [Z-BUFFER] REJECTED at ($currentX,$finalY): currentZ=$($this._currentZ) < zBuffer=$($this._zBuffer[$finalY][$currentX]) char='$($content[$i])'"
++                        }
++                    }
++                }
++            }
++            $currentX++
++        }
++    }
++
++    # Gradient WriteAt: Interpolates foreground color per character from fgStart to fgEnd
++    [void] WriteAt([int]$x, [int]$y, [string]$content, [int]$fgStart, [int]$fgEnd, [int]$bg) {
++        if (-not $this._inFrame -or [string]::IsNullOrEmpty($content)) { return }
++
++        # Apply Offset
++        $offsetX = 0
++        $offsetY = 0
++        if ($this._offsetStack.Count -gt 0) {
++            $current = $this._offsetStack.Peek()
++            $offsetX = $current.X
++            $offsetY = $current.Y
++        }
++        
++        $finalX = $x + $offsetX
++        $finalY = $y + $offsetY
++        $currentX = $finalX
++        
++        # Check current clip bounds
++        $clip = $null
++        if ($this._clipStack.Count -gt 0) { $clip = $this._clipStack.Peek() }
++
++        $len = $content.Length
++        for ($i = 0; $i -lt $len; $i++) {
++            # Calculate interpolation factor
++            $t = if ($len -eq 1) { 0.0 } else { [double]$i / ($len - 1) }
++            $fg = $this._LerpColor($fgStart, $fgEnd, $t)
++            
++            # Check Bounds
++            if ($finalY -ge 0 -and $finalY -lt $this.Height -and $currentX -ge 0 -and $currentX -lt $this.Width) {
++                
++                # Check Clipping
++                $isClipped = $false
++                if ($clip) {
++                    if ($currentX -lt $clip.X -or $currentX -ge $clip.R -or $finalY -lt $clip.Y -or $finalY -ge $clip.B) {
++                        $isClipped = $true
++                    }
++                }
++
++                # Check Z-Index
++                if (-not $isClipped) {
++                    if ($this._currentZ -ge $this._zBuffer[$finalY][$currentX]) {
++                        # Write with interpolated color
++                        $this._backBuffer.SetCell($currentX, $finalY, $content[$i], $fg, $bg, 0)
++                        $this._zBuffer[$finalY][$currentX] = $this._currentZ
++                        $this._UpdateDirtyBounds($currentX, $finalY)
++                    }
++                }
++            }
++            $currentX++
++        }
++    }
++
++    # Bulk Row Write - Optimized for UniversalList
++    [void] WriteRow([int]$x, [int]$y, [string]$text, [int[]]$fgs, [int[]]$bgs, [byte[]]$attrs) {
++        if (-not $this._inFrame -or [string]::IsNullOrEmpty($text)) { return }
++
++        # Apply Offset
++        $offsetX = 0; $offsetY = 0
++        if ($this._offsetStack.Count -gt 0) {
++            $current = $this._offsetStack.Peek()
++            $offsetX = $current.X; $offsetY = $current.Y
++        }
++        $finalX = $x + $offsetX
++        $finalY = $y + $offsetY
++
++        if ($finalY -lt 0 -or $finalY -ge $this.Height) { return }
++
++        # Calculate Clip
++        $minX = 0; $maxX = $this.Width
++        if ($this._clipStack.Count -gt 0) {
++            $clip = $this._clipStack.Peek()
++            if ($finalY -lt $clip.Y -or $finalY -ge $clip.B) { return } # Row outside clip Y
++            $minX = [Math]::Max(0, $clip.X)
++            $maxX = [Math]::Min($this.Width, $clip.R)
++        }
++
++        # Native Path
++        if ($this._backBuffer.GetType().Name -eq 'NativeCellBuffer') {
++            # CRITICAL FIX: Check Z-Buffer before bulk write
++            # NativeCellBuffer.WriteRow blindly overwrites. We must ensure we are on top.
++            
++            $len = $text.Length
++            $startX = [Math]::Max($finalX, $minX)
++            $endX = [Math]::Min($finalX + $len, $maxX)
++            
++            if ($startX -lt $endX) {
++                $zRow = $this._zBuffer[$finalY]
++                $z = $this._currentZ
++                $isOccluded = $false
++                
++                # Check for occlusion
++                for ($cx = $startX; $cx -lt $endX; $cx++) {
++                    if ($z -lt $zRow[$cx]) {
++                        $isOccluded = $true
++                        break
++                    }
++                }
++                
++                if (-not $isOccluded) {
++                    # Safe to bulk write
++                    $this._backBuffer.WriteRow($finalX, $finalY, $text, $fgs, $bgs, $attrs, $minX, $maxX)
++                    
++                    # Bulk update Z-buffer
++                    for ($cx = $startX; $cx -lt $endX; $cx++) {
++                        $zRow[$cx] = $z
++                    }
++                    $this._UpdateDirtyBounds($startX, $finalY)
++                    $this._UpdateDirtyBounds($endX - 1, $finalY)
++                    return
++                }
++            }
++        }
++        
++        # Fallback Path (Loop) - Used if occluded or not using NativeBuffer
++            $len = $text.Length
++            $currentX = $finalX
++            
++            for ($i = 0; $i -lt $len; $i++) {
++                if ($currentX -ge $minX -and $currentX -lt $maxX) {
++                    if ($this._currentZ -ge $this._zBuffer[$finalY][$currentX]) {
++                        $fg = if ($fgs -and $i -lt $fgs.Length) { $fgs[$i] } else { -1 }
++                        $bg = if ($bgs -and $i -lt $bgs.Length) { $bgs[$i] } else { -1 }
++                        $at = if ($attrs -and $i -lt $attrs.Length) { $attrs[$i] } else { 0 }
++                        
++                        $this._backBuffer.SetCell($currentX, $finalY, $text[$i], $fg, $bg, $at)
++                        $this._zBuffer[$finalY][$currentX] = $this._currentZ
++                        $this._UpdateDirtyBounds($currentX, $finalY)
++                    }
++                }
++                $currentX++
++            }
++    }
++
++    # Linear interpolation between two packed RGB colors
++    hidden [int] _LerpColor([int]$c1, [int]$c2, [double]$t) {
++        # Extract RGB components
++        $r1 = ($c1 -shr 16) -band 0xFF
++        $g1 = ($c1 -shr 8) -band 0xFF
++        $b1 = $c1 -band 0xFF
++        $r2 = ($c2 -shr 16) -band 0xFF
++        $g2 = ($c2 -shr 8) -band 0xFF
++        $b2 = $c2 -band 0xFF
++        
++        # Interpolate
++        $r = [int]($r1 + ($r2 - $r1) * $t)
++        $g = [int]($g1 + ($g2 - $g1) * $t)
++        $b = [int]($b1 + ($b2 - $b1) * $t)
++        
++        # Pack and return
++        return ($r -shl 16) -bor ($g -shl 8) -bor $b
++    }
++
++    [void] Clear([int]$x, [int]$y, [int]$width, [int]$height) {
++        # Helper to clear area using spaces
++        # We construct a string of spaces and use WriteAt so Z-Index/Clipping applies automatically
++        $spaces = " " * $width # (In prod: use InternalStringCache::GetSpaces($width))
++        for ($r = 0; $r -lt $height; $r++) {
++            $this.WriteAt($x, $y + $r, $spaces)
++        }
++    }
++
++    [void] Fill([int]$x, [int]$y, [int]$width, [int]$height, [string]$char, [int]$fg, [int]$bg) {
++        if ($width -le 0 -or $height -le 0) { return }
++        if ([string]::IsNullOrEmpty($char)) { $char = " " }
++        
++        # Create the fill string once
++        # If char is multi-character, we take the first char
++        $fillChar = $char[0]
++        $line = [string]$fillChar * $width
++        
++        for ($r = 0; $r -lt $height; $r++) {
++            $this.WriteAt($x, $y + $r, $line, $fg, $bg)
++        }
++    }
++
++    [void] RequestClear() {
++        # Force full redraw on next frame
++        $this.InvalidateCachedRegion(0, $this.Height - 1)
++        # Also clear the terminal immediately to prevent artifacts during transition
++        [Console]::Clear()
++    }
++
++    [void] DrawBox([int]$x, [int]$y, [int]$width, [int]$height, [int]$fg, [int]$bg) {
++        # Overload 2: Colors only (Default Style) - This fixes the 6-arg call
++        $this.DrawBox($x, $y, $width, $height, $fg, $bg, "Single")
++    }
++
++    [void] DrawBox([int]$x, [int]$y, [int]$width, [int]$height, [int]$fg, [int]$bg, [string]$style) {
++        if ($width -lt 2 -or $height -lt 2) { return }
++
++        # Get box characters from cache or define them
++        $chars = switch ($style) {
++            "Double" {
++                @{
++                    TL = "╔"; TR = "╗"; BL = "╚"; BR = "╝"
++                    V = "║"; H = "═"
++                }
++            }
++            "Rounded" {
++                @{
++                    TL = "╭"; TR = "╮"; BL = "╰"; BR = "╯"
++                    V = "│"; H = "─"
++                }
++            }
++            Default {
++                # Single
++                @{
++                    TL = "┌"; TR = "┐"; BL = "└"; BR = "┘"
++                    V = "│"; H = "─"
++                }
++            }
++        }
++
++        # Draw top border
++        $topLine = $chars.TL + ($chars.H * ($width - 2)) + $chars.TR
++        $this.WriteAt($x, $y, $topLine, $fg, $bg)
++
++        # Draw sides
++        $middleLine = $chars.V + (" " * ($width - 2)) + $chars.V
++        
++        for ($i = 1; $i -lt ($height - 1); $i++) {
++            $this.WriteAt($x, $y + $i, $middleLine, $fg, $bg)
++        }
++
++        # Draw bottom border
++        $bottomLine = $chars.BL + ($chars.H * ($width - 2)) + $chars.BR
++        $this.WriteAt($x, $y + $height - 1, $bottomLine, $fg, $bg)
++    }
++
++    [void] InvalidateCachedRegion([int]$minY, [int]$maxY) {
++        # Forcing a redraw is easy: Just corrupt the FrontBuffer in that area.
++        # This makes the Diff engine think "Everything changed" for those rows.
++        for ($y = $minY; $y -le $maxY; $y++) {
++            if ($y -ge 0 -and $y -lt $this.Height) {
++                for ($x = 0; $x -lt $this.Width; $x++) {
++                    # Set front buffer char to a specialized 'invalid' state
++                    # so it definitely mismatches whatever is in backbuffer
++                    $this._frontBuffer.SetCell($x, $y, [char]0, -1, -1, 0)
++                }
++            }
++        }
++
++        # VISUAL FIX: Also clear the lines on the terminal immediately
++        # This prevents artifacts (like old menu items) from remaining visible
++        # if the new frame doesn't write to those exact locations.
++        try {
++            $sb = [InternalStringBuilderPool]::Get()
++            for ($y = $minY; $y -le $maxY; $y++) {
++                if ($y -ge 0 -and $y -lt $this.Height) {
++                    [void]$sb.Append("`e[$($y + 1);1H") # Move to start of line
++                    [void]$sb.Append("`e[2K")           # Clear line
++                }
++            }
++            [Console]::Write($sb.ToString())
++            [InternalStringBuilderPool]::Recycle($sb)
++        }
++        catch {
++            # Ignore errors if console is not available
++        }
++
++        # Mark dirty so EndFrame scans it
++        $this._UpdateDirtyBounds(0, $minY)
++        $this._UpdateDirtyBounds($this.Width - 1, $maxY)
++    }
++
++    # -------------------------------------------------------------------------
++    # INTERNAL HELPERS
++    # -------------------------------------------------------------------------
++
++    hidden [void] _ResetDirtyBounds([bool]$fullScreen) {
++        if ($fullScreen) {
++            $this._dirtyBounds = @{ MinX = 0; MinY = 0; MaxX = $this.Width; MaxY = $this.Height }
++        }
++        else {
++            # Inverted bounds to start
++            $this._dirtyBounds = @{ MinX = $this.Width; MinY = $this.Height; MaxX = -1; MaxY = -1 }
++        }
++    }
++
++    hidden [void] _UpdateDirtyBounds([int]$x, [int]$y) {
++        if ($x -lt $this._dirtyBounds.MinX) { $this._dirtyBounds.MinX = $x }
++        if ($x -gt $this._dirtyBounds.MaxX) { $this._dirtyBounds.MaxX = $x }
++        if ($y -lt $this._dirtyBounds.MinY) { $this._dirtyBounds.MinY = $y }
++        if ($y -gt $this._dirtyBounds.MaxY) { $this._dirtyBounds.MaxY = $y }
++    }
++
++    # Core Diffing Logic - delegates to C# for performance
++    hidden [string] _BuildOptimizedDiff() {
++        # If nothing changed, return empty
++        if ($this._dirtyBounds.MaxX -lt 0) { return "" }
++
++        # Delegate to C# BuildDiff for ~50-100x speedup
++        if ($this._backBuffer.GetType().Name -eq 'NativeCellBuffer') {
++            return $this._backBuffer.BuildDiff($this._frontBuffer)
++        }
++
++        # PowerShell fallback - Clamp bounds to screen
++        $minX = [Math]::Max(0, $this._dirtyBounds.MinX)
++        $maxX = [Math]::Min($this.Width - 1, $this._dirtyBounds.MaxX)
++        $minY = [Math]::Max(0, $this._dirtyBounds.MinY)
++        $maxY = [Math]::Min($this.Height - 1, $this._dirtyBounds.MaxY)
++
++        # Use Pooled StringBuilder to save memory
++        $sb = [InternalStringBuilderPool]::Get()
++
++        $currentFg = -1
++        $currentBg = -1
++        $currentAttr = 0
++        $termCursorX = -1
++        $termCursorY = -1
++
++        for ($y = $minY; $y -le $maxY; $y++) {
++            $x = $minX
++            while ($x -le $maxX) {
++                # Get cells
++                $back = $this._backBuffer.GetCell($x, $y)
++                $front = $this._frontBuffer.GetCell($x, $y)
++
++                # Skip if identical
++                if ($back.Equals($front)) {
++                    $x++
++                    continue
++                }
++
++                # CHANGE DETECTED: We need to draw.
++                
++                # 1. Position Cursor (if needed)
++                if ($termCursorX -ne $x -or $termCursorY -ne $y) {
++                    # Optimized VT100 move
++                    [void]$sb.Append("`e[$($y + 1);$($x + 1)H")
++                    $termCursorX = $x
++                    $termCursorY = $y
++                }
++
++                # 2. Look Ahead (Run Length Encoding)
++                # Find how many subsequent cells have same color/attr AND need updating
++                # (Or have same visual look, even if prev buffer matches... actually simpler:
++                # just group by Attribute/Color for the write)
++                
++                $runLen = 0
++                while (($x + $runLen) -le $maxX) {
++                    $nextBack = $this._backBuffer.GetCell($x + $runLen, $y)
++                    
++                    # Stop if colors/attrs change
++                    if (-not ($nextBack.ForegroundRgb -eq $back.ForegroundRgb -and 
++                            $nextBack.BackgroundRgb -eq $back.BackgroundRgb -and 
++                            $nextBack.Attributes -eq $back.Attributes)) {
++                        break
++                    }
++                    
++                    # Optimization: If the NEXT cell matches the front buffer (is unchanged),
++                    # we technically *could* skip it. But breaking the run to skip 1 char 
++                    # usually costs more bytes (cursor move) than just overwriting it.
++                    # So we generally blast through unless there's a huge gap.
++                    $runLen++
++                }
++
++                # 3. Update Colors/Attrs (Only if changed from current terminal state)
++                if ($back.Attributes -ne $currentAttr) {
++                    # Reset first if needed (simplified)
++                    if ($currentAttr -ne 0) { 
++                        [void]$sb.Append("`e[0m")
++                        $currentFg = -1; $currentBg = -1
++                    }
++                    # Apply bits... (Bold, Underline, etc)
++                    if ($back.Attributes -band 1) { [void]$sb.Append("`e[1m") } # Bold
++                    if ($back.Attributes -band 2) { [void]$sb.Append("`e[4m") } # Underline
++                    $currentAttr = $back.Attributes
++                }
++
++                if ($back.ForegroundRgb -ne $currentFg) {
++                    # Emit RGB or Reset sequence
++                    if ($back.ForegroundRgb -eq -1) { [void]$sb.Append("`e[39m") }
++                    else { 
++                        $rgb = [HybridRenderEngine]::_UnpackRGB($back.ForegroundRgb)
++                        [void]$sb.Append("`e[38;2;$($rgb.R);$($rgb.G);$($rgb.B)m") 
++                    }
++                    $currentFg = $back.ForegroundRgb
++                }
++
++                if ($back.BackgroundRgb -ne $currentBg) {
++                    if ($back.BackgroundRgb -eq -1) { [void]$sb.Append("`e[49m") }
++                    else { 
++                        $rgb = [HybridRenderEngine]::_UnpackRGB($back.BackgroundRgb)
++                        [void]$sb.Append("`e[48;2;$($rgb.R);$($rgb.G);$($rgb.B)m") 
++                    }
++                    $currentBg = $back.BackgroundRgb
++                }
++
++                # 4. Write Characters
++                for ($k = 0; $k -lt $runLen; $k++) {
++                    [void]$sb.Append($this._backBuffer.GetCell($x + $k, $y).Char)
++                }
++
++                $x += $runLen
++                $termCursorX += $runLen
++            }
++        }
++        
++        # Reset color at end of burst to be safe (optional, but good for cursor)
++        if ($currentAttr -ne 0 -or $currentFg -ne -1 -or $currentBg -ne -1) {
++            [void]$sb.Append("`e[0m")
++        }
++
++        $result = $sb.ToString()
++        [InternalStringBuilderPool]::Recycle($sb)
++        return $result
++    }
++
++    hidden [void] _ParseAnsiState([char]$cmd, [string]$params, [ref]$fg, [ref]$bg, [ref]$attr) {
++        # Helper to parse ANSI codes and update state integers
++        if ($cmd -ne 'm') { return }
++        
++        if ([string]::IsNullOrEmpty($params)) {
++            $fg.Value = -1; $bg.Value = -1; $attr.Value = 0
++            return
++        }
++
++        # Check cache
++        if ([HybridRenderEngine]::_ansiCache.ContainsKey($params)) {
++            $cached = [HybridRenderEngine]::_ansiCache[$params]
++            # If cached value is a hashtable with state changes, apply them
++            # However, since we need to update refs based on current state (accumulative?), 
++            # actually ANSI codes like '31' are absolute for color, but '1' is additive for attr.
++            # Simple caching of the *parsing result* (the loop below) is hard because of 'parts'.
++            # But we can cache the *operations* for a param string.
++            
++            # For now, let's implement a simple cache for the most common single-code params
++            # which avoids splitting and looping.
++            if ($cached -is [hashtable]) {
++                if ($cached.ContainsKey('Fg')) { $fg.Value = $cached.Fg }
++                if ($cached.ContainsKey('Bg')) { $bg.Value = $cached.Bg }
++                if ($cached.ContainsKey('Attr')) { $attr.Value = $attr.Value -bor $cached.Attr }
++                if ($cached.ContainsKey('Reset')) { $fg.Value = -1; $bg.Value = -1; $attr.Value = 0 }
++                return
++            }
++        }
++
++        $parts = $params -split ';'
++        $i = 0
++        
++        # Track changes for caching (only for simple cases)
++        $cacheable = $true
++        $cachedChanges = @{}
++
++        while ($i -lt $parts.Length) {
++            $code = [int]$parts[$i]
++            switch ($code) {
++                0 { 
++                    $fg.Value = -1; $bg.Value = -1; $attr.Value = 0 
++                    $cachedChanges['Reset'] = $true
++                }
++                1 { 
++                    $attr.Value = $attr.Value -bor 1 
++                    $cachedChanges['Attr'] = ($cachedChanges['Attr'] -bor 1)
++                } # Bold
++                4 { 
++                    $attr.Value = $attr.Value -bor 2 
++                    $cachedChanges['Attr'] = ($cachedChanges['Attr'] -bor 2)
++                } # Underline
++                38 { 
++                    # FG RGB: 38;2;R;G;B
++                    $cacheable = $false # Don't cache complex RGB for now
++                    if ($i + 4 -lt $parts.Length -and $parts[$i + 1] -eq 2) {
++                        $fg.Value = [HybridRenderEngine]::_PackRGB($parts[$i + 2], $parts[$i + 3], $parts[$i + 4])
++                        $i += 4
++                    }
++                }
++                48 { 
++                    # BG RGB: 48;2;R;G;B
++                    $cacheable = $false
++                    if ($i + 4 -lt $parts.Length -and $parts[$i + 1] -eq 2) {
++                        $bg.Value = [HybridRenderEngine]::_PackRGB($parts[$i + 2], $parts[$i + 3], $parts[$i + 4])
++                        $i += 4
++                    }
++                }
++                39 { 
++                    $fg.Value = -1 
++                    $cachedChanges['Fg'] = -1
++                }
++                49 { 
++                    $bg.Value = -1 
++                    $cachedChanges['Bg'] = -1
++                }
++                default {
++                    # Handle standard 16 colors
++                    if ($code -ge 30 -and $code -le 37) { 
++                        # Standard FG (map to approximated RGB or special value? 
++                        # CellBuffer uses int RGB. Let's map to -1 for now or implementation dependent.
++                        # For strictly RGB engine, we might ignore or map to standard palette.
++                        # This implementation seems to assume RGB or -1.
++                        # Let's mark not cacheable if we don't handle it fully here.
++                        $cacheable = $false
++                    }
++                }
++            }
++            $i++
++        }
++
++        # Cache simple results
++        if ($cacheable -and $parts.Length -eq 1) {
++            [HybridRenderEngine]::_ansiCache[$params] = $cachedChanges
++        }
++    }
++
++    hidden static [int] _PackRGB([int]$r, [int]$g, [int]$b) {
++        # Clamp to valid range
++        $r = [Math]::Max(0, [Math]::Min(255, $r))
++        $g = [Math]::Max(0, [Math]::Min(255, $g))
++        $b = [Math]::Max(0, [Math]::Min(255, $b))
++
++        return ($r -shl 16) -bor ($g -shl 8) -bor $b
++    }
++
++    hidden static [hashtable] _UnpackRGB([int]$packed) {
++        return @{
++            R = ($packed -shr 16) -band 0xFF
++            G = ($packed -shr 8) -band 0xFF
++            B = $packed -band 0xFF
++        }
++    }
++
++    # Helper to convert ANSI string (e.g. from Theme) to Int Color
++    static [int] AnsiColorToInt([string]$ansi) {
++        if ([string]::IsNullOrEmpty($ansi)) { return -1 }
++        
++        # Parse RGB: \e[38;2;R;G;Bm or \e[48;2;R;G;Bm
++        # We look for the sequence digit;digit;digit m
++        if ($ansi -match '(\d+);(\d+);(\d+)m') {
++            $r = [int]$matches[1]
++            $g = [int]$matches[2]
++            $b = [int]$matches[3]
++            return [HybridRenderEngine]::_PackRGB($r, $g, $b)
++        }
++        
++        return -1
++    }
++
++    # -------------------------------------------------------------------------
++    # LAYOUT SYSTEM
++    # -------------------------------------------------------------------------
++
++    [void] DefineRegion([string]$id, [int]$x, [int]$y, [int]$width, [int]$height) {
++        $this.DefineRegion($id, $x, $y, $width, $height, 0, "")
++    }
++
++    [void] DefineRegion([string]$id, [int]$x, [int]$y, [int]$width, [int]$height, [int]$zIndex) {
++        $this.DefineRegion($id, $x, $y, $width, $height, $zIndex, "")
++    }
++
++    [void] DefineRegion([string]$id, [int]$x, [int]$y, [int]$width, [int]$height, [int]$zIndex, [string]$parentId) {
++        $region = [LayoutRegion]::new($id, $x, $y, $width, $height)
++        $region.ZIndex = $zIndex
++        $region.ParentID = $parentId
++        $this._regions[$id] = $region
++    }
++
++    [hashtable] GetRegionBounds([string]$id) {
++        if (-not $this._regions.ContainsKey($id)) { return $null }
++        
++        $region = $this._regions[$id]
++        $bounds = @{ X = $region.X; Y = $region.Y; Width = $region.Width; Height = $region.Height; ZIndex = $region.ZIndex }
++        
++        # Resolve parent offsets recursively
++        $current = $region
++        while (-not [string]::IsNullOrEmpty($current.ParentID)) {
++            if ($this._regions.ContainsKey($current.ParentID)) {
++                $parent = $this._regions[$current.ParentID]
++                $bounds.X += $parent.X
++                $bounds.Y += $parent.Y
++                $bounds.ZIndex += $parent.ZIndex
++                $current = $parent
++            }
++            else {
++                break
++            }
++        }
++        
++        return $bounds
++    }
++
++    [void] WriteToRegion([string]$regionId, [string]$content) {
++        $this.WriteToRegion($regionId, $content, -1, -1)
++    }
++
++    [void] WriteToRegion([string]$regionId, [string]$content, [int]$fg) {
++        $this.WriteToRegion($regionId, $content, $fg, -1)
++    }
++
++    [void] WriteToRegion([string]$regionId, [string]$content, [int]$fg, [int]$bg) {
++        $bounds = $this.GetRegionBounds($regionId)
++        if ($null -eq $bounds) { return }
++        
++        # Apply region z-index temporarily
++        $oldZ = $this._currentZ
++        $this._currentZ = $bounds.ZIndex
++        
++        # Set clip to region bounds
++        $this.PushClip($bounds.X, $bounds.Y, $bounds.Width, $bounds.Height)
++        
++        # Write at region origin (0,0 relative to region)
++        # Note: WriteAt handles clipping logic
++        if ($fg -ne -1 -or $bg -ne -1) {
++            $this.WriteAt($bounds.X, $bounds.Y, $content, $fg, $bg)
++        }
++        else {
++            $this.WriteAt($bounds.X, $bounds.Y, $content)
++        }
++        
++        $this.PopClip()
++        $this._currentZ = $oldZ
++    }
++
++    [void] WriteToRegion([string]$regionId, [string]$content, [int]$fgStart, [int]$fgEnd, [int]$bg) {
++        $bounds = $this.GetRegionBounds($regionId)
++        if ($null -eq $bounds) { return }
++        
++        # Apply region z-index temporarily
++        $oldZ = $this._currentZ
++        $this._currentZ = $bounds.ZIndex
++        
++        # Set clip to region bounds
++        $this.PushClip($bounds.X, $bounds.Y, $bounds.Width, $bounds.Height)
++        
++        # Write at region origin (0,0 relative to region) using Gradient WriteAt
++        $this.WriteAt($bounds.X, $bounds.Y, $content, $fgStart, $fgEnd, $bg)
++        
++        $this.PopClip()
++        $this._currentZ = $oldZ
++    }
++
++    # Fill a defined region with a character and colors
++    [void] FillRegion([string]$regionId, [string]$char, [int]$fg, [int]$bg) {
++        $bounds = $this.GetRegionBounds($regionId)
++        if ($null -eq $bounds) { return }
++        $this.Fill($bounds.X, $bounds.Y, $bounds.Width, $bounds.Height, $char, $fg, $bg)
++    }
++
++    # Define a grid of columns within a parent region
++    # columns: array of hashtables @{ Name='...'; Width=... } or just widths
++    # Returns: array of generated region IDs
++    [string[]] DefineGrid([string]$baseId, [int]$x, [int]$y, [int]$totalWidth, [int]$height, [array]$columns) {
++        $generatedIds = @()
++        $currentX = $x
++        
++        for ($i = 0; $i -lt $columns.Count; $i++) {
++            $col = $columns[$i]
++            $colWidth = 0
++            $colName = "Col$i"
++            
++            if ($col -is [hashtable]) {
++                if ($col.ContainsKey('Width')) { $colWidth = $col.Width }
++                if ($col.ContainsKey('Name')) { $colName = $col.Name }
++            }
++            elseif ($col -is [int]) {
++                $colWidth = $col
++            }
++            
++            # Create region for column content
++            $regionId = "${baseId}_${colName}"
++            # CRITICAL FIX: Set ParentID to baseId so GetChildRegions works!
++            $this.DefineRegion($regionId, $currentX, $y, $colWidth, $height, 0, $baseId)
++            $generatedIds += $regionId
++            
++            # Advance X (including 4-space gap which is NOT part of the region)
++            $currentX += $colWidth + 4
++        }
++        
++        return $generatedIds
++    }
++
++    # Get immediate child regions for a parent ID
++    [string[]] GetChildRegions([string]$parentId) {
++        $children = @()
++        foreach ($key in $this._regions.Keys) {
++            $region = $this._regions[$key]
++            if ($region.ParentID -eq $parentId) {
++                $children += $region.ID
++            }
++        }
++        # Sort by X to ensure column order
++        $sorted = $children | Sort-Object { $this._regions[$_].X }
++        return $sorted
++    }
++
++    # -------------------------------------------------------------------------
++    # RENDER CACHE INTEGRATION
++    # -------------------------------------------------------------------------
++
++    <#
++    .SYNOPSIS
++    Capture a widget's rendered cells from the backbuffer
++    
++    .DESCRIPTION
++    Used by RenderCache to snapshot a widget's output after RenderToEngine().
++    Captures cells from the backbuffer within the specified bounds.
++    
++    .PARAMETER x, y
++    Top-left corner of widget
++    
++    .PARAMETER width, height
++    Widget dimensions
++    
++    .PARAMETER zIndex
++    Z-layer the widget was rendered at
++    
++    .OUTPUTS
++    CachedWidget with cell snapshot
++    #>
++    [object] CaptureWidget([int]$x, [int]$y, [int]$width, [int]$height, [int]$zIndex) {
++        # Ensure RenderCache classes are loaded
++        $cachedType = ([System.Management.Automation.PSTypeName]'CachedWidget').Type
++        if (-not $cachedType) {
++            # RenderCache not loaded - return null
++            return $null
++        }
++        
++        # Create cached widget
++        $cached = [CachedWidget]::new($x, $y, $width, $height, $zIndex)
++        
++        # Clamp bounds to screen
++        $startX = [Math]::Max(0, $x)
++        $startY = [Math]::Max(0, $y)
++        $endX = [Math]::Min($this.Width, $x + $width)
++        $endY = [Math]::Min($this.Height, $y + $height)
++        
++        $captureWidth = $endX - $startX
++        $captureHeight = $endY - $startY
++        
++        if ($captureWidth -le 0 -or $captureHeight -le 0) {
++            return $null
++        }
++        
++        # Create cell array [row][col]
++        $cells = [object[]]::new($captureHeight)
++        
++        for ($row = 0; $row -lt $captureHeight; $row++) {
++            $cells[$row] = [object[]]::new($captureWidth)
++            $screenY = $startY + $row
++            
++            for ($col = 0; $col -lt $captureWidth; $col++) {
++                $screenX = $startX + $col
++                
++                # Copy cell from backbuffer
++                $cell = $this._backBuffer.GetCell($screenX, $screenY)
++                
++                # Store as hashtable (lighter than cloning Cell objects)
++                $cells[$row][$col] = @{
++                    Char = $cell.Char
++                    Fg = $cell.ForegroundRgb
++                    Bg = $cell.BackgroundRgb
++                    Attr = $cell.Attributes
++                }
++            }
++        }
++        
++        $cached.Cells = $cells
++        return $cached
++    }
++
++    <#
++    .SYNOPSIS
++    Write cached cells directly to the backbuffer
++    
++    .DESCRIPTION
++    Used by RenderCache to replay a cached widget's cells.
++    Writes cells directly without re-rendering the widget.
++    Respects Z-index from cached data.
++    
++    .PARAMETER cached
++    CachedWidget with cell snapshot
++    #>
++    [void] WriteFromCache([object]$cached) {
++        if ($null -eq $cached -or $null -eq $cached.Cells) {
++            return
++        }
++        
++        # Set Z-index for proper layering
++        $oldZ = $this._currentZ
++        $this._currentZ = $cached.ZIndex
++        
++        $startX = $cached.X
++        $startY = $cached.Y
++        $cells = $cached.Cells
++        
++        for ($row = 0; $row -lt $cells.Count; $row++) {
++            $screenY = $startY + $row
++            
++            if ($screenY -lt 0 -or $screenY -ge $this.Height) { continue }
++            
++            $rowCells = $cells[$row]
++            for ($col = 0; $col -lt $rowCells.Count; $col++) {
++                $screenX = $startX + $col
++                
++                if ($screenX -lt 0 -or $screenX -ge $this.Width) { continue }
++                
++                # Check Z-index (same logic as WriteAt)
++                if ($this._currentZ -ge $this._zBuffer[$screenY][$screenX]) {
++                    $cell = $rowCells[$col]
++                    
++                    # Write to backbuffer
++                    $this._backBuffer.SetCell($screenX, $screenY, $cell.Char, $cell.Fg, $cell.Bg, $cell.Attr)
++                    
++                    # Update Z buffer
++                    $this._zBuffer[$screenY][$screenX] = $this._currentZ
++                    
++                    # Update dirty bounds
++                    $this._UpdateDirtyBounds($screenX, $screenY)
++                }
++            }
++        }
++        
++        $this._currentZ = $oldZ
++    }
++}
+\ No newline at end of file
+diff --git a/pmc_v3.log b/pmc_v3.log
+index 832990a..cab7185 100644
+--- a/pmc_v3.log
++++ b/pmc_v3.log
+@@ -1,7 +1 @@
+---- Log Started: 01/17/2026 15:47:07 (Level: 1) ---
+-15:47:16.705 [ERROR] Fatal crash in bootstrapper
+-System.Management.Automation.MethodException: Cannot find an overload for "Log" and the argument count: "1".
+-   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)
+-   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)
+-   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+-   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
++--- Log Started: 01/17/2026 17:15:20 (Level: 1) ---
+diff --git a/repro_engine.ps1 b/repro_engine.ps1
+new file mode 100644
+index 0000000..30a8f0d
+--- /dev/null
++++ b/repro_engine.ps1
+@@ -0,0 +1,12 @@
++
++try {
++    Write-Host "Loading HybridRenderEngine.ps1..."
++    . ./HybridRenderEngine.ps1
++    $engine = [HybridRenderEngine]::new()
++    Write-Host "HybridRenderEngine loaded successfully." -ForegroundColor Green
++} catch {
++    Write-Host "CRASHED:" -ForegroundColor Red
++    Write-Host $_.Exception.Message -ForegroundColor Yellow
++    Write-Host $_.ScriptStackTrace -ForegroundColor Gray
++    exit 1
++}
+diff --git a/start-v3.ps1 b/start-v3.ps1
+index 6cf5e6b..6a5f1dc 100644
+--- a/start-v3.ps1
++++ b/start-v3.ps1
+@@ -29,6 +29,7 @@ $files = @(
+     "PerformanceCore.ps1",
+     "CellBuffer.ps1",
+     "RenderCache.ps1",
++    "HybridRenderEngine.Dependencies.ps1",
+     "HybridRenderEngine.ps1",
+     "GapBuffer.ps1",
+     "DataService.ps1",
+@@ -59,9 +60,17 @@ try {
+     
+     foreach ($file in $files) {
+         $filePath = Join-Path $scriptDir $file
++        Write-Host "DEBUG: Checking $file..." -ForegroundColor DarkGray
+         if (Test-Path $filePath) {
+-            [Logger]::Log("Loading $file...", 3)
+-            . $filePath
++            Write-Host "DEBUG: Loading $file..." -ForegroundColor Yellow
++            try {
++                . $filePath
++                Write-Host "DEBUG: Loaded $file OK." -ForegroundColor Green
++            } catch {
++                Write-Host "DEBUG: FAILED to load $file" -ForegroundColor Red
++                Write-Host "ERROR: $($_.Exception.Message)" -ForegroundColor Red
++                throw $_
++            }
+         } else {
+             throw "Missing required file: $file at $filePath"
+         }
+diff --git a/startup_debug.log b/startup_debug.log
+new file mode 100644
+index 0000000..e69de29
+diff --git a/syntax_check.ps1 b/syntax_check.ps1
+new file mode 100644
+index 0000000..244b67e
+--- /dev/null
++++ b/syntax_check.ps1
+@@ -0,0 +1,44 @@
++
++$ErrorActionPreference = "Stop"
++Write-Host "Diagnostic Start..." -ForegroundColor Cyan
++
++function Test-Syntax($path) {
++    Write-Host "Checking $path ... " -NoNewline
++    if (-not (Test-Path $path)) {
++        Write-Host "MISSING" -ForegroundColor Red
++        return
++    }
++    
++    try {
++        $content = Get-Content $path -Raw
++        [void][System.Management.Automation.PSParser]::Tokenize($content, [ref]$null)
++        Write-Host "OK" -ForegroundColor Green
++    } catch {
++        Write-Host "SYNTAX ERROR" -ForegroundColor Red
++        Write-Host $_.Exception.Message -ForegroundColor Yellow
++        exit 1
++    }
++}
++
++$root = $PSScriptRoot
++Test-Syntax "$root/Enums.ps1"
++Test-Syntax "$root/Logger.ps1"
++Test-Syntax "$root/PerformanceCore.ps1"
++Test-Syntax "$root/CellBuffer.ps1"
++Test-Syntax "$root/GapBuffer.ps1"
++Test-Syntax "$root/RenderCache.ps1"
++Test-Syntax "$root/HybridRenderEngine.ps1"
++Test-Syntax "$root/DataService.ps1"
++Test-Syntax "$root/FluxStore.ps1"
++Test-Syntax "$root/NoteEditor.ps1"
++Test-Syntax "$root/SmartEditor.ps1"
++Test-Syntax "$root/ProjectInfoModal.ps1"
++Test-Syntax "$root/TimeModal.ps1"
++Test-Syntax "$root/OverviewModal.ps1"
++Test-Syntax "$root/NotesModal.ps1"
++Test-Syntax "$root/ChecklistsModal.ps1"
++Test-Syntax "$root/StatusBar.ps1"
++Test-Syntax "$root/TuiApp.ps1"
++Test-Syntax "$root/start-v3.ps1"
++
++Write-Host "ALL CHECKS PASSED." -ForegroundColor Cyan
+diff --git a/syntax_results.txt b/syntax_results.txt
+new file mode 100644
+index 0000000..dd4362a
+--- /dev/null
++++ b/syntax_results.txt
+@@ -0,0 +1,21 @@
++Diagnostic Start...
++Checking /home/teej/git/Final/Enums.ps1 ... OK
++Checking /home/teej/git/Final/Logger.ps1 ... OK
++Checking /home/teej/git/Final/PerformanceCore.ps1 ... OK
++Checking /home/teej/git/Final/CellBuffer.ps1 ... OK
++Checking /home/teej/git/Final/GapBuffer.ps1 ... OK
++Checking /home/teej/git/Final/RenderCache.ps1 ... OK
++Checking /home/teej/git/Final/HybridRenderEngine.ps1 ... OK
++Checking /home/teej/git/Final/DataService.ps1 ... OK
++Checking /home/teej/git/Final/FluxStore.ps1 ... OK
++Checking /home/teej/git/Final/NoteEditor.ps1 ... OK
++Checking /home/teej/git/Final/SmartEditor.ps1 ... OK
++Checking /home/teej/git/Final/ProjectInfoModal.ps1 ... OK
++Checking /home/teej/git/Final/TimeModal.ps1 ... OK
++Checking /home/teej/git/Final/OverviewModal.ps1 ... OK
++Checking /home/teej/git/Final/NotesModal.ps1 ... OK
++Checking /home/teej/git/Final/ChecklistsModal.ps1 ... OK
++Checking /home/teej/git/Final/StatusBar.ps1 ... OK
++Checking /home/teej/git/Final/TuiApp.ps1 ... OK
++Checking /home/teej/git/Final/start-v3.ps1 ... OK
++ALL CHECKS PASSED.
+diff --git a/tasks.json b/tasks.json
+index 29d6dee..e83e1b7 100644
+--- a/tasks.json
++++ b/tasks.json
+@@ -1,264 +1,288 @@
+ {
+-  "checklists": null,
++  "tasks": [
++    {
++      "priority": 3,
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "completed": false,
++      "text": "t2",
++      "status": "todo",
++      "modified": "2026-01-06T17:28:45.4439701-07:00",
++      "due": "2026-01-03T00:00:00",
++      "created": "2026-01-03T13:40:04.1941435-07:00",
++      "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
++      "description": "details"
++    },
++    {
++      "priority": 3,
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "completed": false,
++      "text": "t3",
++      "status": "todo",
++      "modified": "2026-01-17T12:34:48.3922069-07:00",
++      "created": "2026-01-03T13:53:06.8552706-07:00",
++      "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3",
++      "description": ""
++    },
++    {
++      "priority": 3,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "completed": false,
++      "text": "t5",
++      "status": "todo",
++      "modified": "2026-01-06T17:26:23.7914548-07:00",
++      "due": "2026-01-06T00:00:00",
++      "created": "2026-01-06T17:26:23.746147-07:00",
++      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc"
++    },
++    {
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "completed": false,
++      "text": "subtask1",
++      "status": "pending",
++      "modified": "2026-01-07T08:12:24.2971891-07:00",
++      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
++      "created": "2026-01-07T08:12:24.2971891-07:00",
++      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394"
++    },
++    {
++      "priority": 3,
++      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62",
++      "tags": [
++        "tag1"
++      ],
++      "completed": false,
++      "text": "t1",
++      "status": "pending",
++      "modified": "2026-01-11T17:54:04.466792-07:00",
++      "due": "2026-01-18T00:00:00",
++      "created": "2026-01-11T17:53:38.1643562-07:00",
++      "id": "671badfe-dcbb-4554-8df4-7753239cea88"
++    },
++    {
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "text": "test",
++      "modified": "2026-01-17T13:02:15.6642561-07:00",
++      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
++      "created": "2026-01-17T13:02:15.6642561-07:00",
++      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0"
++    }
++  ],
+   "projects": [
+     {
+-      "id": "c0f82390-e410-459c-9602-0e227090f455",
+-      "name": "Inbox",
+       "created": "2026-01-01 08:09:47",
+       "task_count": 3,
+       "status": "active",
++      "name": "Inbox",
++      "id": "c0f82390-e410-459c-9602-0e227090f455",
+       "description": "Default inbox"
+     },
+     {
+-      "id": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "T2020": "/home/teej/pmc/ALL_TIME_SCREEN_REVIEW.md",
+-      "name": "Project 1",
+       "created": "2026-01-03T09:53:52.1554583-07:00",
+       "task_count": 1,
+       "modified": "2026-01-10T20:10:28.926031-07:00",
+       "status": "active",
++      "name": "Project 1",
++      "id": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "Main project"
+     },
+     {
+-      "id": "f1f1418e-df69-4737-970b-ee0711139c62",
+-      "name": "Project 2",
+       "created": "2026-01-10T13:30:12.064892-07:00",
+       "task_count": 1,
+       "modified": "2026-01-10T13:30:12.1391838-07:00",
+       "status": "active",
++      "name": "Project 2",
++      "id": "f1f1418e-df69-4737-970b-ee0711139c62",
+       "description": "Secondary project"
+     }
+   ],
+-  "settings": {},
+-  "notes": null,
++  "notes": [
++    {
++      "content": "",
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "title": "New Note",
++      "modified": "2026-01-17T15:51:59.6122476-07:00",
++      "created": "2026-01-17T15:51:53.6019247-07:00",
++      "id": "aae0fd4e-1d16-4d88-9686-778cdbdb1f0e"
++    },
++    {
++      "id": "acded868-2fc8-4b33-8a0b-865e9d40b8fc",
++      "title": "New Note",
++      "created": "2026-01-17T17:15:39.6142986-07:00",
++      "projectId": "GLOBAL_NOTES",
++      "content": "",
++      "modified": "2026-01-17T17:16:26.7166873-07:00"
++    }
++  ],
+   "timelogs": [
+     {
++      "minutes": 45,
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "created": "2026-01-02T10:56:57.812294-07:00",
+       "timestamp": "2026-01-02T10:56:57.8362507-07:00",
+-      "id": "712ce57b-e85d-4f6e-91a9-54474fe04e10",
+       "date": "2026-01-02T00:00:00",
+-      "created": "2026-01-02T10:56:57.812294-07:00",
+-      "minutes": 45,
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
++      "id": "712ce57b-e85d-4f6e-91a9-54474fe04e10"
+     },
+     {
++      "minutes": 60,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "created": "2026-01-09T18:32:16.7481935-07:00",
+       "timestamp": "2026-01-09T18:32:16.8030799-07:00",
+-      "id": "965ed454-946d-46fe-816f-fc221246a9d8",
+       "date": "2026-01-09T00:00:00",
+-      "created": "2026-01-09T18:32:16.7481935-07:00",
+-      "minutes": 60,
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead"
++      "id": "965ed454-946d-46fe-816f-fc221246a9d8"
+     },
+     {
++      "minutes": 15,
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "created": "2026-01-09T19:16:18.9051597-07:00",
+       "timestamp": "2026-01-09T19:16:18.9611364-07:00",
+-      "id": "c4b46c2b-e7c5-4e92-86d0-b61cf6ce4fa4",
+       "date": "2026-01-09T00:00:00",
+-      "created": "2026-01-09T19:16:18.9051597-07:00",
+-      "minutes": 15,
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
++      "id": "c4b46c2b-e7c5-4e92-86d0-b61cf6ce4fa4"
+     },
+     {
++      "minutes": 30,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "created": "2026-01-11T17:55:11.388043-07:00",
+       "timestamp": "2026-01-11T17:55:11.4153592-07:00",
+-      "id": "64769e2e-515c-43e8-9b92-ef10568d0b06",
+       "date": "2026-01-11T00:00:00",
+-      "created": "2026-01-11T17:55:11.388043-07:00",
+-      "minutes": 30,
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead"
++      "id": "64769e2e-515c-43e8-9b92-ef10568d0b06"
+     },
+     {
++      "minutes": 30,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "created": "2026-01-11T17:55:11.4516099-07:00",
+       "timestamp": "2026-01-11T17:55:11.4532232-07:00",
+-      "id": "9a2897f8-05e1-4678-baa0-3f388be9d244",
+       "date": "2026-01-11T00:00:00",
+-      "created": "2026-01-11T17:55:11.4516099-07:00",
+-      "minutes": 30,
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead"
++      "id": "9a2897f8-05e1-4678-baa0-3f388be9d244"
+     },
+     {
+-      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2",
+-      "date": "2026-01-17",
+       "hours": 1.0,
+-      "created": "2026-01-17T09:10:17.9471582-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:10:17.9471582-07:00",
++      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2",
+       "description": "New entry11"
+     },
+     {
+-      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:19:44.0951884-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:19:44.0951884-07:00",
++      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117",
+       "description": "New entry"
+     },
+     {
+-      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:25:01.8476168-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:25:01.8476168-07:00",
++      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8",
+       "description": "New entry"
+     },
+     {
+-      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:25:58.1970967-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:25:58.1970967-07:00",
++      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f",
+       "description": "New entry"
+     },
+     {
+-      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:48:43.2847458-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:48:43.2847458-07:00",
++      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1",
+       "description": "New entry"
+     },
+     {
+-      "id": "316dad33-db32-48f5-99aa-c44c9b0c5896",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:52:37.5113621-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:52:37.5113621-07:00",
++      "id": "316dad33-db32-48f5-99aa-c44c9b0c5896",
+       "description": "New entry"
+     },
+     {
+-      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:59:58.5628307-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:59:58.5628307-07:00",
++      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd",
+       "description": "New entry"
+     },
+     {
+-      "id": "73e8327e-1718-4867-b484-5854c915f533",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T10:07:38.3138082-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T10:07:38.3138082-07:00",
++      "id": "73e8327e-1718-4867-b484-5854c915f533",
+       "description": "New entry"
+     },
+     {
+-      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T10:19:33.2286784-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T10:19:33.2286784-07:00",
++      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558",
+       "description": "New entry"
+     },
+     {
+-      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T10:25:59.9721231-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T10:25:59.9721231-07:00",
++      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a",
+       "description": "New entry"
+     },
+     {
+-      "id": "26227243-4cd1-496a-9aae-578d2e91e771",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T10:32:57.4712218-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T10:32:57.4712218-07:00",
++      "id": "26227243-4cd1-496a-9aae-578d2e91e771",
+       "description": "New entry"
+     },
+     {
+-      "id": "73bc1499-aa36-4622-8d5a-05a997879aed",
+-      "date": "2026-01-17",
+       "hours": 2.0,
+-      "created": "2026-01-17T10:35:21.2169363-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T10:35:21.2169363-07:00",
++      "id": "73bc1499-aa36-4622-8d5a-05a997879aed",
+       "description": "New entry"
+     },
+     {
+-      "id": "94fab5b2-669c-4f7b-9e15-ac4f405e8f91",
+-      "date": "2026-01-17",
+       "hours": 1.25,
+-      "created": "2026-01-17T15:29:48.6582552-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T15:29:48.6582552-07:00",
++      "id": "94fab5b2-669c-4f7b-9e15-ac4f405e8f91",
+       "description": "New entry"
+     },
+     {
+-      "id": "679053f3-50ca-4d8b-b233-b661e5ade3f1",
+-      "created": "2026-01-17T15:41:32.3174341-07:00",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T15:41:32.3174341-07:00",
++      "id": "679053f3-50ca-4d8b-b233-b661e5ade3f1",
+       "description": ""
+     },
+     {
+-      "date": "2026-01-17",
+-      "description": "111111",
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "hours": 0.0,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "created": "2026-01-17T15:45:23.7633434-07:00",
+-      "id": "5fe46c0e-3a49-47f9-8967-ed52c280f87d"
++      "date": "2026-01-17",
++      "id": "5fe46c0e-3a49-47f9-8967-ed52c280f87d",
++      "description": "111111"
+     }
+   ],
+-  "tasks": [
+-    {
+-      "due": "2026-01-03T00:00:00",
+-      "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+-      "priority": 3,
+-      "created": "2026-01-03T13:40:04.1941435-07:00",
+-      "modified": "2026-01-06T17:28:45.4439701-07:00",
+-      "text": "t2",
+-      "completed": false,
+-      "description": "details",
+-      "status": "todo",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
+-    },
+-    {
+-      "priority": 3,
+-      "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3",
+-      "created": "2026-01-03T13:53:06.8552706-07:00",
+-      "modified": "2026-01-17T12:34:48.3922069-07:00",
+-      "text": "t3",
+-      "completed": false,
+-      "description": "",
+-      "status": "todo",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
+-    },
+-    {
+-      "due": "2026-01-06T00:00:00",
+-      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
+-      "priority": 3,
+-      "status": "todo",
+-      "created": "2026-01-06T17:26:23.746147-07:00",
+-      "modified": "2026-01-06T17:26:23.7914548-07:00",
+-      "text": "t5",
+-      "completed": false,
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead"
+-    },
+-    {
+-      "status": "pending",
+-      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394",
+-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+-      "created": "2026-01-07T08:12:24.2971891-07:00",
+-      "modified": "2026-01-07T08:12:24.2971891-07:00",
+-      "text": "subtask1",
+-      "completed": false,
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
+-    },
+-    {
+-      "due": "2026-01-18T00:00:00",
+-      "id": "671badfe-dcbb-4554-8df4-7753239cea88",
+-      "priority": 3,
+-      "status": "pending",
+-      "created": "2026-01-11T17:53:38.1643562-07:00",
+-      "modified": "2026-01-11T17:54:04.466792-07:00",
+-      "text": "t1",
+-      "completed": false,
+-      "tags": [
+-        "tag1"
+-      ],
+-      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62"
+-    },
+-    {
+-      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0",
+-      "created": "2026-01-17T13:02:15.6642561-07:00",
+-      "modified": "2026-01-17T13:02:15.6642561-07:00",
+-      "text": "test",
+-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
+-    }
+-  ]
++  "checklists": {
++    "items": [],
++    "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++    "title": "New Checklist",
++    "modified": "2026-01-17T15:52:36.0494192-07:00",
++    "created": "2026-01-17T15:52:36.049319-07:00",
++    "id": "1b77df46-df70-4f34-a85f-9d56c6484b5f"
++  },
++  "settings": {}
+ }
+diff --git a/tasks.json.bak b/tasks.json.bak
+index b46f00b..7b097d7 100644
+--- a/tasks.json.bak
++++ b/tasks.json.bak
+@@ -1,264 +1,288 @@
+ {
+-  "checklists": null,
++  "tasks": [
++    {
++      "priority": 3,
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "completed": false,
++      "text": "t2",
++      "status": "todo",
++      "modified": "2026-01-06T17:28:45.4439701-07:00",
++      "due": "2026-01-03T00:00:00",
++      "created": "2026-01-03T13:40:04.1941435-07:00",
++      "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
++      "description": "details"
++    },
++    {
++      "priority": 3,
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "completed": false,
++      "text": "t3",
++      "status": "todo",
++      "modified": "2026-01-17T12:34:48.3922069-07:00",
++      "created": "2026-01-03T13:53:06.8552706-07:00",
++      "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3",
++      "description": ""
++    },
++    {
++      "priority": 3,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "completed": false,
++      "text": "t5",
++      "status": "todo",
++      "modified": "2026-01-06T17:26:23.7914548-07:00",
++      "due": "2026-01-06T00:00:00",
++      "created": "2026-01-06T17:26:23.746147-07:00",
++      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc"
++    },
++    {
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "completed": false,
++      "text": "subtask1",
++      "status": "pending",
++      "modified": "2026-01-07T08:12:24.2971891-07:00",
++      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
++      "created": "2026-01-07T08:12:24.2971891-07:00",
++      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394"
++    },
++    {
++      "priority": 3,
++      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62",
++      "tags": [
++        "tag1"
++      ],
++      "completed": false,
++      "text": "t1",
++      "status": "pending",
++      "modified": "2026-01-11T17:54:04.466792-07:00",
++      "due": "2026-01-18T00:00:00",
++      "created": "2026-01-11T17:53:38.1643562-07:00",
++      "id": "671badfe-dcbb-4554-8df4-7753239cea88"
++    },
++    {
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "text": "test",
++      "modified": "2026-01-17T13:02:15.6642561-07:00",
++      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
++      "created": "2026-01-17T13:02:15.6642561-07:00",
++      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0"
++    }
++  ],
+   "projects": [
+     {
+-      "id": "c0f82390-e410-459c-9602-0e227090f455",
+-      "name": "Inbox",
+       "created": "2026-01-01 08:09:47",
+       "task_count": 3,
+       "status": "active",
++      "name": "Inbox",
++      "id": "c0f82390-e410-459c-9602-0e227090f455",
+       "description": "Default inbox"
+     },
+     {
+-      "id": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "T2020": "/home/teej/pmc/ALL_TIME_SCREEN_REVIEW.md",
+-      "name": "Project 1",
+       "created": "2026-01-03T09:53:52.1554583-07:00",
+       "task_count": 1,
+       "modified": "2026-01-10T20:10:28.926031-07:00",
+       "status": "active",
++      "name": "Project 1",
++      "id": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "Main project"
+     },
+     {
+-      "id": "f1f1418e-df69-4737-970b-ee0711139c62",
+-      "name": "Project 2",
+       "created": "2026-01-10T13:30:12.064892-07:00",
+       "task_count": 1,
+       "modified": "2026-01-10T13:30:12.1391838-07:00",
+       "status": "active",
++      "name": "Project 2",
++      "id": "f1f1418e-df69-4737-970b-ee0711139c62",
+       "description": "Secondary project"
+     }
+   ],
+-  "settings": {},
+-  "notes": null,
++  "notes": [
++    {
++      "content": "",
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "title": "New Note",
++      "modified": "2026-01-17T15:51:59.6122476-07:00",
++      "created": "2026-01-17T15:51:53.6019247-07:00",
++      "id": "aae0fd4e-1d16-4d88-9686-778cdbdb1f0e"
++    },
++    {
++      "id": "acded868-2fc8-4b33-8a0b-865e9d40b8fc",
++      "title": "New Note",
++      "created": "2026-01-17T17:15:39.6142986-07:00",
++      "projectId": "GLOBAL_NOTES",
++      "content": "",
++      "modified": "2026-01-17T17:15:39.6151033-07:00"
++    }
++  ],
+   "timelogs": [
+     {
++      "minutes": 45,
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "created": "2026-01-02T10:56:57.812294-07:00",
+       "timestamp": "2026-01-02T10:56:57.8362507-07:00",
+-      "id": "712ce57b-e85d-4f6e-91a9-54474fe04e10",
+       "date": "2026-01-02T00:00:00",
+-      "created": "2026-01-02T10:56:57.812294-07:00",
+-      "minutes": 45,
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
++      "id": "712ce57b-e85d-4f6e-91a9-54474fe04e10"
+     },
+     {
++      "minutes": 60,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "created": "2026-01-09T18:32:16.7481935-07:00",
+       "timestamp": "2026-01-09T18:32:16.8030799-07:00",
+-      "id": "965ed454-946d-46fe-816f-fc221246a9d8",
+       "date": "2026-01-09T00:00:00",
+-      "created": "2026-01-09T18:32:16.7481935-07:00",
+-      "minutes": 60,
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead"
++      "id": "965ed454-946d-46fe-816f-fc221246a9d8"
+     },
+     {
++      "minutes": 15,
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "created": "2026-01-09T19:16:18.9051597-07:00",
+       "timestamp": "2026-01-09T19:16:18.9611364-07:00",
+-      "id": "c4b46c2b-e7c5-4e92-86d0-b61cf6ce4fa4",
+       "date": "2026-01-09T00:00:00",
+-      "created": "2026-01-09T19:16:18.9051597-07:00",
+-      "minutes": 15,
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
++      "id": "c4b46c2b-e7c5-4e92-86d0-b61cf6ce4fa4"
+     },
+     {
++      "minutes": 30,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "created": "2026-01-11T17:55:11.388043-07:00",
+       "timestamp": "2026-01-11T17:55:11.4153592-07:00",
+-      "id": "64769e2e-515c-43e8-9b92-ef10568d0b06",
+       "date": "2026-01-11T00:00:00",
+-      "created": "2026-01-11T17:55:11.388043-07:00",
+-      "minutes": 30,
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead"
++      "id": "64769e2e-515c-43e8-9b92-ef10568d0b06"
+     },
+     {
++      "minutes": 30,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "created": "2026-01-11T17:55:11.4516099-07:00",
+       "timestamp": "2026-01-11T17:55:11.4532232-07:00",
+-      "id": "9a2897f8-05e1-4678-baa0-3f388be9d244",
+       "date": "2026-01-11T00:00:00",
+-      "created": "2026-01-11T17:55:11.4516099-07:00",
+-      "minutes": 30,
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead"
++      "id": "9a2897f8-05e1-4678-baa0-3f388be9d244"
+     },
+     {
+-      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2",
+-      "date": "2026-01-17",
+       "hours": 1.0,
+-      "created": "2026-01-17T09:10:17.9471582-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:10:17.9471582-07:00",
++      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2",
+       "description": "New entry11"
+     },
+     {
+-      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:19:44.0951884-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:19:44.0951884-07:00",
++      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117",
+       "description": "New entry"
+     },
+     {
+-      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:25:01.8476168-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:25:01.8476168-07:00",
++      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8",
+       "description": "New entry"
+     },
+     {
+-      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:25:58.1970967-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:25:58.1970967-07:00",
++      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f",
+       "description": "New entry"
+     },
+     {
+-      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:48:43.2847458-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:48:43.2847458-07:00",
++      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1",
+       "description": "New entry"
+     },
+     {
+-      "id": "316dad33-db32-48f5-99aa-c44c9b0c5896",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:52:37.5113621-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:52:37.5113621-07:00",
++      "id": "316dad33-db32-48f5-99aa-c44c9b0c5896",
+       "description": "New entry"
+     },
+     {
+-      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T09:59:58.5628307-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T09:59:58.5628307-07:00",
++      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd",
+       "description": "New entry"
+     },
+     {
+-      "id": "73e8327e-1718-4867-b484-5854c915f533",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T10:07:38.3138082-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T10:07:38.3138082-07:00",
++      "id": "73e8327e-1718-4867-b484-5854c915f533",
+       "description": "New entry"
+     },
+     {
+-      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T10:19:33.2286784-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T10:19:33.2286784-07:00",
++      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558",
+       "description": "New entry"
+     },
+     {
+-      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T10:25:59.9721231-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T10:25:59.9721231-07:00",
++      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a",
+       "description": "New entry"
+     },
+     {
+-      "id": "26227243-4cd1-496a-9aae-578d2e91e771",
+-      "date": "2026-01-17",
+       "hours": 0.0,
+-      "created": "2026-01-17T10:32:57.4712218-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T10:32:57.4712218-07:00",
++      "id": "26227243-4cd1-496a-9aae-578d2e91e771",
+       "description": "New entry"
+     },
+     {
+-      "id": "73bc1499-aa36-4622-8d5a-05a997879aed",
+-      "date": "2026-01-17",
+       "hours": 2.0,
+-      "created": "2026-01-17T10:35:21.2169363-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T10:35:21.2169363-07:00",
++      "id": "73bc1499-aa36-4622-8d5a-05a997879aed",
+       "description": "New entry"
+     },
+     {
+-      "id": "94fab5b2-669c-4f7b-9e15-ac4f405e8f91",
+-      "date": "2026-01-17",
+       "hours": 1.25,
+-      "created": "2026-01-17T15:29:48.6582552-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T15:29:48.6582552-07:00",
++      "id": "94fab5b2-669c-4f7b-9e15-ac4f405e8f91",
+       "description": "New entry"
+     },
+     {
+-      "id": "679053f3-50ca-4d8b-b233-b661e5ade3f1",
+-      "created": "2026-01-17T15:41:32.3174341-07:00",
+       "hours": 0.0,
+-      "date": "2026-01-17",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "date": "2026-01-17",
++      "created": "2026-01-17T15:41:32.3174341-07:00",
++      "id": "679053f3-50ca-4d8b-b233-b661e5ade3f1",
+       "description": ""
+     },
+     {
+-      "date": "2026-01-17",
+-      "description": "",
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "hours": 0.0,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "created": "2026-01-17T15:45:23.7633434-07:00",
+-      "id": "5fe46c0e-3a49-47f9-8967-ed52c280f87d"
++      "date": "2026-01-17",
++      "id": "5fe46c0e-3a49-47f9-8967-ed52c280f87d",
++      "description": "111111"
+     }
+   ],
+-  "tasks": [
+-    {
+-      "due": "2026-01-03T00:00:00",
+-      "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+-      "priority": 3,
+-      "created": "2026-01-03T13:40:04.1941435-07:00",
+-      "modified": "2026-01-06T17:28:45.4439701-07:00",
+-      "text": "t2",
+-      "completed": false,
+-      "description": "details",
+-      "status": "todo",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
+-    },
+-    {
+-      "priority": 3,
+-      "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3",
+-      "created": "2026-01-03T13:53:06.8552706-07:00",
+-      "modified": "2026-01-17T12:34:48.3922069-07:00",
+-      "text": "t3",
+-      "completed": false,
+-      "description": "",
+-      "status": "todo",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
+-    },
+-    {
+-      "due": "2026-01-06T00:00:00",
+-      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
+-      "priority": 3,
+-      "status": "todo",
+-      "created": "2026-01-06T17:26:23.746147-07:00",
+-      "modified": "2026-01-06T17:26:23.7914548-07:00",
+-      "text": "t5",
+-      "completed": false,
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead"
+-    },
+-    {
+-      "status": "pending",
+-      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394",
+-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+-      "created": "2026-01-07T08:12:24.2971891-07:00",
+-      "modified": "2026-01-07T08:12:24.2971891-07:00",
+-      "text": "subtask1",
+-      "completed": false,
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
+-    },
+-    {
+-      "due": "2026-01-18T00:00:00",
+-      "id": "671badfe-dcbb-4554-8df4-7753239cea88",
+-      "priority": 3,
+-      "status": "pending",
+-      "created": "2026-01-11T17:53:38.1643562-07:00",
+-      "modified": "2026-01-11T17:54:04.466792-07:00",
+-      "text": "t1",
+-      "completed": false,
+-      "tags": [
+-        "tag1"
+-      ],
+-      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62"
+-    },
+-    {
+-      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0",
+-      "created": "2026-01-17T13:02:15.6642561-07:00",
+-      "modified": "2026-01-17T13:02:15.6642561-07:00",
+-      "text": "test",
+-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455"
+-    }
+-  ]
++  "checklists": {
++    "items": [],
++    "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++    "title": "New Checklist",
++    "modified": "2026-01-17T15:52:36.0494192-07:00",
++    "created": "2026-01-17T15:52:36.049319-07:00",
++    "id": "1b77df46-df70-4f34-a85f-9d56c6484b5f"
++  },
++  "settings": {}
+ }

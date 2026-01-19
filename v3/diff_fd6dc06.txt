@@ -1,0 +1,1031 @@
+commit fd6dc06ec8e683a7b07d2ffef67873ca071ec3c0
+Author: Ralph Autonomous <ralph@autonomous.ai>
+Date:   Sat Jan 17 15:41:14 2026 -0700
+
+    4a
+
+diff --git a/TabbedModal.ps1 b/TabbedModal.ps1
+index a46c9d5..b6e55f7 100644
+--- a/TabbedModal.ps1
++++ b/TabbedModal.ps1
+@@ -199,7 +199,7 @@ class TabbedModal {
+         if ($this._editing) {
+             $statusText = " [Enter] Save  [Esc] Cancel"
+         } else {
+-            $statusText = " [Tab] Next Tab  [1-7] Jump  [↑↓] Navigate  [Enter] Edit  [Esc] Close  [Ctrl+S] Save All"
++            $statusText = " [Tab/←→] Next Tab  [1-7] Jump  [↑↓] Navigate  [Enter] Edit  [Esc] Close  [Ctrl+S] Save All"
+         }
+         $engine.WriteAt(0, $statusY, $statusText, [Colors]::White, [Colors]::SelectionBg)
+         
+@@ -286,6 +286,18 @@ class TabbedModal {
+                 $this._scrollOffset = 0
+                 return "Continue"
+             }
++            'LeftArrow' {
++                $this._activeTab = ($this._activeTab - 1 + $this._tabs.Count) % $this._tabs.Count
++                $this._activeField = 0
++                $this._scrollOffset = 0
++                return "Continue"
++            }
++            'RightArrow' {
++                $this._activeTab = ($this._activeTab + 1) % $this._tabs.Count
++                $this._activeField = 0
++                $this._scrollOffset = 0
++                return "Continue"
++            }
+             'UpArrow' {
+                 if ($this._activeField -gt 0) {
+                     $this._activeField--
+diff --git a/TimeModal.ps1 b/TimeModal.ps1
+index 64328a8..fb2437f 100644
+--- a/TimeModal.ps1
++++ b/TimeModal.ps1
+@@ -15,6 +15,8 @@ class TimeModal {
+     hidden [bool]$_editing = $false
+     hidden [hashtable]$_editBuffer = $null
+     hidden [int]$_editField = 0
++    hidden [bool]$_calendarActive = $false
++    hidden [DateTime]$_calendarMonth = [DateTime]::MinValue
+     
+     TimeModal([FluxStore]$store) {
+         $this._store = $store
+@@ -104,10 +106,28 @@ class TimeModal {
+         
+         if ($this._editing) {
+             $menu = "[Enter] Save Field  [Tab] Next Field  [Esc] Cancel Edit"
+-            $engine.WriteAt($x + 4, $menuY, $menu, [Colors]::White, [Colors]::PanelBg)
++            $engine.WriteAt($x + 2, $menuY, $menu, [Colors]::White, [Colors]::PanelBg)
+         } else {
+             $menu = "[N] New  [Enter] Edit  [Delete] Remove  [Tab] Weekly  [Esc] Close"
+-            $engine.WriteAt($x + 20, $menuY, $menu, [Colors]::White, [Colors]::PanelBg)
++            $engine.WriteAt($x + 2, $menuY, $menu, [Colors]::White, [Colors]::PanelBg)
++        }
++        
++        # Render Calendar Overlay
++        if ($this._calendarActive) {
++            # Position calendar below the date field roughly
++            # Date field is at x+2. Row depends on selection.
++            # We need to calculate row Y again.
++            $listY = $y + 3 + 2 
++            $listH = $h - 6 - 4
++            
++            # Simple calc for modal logic (ScrollOffset etc already applied)
++            # Just render centered for now or reuse render logic? 
++            # We need the Y position of the editing row. 
++            $rowVisualIndex = $this._selectedIndex - $this._scrollOffset
++            if ($rowVisualIndex -ge 0 -and $rowVisualIndex -lt $listH) {
++                 $calY = $listY + $rowVisualIndex + 1
++                 $this._RenderCalendar($engine, $x + 2, $calY)
++            }
+         }
+         
+         $engine.EndLayer()
+@@ -281,6 +301,10 @@ class TimeModal {
+         [Logger]::Log("TimeModal.HandleInput: Key=$($key.Key) Char='$($key.KeyChar)' Mod=$($key.Modifiers)", 4)
+         if (-not $this._visible) { return "Continue" }
+         
++        if ($this._calendarActive) {
++            return $this._HandleCalendarInput($key)
++        }
++
+         if ($this._editing) {
+             return $this._HandleEditInput($key)
+         }
+@@ -363,6 +387,31 @@ class TimeModal {
+                 $this._InitEditBuffer()
+                 return "Continue"
+             }
++            'DownArrow' {
++                if ($this._editField -eq 0) { # Date -> Calendar
++                    $this._calendarActive = $true
++                    $val = $this._editBuffer['Value']
++                    try { $this._calendarMonth = [DateTime]::Parse($val) } catch { $this._calendarMonth = [DateTime]::Today }
++                    return "Continue"
++                } elseif ($this._editField -eq 1) { # Hours -> Decrement
++                    try { 
++                        $cur = [double]$this._editBuffer['Value'] 
++                        $cur = [Math]::Max(0, $cur - 0.25)
++                        $this._editBuffer['Value'] = "{0:N2}" -f $cur
++                    } catch {}
++                    return "Continue"
++                }
++            }
++            'UpArrow' {
++                 if ($this._editField -eq 1) { # Hours -> Increment
++                    try {
++                        $cur = [double]$this._editBuffer['Value']
++                        $cur += 0.25
++                        $this._editBuffer['Value'] = "{0:N2}" -f $cur
++                    } catch {}
++                    return "Continue"
++                }
++            }
+             'Backspace' {
+                 if ($this._editBuffer['Value'].Length -gt 0) {
+                     $this._editBuffer['Value'] = $this._editBuffer['Value'].Substring(0, $this._editBuffer['Value'].Length - 1)
+@@ -440,7 +489,7 @@ class TimeModal {
+             projectId = $this._projectId
+             date = [DateTime]::Today.ToString("yyyy-MM-dd")
+             hours = 0.0
+-            description = "New entry"
++            description = ""
+             created = [DataService]::Timestamp()
+         }
+         
+@@ -455,6 +504,93 @@ class TimeModal {
+         return $id
+     }
+     
++    hidden [void] _RenderCalendar([HybridRenderEngine]$engine, [int]$x, [int]$y) {
++        # Calendar Dimensions: 26w x 10h
++        $w = 26
++        $h = 10
++        
++        # Ensure Month is valid 
++        if ($this._calendarMonth -eq [DateTime]::MinValue) { $this._calendarMonth = [DateTime]::Today }
++
++        # Draw Box
++        $engine.BeginLayer(120) # Top Layer
++        $engine.DrawBox($x, $y, $w, $h, [Colors]::Accent, [Colors]::PanelBg)
++        
++        # Header: Month Year
++        $header = $this._calendarMonth.ToString("MMMM yyyy")
++        $engine.WriteAt($x + 2, $y, " $header ", [Colors]::White, [Colors]::Accent)
++        
++        # Days Header
++        $days = "Su Mo Tu We Th Fr Sa"
++        $engine.WriteAt($x + 2, $y + 2, $days, [Colors]::Gray, [Colors]::PanelBg)
++        
++        # Calendar Grid
++        $firstDayOfMonth = [DateTime]::new($this._calendarMonth.Year, $this._calendarMonth.Month, 1)
++        $daysInMonth = [DateTime]::DaysInMonth($this._calendarMonth.Year, $this._calendarMonth.Month)
++        $startOffset = [int]$firstDayOfMonth.DayOfWeek
++        
++        $currentDate = $firstDayOfMonth.AddDays(-$startOffset)
++        
++        # Selection
++        $selectedDate = [DateTime]::Today
++        try { $selectedDate = [DateTime]::Parse($this._editBuffer['Value']) } catch {}
++        
++        for ($row = 0; $row -lt 6; $row++) {
++            for ($col = 0; $col -lt 7; $col++) {
++                $dayStr = $currentDate.Day.ToString().PadLeft(2)
++                $drawX = $x + 2 + ($col * 3)
++                $drawY = $y + 3 + $row
++                
++                if ($drawY -ge $y + $h - 1) { continue }
++                
++                $isCurrentMonth = ($currentDate.Month -eq $this._calendarMonth.Month)
++                $isSelected = ($currentDate.Date -eq $selectedDate.Date)
++                
++                $fg = if ($isSelected) { [Colors]::Black } elseif ($isCurrentMonth) { [Colors]::White } else { [Colors]::Gray }
++                $bg = if ($isSelected) { [Colors]::Cyan } else { [Colors]::PanelBg }
++                
++                $engine.WriteAt($drawX, $drawY, $dayStr, $fg, $bg)
++                
++                $currentDate = $currentDate.AddDays(1)
++            }
++        }
++        $engine.EndLayer()
++    }
++
++    hidden [string] _HandleCalendarInput([ConsoleKeyInfo]$key) {
++        $current = [DateTime]::Today
++        try { $current = [DateTime]::Parse($this._editBuffer['Value']) } catch {}
++        
++        $newDate = $current
++        $changed = $false
++
++        switch ($key.Key) {
++            'LeftArrow' { $newDate = $current.AddDays(-1); $changed = $true }
++            'RightArrow' { $newDate = $current.AddDays(1); $changed = $true }
++            'UpArrow' { $newDate = $current.AddDays(-7); $changed = $true }
++            'DownArrow' { $newDate = $current.AddDays(7); $changed = $true }
++            'PageUp' { $newDate = $current.AddMonths(-1); $changed = $true }
++            'PageDown' { $newDate = $current.AddMonths(1); $changed = $true }
++            'Enter' { 
++                $this._calendarActive = $false 
++                return "Continue"
++            }
++            'Escape' {
++                $this._calendarActive = $false
++                return "Continue"
++            }
++        }
++
++        if ($changed) {
++            $this._editBuffer['Value'] = $newDate.ToString("yyyy-MM-dd")
++            # Sync calendar month
++            if ($newDate.Month -ne $this._calendarMonth.Month -or $newDate.Year -ne $this._calendarMonth.Year) {
++                $this._calendarMonth = $newDate
++            }
++        }
++        return "Continue"
++    }
++
+     hidden [void] _DeleteEntry() {
+         if ($this._timelogs.Count -eq 0 -or $this._selectedIndex -ge $this._timelogs.Count) { return }
+         
+diff --git a/TuiApp.ps1 b/TuiApp.ps1
+index a7215e1..94db082 100644
+--- a/TuiApp.ps1
++++ b/TuiApp.ps1
+@@ -10,6 +10,7 @@ class TuiApp {
+     hidden [ProjectInfoModal]$_projectInfoModal
+     hidden [TimeModal]$_timeModal
+     hidden [OverviewModal]$_overviewModal
++    hidden [NotesModal]$_globalNotesModal
+     hidden [StatusBar]$_statusBar
+     hidden [bool]$_wasModalVisible = $false
+     hidden [bool]$_running
+@@ -23,6 +24,7 @@ class TuiApp {
+         $this._projectInfoModal = [ProjectInfoModal]::new($store)
+         $this._timeModal = [TimeModal]::new($store)
+         $this._overviewModal = [OverviewModal]::new($store)
++        $this._globalNotesModal = [NotesModal]::new($store)
+         $this._statusBar = [StatusBar]::new()
+         $this._running = $false
+     }
+@@ -97,6 +99,9 @@ class TuiApp {
+                 if ($this._overviewModal.IsVisible()) {
+                     $this._overviewModal.Render($this._engine)
+                 }
++                if ($this._globalNotesModal.IsVisible()) {
++                    $this._globalNotesModal.Render($this._engine)
++                }
+                 
+                 # Render dynamic status bar
+                 $context = $this._GetStatusContext($state)
+@@ -116,6 +121,15 @@ class TuiApp {
+     hidden [void] _HandleInput([ConsoleKeyInfo]$key) {
+         $state = $this._store.GetState()
+         
++        # === GLOBAL NOTES MODAL HANDLER ===
++        if ($this._globalNotesModal.IsVisible()) {
++            $result = $this._globalNotesModal.HandleInput($key, $this._engine)
++            if ($result -eq "Close") {
++                $this._store.Dispatch([ActionType]::SET_FOCUS, @{ PanelName = $state.View.FocusedPanel })
++            }
++            return
++        }
++        
+         # === OVERVIEW MODAL HANDLER ===
+         if ($this._overviewModal.IsVisible()) {
+             $result = $this._overviewModal.HandleInput($key)
+@@ -450,6 +464,12 @@ class TuiApp {
+                 }
+             }
+             'N' {
++                if ($key.Modifiers -band [ConsoleModifiers]::Shift) {
++                    # Shift+N: Global Notes
++                    $this._globalNotesModal.Open("GLOBAL_NOTES", "General Notes")
++                    return
++                }
++
+                 # New Item - Using SmartEditor
+                 if ($panel -eq "Sidebar") {
+                     # New Project - Name Only (Inline)
+diff --git a/UniversalList.ps1 b/UniversalList.ps1
+index 00ae09c..7e22f4e 100644
+--- a/UniversalList.ps1
++++ b/UniversalList.ps1
+@@ -16,6 +16,8 @@ class UniversalList {
+     [void] Render([HybridRenderEngine]$engine, [int]$x, [int]$y, [int]$w, [int]$h, [array]$items, [array]$columns, [int]$selectedIndex, [bool]$isActive) {
+         # Draw Border
+         $borderColor = if ($isActive) { [Colors]::Accent } else { [Colors]::PanelBorder }
++        # Fill background first to clear potential artifacts
++        $engine.Fill($x, $y, $w, $h, " ", [Colors]::Foreground, [Colors]::PanelBg)
+         $engine.DrawBox($x, $y, $w, $h, $borderColor, [Colors]::PanelBg)
+         
+         if ($items.Count -eq 0) {
+diff --git a/pmc_v3.log b/pmc_v3.log
+index 1fcf2b0..7ce9630 100644
+--- a/pmc_v3.log
++++ b/pmc_v3.log
+@@ -1,5 +1,5 @@
+---- Log Started: 01/17/2026 15:25:39 (Level: 1) ---
+-15:27:19.048 [ERROR] Fatal crash in bootstrapper
++--- Log Started: 01/17/2026 15:37:42 (Level: 1) ---
++15:38:15.277 [ERROR] Fatal crash in bootstrapper
+ System.Management.Automation.MethodException: Cannot find an overload for "Log" and the argument count: "1".
+    at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)
+    at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)
+diff --git a/tasks.json b/tasks.json
+index 934e387..6e7f6f9 100644
+--- a/tasks.json
++++ b/tasks.json
+@@ -1,240 +1,248 @@
+ {
+-  "settings": {},
++  "checklists": null,
+   "tasks": [
+     {
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "modified": "2026-01-06T17:28:45.4439701-07:00",
+-      "due": "2026-01-03T00:00:00",
+-      "completed": false,
+-      "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+       "priority": 3,
++      "text": "t2",
++      "modified": "2026-01-06T17:28:45.4439701-07:00",
+       "description": "details",
+       "status": "todo",
++      "completed": false,
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "created": "2026-01-03T13:40:04.1941435-07:00",
+-      "text": "t2"
++      "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
++      "due": "2026-01-03T00:00:00"
+     },
+     {
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "priority": 3,
+       "modified": "2026-01-17T12:34:48.3922069-07:00",
+       "text": "t3",
+-      "completed": false,
+-      "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3",
+-      "priority": 3,
+       "description": "",
++      "created": "2026-01-03T13:53:06.8552706-07:00",
++      "completed": false,
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "status": "todo",
+-      "created": "2026-01-03T13:53:06.8552706-07:00"
++      "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3"
+     },
+     {
+-      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "priority": 3,
+       "modified": "2026-01-06T17:26:23.7914548-07:00",
+-      "due": "2026-01-06T00:00:00",
++      "text": "t5",
++      "status": "todo",
+       "completed": false,
+-      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
+-      "priority": 3,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "created": "2026-01-06T17:26:23.746147-07:00",
+-      "status": "todo",
+-      "text": "t5"
++      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
++      "due": "2026-01-06T00:00:00"
+     },
+     {
+       "modified": "2026-01-07T08:12:24.2971891-07:00",
+-      "status": "pending",
+-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+       "text": "subtask1",
+-      "created": "2026-01-07T08:12:24.2971891-07:00",
++      "status": "pending",
+       "completed": false,
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394"
++      "created": "2026-01-07T08:12:24.2971891-07:00",
++      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394",
++      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca"
+     },
+     {
+-      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62",
+-      "tags": [
+-        "tag1"
+-      ],
++      "priority": 3,
+       "modified": "2026-01-11T17:54:04.466792-07:00",
+-      "due": "2026-01-18T00:00:00",
++      "text": "t1",
++      "status": "pending",
+       "completed": false,
+-      "id": "671badfe-dcbb-4554-8df4-7753239cea88",
+-      "priority": 3,
++      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62",
+       "created": "2026-01-11T17:53:38.1643562-07:00",
+-      "status": "pending",
+-      "text": "t1"
++      "id": "671badfe-dcbb-4554-8df4-7753239cea88",
++      "due": "2026-01-18T00:00:00",
++      "tags": [
++        "tag1"
++      ]
+     },
+     {
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+       "modified": "2026-01-17T13:02:15.6642561-07:00",
+       "text": "test",
++      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "created": "2026-01-17T13:02:15.6642561-07:00",
+-      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0"
++      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0",
++      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca"
+     }
+   ],
++  "settings": {},
+   "projects": [
+     {
+-      "name": "Inbox",
++      "description": "Default inbox",
++      "status": "active",
+       "created": "2026-01-01 08:09:47",
+       "task_count": 3,
+       "id": "c0f82390-e410-459c-9602-0e227090f455",
+-      "description": "Default inbox",
+-      "status": "active"
++      "name": "Inbox"
+     },
+     {
+-      "name": "Project 1",
++      "T2020": "/home/teej/pmc/ALL_TIME_SCREEN_REVIEW.md",
+       "modified": "2026-01-10T20:10:28.926031-07:00",
++      "description": "Main project",
++      "status": "active",
+       "created": "2026-01-03T09:53:52.1554583-07:00",
+       "task_count": 1,
+       "id": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "description": "Main project",
+-      "status": "active",
+-      "T2020": "/home/teej/pmc/ALL_TIME_SCREEN_REVIEW.md"
++      "name": "Project 1"
+     },
+     {
+-      "status": "active",
+-      "name": "Project 2",
+       "modified": "2026-01-10T13:30:12.1391838-07:00",
++      "description": "Secondary project",
++      "status": "active",
+       "created": "2026-01-10T13:30:12.064892-07:00",
+       "task_count": 1,
+-      "description": "Secondary project",
+-      "id": "f1f1418e-df69-4737-970b-ee0711139c62"
++      "id": "f1f1418e-df69-4737-970b-ee0711139c62",
++      "name": "Project 2"
+     }
+   ],
+   "timelogs": [
+     {
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "timestamp": "2026-01-02T10:56:57.8362507-07:00",
++      "id": "712ce57b-e85d-4f6e-91a9-54474fe04e10",
+       "minutes": 45,
+-      "date": "2026-01-02T00:00:00",
+       "created": "2026-01-02T10:56:57.812294-07:00",
+-      "id": "712ce57b-e85d-4f6e-91a9-54474fe04e10"
++      "date": "2026-01-02T00:00:00",
++      "timestamp": "2026-01-02T10:56:57.8362507-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "timestamp": "2026-01-09T18:32:16.8030799-07:00",
++      "id": "965ed454-946d-46fe-816f-fc221246a9d8",
+       "minutes": 60,
+-      "date": "2026-01-09T00:00:00",
+       "created": "2026-01-09T18:32:16.7481935-07:00",
+-      "id": "965ed454-946d-46fe-816f-fc221246a9d8"
++      "date": "2026-01-09T00:00:00",
++      "timestamp": "2026-01-09T18:32:16.8030799-07:00"
+     },
+     {
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "timestamp": "2026-01-09T19:16:18.9611364-07:00",
++      "id": "c4b46c2b-e7c5-4e92-86d0-b61cf6ce4fa4",
+       "minutes": 15,
+-      "date": "2026-01-09T00:00:00",
+       "created": "2026-01-09T19:16:18.9051597-07:00",
+-      "id": "c4b46c2b-e7c5-4e92-86d0-b61cf6ce4fa4"
++      "date": "2026-01-09T00:00:00",
++      "timestamp": "2026-01-09T19:16:18.9611364-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "timestamp": "2026-01-11T17:55:11.4153592-07:00",
++      "id": "64769e2e-515c-43e8-9b92-ef10568d0b06",
+       "minutes": 30,
+-      "date": "2026-01-11T00:00:00",
+       "created": "2026-01-11T17:55:11.388043-07:00",
+-      "id": "64769e2e-515c-43e8-9b92-ef10568d0b06"
++      "date": "2026-01-11T00:00:00",
++      "timestamp": "2026-01-11T17:55:11.4153592-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "timestamp": "2026-01-11T17:55:11.4532232-07:00",
++      "id": "9a2897f8-05e1-4678-baa0-3f388be9d244",
+       "minutes": 30,
+-      "date": "2026-01-11T00:00:00",
+       "created": "2026-01-11T17:55:11.4516099-07:00",
+-      "id": "9a2897f8-05e1-4678-baa0-3f388be9d244"
++      "date": "2026-01-11T00:00:00",
++      "timestamp": "2026-01-11T17:55:11.4532232-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 1.0,
+-      "date": "2026-01-17",
+-      "created": "2026-01-17T09:10:17.9471582-07:00",
+       "description": "New entry11",
+-      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2"
++      "created": "2026-01-17T09:10:17.9471582-07:00",
++      "date": "2026-01-17",
++      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2",
++      "hours": 1.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 0.0,
+-      "date": "2026-01-17",
+-      "created": "2026-01-17T09:19:44.0951884-07:00",
+       "description": "New entry",
+-      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117"
++      "created": "2026-01-17T09:19:44.0951884-07:00",
++      "date": "2026-01-17",
++      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 0.0,
+-      "date": "2026-01-17",
+-      "created": "2026-01-17T09:25:01.8476168-07:00",
+       "description": "New entry",
+-      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8"
++      "created": "2026-01-17T09:25:01.8476168-07:00",
++      "date": "2026-01-17",
++      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 0.0,
+-      "date": "2026-01-17",
+-      "created": "2026-01-17T09:25:58.1970967-07:00",
+       "description": "New entry",
+-      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f"
++      "created": "2026-01-17T09:25:58.1970967-07:00",
++      "date": "2026-01-17",
++      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 0.0,
+-      "date": "2026-01-17",
+-      "created": "2026-01-17T09:48:43.2847458-07:00",
+       "description": "New entry",
+-      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1"
++      "created": "2026-01-17T09:48:43.2847458-07:00",
++      "date": "2026-01-17",
++      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 0.0,
+-      "date": "2026-01-17",
+-      "created": "2026-01-17T09:52:37.5113621-07:00",
+       "description": "New entry",
+-      "id": "316dad33-db32-48f5-99aa-c44c9b0c5896"
++      "created": "2026-01-17T09:52:37.5113621-07:00",
++      "date": "2026-01-17",
++      "id": "316dad33-db32-48f5-99aa-c44c9b0c5896",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 0.0,
+-      "date": "2026-01-17",
+-      "created": "2026-01-17T09:59:58.5628307-07:00",
+       "description": "New entry",
+-      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd"
++      "created": "2026-01-17T09:59:58.5628307-07:00",
++      "date": "2026-01-17",
++      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 0.0,
+-      "date": "2026-01-17",
+-      "created": "2026-01-17T10:07:38.3138082-07:00",
+       "description": "New entry",
+-      "id": "73e8327e-1718-4867-b484-5854c915f533"
++      "created": "2026-01-17T10:07:38.3138082-07:00",
++      "date": "2026-01-17",
++      "id": "73e8327e-1718-4867-b484-5854c915f533",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 0.0,
+-      "date": "2026-01-17",
+-      "created": "2026-01-17T10:19:33.2286784-07:00",
+       "description": "New entry",
+-      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558"
++      "created": "2026-01-17T10:19:33.2286784-07:00",
++      "date": "2026-01-17",
++      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 0.0,
+-      "date": "2026-01-17",
+-      "created": "2026-01-17T10:25:59.9721231-07:00",
+       "description": "New entry",
+-      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a"
++      "created": "2026-01-17T10:25:59.9721231-07:00",
++      "date": "2026-01-17",
++      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 0.0,
+-      "date": "2026-01-17",
+-      "created": "2026-01-17T10:32:57.4712218-07:00",
+       "description": "New entry",
+-      "id": "26227243-4cd1-496a-9aae-578d2e91e771"
++      "created": "2026-01-17T10:32:57.4712218-07:00",
++      "date": "2026-01-17",
++      "id": "26227243-4cd1-496a-9aae-578d2e91e771",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "hours": 2.0,
+-      "date": "2026-01-17",
++      "description": "New entry",
+       "created": "2026-01-17T10:35:21.2169363-07:00",
++      "date": "2026-01-17",
++      "id": "73bc1499-aa36-4622-8d5a-05a997879aed",
++      "hours": 2.0
++    },
++    {
++      "created": "2026-01-17T15:29:48.6582552-07:00",
++      "date": "2026-01-17",
+       "description": "New entry",
+-      "id": "73bc1499-aa36-4622-8d5a-05a997879aed"
++      "hours": 1.25,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "id": "94fab5b2-669c-4f7b-9e15-ac4f405e8f91"
+     }
+   ],
+-  "checklists": null,
+   "notes": null
+ }
+diff --git a/tasks.json.bak b/tasks.json.bak
+index dbd00cf..30a379c 100644
+--- a/tasks.json.bak
++++ b/tasks.json.bak
+@@ -1,111 +1,101 @@
+ {
+-  "notes": null,
+-  "settings": {},
+   "checklists": null,
+   "tasks": [
+     {
+-      "status": "todo",
++      "priority": 3,
++      "text": "t2",
++      "modified": "2026-01-06T17:28:45.4439701-07:00",
+       "description": "details",
++      "status": "todo",
+       "completed": false,
+-      "modified": "2026-01-06T17:28:45.4439701-07:00",
+-      "due": "2026-01-03T00:00:00",
+-      "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+-      "created": "2026-01-03T13:40:04.1941435-07:00",
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "priority": 3,
+-      "text": "t2"
++      "created": "2026-01-03T13:40:04.1941435-07:00",
++      "id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
++      "due": "2026-01-03T00:00:00"
+     },
+     {
+-      "completed": false,
+-      "status": "todo",
+-      "description": "",
+-      "text": "t3",
++      "priority": 3,
+       "modified": "2026-01-17T12:34:48.3922069-07:00",
+-      "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3",
++      "text": "t3",
++      "description": "",
++      "created": "2026-01-03T13:53:06.8552706-07:00",
++      "completed": false,
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "priority": 3,
+-      "created": "2026-01-03T13:53:06.8552706-07:00"
++      "status": "todo",
++      "id": "886d1757-3fd9-405d-94ac-c1bf4a07c2f3"
+     },
+     {
+-      "status": "todo",
++      "priority": 3,
+       "modified": "2026-01-06T17:26:23.7914548-07:00",
++      "text": "t5",
++      "status": "todo",
+       "completed": false,
+-      "due": "2026-01-06T00:00:00",
+-      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
+-      "created": "2026-01-06T17:26:23.746147-07:00",
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "priority": 3,
+-      "text": "t5"
++      "created": "2026-01-06T17:26:23.746147-07:00",
++      "id": "43bf8c35-f482-4e6e-be11-da5039d0badc",
++      "due": "2026-01-06T00:00:00"
+     },
+     {
+-      "completed": false,
+-      "status": "pending",
+-      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394",
+-      "text": "subtask1",
+-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca",
+       "modified": "2026-01-07T08:12:24.2971891-07:00",
++      "text": "subtask1",
++      "status": "pending",
++      "completed": false,
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "created": "2026-01-07T08:12:24.2971891-07:00"
++      "created": "2026-01-07T08:12:24.2971891-07:00",
++      "id": "7ec9f4cf-0a3a-42e7-9401-c142838be394",
++      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca"
+     },
+     {
+-      "status": "pending",
++      "priority": 3,
+       "modified": "2026-01-11T17:54:04.466792-07:00",
+-      "due": "2026-01-18T00:00:00",
++      "text": "t1",
++      "status": "pending",
+       "completed": false,
++      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62",
++      "created": "2026-01-11T17:53:38.1643562-07:00",
++      "id": "671badfe-dcbb-4554-8df4-7753239cea88",
++      "due": "2026-01-18T00:00:00",
+       "tags": [
+         "tag1"
+-      ],
+-      "id": "671badfe-dcbb-4554-8df4-7753239cea88",
+-      "created": "2026-01-11T17:53:38.1643562-07:00",
+-      "projectId": "f1f1418e-df69-4737-970b-ee0711139c62",
+-      "priority": 3,
+-      "text": "t1"
++      ]
+     },
+     {
+       "modified": "2026-01-17T13:02:15.6642561-07:00",
+       "text": "test",
+-      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0",
+-      "created": "2026-01-17T13:02:15.6642561-07:00",
+-      "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+-      "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca"
+-    },
+-    {
+-      "id": "1d4fc657-b666-4367-812c-22fe629ef9e7",
+-      "text": "",
+-      "modified": "2026-01-17T15:23:21.1211125-07:00",
+-      "due": "2026-01-26T00:00:00",
+-      "created": "2026-01-17T15:23:21.1211125-07:00",
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
++      "created": "2026-01-17T13:02:15.6642561-07:00",
++      "id": "5a073afc-7bc8-43cc-a787-921fd10d85b0",
+       "parent_id": "b16effa0-74b0-436c-a2ff-e09f3c42b2ca"
+     }
+   ],
++  "settings": {},
+   "projects": [
+     {
+-      "status": "active",
+       "description": "Default inbox",
++      "status": "active",
++      "created": "2026-01-01 08:09:47",
+       "task_count": 3,
+-      "name": "Inbox",
+       "id": "c0f82390-e410-459c-9602-0e227090f455",
+-      "created": "2026-01-01 08:09:47"
++      "name": "Inbox"
+     },
+     {
+-      "status": "active",
+-      "description": "Main project",
+       "T2020": "/home/teej/pmc/ALL_TIME_SCREEN_REVIEW.md",
+-      "task_count": 1,
+       "modified": "2026-01-10T20:10:28.926031-07:00",
+-      "name": "Project 1",
++      "description": "Main project",
++      "status": "active",
++      "created": "2026-01-03T09:53:52.1554583-07:00",
++      "task_count": 1,
+       "id": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+-      "created": "2026-01-03T09:53:52.1554583-07:00"
++      "name": "Project 1"
+     },
+     {
+-      "name": "Project 2",
+-      "description": "Secondary project",
+-      "task_count": 1,
+       "modified": "2026-01-10T13:30:12.1391838-07:00",
++      "description": "Secondary project",
++      "status": "active",
+       "created": "2026-01-10T13:30:12.064892-07:00",
++      "task_count": 1,
+       "id": "f1f1418e-df69-4737-970b-ee0711139c62",
+-      "status": "active"
++      "name": "Project 2"
+     }
+   ],
+   "timelogs": [
+@@ -113,137 +103,146 @@
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "id": "712ce57b-e85d-4f6e-91a9-54474fe04e10",
+       "minutes": 45,
+-      "timestamp": "2026-01-02T10:56:57.8362507-07:00",
++      "created": "2026-01-02T10:56:57.812294-07:00",
+       "date": "2026-01-02T00:00:00",
+-      "created": "2026-01-02T10:56:57.812294-07:00"
++      "timestamp": "2026-01-02T10:56:57.8362507-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "id": "965ed454-946d-46fe-816f-fc221246a9d8",
+       "minutes": 60,
+-      "timestamp": "2026-01-09T18:32:16.8030799-07:00",
++      "created": "2026-01-09T18:32:16.7481935-07:00",
+       "date": "2026-01-09T00:00:00",
+-      "created": "2026-01-09T18:32:16.7481935-07:00"
++      "timestamp": "2026-01-09T18:32:16.8030799-07:00"
+     },
+     {
+       "projectId": "c0f82390-e410-459c-9602-0e227090f455",
+       "id": "c4b46c2b-e7c5-4e92-86d0-b61cf6ce4fa4",
+       "minutes": 15,
+-      "timestamp": "2026-01-09T19:16:18.9611364-07:00",
++      "created": "2026-01-09T19:16:18.9051597-07:00",
+       "date": "2026-01-09T00:00:00",
+-      "created": "2026-01-09T19:16:18.9051597-07:00"
++      "timestamp": "2026-01-09T19:16:18.9611364-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "id": "64769e2e-515c-43e8-9b92-ef10568d0b06",
+       "minutes": 30,
+-      "timestamp": "2026-01-11T17:55:11.4153592-07:00",
++      "created": "2026-01-11T17:55:11.388043-07:00",
+       "date": "2026-01-11T00:00:00",
+-      "created": "2026-01-11T17:55:11.388043-07:00"
++      "timestamp": "2026-01-11T17:55:11.4153592-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "id": "9a2897f8-05e1-4678-baa0-3f388be9d244",
+       "minutes": 30,
+-      "timestamp": "2026-01-11T17:55:11.4532232-07:00",
++      "created": "2026-01-11T17:55:11.4516099-07:00",
+       "date": "2026-01-11T00:00:00",
+-      "created": "2026-01-11T17:55:11.4516099-07:00"
++      "timestamp": "2026-01-11T17:55:11.4532232-07:00"
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry11",
+-      "hours": 1.0,
+-      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2",
++      "created": "2026-01-17T09:10:17.9471582-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:10:17.9471582-07:00"
++      "id": "893481ab-7a32-4c0e-87f3-c6082bb0c2c2",
++      "hours": 1.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+-      "hours": 0.0,
+-      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117",
++      "created": "2026-01-17T09:19:44.0951884-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:19:44.0951884-07:00"
++      "id": "b0944884-6e13-4d69-8ab0-d5dd200b5117",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+-      "hours": 0.0,
+-      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8",
++      "created": "2026-01-17T09:25:01.8476168-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:25:01.8476168-07:00"
++      "id": "c2bd15e1-ede2-41d7-aa1d-538c47392bc8",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+-      "hours": 0.0,
+-      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f",
++      "created": "2026-01-17T09:25:58.1970967-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:25:58.1970967-07:00"
++      "id": "93b74a40-b5fb-43d3-b2fa-a447c719c19f",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+-      "hours": 0.0,
+-      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1",
++      "created": "2026-01-17T09:48:43.2847458-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:48:43.2847458-07:00"
++      "id": "407b8619-f55f-49e1-8012-7ffbe285f0d1",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+-      "hours": 0.0,
+-      "id": "316dad33-db32-48f5-99aa-c44c9b0c5896",
++      "created": "2026-01-17T09:52:37.5113621-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:52:37.5113621-07:00"
++      "id": "316dad33-db32-48f5-99aa-c44c9b0c5896",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+-      "hours": 0.0,
+-      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd",
++      "created": "2026-01-17T09:59:58.5628307-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T09:59:58.5628307-07:00"
++      "id": "b46c89d9-19fb-4788-b80d-d00365787cfd",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+-      "hours": 0.0,
+-      "id": "73e8327e-1718-4867-b484-5854c915f533",
++      "created": "2026-01-17T10:07:38.3138082-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T10:07:38.3138082-07:00"
++      "id": "73e8327e-1718-4867-b484-5854c915f533",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+-      "hours": 0.0,
+-      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558",
++      "created": "2026-01-17T10:19:33.2286784-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T10:19:33.2286784-07:00"
++      "id": "ab2ed3d1-b32d-4eb6-a940-ae455074a558",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+-      "hours": 0.0,
+-      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a",
++      "created": "2026-01-17T10:25:59.9721231-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T10:25:59.9721231-07:00"
++      "id": "0bb796ea-c72c-42f9-a2f1-55d72e3d2e7a",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+-      "hours": 0.0,
+-      "id": "26227243-4cd1-496a-9aae-578d2e91e771",
++      "created": "2026-01-17T10:32:57.4712218-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T10:32:57.4712218-07:00"
++      "id": "26227243-4cd1-496a-9aae-578d2e91e771",
++      "hours": 0.0
+     },
+     {
+       "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
+       "description": "New entry",
+-      "hours": 2.0,
++      "created": "2026-01-17T10:35:21.2169363-07:00",
++      "date": "2026-01-17",
+       "id": "73bc1499-aa36-4622-8d5a-05a997879aed",
++      "hours": 2.0
++    },
++    {
++      "created": "2026-01-17T15:29:48.6582552-07:00",
+       "date": "2026-01-17",
+-      "created": "2026-01-17T10:35:21.2169363-07:00"
++      "description": "New entry",
++      "hours": 0.0,
++      "projectId": "863bd4ed-3b16-4bd2-ba75-bff6a57bfead",
++      "id": "94fab5b2-669c-4f7b-9e15-ac4f405e8f91"
+     }
+-  ]
++  ],
++  "notes": null
+ }

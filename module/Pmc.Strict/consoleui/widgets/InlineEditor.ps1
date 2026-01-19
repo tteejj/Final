@@ -414,6 +414,7 @@ class InlineEditor : PmcWidget {
             return $handled
         }
 
+        Write-PmcTuiLog "InlineEditor.HandleInput: After expanded widget check - Key=$($keyInfo.Key)" "INFO"
         # Enter key behavior depends on current field
         if ($keyInfo.Key -eq 'Enter') {
             Write-PmcTuiLog "InlineEditor.HandleInput: Enter key at line 416, _currentFieldIndex=$($this._currentFieldIndex)" "DEBUG"
@@ -474,6 +475,7 @@ class InlineEditor : PmcWidget {
         }
 
         if ($keyInfo.Key -eq 'Escape') {
+            Write-PmcTuiLog "InlineEditor.HandleInput: Line 476 Escape handler - setting IsCancelled=true" "INFO"
             $this.IsCancelled = $true
             $this.NeedsClear = $true  # Request full screen clear to remove partial entry
             $this._InvokeCallback($this.OnCancelled, $null)

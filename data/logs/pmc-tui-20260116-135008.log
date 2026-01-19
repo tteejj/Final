@@ -1,0 +1,277 @@
+[2026-01-16 13:50:08.493] [INFO] Loading PMC module...
+[2026-01-16 13:50:08.499] [INFO] Loading dependencies (FieldSchemas, etc.)...
+[2026-01-16 13:50:08.548] [INFO] Dependencies loaded
+[2026-01-16 13:50:08.549] [INFO] Loading SpeedTUI framework...
+[2026-01-16 13:50:09.621] [INFO] SpeedTUI framework loaded
+[2026-01-16 13:50:09.622] [INFO] Loading core dependencies...
+[2026-01-16 13:50:09.655] [INFO] Core dependencies loaded
+[2026-01-16 13:50:09.656] [INFO] Loading widget base classes...
+[2026-01-16 13:50:09.680] [INFO] Widget base classes loaded
+[2026-01-16 13:50:09.681] [INFO] Loading services...
+[2026-01-16 13:50:09.814] [INFO] Services loaded
+[2026-01-16 13:50:09.815] [INFO] Loading helpers...
+[2026-01-16 13:50:09.961] [INFO] Helpers loaded
+[2026-01-16 13:50:09.961] [INFO] Loading widgets...
+[2026-01-16 13:50:10.186] [INFO] Widgets loaded
+[2026-01-16 13:50:10.188] [INFO] Loading screen base class...
+[2026-01-16 13:50:10.199] [INFO] Screen base class loaded
+[2026-01-16 13:50:10.200] [INFO] Loading HelpViewScreen (needed by base classes)...
+[2026-01-16 13:50:10.205] [INFO] HelpViewScreen loaded
+[2026-01-16 13:50:10.206] [INFO] Loading base classes...
+[2026-01-16 13:50:10.297] [INFO] Base classes loaded
+[2026-01-16 13:50:10.299] [INFO] Loading ServiceContainer (needed by screens)...
+[2026-01-16 13:50:10.304] [INFO] ServiceContainer loaded
+[2026-01-16 13:50:10.305] [INFO] Loading remaining screens...
+[2026-01-16 13:50:10.416] [INFO] Remaining screens loaded
+[2026-01-16 13:50:10.417] [INFO] Loading PmcApplication...
+[2026-01-16 13:50:10.435] [INFO] PmcApplication loaded
+[2026-01-16 13:50:10.436] [INFO] All components loaded successfully
+[2026-01-16 13:50:10.452] [INFO] Starting PMC TUI with screen: Start
+[2026-01-16 13:50:10.515] [INFO] Cleared stale PmcSharedMenuBar and MenuRegistry singleton
+[2026-01-16 13:50:10.516] [INFO] Creating ServiceContainer...
+[2026-01-16 13:50:10.523] [INFO] ServiceContainer created
+[2026-01-16 13:50:10.524] [INFO] Registering Theme service...
+[2026-01-16 13:50:10.548] ServiceContainer: Registered 'Theme' (singleton=True)
+[2026-01-16 13:50:10.551] [INFO] Registering ThemeManager...
+[2026-01-16 13:50:10.552] ServiceContainer: Registered 'ThemeManager' (singleton=True)
+[2026-01-16 13:50:10.553] [INFO] Registering Config service...
+[2026-01-16 13:50:10.554] ServiceContainer: Registered 'Config' (singleton=True)
+[2026-01-16 13:50:10.555] [INFO] Registering TaskStore service...
+[2026-01-16 13:50:10.556] ServiceContainer: Registered 'TaskStore' (singleton=True)
+[2026-01-16 13:50:10.557] [INFO] Registering MenuRegistry service...
+[2026-01-16 13:50:10.558] ServiceContainer: Registered 'MenuRegistry' (singleton=True)
+[2026-01-16 13:50:10.559] [INFO] Registering Application service...
+[2026-01-16 13:50:10.560] ServiceContainer: Registered 'Application' (singleton=True)
+[2026-01-16 13:50:10.560] [INFO] Registering CommandService...
+[2026-01-16 13:50:10.561] ServiceContainer: Registered 'CommandService' (singleton=True)
+[2026-01-16 13:50:10.562] [INFO] Registering ChecklistService...
+[2026-01-16 13:50:10.563] ServiceContainer: Registered 'ChecklistService' (singleton=True)
+[2026-01-16 13:50:10.564] [INFO] Registering NoteService...
+[2026-01-16 13:50:10.564] ServiceContainer: Registered 'NoteService' (singleton=True)
+[2026-01-16 13:50:10.565] [INFO] Registering ExcelMappingService...
+[2026-01-16 13:50:10.566] ServiceContainer: Registered 'ExcelMappingService' (singleton=True)
+[2026-01-16 13:50:10.567] ServiceContainer: Registered 'ExcelCopyService' (singleton=True)
+[2026-01-16 13:50:10.567] [INFO] Registering PreferencesService...
+[2026-01-16 13:50:10.568] ServiceContainer: Registered 'PreferencesService' (singleton=True)
+[2026-01-16 13:50:10.569] ServiceContainer: Registered 'ExcelImportService' (singleton=True)
+[2026-01-16 13:50:10.570] ServiceContainer: Registered 'TextExportService' (singleton=True)
+[2026-01-16 13:50:10.570] [INFO] Registering screen factories...
+[2026-01-16 13:50:10.571] ServiceContainer: Registered 'TaskListScreen' (singleton=False)
+[2026-01-16 13:50:10.572] [INFO] Resolving Application from container...
+[2026-01-16 13:50:10.586] ServiceContainer: Resolving 'Application'...
+[2026-01-16 13:50:10.588] [INFO] Resolving Application...
+[2026-01-16 13:50:10.589] ServiceContainer: Resolving 'Theme'...
+[2026-01-16 13:50:10.592] [INFO] Resolving Theme: Resetting singletons and initializing...
+[2026-01-16 13:50:10.775] [INFO] Theme initialized: #ffffff
+[2026-01-16 13:50:10.777] ServiceContainer: Resolved 'Theme' successfully
+[2026-01-16 13:50:10.845] ServiceContainer: Resolving 'ThemeManager'...
+[2026-01-16 13:50:10.847] [INFO] Resolving ThemeManager...
+[2026-01-16 13:50:10.848] ServiceContainer: Resolved 'ThemeManager' successfully
+[2026-01-16 13:50:10.859] ServiceContainer: Resolved 'Application' successfully
+[2026-01-16 13:50:10.860] [INFO] Application resolved and assigned to $global:PmcApp
+[2026-01-16 13:50:10.861] [INFO] Loading menus from manifest...
+[2026-01-16 13:50:10.862] ServiceContainer: Resolving 'MenuRegistry'...
+[2026-01-16 13:50:10.863] [INFO] Resolving MenuRegistry...
+[2026-01-16 13:50:10.872] ServiceContainer: Resolved 'MenuRegistry' successfully
+[2026-01-16 13:50:10.893] MenuRegistry: Loaded manifest with 17 entries
+[2026-01-16 13:50:10.913] ServiceContainer: Registered 'ExcelImportProfileManagerScreen' (singleton=False)
+[2026-01-16 13:50:10.914] MenuRegistry: Registered factory for 'Excel Import Profiles'
+[2026-01-16 13:50:10.926] MenuRegistry: Registered 'Excel Import Profiles' in 'Tools' menu (hotkey=I order=40)
+[2026-01-16 13:50:10.927] ServiceContainer: Registered 'NotesMenuScreen' (singleton=False)
+[2026-01-16 13:50:10.928] MenuRegistry: Registered factory for 'Notes'
+[2026-01-16 13:50:10.929] MenuRegistry: Registered 'Notes' in 'Tools' menu (hotkey=N order=20)
+[2026-01-16 13:50:10.930] ServiceContainer: Registered 'ThemeEditorScreen' (singleton=False)
+[2026-01-16 13:50:10.931] MenuRegistry: Registered factory for 'Theme Editor'
+[2026-01-16 13:50:10.932] MenuRegistry: Registered 'Theme Editor' in 'Options' menu (hotkey=T order=10)
+[2026-01-16 13:50:10.933] ServiceContainer: Registered 'TimeListScreen' (singleton=False)
+[2026-01-16 13:50:10.933] MenuRegistry: Registered factory for 'Time Tracking'
+[2026-01-16 13:50:10.934] MenuRegistry: Registered 'Time Tracking' in 'Time' menu (hotkey=T order=5)
+[2026-01-16 13:50:10.935] ServiceContainer: Registered 'CalendarScreen' (singleton=False)
+[2026-01-16 13:50:10.936] MenuRegistry: Registered factory for 'Calendar'
+[2026-01-16 13:50:10.937] MenuRegistry: Registered 'Calendar' in 'Tools' menu (hotkey=A order=50)
+[2026-01-16 13:50:10.938] ServiceContainer: Registered 'CommandLibraryScreen' (singleton=False)
+[2026-01-16 13:50:10.938] MenuRegistry: Registered factory for 'Command Library'
+[2026-01-16 13:50:10.939] MenuRegistry: Registered 'Command Library' in 'Tools' menu (hotkey=L order=10)
+[2026-01-16 13:50:10.940] ServiceContainer: Registered 'ProjectListScreen' (singleton=False)
+[2026-01-16 13:50:10.941] MenuRegistry: Registered factory for 'Project List'
+[2026-01-16 13:50:10.942] MenuRegistry: Registered 'Project List' in 'Projects' menu (hotkey=L order=10)
+[2026-01-16 13:50:10.943] ServiceContainer: Registered 'HelpViewScreen' (singleton=False)
+[2026-01-16 13:50:10.944] MenuRegistry: Registered factory for 'Help'
+[2026-01-16 13:50:10.944] MenuRegistry: Registered 'Help' in 'Help' menu (hotkey=H order=10)
+[2026-01-16 13:50:10.945] ServiceContainer: Registered 'StartScreen' (singleton=False)
+[2026-01-16 13:50:10.946] MenuRegistry: Registered factory for 'Dashboard'
+[2026-01-16 13:50:10.947] MenuRegistry: Registered 'Dashboard' in 'Tasks' menu (hotkey=D order=1)
+[2026-01-16 13:50:10.948] ServiceContainer: Registered 'TaskListScreen_Default' (singleton=False)
+[2026-01-16 13:50:10.949] MenuRegistry: Registered factory for 'Task List'
+[2026-01-16 13:50:10.949] MenuRegistry: Registered 'Task List' in 'Tasks' menu (hotkey=L order=5)
+[2026-01-16 13:50:10.951] ServiceContainer: Registered 'SettingsScreen' (singleton=False)
+[2026-01-16 13:50:10.951] MenuRegistry: Registered factory for 'Settings'
+[2026-01-16 13:50:10.952] MenuRegistry: Registered 'Settings' in 'Options' menu (hotkey=S order=20)
+[2026-01-16 13:50:10.953] ServiceContainer: Registered 'ChecklistTemplatesFolderScreen' (singleton=False)
+[2026-01-16 13:50:10.954] MenuRegistry: Registered factory for 'Checklist Templates'
+[2026-01-16 13:50:10.955] MenuRegistry: Registered 'Checklist Templates' in 'Tools' menu (hotkey=H order=30)
+[2026-01-16 13:50:10.956] ServiceContainer: Registered 'ExcelImportScreen' (singleton=False)
+[2026-01-16 13:50:10.960] MenuRegistry: Registered factory for 'Import from Excel'
+[2026-01-16 13:50:10.961] MenuRegistry: Registered 'Import from Excel' in 'Projects' menu (hotkey=I order=40)
+[2026-01-16 13:50:10.962] ServiceContainer: Registered 'TextExportProfileManagerScreen' (singleton=False)
+[2026-01-16 13:50:10.963] MenuRegistry: Registered factory for 'T2020 Export Profiles'
+[2026-01-16 13:50:10.964] MenuRegistry: Registered 'T2020 Export Profiles' in 'Tools' menu (hotkey=E order=45)
+[2026-01-16 13:50:10.965] ServiceContainer: Registered 'WeeklyTimeReportScreen' (singleton=False)
+[2026-01-16 13:50:10.966] MenuRegistry: Registered factory for 'Weekly Report'
+[2026-01-16 13:50:10.967] MenuRegistry: Registered 'Weekly Report' in 'Time' menu (hotkey=W order=10)
+[2026-01-16 13:50:10.968] ServiceContainer: Registered 'ChecklistsLauncherScreen' (singleton=False)
+[2026-01-16 13:50:10.969] MenuRegistry: Registered factory for 'Checklists'
+[2026-01-16 13:50:10.970] MenuRegistry: Registered 'Checklists' in 'Tools' menu (hotkey=C order=25)
+[2026-01-16 13:50:10.971] ServiceContainer: Registered 'ExcelProfileManagerScreen' (singleton=False)
+[2026-01-16 13:50:10.972] MenuRegistry: Registered factory for 'Excel Profiles'
+[2026-01-16 13:50:10.973] MenuRegistry: Registered 'Excel Profiles' in 'Projects' menu (hotkey=M order=50)
+[2026-01-16 13:50:10.974] [INFO] Menus loaded from /home/teej/ztest/module/Pmc.Strict/consoleui/screens/MenuItems.psd1
+[2026-01-16 13:50:10.975] [INFO] Launching screen: Start
+[2026-01-16 13:50:11.677] [INFO] Starting event loop...
+[2026-01-16 13:50:16.479] ServiceContainer: Resolving 'TaskListScreen_Default'...
+[2026-01-16 13:50:16.697] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-16 13:50:16.704] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-16 13:50:16.715] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[2026-01-16 13:50:16.800] _PopulateMenusFromRegistry: Menu 'Time' has 2 items from registry (array)
+[2026-01-16 13:50:16.805] _PopulateMenusFromRegistry: Menu 'Options' has 2 items from registry (array)
+[2026-01-16 13:50:16.807] _PopulateMenusFromRegistry: Menu 'Projects' has 3 items from registry (array)
+[2026-01-16 13:50:16.809] _PopulateMenusFromRegistry: Menu 'Tools' has 7 items from registry (array)
+[2026-01-16 13:50:16.811] _PopulateMenusFromRegistry: Menu 'Tasks' has 2 items from registry (array)
+[2026-01-16 13:50:16.812] _PopulateMenusFromRegistry: Menu 'Help' has 1 items from registry (array)
+[2026-01-16 13:50:16.813] ServiceContainer: Resolved 'TaskListScreen_Default' successfully
+[2026-01-16 13:50:16.947] [INFO] StandardListScreen._ConfigureListActions: Configuring actions for Tasks
+[2026-01-16 13:50:16.948] [INFO] StandardListScreen: Added footer shortcut D -> Delete
+[2026-01-16 13:50:16.951] [INFO] StandardListScreen._ConfigureListActions: Configured 16 footer shortcuts
+[13:50:17.225] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[13:50:17.226] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[13:50:17.226] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[13:50:17.227] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[13:50:17.227] [Z-BUFFER] REJECTED at (30,4): currentZ=10 < zBuffer=20 char='D'
+[13:50:17.228] [Z-BUFFER] REJECTED at (31,4): currentZ=10 < zBuffer=20 char='u'
+[13:50:17.228] [Z-BUFFER] REJECTED at (32,4): currentZ=10 < zBuffer=20 char='e'
+[13:50:17.229] [Z-BUFFER] REJECTED at (53,4): currentZ=10 < zBuffer=20 char='T'
+[13:50:17.229] [Z-BUFFER] REJECTED at (54,4): currentZ=10 < zBuffer=20 char='a'
+[13:50:17.230] [Z-BUFFER] REJECTED at (55,4): currentZ=10 < zBuffer=20 char='g'
+[13:50:17.230] [Z-BUFFER] REJECTED at (56,4): currentZ=10 < zBuffer=20 char='s'
+[13:50:17.232] [Z-BUFFER] REJECTED at (2,6): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.232] [Z-BUFFER] REJECTED at (80,6): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.233] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.233] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.234] [Z-BUFFER] REJECTED at (2,8): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.234] [Z-BUFFER] REJECTED at (80,8): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.235] [Z-BUFFER] REJECTED at (2,9): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.235] [Z-BUFFER] REJECTED at (80,9): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.236] [Z-BUFFER] REJECTED at (2,10): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.236] [Z-BUFFER] REJECTED at (80,10): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.237] [Z-BUFFER] REJECTED at (2,11): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.237] [Z-BUFFER] REJECTED at (80,11): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.238] [Z-BUFFER] REJECTED at (2,12): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.238] [Z-BUFFER] REJECTED at (80,12): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.239] [Z-BUFFER] REJECTED at (2,13): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.239] [Z-BUFFER] REJECTED at (80,13): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.240] [Z-BUFFER] REJECTED at (2,14): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.240] [Z-BUFFER] REJECTED at (80,14): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.241] [Z-BUFFER] REJECTED at (2,15): currentZ=10 < zBuffer=20 char='|'
+[13:50:17.241] [Z-BUFFER] REJECTED at (80,15): currentZ=10 < zBuffer=20 char='|'
+[2026-01-16 13:50:18.425] [INFO] *** STANDARDLISTSCREEN.ADDITEM CALLED on type=TaskListScreen key=TaskList ***
+[2026-01-16 13:50:18.491] [INFO] StandardListScreen.AddItem: ActiveModal set to InlineEditor. ShowInlineEditor=True
+[13:50:18.573] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[13:50:18.574] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[13:50:18.574] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[13:50:18.574] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[13:50:18.575] [Z-BUFFER] REJECTED at (30,4): currentZ=10 < zBuffer=20 char='D'
+[13:50:18.575] [Z-BUFFER] REJECTED at (31,4): currentZ=10 < zBuffer=20 char='u'
+[13:50:18.575] [Z-BUFFER] REJECTED at (32,4): currentZ=10 < zBuffer=20 char='e'
+[13:50:18.575] [Z-BUFFER] REJECTED at (53,4): currentZ=10 < zBuffer=20 char='T'
+[13:50:18.576] [Z-BUFFER] REJECTED at (54,4): currentZ=10 < zBuffer=20 char='a'
+[13:50:18.576] [Z-BUFFER] REJECTED at (55,4): currentZ=10 < zBuffer=20 char='g'
+[13:50:18.579] [Z-BUFFER] REJECTED at (56,4): currentZ=10 < zBuffer=20 char='s'
+[13:50:18.581] [Z-BUFFER] REJECTED at (2,6): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.581] [Z-BUFFER] REJECTED at (80,6): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.581] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.581] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.582] [Z-BUFFER] REJECTED at (2,8): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.582] [Z-BUFFER] REJECTED at (80,8): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.582] [Z-BUFFER] REJECTED at (2,9): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.582] [Z-BUFFER] REJECTED at (80,9): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.583] [Z-BUFFER] REJECTED at (2,10): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.583] [Z-BUFFER] REJECTED at (80,10): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.583] [Z-BUFFER] REJECTED at (2,11): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.583] [Z-BUFFER] REJECTED at (80,11): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.584] [Z-BUFFER] REJECTED at (2,12): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.584] [Z-BUFFER] REJECTED at (80,12): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.584] [Z-BUFFER] REJECTED at (2,13): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.584] [Z-BUFFER] REJECTED at (80,13): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.585] [Z-BUFFER] REJECTED at (2,14): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.585] [Z-BUFFER] REJECTED at (80,14): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.585] [Z-BUFFER] REJECTED at (2,15): currentZ=10 < zBuffer=20 char='|'
+[13:50:18.585] [Z-BUFFER] REJECTED at (80,15): currentZ=10 < zBuffer=20 char='|'
+[2026-01-16 13:50:18.588] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=6
+[2026-01-16 13:50:19.647] [INFO] InlineEditor.HandleInput: ENTRY Key=Escape
+[13:50:19.726] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[13:50:19.727] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[13:50:19.727] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[13:50:19.727] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[13:50:19.728] [Z-BUFFER] REJECTED at (30,4): currentZ=10 < zBuffer=20 char='D'
+[13:50:19.728] [Z-BUFFER] REJECTED at (31,4): currentZ=10 < zBuffer=20 char='u'
+[13:50:19.728] [Z-BUFFER] REJECTED at (32,4): currentZ=10 < zBuffer=20 char='e'
+[13:50:19.729] [Z-BUFFER] REJECTED at (53,4): currentZ=10 < zBuffer=20 char='T'
+[13:50:19.729] [Z-BUFFER] REJECTED at (54,4): currentZ=10 < zBuffer=20 char='a'
+[13:50:19.729] [Z-BUFFER] REJECTED at (55,4): currentZ=10 < zBuffer=20 char='g'
+[13:50:19.730] [Z-BUFFER] REJECTED at (56,4): currentZ=10 < zBuffer=20 char='s'
+[13:50:19.731] [Z-BUFFER] REJECTED at (2,6): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.731] [Z-BUFFER] REJECTED at (80,6): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.732] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.732] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.732] [Z-BUFFER] REJECTED at (2,8): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.732] [Z-BUFFER] REJECTED at (80,8): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.733] [Z-BUFFER] REJECTED at (2,9): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.740] [Z-BUFFER] REJECTED at (80,9): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.740] [Z-BUFFER] REJECTED at (2,10): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.741] [Z-BUFFER] REJECTED at (80,10): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.741] [Z-BUFFER] REJECTED at (2,11): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.741] [Z-BUFFER] REJECTED at (80,11): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.741] [Z-BUFFER] REJECTED at (2,12): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.742] [Z-BUFFER] REJECTED at (80,12): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.742] [Z-BUFFER] REJECTED at (2,13): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.742] [Z-BUFFER] REJECTED at (80,13): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.743] [Z-BUFFER] REJECTED at (2,14): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.743] [Z-BUFFER] REJECTED at (80,14): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.743] [Z-BUFFER] REJECTED at (2,15): currentZ=10 < zBuffer=20 char='|'
+[13:50:19.744] [Z-BUFFER] REJECTED at (80,15): currentZ=10 < zBuffer=20 char='|'
+[2026-01-16 13:50:19.745] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=6
+[2026-01-16 13:50:22.061] [INFO] InlineEditor.HandleInput: ENTRY Key=Tab
+[13:50:22.122] [Z-BUFFER] REJECTED at (4,4): currentZ=10 < zBuffer=20 char='T'
+[13:50:22.123] [Z-BUFFER] REJECTED at (5,4): currentZ=10 < zBuffer=20 char='a'
+[13:50:22.123] [Z-BUFFER] REJECTED at (6,4): currentZ=10 < zBuffer=20 char='s'
+[13:50:22.123] [Z-BUFFER] REJECTED at (7,4): currentZ=10 < zBuffer=20 char='k'
+[13:50:22.124] [Z-BUFFER] REJECTED at (30,4): currentZ=10 < zBuffer=20 char='D'
+[13:50:22.124] [Z-BUFFER] REJECTED at (31,4): currentZ=10 < zBuffer=20 char='u'
+[13:50:22.124] [Z-BUFFER] REJECTED at (32,4): currentZ=10 < zBuffer=20 char='e'
+[13:50:22.124] [Z-BUFFER] REJECTED at (53,4): currentZ=10 < zBuffer=20 char='T'
+[13:50:22.125] [Z-BUFFER] REJECTED at (54,4): currentZ=10 < zBuffer=20 char='a'
+[13:50:22.125] [Z-BUFFER] REJECTED at (55,4): currentZ=10 < zBuffer=20 char='g'
+[13:50:22.125] [Z-BUFFER] REJECTED at (56,4): currentZ=10 < zBuffer=20 char='s'
+[13:50:22.128] [Z-BUFFER] REJECTED at (2,6): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.128] [Z-BUFFER] REJECTED at (80,6): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.128] [Z-BUFFER] REJECTED at (2,7): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.129] [Z-BUFFER] REJECTED at (80,7): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.129] [Z-BUFFER] REJECTED at (2,8): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.129] [Z-BUFFER] REJECTED at (80,8): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.129] [Z-BUFFER] REJECTED at (2,9): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.130] [Z-BUFFER] REJECTED at (80,9): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.130] [Z-BUFFER] REJECTED at (2,10): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.130] [Z-BUFFER] REJECTED at (80,10): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.130] [Z-BUFFER] REJECTED at (2,11): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.131] [Z-BUFFER] REJECTED at (80,11): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.131] [Z-BUFFER] REJECTED at (2,12): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.131] [Z-BUFFER] REJECTED at (80,12): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.131] [Z-BUFFER] REJECTED at (2,13): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.133] [Z-BUFFER] REJECTED at (80,13): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.133] [Z-BUFFER] REJECTED at (2,14): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.134] [Z-BUFFER] REJECTED at (80,14): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.134] [Z-BUFFER] REJECTED at (2,15): currentZ=10 < zBuffer=20 char='|'
+[13:50:22.134] [Z-BUFFER] REJECTED at (80,15): currentZ=10 < zBuffer=20 char='|'
+[2026-01-16 13:50:22.135] [INFO] StandardListScreen.RenderContentToEngine: Rendering InlineEditor at Y=6
+[2026-01-16 13:50:23.610] [INFO] Event loop exited normally
+[2026-01-16 13:50:23.611] [INFO] Cleanup - showing cursor and resetting terminal

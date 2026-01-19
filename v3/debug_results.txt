@@ -1,0 +1,51 @@
+Testing /home/teej/git/Final/Enums.ps1... OK
+Testing /home/teej/git/Final/PerformanceCore.ps1... OK
+Testing /home/teej/git/Final/CellBuffer.ps1... OK
+Testing /home/teej/git/Final/RenderCache.ps1... OK
+Testing /home/teej/git/Final/HybridRenderEngine.ps1... FAIL
+At /home/teej/git/Final/HybridRenderEngine.ps1:120 char:19
++         if (-not [InternalStringCache]::_initialized) {
++                   ~~~~~~~~~~~~~~~~~~~
+Unable to find type [InternalStringCache].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:121 char:14
++             [InternalStringCache]::Initialize()
++              ~~~~~~~~~~~~~~~~~~~
+Unable to find type [InternalStringCache].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:167 char:35
++             $this._frontBuffer = [CellBuffer]::new($this.Width, $this …
++                                   ~~~~~~~~~~
+Unable to find type [CellBuffer].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:168 char:34
++             $this._backBuffer = [CellBuffer]::new($this.Width, $this. …
++                                  ~~~~~~~~~~
+Unable to find type [CellBuffer].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:756 char:20
++             $sb = [InternalStringBuilderPool]::Get()
++                    ~~~~~~~~~~~~~~~~~~~~~~~~~
+Unable to find type [InternalStringBuilderPool].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:764 char:14
++             [InternalStringBuilderPool]::Recycle($sb)
++              ~~~~~~~~~~~~~~~~~~~~~~~~~
+Unable to find type [InternalStringBuilderPool].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:813 char:16
++         $sb = [InternalStringBuilderPool]::Get()
++                ~~~~~~~~~~~~~~~~~~~~~~~~~
+Unable to find type [InternalStringBuilderPool].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:915 char:10
++         [InternalStringBuilderPool]::Recycle($sb)
++          ~~~~~~~~~~~~~~~~~~~~~~~~~
+Unable to find type [InternalStringBuilderPool].
+
+At /home/teej/git/Final/HybridRenderEngine.ps1:1228 char:20
++         $cached = [CachedWidget]::new($x, $y, $width, $height, $zInde …
++                    ~~~~~~~~~~~~
+Unable to find type [CachedWidget].
+at Test-Load, /home/teej/git/Final/debug_crash.ps1: line 7
+at <ScriptBlock>, /home/teej/git/Final/debug_crash.ps1: line 26

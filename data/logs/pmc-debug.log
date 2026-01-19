@@ -7,3 +7,6 @@
 [13:02:29.343] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20260116-130229.log (Level 2)
 [13:02:31.239] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
 [13:02:49.217] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20260116-130229.log
+[13:50:08.472] [Start-PmcTUI] Debug logging enabled: /home/teej/ztest/data/logs/pmc-tui-20260116-135008.log (Level 2)
+[13:50:10.451] [Start-PmcTUI] Starting PMC TUI (SpeedTUI Architecture)...
+[13:50:23.611] [Start-PmcTUI] Log saved to: /home/teej/ztest/data/logs/pmc-tui-20260116-135008.log

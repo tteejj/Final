@@ -1,0 +1,10 @@
+--- Log Started: 01/17/2026 16:32:34 (Level: 1) ---
+16:32:34.924 [ERROR] Fatal crash in bootstrapper
+System.Management.Automation.ParseException: At /home/teej/git/Final/ChecklistsModal.ps1:219 char:45
++                      $this._RenameChecklist($engine)
++                                             ~~~~~~~
+Variable is not assigned in the method.
+   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)
+   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)
+   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
