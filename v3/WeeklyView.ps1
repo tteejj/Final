@@ -61,7 +61,7 @@ class WeeklyView {
         # Catch logs with no project or unknown project
         $unknownId = "UNKNOWN"
         $matrix[$unknownId] = [double[]]::new(7)
-        $projNames[$unknownId] = "(No Project)"
+        $projNames[$unknownId] = "General"
         
         # Aggregate
         foreach ($log in $timelogs) {

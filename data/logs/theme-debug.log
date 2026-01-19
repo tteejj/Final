@@ -114,3 +114,15 @@
 [09:56:01.199] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
 [09:56:01.216] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
 [09:56:01.254] [Load-Theme] Returning theme with Hex='#ffffff'
+[10:07:14.878] [Load-Theme] themeName='notepad' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:07:14.886] [Load-Theme] Looking for: /home/teej/ztest/themes/notepad.json (exists=True)
+[10:07:14.890] [Load-Theme] JSON loaded. Name='Notepad' Hex='#ffffff'
+[10:07:14.913] [Load-Theme] Returning theme with Hex='#ffffff'
+[10:07:28.414] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:07:28.415] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:07:28.417] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:07:28.427] [Load-Theme] Returning theme with Hex='#00f3ff'
+[10:51:05.279] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[10:51:05.287] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[10:51:05.290] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[10:51:05.315] [Load-Theme] Returning theme with Hex='#00f3ff'

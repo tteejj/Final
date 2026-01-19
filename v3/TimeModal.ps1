@@ -149,17 +149,19 @@ class TimeModal {
         # Clear content area
         $engine.Fill($x + 1, $y, $w - 2, $h, " ", [Colors]::Foreground, [Colors]::PanelBg)
         
-        # Column headers - Date, ID1, Hours, Description
+        # Column headers - Date, Project, ID1, ID2, Hours, Description
         $engine.WriteAt($x + 2, $y, "Date".PadRight(12), [Colors]::Title, [Colors]::PanelBg)
-        $engine.WriteAt($x + 14, $y, "ID1".PadRight(8), [Colors]::Title, [Colors]::PanelBg)
-        $engine.WriteAt($x + 22, $y, "Hours".PadRight(8), [Colors]::Title, [Colors]::PanelBg)
-        $engine.WriteAt($x + 30, $y, "Description", [Colors]::Title, [Colors]::PanelBg)
+        $engine.WriteAt($x + 14, $y, "Project".PadRight(15), [Colors]::Title, [Colors]::PanelBg)
+        $engine.WriteAt($x + 30, $y, "ID1".PadRight(8), [Colors]::Title, [Colors]::PanelBg)
+        $engine.WriteAt($x + 39, $y, "ID2".PadRight(8), [Colors]::Title, [Colors]::PanelBg)
+        $engine.WriteAt($x + 48, $y, "Hours".PadRight(8), [Colors]::Title, [Colors]::PanelBg)
+        $engine.WriteAt($x + 57, $y, "Description", [Colors]::Title, [Colors]::PanelBg)
         
         $engine.WriteAt($x + 1, $y + 1, ("─" * ($w - 2)), [Colors]::PanelBorder, [Colors]::PanelBg)
         
         $listY = $y + 2
         $listH = $h - 4
-        $maxDesc = [Math]::Max(0, $w - 34)
+        $maxDesc = [Math]::Max(0, $w - 58)
         
         if ($this._timelogs.Count -eq 0) {
             $engine.WriteAt($x + 4, $listY, "(No time entries. Press N to add one)", [Colors]::Muted, [Colors]::PanelBg)
@@ -194,7 +196,10 @@ class TimeModal {
                 
                 $dateRaw = if ($entry['date']) { [string]$entry['date'] } else { "" }
                 $date = if ($dateRaw.Length -gt 10) { $dateRaw.Substring(0, 10) } else { $dateRaw }
+                $projName = if ($this._projectName) { $this._projectName } else { "General" }
+                if ($projName.Length -gt 14) { $projName = $projName.Substring(0, 14) }
                 $id1 = if ($entry['id1']) { $entry['id1'] } else { "" }
+                $id2 = if ($entry['id2']) { $entry['id2'] } else { "" }
                 $hours = if ($entry['hours']) { "{0:N2}" -f [double]$entry['hours'] } else { "0.00" }
                 $desc = if ($entry['description']) { $entry['description'] } else { "" }
                 if ($desc.Length -gt $maxDesc) { $desc = $desc.Substring(0, $maxDesc - 3) + "..." }
@@ -203,32 +208,43 @@ class TimeModal {
                 if ($this._editing -and $isSelected -and $null -ne $this._editBuffer) {
                     $editVal = $this._editBuffer['Value']
                     
-                    if ($this._editField -eq 0) { # Date
-                        $engine.WriteAt($x + 2, $rowY, $editVal.PadRight(12), [Colors]::CursorBg, [Colors]::Title)
-                        $engine.WriteAt($x + 14, $rowY, $id1.PadRight(8), $fg, $bg)
-                        $engine.WriteAt($x + 22, $rowY, $hours.PadRight(8), $fg, $bg)
-                        $engine.WriteAt($x + 30, $rowY, $desc.PadRight($maxDesc), $fg, $bg)
-                    } elseif ($this._editField -eq 1) { # ID1
-                        $engine.WriteAt($x + 2, $rowY, $date.PadRight(12), $fg, $bg)
-                        $engine.WriteAt($x + 14, $rowY, $editVal.PadRight(8), [Colors]::CursorBg, [Colors]::Title)
-                        $engine.WriteAt($x + 22, $rowY, $hours.PadRight(8), $fg, $bg)
-                        $engine.WriteAt($x + 30, $rowY, $desc.PadRight($maxDesc), $fg, $bg)
-                    } elseif ($this._editField -eq 2) { # Hours
-                        $engine.WriteAt($x + 2, $rowY, $date.PadRight(12), $fg, $bg)
-                        $engine.WriteAt($x + 14, $rowY, $id1.PadRight(8), $fg, $bg)
-                        $engine.WriteAt($x + 22, $rowY, $editVal.PadRight(8), [Colors]::CursorBg, [Colors]::Title)
-                        $engine.WriteAt($x + 30, $rowY, $desc.PadRight($maxDesc), $fg, $bg)
-                    } elseif ($this._editField -eq 3) { # Description
-                        $engine.WriteAt($x + 2, $rowY, $date.PadRight(12), $fg, $bg)
-                        $engine.WriteAt($x + 14, $rowY, $id1.PadRight(8), $fg, $bg)
-                        $engine.WriteAt($x + 22, $rowY, $hours.PadRight(8), $fg, $bg)
-                        $engine.WriteAt($x + 30, $rowY, $editVal, [Colors]::CursorBg, [Colors]::Title)
-                    }
+                    $colDate = if ($this._editField -eq 0) { [Colors]::CursorBg } else { $fg }
+                    $bgDate = if ($this._editField -eq 0) { [Colors]::Title } else { $bg }
+                    $txtDate = if ($this._editField -eq 0) { $editVal.PadRight(12) } else { $date.PadRight(12) }
+                    
+                    # Project Name is not editable here (it's context)
+                    $txtProj = $projName.PadRight(15)
+                    
+                    $colId1 = if ($this._editField -eq 1) { [Colors]::CursorBg } else { $fg }
+                    $bgId1 = if ($this._editField -eq 1) { [Colors]::Title } else { $bg }
+                    $txtId1 = if ($this._editField -eq 1) { $editVal.PadRight(8) } else { $id1.PadRight(8) }
+                    
+                    $colId2 = if ($this._editField -eq 2) { [Colors]::CursorBg } else { $fg }
+                    $bgId2 = if ($this._editField -eq 2) { [Colors]::Title } else { $bg }
+                    $txtId2 = if ($this._editField -eq 2) { $editVal.PadRight(8) } else { $id2.PadRight(8) }
+                    
+                    $colHours = if ($this._editField -eq 3) { [Colors]::CursorBg } else { $fg }
+                    $bgHours = if ($this._editField -eq 3) { [Colors]::Title } else { $bg }
+                    $txtHours = if ($this._editField -eq 3) { $editVal.PadRight(8) } else { $hours.PadRight(8) }
+                    
+                    $colDesc = if ($this._editField -eq 4) { [Colors]::CursorBg } else { $fg }
+                    $bgDesc = if ($this._editField -eq 4) { [Colors]::Title } else { $bg }
+                    $txtDesc = if ($this._editField -eq 4) { $editVal } else { $desc.PadRight($maxDesc) }
+                    
+                    $engine.WriteAt($x + 2, $rowY, $txtDate, $colDate, $bgDate)
+                    $engine.WriteAt($x + 14, $rowY, $txtProj, $fg, $bg)
+                    $engine.WriteAt($x + 30, $rowY, $txtId1, $colId1, $bgId1)
+                    $engine.WriteAt($x + 39, $rowY, $txtId2, $colId2, $bgId2)
+                    $engine.WriteAt($x + 48, $rowY, $txtHours, $colHours, $bgHours)
+                    $engine.WriteAt($x + 57, $rowY, $txtDesc, $colDesc, $bgDesc)
+                    
                 } else {
                     $engine.WriteAt($x + 2, $rowY, $date.PadRight(12), $fg, $bg)
-                    $engine.WriteAt($x + 14, $rowY, $id1.PadRight(8), $fg, $bg)
-                    $engine.WriteAt($x + 22, $rowY, $hours.PadRight(8), $fg, $bg)
-                    $engine.WriteAt($x + 30, $rowY, $desc.PadRight($maxDesc), $fg, $bg)
+                    $engine.WriteAt($x + 14, $rowY, $projName.PadRight(15), $fg, $bg)
+                    $engine.WriteAt($x + 30, $rowY, $id1.PadRight(8), $fg, $bg)
+                    $engine.WriteAt($x + 39, $rowY, $id2.PadRight(8), $fg, $bg)
+                    $engine.WriteAt($x + 48, $rowY, $hours.PadRight(8), $fg, $bg)
+                    $engine.WriteAt($x + 57, $rowY, $desc.PadRight($maxDesc), $fg, $bg)
                 }
             }
         }
@@ -456,9 +472,11 @@ class TimeModal {
                      $entry['date'] = $val
                 } elseif ($this._editField -eq 1) { # ID1
                      $entry['id1'] = $val
-                } elseif ($this._editField -eq 2) { # Hours
+                } elseif ($this._editField -eq 2) { # ID2
+                     $entry['id2'] = $val
+                } elseif ($this._editField -eq 3) { # Hours
                      try { $entry['hours'] = [double]$val } catch {}
-                } elseif ($this._editField -eq 3) { # Description
+                } elseif ($this._editField -eq 4) { # Description
                      $entry['description'] = $val
                 }
                 
@@ -477,14 +495,16 @@ class TimeModal {
                      $entry['date'] = $val
                 } elseif ($this._editField -eq 1) { # ID1
                      $entry['id1'] = $val
-                } elseif ($this._editField -eq 2) { # Hours
+                } elseif ($this._editField -eq 2) { # ID2
+                     $entry['id2'] = $val
+                } elseif ($this._editField -eq 3) { # Hours
                      try { $entry['hours'] = [double]$val } catch {}
-                } elseif ($this._editField -eq 3) { # Description
+                } elseif ($this._editField -eq 4) { # Description
                      $entry['description'] = $val
                 }
                 
-                # Switch field: Date -> ID1 -> Hours -> Description -> Date
-                $this._editField = ($this._editField + 1) % 4
+                # Switch field: Date -> ID1 -> ID2 -> Hours -> Description -> Date
+                $this._editField = ($this._editField + 1) % 5
                 $this._InitEditBuffer()
                 
                 # Save Data on Tab to prevent loss
@@ -498,7 +518,7 @@ class TimeModal {
                     $val = $this._editBuffer['Value']
                     try { $this._calendarMonth = [DateTime]::Parse($val) } catch { $this._calendarMonth = [DateTime]::Today }
                     return "Continue"
-                } elseif ($this._editField -eq 2) { # Hours -> Decrement
+                } elseif ($this._editField -eq 3) { # Hours -> Decrement
                     try { 
                         $cur = [double]$this._editBuffer['Value'] 
                         $cur = [Math]::Max(0, $cur - 0.25)
@@ -508,7 +528,7 @@ class TimeModal {
                 }
             }
             'UpArrow' {
-                 if ($this._editField -eq 2) { # Hours -> Increment
+                 if ($this._editField -eq 3) { # Hours -> Increment
                     try {
                         $cur = [double]$this._editBuffer['Value']
                         $cur += 0.25
@@ -555,8 +575,10 @@ class TimeModal {
             } elseif ($this._editField -eq 1) {
                 $val = if ($entry['id1']) { $entry['id1'] } else { "" }
             } elseif ($this._editField -eq 2) {
-                $val = if ($entry['hours']) { "$($entry['hours'])" } else { "0" }
+                $val = if ($entry['id2']) { $entry['id2'] } else { "" }
             } elseif ($this._editField -eq 3) {
+                $val = if ($entry['hours']) { "$($entry['hours'])" } else { "0" }
+            } elseif ($this._editField -eq 4) {
                 $val = if ($entry['description']) { $entry['description'] } else { "" }
             }
             
@@ -591,11 +613,29 @@ class TimeModal {
     
     hidden [string] _CreateEntry() {
         $id = [DataService]::NewGuid()
+        
+        # Look up project to pre-fill ID1/ID2
+        $projId1 = ""
+        $projId2 = ""
+        
+        if (-not [string]::IsNullOrEmpty($this._projectId)) {
+             $state = $this._store.GetState()
+             if ($state.Data.projects) {
+                $proj = $state.Data.projects | Where-Object { $_['id'] -eq $this._projectId } | Select-Object -First 1
+                if ($proj) {
+                    if ($proj['id1']) { $projId1 = $proj['id1'] }
+                    if ($proj['id2']) { $projId2 = $proj['id2'] }
+                }
+             }
+        }
+        
         $newEntry = @{
             id = $id
             projectId = $this._projectId
             date = [DateTime]::Today.ToString("yyyy-MM-dd")
             hours = 0.0
+            id1 = $projId1
+            id2 = $projId2
             description = ""
             created = [DataService]::Timestamp()
         }

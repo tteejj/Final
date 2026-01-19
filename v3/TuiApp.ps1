@@ -739,8 +739,10 @@ class TuiApp {
                 }
             }
             "T" {
-                if ($state.View.FocusedPanel -eq "Sidebar" -and $state.Data.projects.Count -gt 0) {
+                if ($state.Data.projects.Count -gt 0) {
                     $proj = $state.Data.projects[$state.View.Selection.Sidebar]
+                    # If All Projects (virtual) is selected? (Need to check if Selection.Sidebar yields a valid project)
+                    # Assuming Selection.Sidebar is an index into state.Data.projects
                     if ($proj) { $this._timeModal.Open($proj['id'], $proj['name']) }
                 }
             }
