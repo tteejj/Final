@@ -248,11 +248,19 @@ class NoteEditor {
                     
                     'LeftArrow' { 
                         $this._UpdateSelection($isShift)
-                        if ($this._cursorPos -gt 0) { $this._cursorPos-- } 
+                        if ($mod -band [ConsoleModifiers]::Control) {
+                            $this._MoveWordLeft()
+                        } elseif ($this._cursorPos -gt 0) { 
+                            $this._cursorPos-- 
+                        }
                     }
                     'RightArrow' { 
                         $this._UpdateSelection($isShift)
-                        if ($this._cursorPos -lt $this._buffer.GetLength()) { $this._cursorPos++ } 
+                        if ($mod -band [ConsoleModifiers]::Control) {
+                            $this._MoveWordRight()
+                        } elseif ($this._cursorPos -lt $this._buffer.GetLength()) { 
+                            $this._cursorPos++ 
+                        }
                     }
                     'UpArrow' {
                         $this._UpdateSelection($isShift)
@@ -378,5 +386,51 @@ class NoteEditor {
                 $this._cursorPos = $nextStart + $newCol
             }
         }
+    }
+    
+    # Word Movement (Ctrl+Arrow) - Like MS Word
+    hidden [void] _MoveWordLeft() {
+        if ($this._cursorPos -eq 0) { return }
+        
+        $pos = $this._cursorPos
+        
+        # Skip any whitespace/punctuation immediately to the left
+        while ($pos -gt 0) {
+            $c = $this._buffer.GetChar($pos - 1)
+            if ($c -match '[\w]') { break }
+            $pos--
+        }
+        
+        # Skip the word characters
+        while ($pos -gt 0) {
+            $c = $this._buffer.GetChar($pos - 1)
+            if ($c -notmatch '[\w]') { break }
+            $pos--
+        }
+        
+        $this._cursorPos = $pos
+    }
+    
+    hidden [void] _MoveWordRight() {
+        $len = $this._buffer.GetLength()
+        if ($this._cursorPos -ge $len) { return }
+        
+        $pos = $this._cursorPos
+        
+        # Skip word characters first
+        while ($pos -lt $len) {
+            $c = $this._buffer.GetChar($pos)
+            if ($c -notmatch '[\w]') { break }
+            $pos++
+        }
+        
+        # Skip any whitespace/punctuation
+        while ($pos -lt $len) {
+            $c = $this._buffer.GetChar($pos)
+            if ($c -match '[\w]') { break }
+            $pos++
+        }
+        
+        $this._cursorPos = $pos
     }
 }
