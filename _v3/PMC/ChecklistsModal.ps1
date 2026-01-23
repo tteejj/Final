@@ -273,24 +273,40 @@ class ChecklistsModal {
     }
     
     hidden [void] _CreateChecklist() {
-        $newChecklist = @{
-            id = [DataService]::NewGuid()
-            projectId = $this._projectId
-            title = "New Checklist"
-            items = @()
-            created = [DataService]::Timestamp()
-            modified = [DataService]::Timestamp()
-        }
+        # Prompt for Title first
+        if ($null -eq $this._engine) { return }
         
-        $state = $this._store.GetState()
-        if (-not $state.Data.ContainsKey('checklists')) {
-            $state.Data.checklists = @()
+        try {
+            # Use NoteEditor as InputBox
+            $editor = [NoteEditor]::new("New Checklist")
+            $title = $editor.RenderAndEdit($this._engine, "Create Checklist")
+            
+            if ([string]::IsNullOrWhiteSpace($title)) {
+                return # Cancelled
+            }
+            
+            $newChecklist = @{
+                id = [DataService]::NewGuid()
+                projectId = $this._projectId
+                title = $title.Trim()
+                items = @()
+                created = [DataService]::Timestamp()
+                modified = [DataService]::Timestamp()
+            }
+            
+            $state = $this._store.GetState()
+            if (-not $state.Data.ContainsKey('checklists')) {
+                $state.Data.checklists = @()
+            }
+            $state.Data.checklists += $newChecklist
+            
+            $this._store.Dispatch([ActionType]::SAVE_DATA, @{})
+            $this._LoadChecklists()
+            $this._selectedIndex = $this._checklists.Count - 1
+            
+        } catch {
+             [Logger]::Error("ChecklistsModal._CreateChecklist: Error", $_)
         }
-        $state.Data.checklists += $newChecklist
-        
-        $this._store.Dispatch([ActionType]::SAVE_DATA, @{})
-        $this._LoadChecklists()
-        $this._selectedIndex = $this._checklists.Count - 1
     }
     
     hidden [void] _DeleteChecklist() {

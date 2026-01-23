@@ -23,6 +23,9 @@ class TimeModal {
     hidden [int]$_projectSelectorIndex = 0
     hidden [array]$_filteredProjects = @()
     
+    # PERFORMANCE: Cache project map
+    hidden [hashtable]$_projMap = @{}
+    
     TimeModal([FluxStore]$store) {
         $this._store = $store
     }
@@ -55,6 +58,12 @@ class TimeModal {
             $this._timelogs = @($state.Data.timelogs | Sort-Object { $_['date'] } -Descending)
         } else {
             $this._timelogs = @()
+        }
+        
+        # PERFORMANCE: Build projMap cache here, once per load
+        $this._projMap = @{}
+        if ($state.Data.projects) {
+            foreach ($p in $state.Data.projects) { $this._projMap[$p['id']] = $p }
         }
     }
     
@@ -143,12 +152,9 @@ class TimeModal {
         if ($this._selectedIndex -lt $this._scrollOffset) { $this._scrollOffset = $this._selectedIndex }
         if ($this._selectedIndex -ge $this._scrollOffset + $listH) { $this._scrollOffset = $this._selectedIndex - $listH + 1 }
         
-        # Lookup Projects map
-        $state = $this._store.GetState()
-        $projMap = @{}
-        if ($state.Data.projects) {
-            foreach ($p in $state.Data.projects) { $projMap[$p['id']] = $p }
-        }
+        # PERFORMANCE FIX: Use cached projMap instead of building every frame
+        # $projMap is now built in _LoadTimelogs/_RefreshProjMap and cached
+        $projMap = $this._projMap
         
         for ($i = 0; $i -lt $listH; $i++) {
             $idx = $i + $this._scrollOffset
@@ -356,7 +362,20 @@ class TimeModal {
 
     hidden [string] _HandleEditInput([ConsoleKeyInfo]$key) {
         switch ($key.Key) {
-            'Escape' { $this._editing = $false; return "Handled" }
+            'Escape' { 
+                # If we were creating a NEW entry (ID1 is empty, Hours 0), and escape is pressed,
+                # we should probably DELETE it to avoid "ghost" zeros.
+                # However, strict "Delete on Cancel" might be annoying if accidental.
+                # But user complaint is "Escape Saves". 
+                # Let's check if it's the newest entry and is empty/default.
+                $entry = $this._timelogs[$this._selectedIndex]
+                if ($entry['hours'] -eq 0 -and $entry['description'] -eq "" -and $entry['projectId'] -eq "") {
+                    $this._DeleteEntry() # Cleanup draft
+                }
+                
+                $this._editing = $false; 
+                return "Handled" 
+            }
             'Enter' { 
                 # ID 1 (Project Name) logic
                 if ($this._editField -eq 1) { 
@@ -377,6 +396,27 @@ class TimeModal {
                     return "Handled"
                 }
                 if ($this._editField -eq 0) { $this._calendarActive = $true }
+                
+                # Increment/Decrement for Hours (Field 4)
+                if ($this._editField -eq 4) {
+                    try {
+                        $val = [double]$this._editBuffer['Value']
+                        $val = [Math]::Max(0, $val - 0.25)
+                        $this._editBuffer['Value'] = "{0:N2}" -f $val
+                    } catch {}
+                    return "Handled"
+                }
+            }
+            'UpArrow' {
+                # Increment for Hours (Field 4)
+                if ($this._editField -eq 4) {
+                    try {
+                        $val = [double]$this._editBuffer['Value']
+                        $val += 0.25
+                        $this._editBuffer['Value'] = "{0:N2}" -f $val
+                    } catch {}
+                    return "Handled"
+                }
             }
         }
         

@@ -318,8 +318,71 @@ class ProjectInfoModal {
                 $isWin = [System.Environment]::OSVersion.Platform -eq 'Win32NT'
                 if (-not $isWin) {
                     [Logger]::Log("ProjectInfoModal: Excel import requires Windows (COM automation)")
-                } else {
-                    [Logger]::Log("ProjectInfoModal: Excel import - profile system not yet ported")
+                    return
+                }
+
+                $caaPath = $this._GetValue('CAAName')
+                if ([string]::IsNullOrWhiteSpace($caaPath) -or -not (Test-Path $caaPath)) {
+                    # Prompt for file if not set or invalid
+                    $this._BrowseFile('CAAName', $false, 'Select CAA File for Import')
+                    # We have to return because BrowseFile is async/modal transition? 
+                    # Actually FilePicker blocks input but rendering loop continues.
+                    # But we can't wait here in the event handler easily without freezing UI.
+                    # Best approach: User sets file, THEN clicks import again.
+                    [Logger]::Log("ProjectInfoModal: No CAA file selected. Please select file first.")
+                    return 
+                }
+
+                # Start Import
+                [Logger]::Log("ProjectInfoModal: Starting Excel Import from $caaPath...")
+                try {
+                    $excel = New-Object -ComObject Excel.Application
+                    # $excel.Visible = $true # Debug
+                    $workbook = $excel.Workbooks.Open($caaPath, $null, $true) # ReadOnly
+                    
+                    # Load Active Profile
+                    $mappingService = [FieldMappingService]::GetInstance($PSScriptRoot) # Assuming standard path
+                    $profile = $mappingService.GetActiveProfile()
+                    
+                    if (-not $profile) {
+                         [Logger]::Log("ProjectInfoModal: No active mapping profile found.")
+                         $workbook.Close($false)
+                         $excel.Quit()
+                         return
+                    }
+                    
+                    $mappings = $mappingService.GetMappings($profile.id)
+                    $changes = @{}
+                    
+                    foreach ($m in $mappings) {
+                        try {
+                            $sheetName = if ($m.excel_sheet) { $m.excel_sheet } else { "Sheet1" }
+                            $sheet = $workbook.Sheets.Item($sheetName)
+                            $cell = $sheet.Range($m.excel_cell)
+                            $val = $cell.Text # Use Text to get formatted value
+                            
+                            $prop = $m.project_property
+                            if (-not [string]::IsNullOrEmpty($val) -and -not [string]::IsNullOrEmpty($prop)) {
+                                $this._SaveField($prop, $val) # Save individually to update UI/Store
+                                $changes[$prop] = $val
+                            }
+                        } catch {
+                            [Logger]::Log("ProjectInfoModal: Error mapping $($m.display_name): $_")
+                        }
+                    }
+                    
+                    $workbook.Close($false)
+                    $excel.Quit()
+                    
+                    # Cleanup COM
+                    [System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel) | Out-Null
+                    [GC]::Collect()
+                    [GC]::WaitForPendingFinalizers()
+                    
+                    [Logger]::Log("ProjectInfoModal: Import Complete. Updated $($changes.Count) fields.")
+                    
+                } catch {
+                    [Logger]::Log("ProjectInfoModal: Critical Import Error: $_")
                 }
             }
             '_action_text_export' {

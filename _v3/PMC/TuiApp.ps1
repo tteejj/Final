@@ -72,10 +72,15 @@ class TuiApp {
             # "DEBUG: Loop Tick" | Out-File "/tmp/tui_tick.log" -Append
 
             try {
-                # 1. Process Input (Non-blocking)
-                if ([Console]::KeyAvailable) {
-                        $key = [Console]::ReadKey($true)
-                        $this._HandleInput($key)
+                # 1. Process Input (Non-blocking, Drain Buffer)
+                # CRITICAL FIX: Loop until KeyAvailable is false to drain the buffer.
+                # This prevents "accordion" lag when typing fast.
+                while ([Console]::KeyAvailable) {
+                    $key = [Console]::ReadKey($true)
+                    $this._HandleInput($key)
+                    
+                    # Optional: Cap processing to prevent infinite loop if spamming? 
+                    # For now, trust the buffer isn't infinite.
                 }
                 
                 # 2. Render
@@ -149,7 +154,9 @@ class TuiApp {
     }
     
     hidden [void] _HandleInput([ConsoleKeyInfo]$key) {
-        [Logger]::Log("_HandleInput ENTRY: key=$($key.Key)", 1)
+        # Processing moved to Run() loop for bulk handling,
+        # but we keep this method to handle a SINGLE key event.
+        # [Logger]::Log("_HandleInput ENTRY: key=$($key.Key)", 1)
         $state = $this._store.GetState()
 
         # === EDIT MODE HANDLER (HIGHEST PRIORITY) ===
@@ -458,6 +465,37 @@ class TuiApp {
                 
                 if ($currIdx -lt ($max - 1)) {
                     $this._store.Dispatch([ActionType]::SET_SELECTION, @{ PanelName = $panel; Index = $currIdx + 1 })
+                }
+            }
+            # Priority Keys
+            'D1' {
+                if ($panel -eq "TaskList") {
+                    $task = $this._GetSelectedTask($state)
+                    if ($task) {
+                        $this._store.Dispatch([ActionType]::UPDATE_ITEM, @{
+                            Type = "tasks"; Id = $task['id']; Changes = @{ priority = 1 }
+                        })
+                    }
+                }
+            }
+            'D2' {
+                if ($panel -eq "TaskList") {
+                    $task = $this._GetSelectedTask($state)
+                    if ($task) {
+                        $this._store.Dispatch([ActionType]::UPDATE_ITEM, @{
+                            Type = "tasks"; Id = $task['id']; Changes = @{ priority = 2 }
+                        })
+                    }
+                }
+            }
+            'D3' {
+                if ($panel -eq "TaskList") {
+                    $task = $this._GetSelectedTask($state)
+                    if ($task) {
+                        $this._store.Dispatch([ActionType]::UPDATE_ITEM, @{
+                            Type = "tasks"; Id = $task['id']; Changes = @{ priority = 3 }
+                        })
+                    }
                 }
             }
             'S' {

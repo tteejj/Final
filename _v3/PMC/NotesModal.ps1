@@ -183,30 +183,48 @@ class NotesModal {
     }
     
     hidden [void] _CreateNote([HybridRenderEngine]$engine) {
-        # Create new note
-        $newNote = @{
-            id = [DataService]::NewGuid()
-            projectId = $this._projectId
-            title = "New Note"
-            content = ""
-            created = [DataService]::Timestamp()
-            modified = [DataService]::Timestamp()
+        # Prompt for Title first
+        $defaultTitle = "New Note"
+        
+        try {
+            $editor = [NoteEditor]::new($defaultTitle)
+            $title = $editor.RenderAndEdit($engine, "Create New Note")
+            
+            if ([string]::IsNullOrWhiteSpace($title)) {
+                return # Cancelled
+            }
+            
+            # Create new note
+            $newNote = @{
+                id = [DataService]::NewGuid()
+                projectId = $this._projectId
+                title = $title.Trim()
+                content = ""
+                created = [DataService]::Timestamp()
+                modified = [DataService]::Timestamp()
+            }
+            
+            # Add to state
+            $state = $this._store.GetState()
+            if (-not $state.Data.ContainsKey('notes')) {
+                $state.Data.notes = @()
+            }
+            $state.Data.notes += $newNote
+            
+            # Save
+            $this._store.Dispatch([ActionType]::SAVE_DATA, @{})
+            $this._LoadNotes()
+            
+            # Select the new note
+            $this._selectedIndex = $this._notes.Count - 1
+            
+            # OPTIONAL: Immediately edit content after creation?
+            # User probably expects to write content now.
+            $this._EditNote($engine)
+            
+        } catch {
+             [Logger]::Error("NotesModal._CreateNote: Error", $_)
         }
-        
-        # Add to state
-        $state = $this._store.GetState()
-        if (-not $state.Data.ContainsKey('notes')) {
-            $state.Data.notes = @()
-        }
-        $state.Data.notes += $newNote
-        
-        # Save
-        $this._store.Dispatch([ActionType]::SAVE_DATA, @{})
-        $this._LoadNotes()
-        
-        # Select and edit the new note
-        $this._selectedIndex = $this._notes.Count - 1
-        $this._EditNote($engine)
     }
     
     hidden [void] _EditNote([HybridRenderEngine]$engine) {

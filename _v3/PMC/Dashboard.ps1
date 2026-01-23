@@ -162,7 +162,7 @@ class Dashboard {
         $displayProjects = $this._projectCache.List
         
         $projectCols = @(
-            @{ Header = "Project"; Field = "name"; Width = $sidebarW - 2 }
+            @{ Header = "Project"; Field = "name"; Width = $sidebarW - 3 }
         )
         
         $this._sidebar.Render($engine, 0, 0, $sidebarW, $h - 1, $displayProjects.ToArray(), $projectCols, $view.Selection.Sidebar, ($view.FocusedPanel -eq "Sidebar"))
@@ -198,7 +198,7 @@ class Dashboard {
         $taskCols = @(
             @{ Header = "S"; Field = "status"; Width = 3 },
             @{ Header = "P"; Field = "prio"; Width = 3 },
-            @{ Header = "Task / Tags"; Field = "text"; Width = $taskListW - 24 },
+            @{ Header = "Task / Tags"; Field = "text"; Width = $taskListW - 25 },
             @{ Header = "Due"; Field = "due"; Width = 12 }
         )
         
