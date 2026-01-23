@@ -97,6 +97,7 @@ class Dashboard {
     
     hidden [object]$_projectCache = @{ Version = -1; List = [System.Collections.ArrayList]::new() }
     hidden [object]$_taskCache = @{ Version = -1; ProjectId = ""; List = @() }
+    hidden [object]$_displayCache = @{ Version = -1; ProjectId = ""; TaskId = ""; List = $null }
     hidden [hashtable]$_tasksById = @{}
     
     [void] Render([HybridRenderEngine]$engine, [hashtable]$state) {
@@ -192,8 +193,26 @@ class Dashboard {
         $projName = if ($selectedProject) { $selectedProject.name } else { "(none)" }
         [Logger]::Log("Dashboard.Render: Proj='$projName' TasksFiltered=$(@($filteredTasks).Count)", 3)
         
-        # Use shared hierarchy flattening
-        $displayTasks = [TaskHierarchy]::FlattenTasks($filteredTasks, $view)
+        # Use shared hierarchy flattening with Caching & Native Optimization
+        $activeTaskId = if ($view.ActiveTimer) { $view.ActiveTimer.TaskId } else { "" }
+        
+        if ($state.Version -ne $this._displayCache.Version -or 
+            $selectedProjId -ne $this._displayCache.ProjectId -or 
+            $activeTaskId -ne $this._displayCache.TaskId) {
+            
+            if ("NativeTaskProcessor" -as [type]) {
+                 $displayTasks = [NativeTaskProcessor]::FlattenTasks($filteredTasks, $view)
+            } else {
+                 $displayTasks = [TaskHierarchy]::FlattenTasks($filteredTasks, $view)
+            }
+            
+            $this._displayCache.Version = $state.Version
+            $this._displayCache.ProjectId = $selectedProjId
+            $this._displayCache.TaskId = $activeTaskId
+            $this._displayCache.List = $displayTasks
+        } else {
+            $displayTasks = $this._displayCache.List
+        }
         
         $taskCols = @(
             @{ Header = "S"; Field = "status"; Width = 3 },

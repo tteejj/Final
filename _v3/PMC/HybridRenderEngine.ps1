@@ -63,7 +63,7 @@ class HybridRenderEngine {
     hidden [object]$_backBuffer   # NativeCellBuffer or CellBuffer
     # ZBuffer: Stores the depth (layer index) of each cell. Used to decide if a new
     # write should overwrite existing content or appear behind it.
-    hidden [int[][]] $_zBuffer
+    hidden [object] $_zBuffer           # NativeZBuffer for fast Z-ops
 
     # -- STATE MANAGEMENT --
     hidden [bool]$_initialized = $false
@@ -163,21 +163,12 @@ class HybridRenderEngine {
 
     hidden [void] _InitializeBuffers() {
         # Re-allocate all buffers to match new dimensions
-        # Use C# NativeCellBuffer for ~50-100x speedup (if loaded)
-        $nativeType = ([System.Management.Automation.PSTypeName]'NativeCellBuffer').Type
-        if ($nativeType) {
-            $this._frontBuffer = $nativeType::new($this.Width, $this.Height)
-            $this._backBuffer = $nativeType::new($this.Width, $this.Height)
-        } else {
-            $this._frontBuffer = [CellBuffer]::new($this.Width, $this.Height)
-            $this._backBuffer = [CellBuffer]::new($this.Width, $this.Height)
-        }
+        # Use C# NativeCellBuffer for high-performance rendering
+        $this._frontBuffer = [NativeCellBuffer]::new($this.Width, $this.Height)
+        $this._backBuffer = [NativeCellBuffer]::new($this.Width, $this.Height)
         
-        # Z-Buffer is a primitive int array for speed
-        $this._zBuffer = [int[][]]::new($this.Height)
-        for ($y = 0; $y -lt $this.Height; $y++) {
-            $this._zBuffer[$y] = [int[]]::new($this.Width)
-        }
+        # Use C# NativeZBuffer for fast Z-buffer operations
+        $this._zBuffer = [NativeZBuffer]::new($this.Width, $this.Height)
         
         # Reset Dirty Bounds to full screen initially
         $this._ResetDirtyBounds($true)
@@ -198,22 +189,8 @@ class HybridRenderEngine {
         # Note: We don't allocate new memory, just reset values.
         $this._backBuffer.Clear()
 
-        # Reset Z-Buffer to lowest possible value so Layer 0 can write
-        $minInt = [int]::MinValue
-        
-        # OPTIMIZATION: Use Array.Fill instead of nested loops (much faster)
-        try {
-            for ($y = 0; $y -lt $this.Height; $y++) {
-                [Array]::Fill($this._zBuffer[$y], $minInt)
-            }
-        } catch {
-            # Fallback for older PowerShell versions
-            for ($y = 0; $y -lt $this.Height; $y++) {
-                for ($x = 0; $x -lt $this.Width; $x++) {
-                    $this._zBuffer[$y][$x] = $minInt
-                }
-            }
-        }
+        # Reset Z-Buffer using C# Clear (fast native operation)
+        $this._zBuffer.Clear()
         
         # Reset Render State
         $this._clipStack.Clear()
@@ -240,12 +217,14 @@ class HybridRenderEngine {
         }
 
         # Swap Buffers: BackBuffer becomes the new FrontBuffer
-        # We use CopyFrom because swapping references breaks if we hold references elsewhere,
-        # but for this engine, swapping content is safer.
-        # FIX: Handle resize during frame - if dimensions mismatch, skip copy (next frame will be clean)
+        # PERFORMANCE FIX: Swap references instead of copying all cells (O(1) vs O(N))
+        # This is safe because we clear and rebuild backBuffer every frame anyway.
         if ($this._frontBuffer.Width -eq $this._backBuffer.Width -and 
             $this._frontBuffer.Height -eq $this._backBuffer.Height) {
-            $this._frontBuffer.CopyFrom($this._backBuffer)
+            # Swap references
+            $temp = $this._frontBuffer
+            $this._frontBuffer = $this._backBuffer
+            $this._backBuffer = $temp
         } else {
             # Terminal resized mid-frame - reinitialize buffers for next frame
             $this._InitializeBuffers()
@@ -410,21 +389,12 @@ class HybridRenderEngine {
                     }
                 }
 
-                # 3. Check Z-Index (Depth)
+                # 3. Check Z-Index (Depth) and write if allowed
                 if (-not $isClipped) {
-                    if ($this._currentZ -ge $this._zBuffer[$finalY][$currentX]) {
-                        # ** WRITE IS ALLOWED **
-                        
-                        # Update Back Buffer
+                    if ($this._zBuffer.TestAndSet($currentX, $finalY, $this._currentZ)) {
+                        # ** WRITE IS ALLOWED - Z-buffer already updated by TestAndSet **
                         $this._backBuffer.SetCell($currentX, $finalY, $content[$i], $currentFg, $currentBg, $currentAttr)
-                        
-                        # Update Z Buffer
-                        $this._zBuffer[$finalY][$currentX] = $this._currentZ
-                        
-                        # Update Dirty Rectangle (Grow to include this point)
                         $this._UpdateDirtyBounds($currentX, $finalY)
-                    } else {
-                        # Write rejected by Z-buffer (higher priority content at this position)
                     }
                 }
             }
@@ -506,13 +476,10 @@ class HybridRenderEngine {
 
                 # Check Z-Index
                 if (-not $isClipped) {
-                    if ($this._currentZ -ge $this._zBuffer[$finalY][$currentX]) {
+                    if ($this._zBuffer.TestAndSet($currentX, $finalY, $this._currentZ)) {
                         # Write
                         $this._backBuffer.SetCell($currentX, $finalY, $content[$i], $fg, $bg, 0)
-                        $this._zBuffer[$finalY][$currentX] = $this._currentZ
                         $this._UpdateDirtyBounds($currentX, $finalY)
-                    } else {
-                        # Write rejected by Z-buffer (higher priority content at this position)
                     }
                 }
             }
@@ -560,10 +527,9 @@ class HybridRenderEngine {
 
                 # Check Z-Index
                 if (-not $isClipped) {
-                    if ($this._currentZ -ge $this._zBuffer[$finalY][$currentX]) {
+                    if ($this._zBuffer.TestAndSet($currentX, $finalY, $this._currentZ)) {
                         # Write with interpolated color
                         $this._backBuffer.SetCell($currentX, $finalY, $content[$i], $fg, $bg, 0)
-                        $this._zBuffer[$finalY][$currentX] = $this._currentZ
                         $this._UpdateDirtyBounds($currentX, $finalY)
                     }
                 }
@@ -606,13 +572,12 @@ class HybridRenderEngine {
             $endX = [Math]::Min($finalX + $len, $maxX)
             
             if ($startX -lt $endX) {
-                $zRow = $this._zBuffer[$finalY]
                 $z = $this._currentZ
                 $isOccluded = $false
                 
-                # Check for occlusion
+                # Check for occlusion using NativeZBuffer
                 for ($cx = $startX; $cx -lt $endX; $cx++) {
-                    if ($z -lt $zRow[$cx]) {
+                    if ($z -lt $this._zBuffer.Get($cx, $finalY)) {
                         $isOccluded = $true
                         break
                     }
@@ -624,7 +589,7 @@ class HybridRenderEngine {
                     
                     # Bulk update Z-buffer
                     for ($cx = $startX; $cx -lt $endX; $cx++) {
-                        $zRow[$cx] = $z
+                        $this._zBuffer.Set($cx, $finalY, $z)
                     }
                     $this._UpdateDirtyBounds($startX, $finalY)
                     $this._UpdateDirtyBounds($endX - 1, $finalY)
@@ -639,13 +604,12 @@ class HybridRenderEngine {
             
             for ($i = 0; $i -lt $len; $i++) {
                 if ($currentX -ge $minX -and $currentX -lt $maxX) {
-                    if ($this._currentZ -ge $this._zBuffer[$finalY][$currentX]) {
+                    if ($this._zBuffer.TestAndSet($currentX, $finalY, $this._currentZ)) {
                         $fg = if ($fgs -and $i -lt $fgs.Length) { $fgs[$i] } else { -1 }
                         $bg = if ($bgs -and $i -lt $bgs.Length) { $bgs[$i] } else { -1 }
                         $at = if ($attrs -and $i -lt $attrs.Length) { $attrs[$i] } else { 0 }
                         
                         $this._backBuffer.SetCell($currentX, $finalY, $text[$i], $fg, $bg, $at)
-                        $this._zBuffer[$finalY][$currentX] = $this._currentZ
                         $this._UpdateDirtyBounds($currentX, $finalY)
                     }
                 }
@@ -1320,14 +1284,11 @@ class HybridRenderEngine {
                 if ($screenX -lt 0 -or $screenX -ge $this.Width) { continue }
                 
                 # Check Z-index (same logic as WriteAt)
-                if ($this._currentZ -ge $this._zBuffer[$screenY][$screenX]) {
+                if ($this._zBuffer.TestAndSet($screenX, $screenY, $this._currentZ)) {
                     $cell = $rowCells[$col]
                     
                     # Write to backbuffer
                     $this._backBuffer.SetCell($screenX, $screenY, $cell.Char, $cell.Fg, $cell.Bg, $cell.Attr)
-                    
-                    # Update Z buffer
-                    $this._zBuffer[$screenY][$screenX] = $this._currentZ
                     
                     # Update dirty bounds
                     $this._UpdateDirtyBounds($screenX, $screenY)

@@ -28,7 +28,7 @@ $files = @(
     "ThemeService.ps1",
     "Enums.ps1",
     "PerformanceCore.ps1",
-    "CellBuffer.ps1",
+    "NativeRenderCore.ps1",   # C# NativeCellBuffer - high performance rendering
     "RenderCache.ps1",
     "HybridRenderEngine.Dependencies.ps1",
     "HybridRenderEngine.ps1",

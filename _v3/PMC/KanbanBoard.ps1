@@ -18,6 +18,9 @@ class KanbanBoard {
     hidden [hashtable]$_scrollOffsets = @{ "TODO" = 0; "IN PROGRESS" = 0; "DONE" = 0 }
     hidden [hashtable]$_selectedIndices = @{ "TODO" = -1; "IN PROGRESS" = -1; "DONE" = -1 }
     hidden [int]$_focusedColumn = 0
+    
+    # Optimization: Cache column task lists
+    hidden [object]$_cache = @{ Version = -1; Columns = @{} }
 
     [void] MoveFocus([string]$direction) {
         if ($direction -eq "Right") {
@@ -90,6 +93,15 @@ class KanbanBoard {
     }
 
     hidden [array] _GetTasksForColumn([hashtable]$state, [string]$column) {
+        # Optimization: Use cache if version matches
+        if ($state.Version -ne $this._cache.Version) {
+            $this._cache.Version = $state.Version
+            $this._cache.Columns = @{}
+        }
+        if ($this._cache.Columns.ContainsKey($column)) {
+            return $this._cache.Columns[$column]
+        }
+
         $statusMap = @{
             "TODO" = @("todo", "pending", "")
             "IN PROGRESS" = @("in-progress")
@@ -104,6 +116,9 @@ class KanbanBoard {
                 $taskStatus = if ($_.ContainsKey('status')) { $_.status } else { "" }
                 $taskStatus -in $targetStatuses
             })
+            
+            # Cache result
+            $this._cache.Columns[$column] = $tasks
             return $tasks
         }
         return @()

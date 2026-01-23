@@ -68,6 +68,9 @@ class TuiApp {
         $this._smartEditor.LoadProjects($this._store.GetState().Data.projects)
         
         while ($this._running) {
+            # Frame timing for adaptive sleep
+            $frameStart = [DateTime]::UtcNow
+            
             # DEBUG: Log every tick to ensure it's alive (optional, remove later if spammy)
             # "DEBUG: Loop Tick" | Out-File "/tmp/tui_tick.log" -Append
 
@@ -146,8 +149,12 @@ class TuiApp {
                 }
             }
             
-            # 3. Cap CPU
-            Start-Sleep -Milliseconds 16 # ~60 FPS
+            # 3. Adaptive Frame Timing (instead of fixed 16ms)
+            # Only sleep if we finished fast, and sleep just enough to hit ~60fps
+            $frameEnd = [DateTime]::UtcNow
+            $frameMs = ($frameEnd - $frameStart).TotalMilliseconds
+            $sleepMs = [Math]::Max(0, 16 - $frameMs)
+            if ($sleepMs -gt 1) { Start-Sleep -Milliseconds ([int]$sleepMs) }
         }
         
         $this._engine.Cleanup()
