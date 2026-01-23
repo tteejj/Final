@@ -602,17 +602,7 @@ class HybridRenderEngine {
                 $z = $this._currentZ
                 $isOccluded = $false
                 
-                # Check for occlusion
-                for ($cx = $startX; $cx -lt $endX; $cx++) {
-                    if ($z -lt $zRow[$cx]) {
-                        $isOccluded = $true
-                        break
-                    }
-                }
-                
-                if (-not $isOccluded) {
-                    # Safe to bulk write
-                    $this._backBuffer.WriteRow($finalX, $finalY, $text, $fgs, $bgs, $attrs, $minX, $maxX)
+                $this._backBuffer.WriteRow($finalX, $finalY, $text, $fgs, $bgs, $attrs, $minX, $maxX)
                     
                     # Bulk update Z-buffer
                     for ($cx = $startX; $cx -lt $endX; $cx++) {

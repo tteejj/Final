@@ -63,11 +63,15 @@ class TimeModal {
 
         if (-not $this._visible) { return }
         
-        [Logger]::Log("TimeModal.Render: Frame (Editing: $($this._editing))", 4)
+        [Logger]::Log("TimeModal.Render: START Frame. Editing=$($this._editing) ActiveTab=$($this._activeTab)", 4)
         
         # Render Modal Box
-        $w = 80
-        $h = 24
+        # Dynamic Size: 80% width (clamped), Height - 4 (clamped)
+        $w = [Math]::Min([Math]::Max(60, [int]($engine.Width * 0.8)), 100)
+        $h = [Math]::Max(10, $engine.Height - 4)
+        
+        # Safety Check: If H hits bottom edge, shrink it
+        if ($h -ge $engine.Height) { $h = $engine.Height - 1 }
         
         # Center the modal
         $x = [Math]::Max(0, [int](($engine.Width - $w) / 2))
@@ -77,8 +81,8 @@ class TimeModal {
         
         $engine.BeginLayer(110) # High Z-Index
         
-        # 1. Clear modal area completely + 3 rows below to prevent ghosts from dashboard
-        $engine.Fill($x, $y, $w, $h + 3, " ", [Colors]::Foreground, [Colors]::PanelBg)
+        # 1. Clear modal area completely
+        $engine.Fill($x, $y, $w, $h, " ", [Colors]::Foreground, [Colors]::PanelBg)
         
         # 2. Draw Box Border
         $engine.DrawBox($x, $y, $w, $h, [Colors]::Accent, [Colors]::PanelBg)
@@ -111,14 +115,19 @@ class TimeModal {
         
         # Footer / Menu
         $menuY = $y + $h - 2
+        
+        [Logger]::Log("TimeModal.Render: Geometry X=$x Y=$y W=$w H=$h MenuY=$menuY Editing=$($this._editing)", 4)
+        
         # Explicitly clear footer line (Corrected width to avoid artifacts)
         $engine.Fill($x + 1, $menuY, $w - 2, 1, " ", [Colors]::Bright, [Colors]::PanelBg)
         
         if ($this._editing) {
             $menu = "[Enter] Save Field  [Tab] Next Field  [Esc] Cancel Edit"
+            [Logger]::Log("TimeModal.Render: Drawing EDIT MENU at X=$($x + 2) Y=$menuY Content='$menu'", 4)
             $engine.WriteAt($x + 2, $menuY, $menu, [Colors]::Bright, [Colors]::PanelBg)
         } else {
             $menu = "[N] New  [Enter] Edit  [Delete] Remove  [Tab] Weekly  [Esc] Close"
+            [Logger]::Log("TimeModal.Render: Drawing STANDARD MENU at X=$($x + 2) Y=$menuY", 4)
             $engine.WriteAt($x + 2, $menuY, $menu, [Colors]::Bright, [Colors]::PanelBg)
         }
         
@@ -140,12 +149,19 @@ class TimeModal {
             }
         }
         
+        # Explicitly clear EVERYTHING below the modal to wipe any ghost text/artifacts
+        # Dynamic Wipe: From (Y+H) to (ScreenHeight)
+        $wipeY = $y + $h
+        if ($wipeY -lt $engine.Height) {
+             # Wipe to the very bottom of the screen
+             $remainingH = $engine.Height - $wipeY
+             $engine.Fill($x, $wipeY, $w, $remainingH, " ", [Colors]::Foreground, [Colors]::Background)
+        }
+        
         $engine.EndLayer()
     }
     
     hidden [void] _RenderEntriesTab([HybridRenderEngine]$engine, [int]$x, [int]$y, [int]$w, [int]$h) {
-        [Logger]::Log("TimeModal._RenderEntriesTab: Count=$($this._timelogs.Count)", 3)
-        
         # Clear content area
         $engine.Fill($x + 1, $y, $w - 2, $h, " ", [Colors]::Foreground, [Colors]::PanelBg)
         
@@ -161,7 +177,9 @@ class TimeModal {
         
         $listY = $y + 2
         $listH = $h - 4
-        $maxDesc = [Math]::Max(0, $w - 58)
+        # Reduce width to ensure we don't hit the right border (Start 57 + Width < 79)
+        # 58 was hitting exact border (index 79). 60 leaves 1 char gap.
+        $maxDesc = [Math]::Max(0, $w - 60)
         
         if ($this._timelogs.Count -eq 0) {
             $engine.WriteAt($x + 4, $listY, "(No time entries. Press N to add one)", [Colors]::Muted, [Colors]::PanelBg)
@@ -230,13 +248,15 @@ class TimeModal {
                     $colDesc = if ($this._editField -eq 4) { [Colors]::CursorBg } else { $fg }
                     $bgDesc = if ($this._editField -eq 4) { [Colors]::Title } else { $bg }
                     $txtDesc = if ($this._editField -eq 4) { $editVal } else { $desc.PadRight($maxDesc) }
+                    # Clip description while editing to prevent overflow
+                    if ($txtDesc.Length -gt $maxDesc) { $txtDesc = $txtDesc.Substring(0, $maxDesc) }
                     
                     $engine.WriteAt($x + 2, $rowY, $txtDate, $colDate, $bgDate)
                     $engine.WriteAt($x + 14, $rowY, $txtProj, $fg, $bg)
                     $engine.WriteAt($x + 30, $rowY, $txtId1, $colId1, $bgId1)
                     $engine.WriteAt($x + 39, $rowY, $txtId2, $colId2, $bgId2)
                     $engine.WriteAt($x + 48, $rowY, $txtHours, $colHours, $bgHours)
-                    $engine.WriteAt($x + 57, $rowY, $txtDesc, $colDesc, $bgDesc)
+                    $engine.WriteAt($x + 57, $rowY, $txtDesc.PadRight($maxDesc), $colDesc, $bgDesc)
                     
                 } else {
                     $engine.WriteAt($x + 2, $rowY, $date.PadRight(12), $fg, $bg)
@@ -420,7 +440,6 @@ class TimeModal {
                 $this._editField = 2 # Desc
                 $this._editing = $true
                 $this._InitEditBuffer()
-                [Logger]::Log("TimeModal: 'N' pressed - Editing started, field=$($this._editField)", 1)
                 return "Continue"
             }
             'Enter' {
@@ -458,6 +477,7 @@ class TimeModal {
     }
     
     hidden [string] _HandleEditInput([ConsoleKeyInfo]$key) {
+        [Logger]::Log("TimeModal._HandleEditInput: Key=$($key.Key)", 4)
         switch ($key.Key) {
             'Escape' {
                 $this._editing = $false

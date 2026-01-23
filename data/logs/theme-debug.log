@@ -126,3 +126,51 @@
 [10:51:05.287] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
 [10:51:05.290] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
 [10:51:05.315] [Load-Theme] Returning theme with Hex='#00f3ff'
+[11:00:52.496] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[11:00:52.505] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[11:00:52.510] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[11:00:52.538] [Load-Theme] Returning theme with Hex='#00f3ff'
+[11:04:48.183] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[11:04:48.190] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[11:04:48.194] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[11:04:48.217] [Load-Theme] Returning theme with Hex='#00f3ff'
+[12:39:17.837] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[12:39:17.845] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[12:39:17.849] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[12:39:17.872] [Load-Theme] Returning theme with Hex='#00f3ff'
+[12:40:39.026] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[12:40:39.035] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[12:40:39.039] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[12:40:39.062] [Load-Theme] Returning theme with Hex='#00f3ff'
+[12:43:55.775] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[12:43:55.783] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[12:43:55.787] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[12:43:55.811] [Load-Theme] Returning theme with Hex='#00f3ff'
+[12:48:23.202] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[12:48:23.211] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[12:48:23.215] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[12:48:23.244] [Load-Theme] Returning theme with Hex='#00f3ff'
+[12:54:06.174] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[12:54:06.182] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[12:54:06.186] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[12:54:06.209] [Load-Theme] Returning theme with Hex='#00f3ff'
+[13:01:44.670] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[13:01:44.678] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[13:01:44.682] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[13:01:44.706] [Load-Theme] Returning theme with Hex='#00f3ff'
+[13:40:08.868] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[13:40:08.876] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[13:40:08.879] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[13:40:08.903] [Load-Theme] Returning theme with Hex='#00f3ff'
+[13:44:54.731] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[13:44:54.738] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[13:44:54.742] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[13:44:54.765] [Load-Theme] Returning theme with Hex='#00f3ff'
+[13:49:02.741] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[13:49:02.749] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[13:49:02.752] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[13:49:02.779] [Load-Theme] Returning theme with Hex='#00f3ff'
+[13:56:41.890] [Load-Theme] themeName='cyberpunk' PmcAppRoot='/home/teej/ztest' themesDir='/home/teej/ztest/themes'
+[13:56:41.898] [Load-Theme] Looking for: /home/teej/ztest/themes/cyberpunk.json (exists=True)
+[13:56:41.901] [Load-Theme] JSON loaded. Name='Cyberpunk' Hex='#00f3ff'
+[13:56:41.925] [Load-Theme] Returning theme with Hex='#00f3ff'

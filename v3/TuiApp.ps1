@@ -93,13 +93,12 @@ class TuiApp {
             if ($needsRender) {
                 $this._engine.BeginFrame()
                 
-                # Render View - SKIP when modal visible to prevent ghost text
-                if (-not $modalVisible) {
-                    if ($state.View.CurrentView -eq "WeeklyReport") {
-                        $this._weeklyView.Render($this._engine, $state)
-                    } else {
-                        $this._dashboard.Render($this._engine, $state)
-                    }
+                # Render View (Always render background view to prevent stale buffer artifacts)
+                # Modals will render on top (higher Z-index)
+                if ($state.View.CurrentView -eq "WeeklyReport") {
+                    $this._weeklyView.Render($this._engine, $state)
+                } else {
+                    $this._dashboard.Render($this._engine, $state)
                 }
                 
                 # Render SmartEditor Overlay if active

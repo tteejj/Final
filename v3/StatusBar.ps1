@@ -109,7 +109,7 @@ class StatusBar {
     
     [void] Render([HybridRenderEngine]$engine, [string]$context) {
         $y = $engine.Height - 1
-        $w = $engine.Width
+        $w = $engine.Width - 1 # Reduce by 1 to avoid hitting bottom-right kill corner (prevents scrolling)
         
         # Clear status bar
         $engine.Fill(0, $y, $w, 1, " ", [Colors]::Bright, [Colors]::SelectionBg)
