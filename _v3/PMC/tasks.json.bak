@@ -1,0 +1,48 @@
+{
+  "projects": [
+    {
+      "id": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
+      "status": "active",
+      "created": "2026-01-23T11:00:47.9340147-07:00",
+      "name": "inbox",
+      "description": "",
+      "modified": "2026-01-23T11:00:47.9340147-07:00"
+    }
+  ],
+  "notes": {
+    "id": "6c5c0f2e-9af1-40f1-977d-4aa23340ec75",
+    "created": "2026-01-23T11:16:41.0622814-07:00",
+    "modified": "2026-01-23T11:16:55.0102109-07:00",
+    "title": "New Note",
+    "content": "a new note appears\n",
+    "projectId": "GLOBAL_NOTES"
+  },
+  "timelogs": [
+    {
+      "created": "2026-01-23T11:13:48.9144941-07:00",
+      "id1": "",
+      "projectId": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
+      "id2": "",
+      "description": "",
+      "hours": 0.0,
+      "date": "2026-01-23",
+      "id": "38388079-b313-4f4c-a1d8-fc22fae82659"
+    }
+  ],
+  "tasks": [
+    {
+      "description": "note\n",
+      "projectId": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
+      "completed": false,
+      "text": "test",
+      "status": "todo",
+      "id": "1d6905c5-1d53-4eee-825b-908be1c97b0a",
+      "due": "2026-01-31T00:00:00",
+      "created": "2026-01-23T11:09:32.4680589-07:00",
+      "priority": 1,
+      "modified": "2026-01-23T11:12:21.3724662-07:00"
+    }
+  ],
+  "checklists": null,
+  "settings": {}
+}
