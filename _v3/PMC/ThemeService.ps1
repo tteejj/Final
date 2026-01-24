@@ -24,8 +24,9 @@ class PmcPalette {
     PmcPalette() {
         # Default Fallback (VS Code Dark style) - Guaranteed valid ints
         $this.Foreground    = 0xD4D4D4
-        $this.Background    = 0x1E1E1E
-        $this.PanelBg       = 0x252526
+        # UPDATED: Use Black as default background to prevent "Grey Flash" or fallback mismatch
+        $this.Background    = 0x000000
+        $this.PanelBg       = 0x000000 
         $this.PanelBorder   = 0x3E3E42
         
         $this.Error         = 0xF44747
@@ -131,6 +132,12 @@ class ThemeService {
                 Accent = 0xFFCC00; SelectionBg = 0x804000; SelectionFg = 0xFFE000
                 Muted = 0x805800; Header = 0xFFCC00
                 Success = 0xFFCC00; Warning = 0xFF8800; Error = 0xFF4400
+            }}
+            @{ Name = "Nostromo (Retro)"; Data = @{ 
+                Foreground = 0x00AA44; Background = 0x000000; PanelBg = 0x000000; PanelBorder = 0x005522
+                Accent = 0x44FF88; SelectionBg = 0x003311; SelectionFg = 0x44FF88
+                Muted = 0x003311; Header = 0x00CC55
+                Success = 0x00FF00; Warning = 0xDDFF00; Error = 0xFF0000
             }}
         )
     }

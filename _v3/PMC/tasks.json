@@ -1,55 +1,65 @@
 {
-  "timelogs": [
-    {
-      "hours": 0.0,
-      "created": "2026-01-23T11:13:48.9144941-07:00",
-      "id1": "",
-      "id2": "",
-      "description": "",
-      "id": "38388079-b313-4f4c-a1d8-fc22fae82659",
-      "projectId": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
-      "date": "2026-01-23"
-    }
-  ],
-  "projects": [
-    {
-      "status": "active",
-      "name": "inbox",
-      "modified": "2026-01-23T11:00:47.9340147-07:00",
-      "description": "",
-      "id": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
-      "created": "2026-01-23T11:00:47.9340147-07:00"
-    }
-  ],
-  "checklists": {
-    "projectId": "GLOBAL_CHECKLISTS",
-    "created": "2026-01-23T11:18:46.1718096-07:00",
-    "items": [],
-    "modified": "2026-01-23T11:18:46.1729028-07:00",
-    "id": "39f99a4c-dbc2-4e60-a0f8-5a738ef9ea2a",
-    "title": "New Checklist"
-  },
-  "notes": {
-    "content": "a new note appears\nds;fhgkldfkl;f alfjfkjla;dfkjldfklj kasdnfjsadfl;nADJL;JA;jdfo",
-    "projectId": "GLOBAL_NOTES",
-    "created": "2026-01-23T11:16:41.0622814-07:00",
-    "modified": "2026-01-23T13:47:47.9324900-07:00",
-    "id": "6c5c0f2e-9af1-40f1-977d-4aa23340ec75",
-    "title": "New Note"
-  },
   "tasks": [
     {
+      "due": "2026-01-31T00:00:00",
+      "projectId": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
       "id": "1d6905c5-1d53-4eee-825b-908be1c97b0a",
+      "priority": 1,
       "completed": false,
       "text": "test",
       "status": "todo",
-      "created": "2026-01-23T11:09:32.4680589-07:00",
-      "modified": "2026-01-23T11:12:21.3724662-07:00",
       "description": "note\n",
-      "due": "2026-01-31T00:00:00",
-      "projectId": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
-      "priority": 1
+      "modified": "2026-01-23T11:12:21.3724662-07:00",
+      "created": "2026-01-23T11:09:32.4680589-07:00"
     }
   ],
-  "settings": {}
+  "timelogs": [
+    {
+      "hours": 0.0,
+      "projectId": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
+      "id": "38388079-b313-4f4c-a1d8-fc22fae82659",
+      "date": "2026-01-23",
+      "id1": "",
+      "description": "",
+      "id2": "",
+      "created": "2026-01-23T11:13:48.9144941-07:00"
+    }
+  ],
+  "checklists": {
+    "items": [],
+    "id": "39f99a4c-dbc2-4e60-a0f8-5a738ef9ea2a",
+    "projectId": "GLOBAL_CHECKLISTS",
+    "created": "2026-01-23T11:18:46.1718096-07:00",
+    "title": "New Checklist",
+    "modified": "2026-01-23T11:18:46.1729028-07:00"
+  },
+  "settings": {
+    "Theme": "Nostromo (Retro)"
+  },
+  "notes": {
+    "projectId": "GLOBAL_NOTES",
+    "id": "6c5c0f2e-9af1-40f1-977d-4aa23340ec75",
+    "content": "a new note appears\nds;fhgkldfkl;f alfjfkjla;dfkjldfklj kasdnfjsadfl;nADJL;JA;jdfo",
+    "title": "New Note",
+    "modified": "2026-01-23T13:47:47.93249-07:00",
+    "created": "2026-01-23T11:16:41.0622814-07:00"
+  },
+  "projects": [
+    {
+      "created": "2026-01-23T11:00:47.9340147-07:00",
+      "id": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
+      "description": "",
+      "status": "active",
+      "modified": "2026-01-23T11:00:47.9340147-07:00",
+      "name": "inbox"
+    },
+    {
+      "created": "2026-01-23T18:54:10.3335810-07:00",
+      "id": "219c4c77-d593-4ef7-b432-a29b66d67211",
+      "description": "",
+      "status": "active",
+      "modified": "2026-01-23T18:54:10.3335810-07:00",
+      "name": "test project"
+    }
+  ]
 }

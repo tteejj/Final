@@ -19,7 +19,8 @@ class TuiApp {
     hidden [bool]$_wasModalVisible = $false
     hidden [bool]$_running
     hidden [bool]$_forceRender = $false
-    
+    hidden [string]$_lastTheme = ""
+
     TuiApp([HybridRenderEngine]$engine, [FluxStore]$store) {
         $this._engine = $engine
         $this._store = $store
@@ -103,18 +104,31 @@ class TuiApp {
                 $needsRender = $state.View.Editing -or $state.Version -ne $lastVersion -or $modalVisible -or $modalJustClosed -or $this._forceRender
                 $this._forceRender = $false
                 
+                # Check for Theme Change to update Engine (Retro Mode)
+                # Check for Theme Change to update Engine (Retro Mode)
+                $currentTheme = ""
+                if ($state.Data -and $state.Data.ContainsKey('settings') -and $state.Data.settings) {
+                    if ($state.Data.settings.ContainsKey('Theme')) {
+                        $currentTheme = $state.Data.settings.Theme
+                    }
+                }
+
+                if ($currentTheme -ne $this._lastTheme) {
+                    $this._SyncThemeEngine($currentTheme)
+                    $this._lastTheme = $currentTheme
+                    $needsRender = $true
+                }
+                
                 if ($needsRender) {
                     $this._engine.BeginFrame()
                     
-                    # Render View - SKIP when modal visible to prevent ghost text
-                    if (-not $modalVisible) {
-                        if ($state.View.CurrentView -eq "WeeklyReport") {
-                            $this._weeklyView.Render($this._engine, $state)
-                        } elseif ($state.View.CurrentView -eq "Kanban") {
-                            $this._kanbanBoard.Render($this._engine, $state)
-                        } else {
-                            $this._dashboard.Render($this._engine, $state)
-                        }
+                    # Render View - ALWAYS render to allow background behind modals (Z-Buffer handles overlap)
+                    if ($state.View.CurrentView -eq "WeeklyReport") {
+                        $this._weeklyView.Render($this._engine, $state)
+                    } elseif ($state.View.CurrentView -eq "Kanban") {
+                        $this._kanbanBoard.Render($this._engine, $state)
+                    } else {
+                        $this._dashboard.Render($this._engine, $state)
                     }
                     
                     # Render SmartEditor Overlay if active
@@ -142,11 +156,15 @@ class TuiApp {
                 }
             } catch {
                 [Logger]::Error("Runtime Loop Error", $_.Exception)
+                Write-Host "FATAL LOOP ERROR: $_" -ForegroundColor Red
+                Write-Host $_.ScriptStackTrace -ForegroundColor Red
+                
                 $this._statusBar.ShowMessage("Runtime Error: Check Logs", "Error")
                 # Attempt to recover frame state - only if we're mid-frame
                 if ($this._engine._inFrame) {
                     try { $this._engine.EndFrame() } catch {}
                 }
+                Start-Sleep -Seconds 1 # Pause to let user see error
             }
             
             # 3. Adaptive Frame Timing (instead of fixed 16ms)
@@ -830,6 +848,20 @@ class TuiApp {
             }
         }
     }
+
+    hidden [void] _SyncThemeEngine([string]$themeName) {
+        $isRetro = $themeName -match "Retro" -or $themeName -match "Nostromo"
+        $this._engine.UseRetroStyle = $isRetro
+        
+        if ($isRetro) {
+            # Nostromo constants (Phosphor Green)
+            $this._engine.RetroScanlineColorTarget = 0x00AA44 # CRT_Norm
+            $this._engine.RetroScanlineColorDim = 0x003300    # CRT_Dim
+        } else {
+             $this._engine.RetroScanlineColorTarget = -1
+        }
+    }
+
     
     hidden [string] _GetStatusContext([hashtable]$state) {
         # Determine context for status bar

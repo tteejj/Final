@@ -97,6 +97,11 @@ class HybridRenderEngine {
     # -- LAYOUT SYSTEM --
     hidden [hashtable]$_regions = @{}
 
+    # -- THEME OPTIONS --
+    [bool]$UseRetroStyle = $false
+    [int]$RetroScanlineColorTarget = -1
+    [int]$RetroScanlineColorDim = -1
+
     HybridRenderEngine() {
         $this._clipStack = [Stack[object]]::new()
         $this._offsetStack = [Stack[object]]::new()
@@ -112,7 +117,8 @@ class HybridRenderEngine {
         if ($this._initialized) { return }
 
         # Prepare the terminal
-        # [Console]::Clear()
+        #[Console]::Write("`e[2J`e[H")
+        #[Console]::Clear()
         [Console]::CursorVisible = $false
         [Console]::SetCursorPosition(0, 0)
         
@@ -170,6 +176,11 @@ class HybridRenderEngine {
         # Use C# NativeZBuffer for fast Z-buffer operations
         $this._zBuffer = [NativeZBuffer]::new($this.Width, $this.Height)
         
+        # DIRTY HACK: Fill FrontBuffer with '\0' (Null) so it differs from ' ' (Space)
+        # This forces the Diff Engine to treat EVERY cell as changed on the first frame,
+        # ensuring the screen is fully painted over any existing terminal garbage.
+        $this._frontBuffer.Fill(0, 0, $this.Width, $this.Height, [char]0, -1, -1, 0)
+        
         # Reset Dirty Bounds to full screen initially
         $this._ResetDirtyBounds($true)
     }
@@ -187,7 +198,20 @@ class HybridRenderEngine {
         
         # Reset BackBuffer (Clear text/colors)
         # Note: We don't allocate new memory, just reset values.
-        $this._backBuffer.Clear()
+        if ($this.UseRetroStyle) { 
+            # Force FILL with ' ' and Theme Background
+            # This overrides -1 (Default) to ensure 0x000000 is emitted
+            # We use [Colors]::Background which should be 0x000000
+            try {
+                # Write-Host "HybridRenderEngine: Explicit Fill(w=$($this.Width), h=$($this.Height), bg=$([Colors]::Background))" -ForegroundColor Cyan
+                $this._backBuffer.Fill(0, 0, $this.Width, $this.Height, [char]32, [Colors]::Foreground, [Colors]::Background, [byte]0)
+            } catch {
+                Write-Host "FILL ERROR: $_" -ForegroundColor Red
+                [Logger]::Error("BackBuffer Fill Failed", $_.Exception)
+            }
+        } else {
+            $this._backBuffer.Clear()
+        }
 
         # Reset Z-Buffer using C# Clear (fast native operation)
         $this._zBuffer.Clear()
@@ -667,8 +691,59 @@ class HybridRenderEngine {
     }
 
     [void] DrawBox([int]$x, [int]$y, [int]$width, [int]$height, [int]$fg, [int]$bg) {
+        [Logger]::Log("DrawBox(ColorOnly): X=$x Y=$y W=$width H=$height FG=$fg BG=$bg", 2)
         # Overload 2: Colors only (Default Style) - This fixes the 6-arg call
         $this.DrawBox($x, $y, $width, $height, $fg, $bg, "Single")
+    }
+
+    [void] DrawTitledBox([int]$x, [int]$y, [int]$width, [int]$height, [int]$color, [string]$title) {
+        [Logger]::Log("DrawTitledBox: X=$x Y=$y W=$width H=$height Color=$color Title='$title'", 1)
+        # Wrapper call for simple boxes with titles (used by UniversalList)
+        if ($this.UseRetroStyle) {
+             # Draw Box (Assuming bg is current PanelBg or transparent? Use -1 or infer)
+             # UniversalList uses [Colors]::PanelBg. To keep API simple, we'll assume PanelBg is standard.
+             # Actually, UniversalList expects [int], [string].
+             # We should probably pass BG too? But the call site has 6 args.
+             # Call Site: DrawBox(x, y, w, h, borderColor, boxTitle)
+             # We DO NOT know the background color here easily unless we fetch from ThemeService or hardcode.
+             
+             # BUT, we can just call the braille renderer directly if we want.
+             # Or call the base DrawBox and then overlay title.
+             $this.DrawBox($x, $y, $width, $height, $color, -1, "Single") # -1 as bg
+             
+             if (-not [string]::IsNullOrEmpty($title)) {
+                 $this._DrawRetroTitle($x, $y, $width, $title, $color)
+             }
+        } else {
+             $this.DrawBox($x, $y, $width, $height, $color, -1, "Single")
+             # Standard Title
+             if (-not [string]::IsNullOrEmpty($title)) {
+                 $tStr = " $title "
+                 if ($tStr.Length -gt $width - 2) { $tStr = $tStr.Substring(0, $width - 2) }
+                 $this.WriteAt($x + 2, $y, $tStr, $color, -1)
+             }
+        }
+    }
+    
+    hidden [void] _DrawRetroTitle([int]$x, [int]$y, [int]$width, [string]$title, [int]$color) {
+         # Retro Title Style: ┌─ TITLE ──────┐
+         # We assume the Single box is already drawn.
+         # So we write "─ TITLE " starting at x+1 (overwriting the first horizontal char)
+         
+         # Logic:
+         # 1. Spacer "─ "
+         # 2. Text "TITLE "
+         # 3. Filler "──────" (Wait, WriteAt handles overwriting, but we want the filler to match box line)
+         
+         # Actually, DrawBox drawn "─" everywhere.
+         # So we just need to write "─ TITLE " and it will look integrated.
+         # Wait, DrawBox draws "─".
+         # If I write "─ TITLE ", the first "─" matches. " " clears line. "TITLE" overwrites line. " " clears line.
+         # Result: ┌─ TITLE ──────┐
+         
+         $tStr = "─ $title "
+         if ($tStr.Length -gt $width - 2) { $tStr = $tStr.Substring(0, $width - 2) }
+         $this.WriteAt($x + 1, $y, $tStr, $color, -1)
     }
 
     [void] DrawBox([int]$x, [int]$y, [int]$width, [int]$height, [int]$fg, [int]$bg, [string]$style) {

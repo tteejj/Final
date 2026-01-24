@@ -112,7 +112,7 @@ class StatusBar {
         $w = $engine.Width
         
         # Clear status bar
-        $engine.Fill(0, $y, $w, 1, " ", [Colors]::White, [Colors]::SelectionBg)
+        $engine.Fill(0, $y, $w, 1, " ", [Colors]::Muted, [Colors]::PanelBg)
         
         # Get actions for context
         $actions = $this._contexts[$context]
@@ -132,7 +132,7 @@ class StatusBar {
             $statusText = $statusText.Substring(0, $w - 5) + "..."
         }
         
-        $engine.WriteAt(0, $y, $statusText, [Colors]::White, [Colors]::SelectionBg)
+        $engine.WriteAt(0, $y, $statusText, [Colors]::Muted, [Colors]::PanelBg)
         
         # Render Toast Message (Right Aligned)
         if ($this._message -and [DateTime]::Now -lt $this._messageTime) {

@@ -597,6 +597,89 @@ public class NativeTaskProcessor
         return displayTasks;
     }
 }
+
+    /// <summary>
+    /// High-performance render utilities.
+    /// </summary>
+    public static class NativePostProcessor
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ApplyScanlines(NativeCellBuffer buffer)
+        {
+            // Dim every 2nd row to simulate CRT scanlines
+            int height = buffer.Height;
+            int width = buffer.Width;
+
+            // Iterate alternating rows (1, 3, 5...)
+            for (int y = 1; y < height; y += 2)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    NativeCell cell = buffer.GetCell(x, y);
+                    
+                    // Skip if background is explicit, or maybe we want to dim background too?
+                    // Logic is to dim the foreground color slightly or switch to dim variant
+                    // Since we don't know the exact enum values here, we'll do a simple bitshift dimming
+                    // if it's not black.
+                    
+                    if (cell.ForegroundRgb > 0)
+                    {
+                        // Simple 50% dimming approx
+                        int r = (cell.ForegroundRgb >> 16) & 0xFF;
+                        int g = (cell.ForegroundRgb >> 8) & 0xFF;
+                        int b = cell.ForegroundRgb & 0xFF;
+                        
+                        // Shift right by 1 to halve intensity, mask to keep safe
+                        int dimR = (r >> 1) & 0xFF;
+                        int dimG = (g >> 1) & 0xFF;
+                        int dimB = (b >> 1) & 0xFF;
+                        
+                        int newFg = (dimR << 16) | (dimG << 8) | dimB;
+                        buffer.SetCell(x, y, cell.Char, newFg, cell.BackgroundRgb, cell.Attributes);
+                    }
+                }
+            }
+        }
+        
+        // Scanline variant that maps specific colors (more robust for themes)
+        public static void ApplyScanlinesMap(NativeCellBuffer buffer, int targetColor, int dimColor)
+        {
+             int height = buffer.Height;
+             int width = buffer.Width;
+             
+             // First Pass: Force Monochrome (Enforce Phosphor Color) on ALL rows
+             for (int y = 0; y < height; y++) {
+                 for (int x = 0; x < width; x++) {
+                     NativeCell cell = buffer.GetCell(x, y);
+                     // Fix: Catch -1 (Default) AND > 0. Only ignore 0 (Black).
+                     if (cell.ForegroundRgb != 0) { 
+                         // Check if it's "White/Gray" or "Generic" and force it to Target
+                         
+                         // Optional: Allow Red for Alert? (0xFF0000)
+                         // Ensure we don't treat -1 as Alert
+                         bool isAlert = (cell.ForegroundRgb > 0) && (cell.ForegroundRgb & 0xFF0000) > 0x800000 && (cell.ForegroundRgb & 0x00FF00) < 0x400000;
+                         
+                         if (!isAlert) {
+                             buffer.SetCell(x, y, cell.Char, targetColor, cell.BackgroundRgb, cell.Attributes);
+                         }
+                     }
+                 }
+             }
+             
+             // Second Pass: Apply Scanlines (Dim alternating rows)
+             for (int y = 1; y < height; y += 2)
+             {
+                 for (int x = 0; x < width; x++)
+                 {
+                     NativeCell cell = buffer.GetCell(x, y);
+                     if (cell.ForegroundRgb == targetColor)
+                     {
+                         buffer.SetCell(x, y, cell.Char, dimColor, cell.BackgroundRgb, cell.Attributes);
+                     }
+                 }
+             }
+        }
+    }
 "@
 
     Add-Type -TypeDefinition $csharpCode -Language CSharp -ErrorAction Stop

@@ -1,7 +1,18 @@
---- Log Started: 01/23/2026 13:47:17 (Level: 1) ---
-13:47:23.251 [INFO] TuiApp: PAST KANBAN CHECK, about to check WeeklyReport. CurrentView=Dashboard
-13:47:23.253 [INFO] TuiApp: CurrentView=Dashboard checking WeeklyReport
-13:48:02.340 [INFO] TuiApp: PAST KANBAN CHECK, about to check WeeklyReport. CurrentView=Dashboard
-13:48:02.341 [INFO] TuiApp: CurrentView=Dashboard checking WeeklyReport
-13:48:04.050 [INFO] TuiApp: PAST KANBAN CHECK, about to check WeeklyReport. CurrentView=Dashboard
-13:48:04.051 [INFO] TuiApp: CurrentView=Dashboard checking WeeklyReport
+--- Log Started: 01/23/2026 19:51:39 (Level: 1) ---
+--- Log Started: 01/23/2026 20:03:27 (Level: 1) ---
+20:03:37.250 [INFO] TuiApp: PAST KANBAN CHECK, about to check WeeklyReport. CurrentView=Dashboard
+20:03:37.251 [INFO] TuiApp: CurrentView=Dashboard checking WeeklyReport
+20:03:44.882 [INFO] TuiApp: PAST KANBAN CHECK, about to check WeeklyReport. CurrentView=Dashboard
+20:03:44.883 [INFO] TuiApp: CurrentView=Dashboard checking WeeklyReport
+20:03:47.306 [INFO] TuiApp: PAST KANBAN CHECK, about to check WeeklyReport. CurrentView=Dashboard
+20:03:47.306 [INFO] TuiApp: CurrentView=Dashboard checking WeeklyReport
+11:27:25.238 [INFO] TuiApp: PAST KANBAN CHECK, about to check WeeklyReport. CurrentView=Dashboard
+11:27:25.240 [INFO] TuiApp: CurrentView=Dashboard checking WeeklyReport
+11:27:32.232 [INFO] TuiApp: PAST KANBAN CHECK, about to check WeeklyReport. CurrentView=Dashboard
+11:27:32.233 [INFO] TuiApp: CurrentView=Dashboard checking WeeklyReport
+11:27:32.244 [INFO] TuiApp: PAST KANBAN CHECK, about to check WeeklyReport. CurrentView=Dashboard
+11:27:32.244 [INFO] TuiApp: CurrentView=Dashboard checking WeeklyReport
+11:27:32.250 [INFO] TuiApp: PAST KANBAN CHECK, about to check WeeklyReport. CurrentView=Dashboard
+11:27:32.253 [INFO] TuiApp: CurrentView=Dashboard checking WeeklyReport
+11:27:33.579 [INFO] TuiApp: PAST KANBAN CHECK, about to check WeeklyReport. CurrentView=Dashboard
+11:27:33.579 [INFO] TuiApp: CurrentView=Dashboard checking WeeklyReport
