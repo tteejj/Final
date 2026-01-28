@@ -432,12 +432,17 @@ class TimeModal {
                 for ($i = 0; $i -lt $this._timelogs.Count; $i++) {
                     if ($this._timelogs[$i]['id'] -eq $newId) {
                         $this._selectedIndex = $i
+
+                        # Ensure scroll keeps new item visible
+                        if ($this._selectedIndex -ge $this._scrollOffset + ($this._engine.Height - 10)) {
+                             $this._scrollOffset = $this._selectedIndex - ($this._engine.Height - 10) + 1
+                        }
                         break
                     }
                 }
                 
-                # Auto-start editing description
-                $this._editField = 2 # Desc
+                # Auto-start editing hours (Field 3)
+                $this._editField = 3
                 $this._editing = $true
                 $this._InitEditBuffer()
                 return "Continue"

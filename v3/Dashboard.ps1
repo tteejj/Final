@@ -135,7 +135,7 @@ class Dashboard {
         $displayProjects = $this._projectCache.List
         
         $projectCols = @(
-            @{ Header = "Project"; Field = "name"; Width = $sidebarW - 2 }
+            @{ Header = "Project"; Field = "name"; Width = $sidebarW - 3 }
         )
         
         $this._sidebar.Render($engine, 0, 0, $sidebarW, $h, $displayProjects.ToArray(), $projectCols, $view.Selection.Sidebar, ($view.FocusedPanel -eq "Sidebar"))
@@ -149,7 +149,9 @@ class Dashboard {
         $filteredTasks = @()
         if ($selectedProject) {
             if ($data.tasks) {
-                $filteredTasks = @($data.tasks | Where-Object { $_.projectId -eq $selectedProject.id })
+                # Ensure we are getting the latest tasks from the state data directly
+                # Force array cast to ensure Count property exists
+                $filteredTasks = @($state.Data.tasks | Where-Object { $_.projectId -eq $selectedProject.id })
             }
         }
         
