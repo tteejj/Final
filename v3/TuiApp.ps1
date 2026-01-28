@@ -12,6 +12,7 @@ class TuiApp {
     hidden [OverviewModal]$_overviewModal
     hidden [NotesModal]$_globalNotesModal
     hidden [ChecklistsModal]$_globalChecklistsModal
+    hidden [CommandLibraryModal]$_commandLibraryModal
     hidden [CommandPalette]$_commandPalette
     hidden [ThemePicker]$_themePicker
     hidden [StatusBar]$_statusBar
@@ -29,6 +30,7 @@ class TuiApp {
         $this._overviewModal = [OverviewModal]::new($store)
         $this._globalNotesModal = [NotesModal]::new($store)
         $this._globalChecklistsModal = [ChecklistsModal]::new($store)
+        $this._commandLibraryModal = [CommandLibraryModal]::new($store)
         $this._commandPalette = [CommandPalette]::new()
         $this._themePicker = [ThemePicker]::new()
         $this._statusBar = [StatusBar]::new()
@@ -78,7 +80,7 @@ class TuiApp {
             $state = $this._store.GetState()
             
             # Force render if in edit mode, view changed, or modal visible
-            $modalVisible = $this._projectInfoModal.IsVisible() -or $this._timeModal.IsVisible() -or $this._overviewModal.IsVisible() -or $this._globalNotesModal.IsVisible() -or $this._globalChecklistsModal.IsVisible() -or $this._commandPalette.IsVisible() -or $this._themePicker.IsVisible()
+            $modalVisible = $this._projectInfoModal.IsVisible() -or $this._timeModal.IsVisible() -or $this._overviewModal.IsVisible() -or $this._globalNotesModal.IsVisible() -or $this._globalChecklistsModal.IsVisible() -or $this._commandLibraryModal.IsVisible() -or $this._commandPalette.IsVisible() -or $this._themePicker.IsVisible()
             
             # Detect if a modal just closed (State transition from Visible -> Not Visible)
             $modalJustClosed = $this._wasModalVisible -and -not $modalVisible
@@ -121,6 +123,9 @@ class TuiApp {
                 }
                 if ($this._globalChecklistsModal.IsVisible()) {
                     $this._globalChecklistsModal.Render($this._engine)
+                }
+                if ($this._commandLibraryModal.IsVisible()) {
+                    $this._commandLibraryModal.Render($this._engine)
                 }
                 if ($this._commandPalette.IsVisible()) {
                     $this._commandPalette.Render($this._engine)
@@ -221,6 +226,15 @@ class TuiApp {
             return
         }
 
+        # === COMMAND LIBRARY MODAL HANDLER ===
+        if ($this._commandLibraryModal.IsVisible()) {
+            $result = $this._commandLibraryModal.HandleInput($key)
+            if ($result -eq "Close") {
+                $this._store.Dispatch([ActionType]::SET_FOCUS, @{ PanelName = $state.View.FocusedPanel })
+            }
+            return
+        }
+
         # === GLOBAL NOTES MODAL HANDLER ===
         if ($this._globalNotesModal.IsVisible()) {
             $result = $this._globalNotesModal.HandleInput($key, $this._engine)
@@ -269,6 +283,17 @@ class TuiApp {
                  $this._globalChecklistsModal.Open("GLOBAL_CHECKLISTS", "Global Checklists")
              } catch {
                  [Logger]::Error("Failed to open Global Checklists", $_)
+             }
+             return
+        }
+
+        # Command Library (C)
+        if ($key.Key -eq 'C' -and -not $key.Modifiers) {
+             [Logger]::Log("Global Shortcut: C (Command Library) Detected", 2)
+             try {
+                 $this._commandLibraryModal.Open()
+             } catch {
+                 [Logger]::Error("Failed to open Command Library", $_)
              }
              return
         }
@@ -726,6 +751,7 @@ class TuiApp {
             "Q" { $this._running = $false }
             "H" { $this._globalNotesModal.Open("GLOBAL_NOTES", "General Notes") }
             "K" { $this._globalChecklistsModal.Open("GLOBAL_CHECKLISTS", "Global Checklists") }
+            "C" { $this._commandLibraryModal.Open() }
             "L" { $this._timeModal.Open("", "General Time") }
             "O" { $this._overviewModal.Open() }
             "W" { $this._store.Dispatch([ActionType]::SET_VIEW, @{ ViewName = "WeeklyReport" }) }

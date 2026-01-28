@@ -56,7 +56,10 @@ class UniversalList {
         
         # Scrollbar indicator in header if needed
         if ($items.Count -gt $visibleRows) {
-            $scrollPct = if ($maxOffset -gt 0) { [int](($this._scrollOffset / $maxOffset) * 100) } else { 0 }
+            $scrollPct = 0
+            if ($maxOffset -gt 0) {
+                $scrollPct = [int](($this._scrollOffset / $maxOffset) * 100)
+            }
             $scrollInfo = " $($this._scrollOffset + 1)-$([Math]::Min($this._scrollOffset + $visibleRows, $items.Count))/$($items.Count)"
             $engine.WriteAt($x + $w - $scrollInfo.Length - 1, $y, $scrollInfo, [Colors]::Muted, [Colors]::PanelBg)
         }

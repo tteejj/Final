@@ -16,6 +16,7 @@ class DataService {
                 timelogs = @()
                 notes = @()
                 checklists = @()
+                commands = @()
                 settings = @{}
             }
         }
@@ -29,6 +30,7 @@ class DataService {
             timelogs = @()
             notes = @()
             checklists = @()
+            commands = @()
             settings = @{}
         }
 
@@ -81,6 +83,14 @@ class DataService {
             }
         }
 
+        if ($json.PSObject.Properties['commands'] -and $json.commands) {
+            foreach ($c in $json.commands) {
+                $h = [hashtable]@{}
+                $c.PSObject.Properties | ForEach-Object { $h[$_.Name] = $_.Value }
+                $data.commands += $h
+            }
+        }
+
         if ($json.settings) {
             $json.settings.PSObject.Properties | ForEach-Object { $data.settings[$_.Name] = $_.Value }
         }
@@ -95,6 +105,7 @@ class DataService {
             timelogs = $data.timelogs
             notes = if ($data.ContainsKey('notes')) { $data.notes } else { @() }
             checklists = if ($data.ContainsKey('checklists')) { $data.checklists } else { @() }
+            commands = if ($data.ContainsKey('commands')) { $data.commands } else { @() }
             settings = $data.settings
         }
         

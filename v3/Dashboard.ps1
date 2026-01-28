@@ -185,7 +185,10 @@ class Dashboard {
                 $engine.WriteAt($detailsX + 2, 0, " Notes ", [Colors]::Title, [Colors]::PanelBg)
                 
                 if ($selectedTask) {
-                     $desc = if ($selectedTask.ContainsKey('description') -and $selectedTask['description']) { $selectedTask['description'] } else { "(No notes. Press 'M' to add)" }
+                     $desc = "(No notes. Press 'M' to add)"
+                     if ($selectedTask.ContainsKey('description') -and $selectedTask['description']) {
+                         $desc = $selectedTask['description']
+                     }
                      # Word wrap (simple)
                      $lines = $desc -split "`n"
                      $currentY = 1
@@ -197,7 +200,10 @@ class Dashboard {
                          $currentY++
                      }
                 } elseif ($selectedProject) {
-                     $desc = if ($selectedProject.ContainsKey('description') -and $selectedProject['description']) { $selectedProject['description'] } else { "(No project notes)" }
+                     $desc = "(No project notes)"
+                     if ($selectedProject.ContainsKey('description') -and $selectedProject['description']) {
+                         $desc = $selectedProject['description']
+                     }
                      $engine.WriteAt($detailsX + 2, 1, $desc, [Colors]::Foreground, [Colors]::PanelBg)
                 }
                 

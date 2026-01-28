@@ -25,16 +25,26 @@ $manifest = @{
 # 3. Load Dependencies in strict order
 # First, load NativeRenderCore.ps1 from lib for C# NativeCellBuffer (50-100x speedup)
 $nativeCorePath = Join-Path (Split-Path $scriptDir -Parent) "lib/SpeedTUI/Core/NativeRenderCore.ps1"
-if (Test-Path $nativeCorePath) {
-    Write-Host "DEBUG: Loading NativeRenderCore.ps1 for C# acceleration..." -ForegroundColor Yellow
+$localNativeCore = Join-Path $scriptDir "NativeRenderCore.ps1"
+
+if (Test-Path $localNativeCore) {
+    Write-Host "DEBUG: Loading NativeRenderCore.ps1 from local directory..." -ForegroundColor Yellow
+    try {
+        . $localNativeCore
+        Write-Host "DEBUG: NativeRenderCore.ps1 loaded (local) - C# acceleration enabled!" -ForegroundColor Green
+    } catch {
+        Write-Host "DEBUG: Local NativeRenderCore.ps1 failed to load" -ForegroundColor DarkYellow
+    }
+} elseif (Test-Path $nativeCorePath) {
+    Write-Host "DEBUG: Loading NativeRenderCore.ps1 from lib..." -ForegroundColor Yellow
     try {
         . $nativeCorePath
-        Write-Host "DEBUG: NativeRenderCore.ps1 loaded - C# acceleration enabled!" -ForegroundColor Green
+        Write-Host "DEBUG: NativeRenderCore.ps1 loaded (lib) - C# acceleration enabled!" -ForegroundColor Green
     } catch {
         Write-Host "DEBUG: NativeRenderCore.ps1 failed to load, using PowerShell fallback" -ForegroundColor DarkYellow
     }
 } else {
-    Write-Host "DEBUG: NativeRenderCore.ps1 not found at $nativeCorePath, using PowerShell fallback" -ForegroundColor DarkYellow
+    Write-Host "DEBUG: NativeRenderCore.ps1 not found, using PowerShell fallback" -ForegroundColor DarkYellow
 }
 
 $files = @(
@@ -58,6 +68,7 @@ $files = @(
     "TabbedModal.ps1",
     "NotesModal.ps1",
     "ChecklistsModal.ps1",
+    "CommandLibraryModal.ps1",
     "FieldMappingService.ps1",
     "TextExportService.ps1",
     "ProjectInfoModal.ps1",
