@@ -1,0 +1,121 @@
+{
+  "projects": [
+    {
+      "description": "",
+      "status": "active",
+      "name": "inbox",
+      "modified": "2026-01-23T11:00:47.9340147-07:00",
+      "created": "2026-01-23T11:00:47.9340147-07:00",
+      "id": "88811e22-a7a3-4eb1-b98d-51ab3de7301f"
+    },
+    {
+      "description": "",
+      "status": "active",
+      "name": "test project",
+      "modified": "2026-01-23T18:54:10.333581-07:00",
+      "created": "2026-01-23T18:54:10.333581-07:00",
+      "id": "219c4c77-d593-4ef7-b432-a29b66d67211"
+    },
+    {
+      "description": "",
+      "status": "active",
+      "name": "Proj 1",
+      "modified": "2026-01-24T15:01:58.6395959-07:00",
+      "created": "2026-01-24T15:01:58.6395959-07:00",
+      "id": "f128edcf-d617-462d-9175-1c6cf2de53f3"
+    },
+    {
+      "description": "",
+      "status": "active",
+      "name": "Proj 2",
+      "modified": "2026-01-24T15:12:19.178829-07:00",
+      "created": "2026-01-24T15:12:19.178829-07:00",
+      "id": "cc113c4f-65e2-479f-826c-05a53107f379"
+    }
+  ],
+  "settings": {
+    "Theme": "Nostromo (Retro)"
+  },
+  "timelogs": [
+    {
+      "date": "2026-01-23",
+      "description": "",
+      "hours": 0.0,
+      "id1": "",
+      "created": "2026-01-23T11:13:48.9144941-07:00",
+      "projectId": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
+      "id2": "",
+      "id": "38388079-b313-4f4c-a1d8-fc22fae82659"
+    }
+  ],
+  "tasks": [
+    {
+      "text": "test",
+      "due": "2026-01-31T00:00:00",
+      "description": "note\n",
+      "created": "2026-01-23T11:09:32.4680589-07:00",
+      "status": "todo",
+      "priority": 1,
+      "modified": "2026-01-26T14:22:40.2353920-07:00",
+      "completed": false,
+      "projectId": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
+      "id": "1d6905c5-1d53-4eee-825b-908be1c97b0a"
+    },
+    {
+      "text": "test",
+      "due": "2026-01-31T00:00:00",
+      "created": "2026-01-24T15:25:08.5651566-07:00",
+      "status": "todo",
+      "priority": 1,
+      "modified": "2026-01-24T15:25:08.5651566-07:00",
+      "projectId": "cc113c4f-65e2-479f-826c-05a53107f379",
+      "id": "ac82bc3c-d359-4e11-aaee-ca725df69423"
+    },
+    {
+      "text": "task 1",
+      "due": "2026-01-31T00:00:00",
+      "created": "2026-01-24T20:28:43.6839647-07:00",
+      "status": "active",
+      "priority": 1,
+      "modified": "2026-01-24T20:28:43.6839647-07:00",
+      "projectId": "cc113c4f-65e2-479f-826c-05a53107f379",
+      "id": "32e2c389-d305-4e73-853d-67c4a5a9f5f3"
+    },
+    {
+      "text": "task 1",
+      "due": "2026-01-30T00:00:00",
+      "created": "2026-01-24T21:03:37.9798319-07:00",
+      "status": "active",
+      "priority": 1,
+      "modified": "2026-01-24T21:03:37.9798319-07:00",
+      "projectId": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
+      "id": "6d8e54a3-8297-46b7-bc62-0aec9b2892e0"
+    },
+    {
+      "text": "t1",
+      "due": "2026-01-26T00:00:00",
+      "created": "2026-01-24T21:08:07.8090004-07:00",
+      "status": "active",
+      "priority": 1,
+      "modified": "2026-01-24T21:08:07.8090004-07:00",
+      "projectId": "88811e22-a7a3-4eb1-b98d-51ab3de7301f",
+      "id": "24fb2804-bef7-43e9-a073-e267d4eba6e0"
+    }
+  ],
+  "notes": {
+    "content": "a new note appears\nds;fhgkldfkl;f alfjfkjla;dfkjldfklj kasdnfjsadfl;nADJL;JA;jdfo",
+    "created": "2026-01-23T11:16:41.0622814-07:00",
+    "title": "New Note",
+    "modified": "2026-01-23T13:47:47.93249-07:00",
+    "projectId": "GLOBAL_NOTES",
+    "id": "6c5c0f2e-9af1-40f1-977d-4aa23340ec75"
+  },
+  "checklists": {
+    "created": "2026-01-23T11:18:46.1718096-07:00",
+    "title": "New Checklist",
+    "modified": "2026-01-23T11:18:46.1729028-07:00",
+    "items": [],
+    "projectId": "GLOBAL_CHECKLISTS",
+    "id": "39f99a4c-dbc2-4e60-a0f8-5a738ef9ea2a"
+  }
+}
